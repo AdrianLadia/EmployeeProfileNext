@@ -54,6 +54,7 @@ memoObject = {
     'memoPhotosList': ['memoPhotosList'],
     'subject': 'subject',
     'MemoCode': offenseObject,
+    'Code': None,
     'submitted': False,
     'description': 'description',
     'date': datetime.datetime.now(),

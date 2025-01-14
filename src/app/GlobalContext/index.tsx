@@ -428,12 +428,10 @@ export default function ContextProvider({
       // setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     }
 
-    if (status === "unauthenticated" && isTestEnv === "false") {
-      console.log("ran2");
+    if (status === "unauthenticated" && isTestEnv === "false") { 
       router.push("/api/auth/signin");
     }
-    if (status === "unauthenticated" && isTestEnv === "true") {
-      console.log("ran");
+    if (status === "unauthenticated" && isTestEnv === "true") { 
       router.push("/");
       setLoading(false);
       // serverRequests.deleteAllDataInCollection('User')

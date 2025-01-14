@@ -268,8 +268,14 @@ class UserActions(User):
 
     def updateOffenseAction(self, user, data, dataToUpdate):
         offense = Offense(**data)
+        incrementVersion = True
+        if 'remedialActions' not in dataToUpdate:
+            incrementVersion = False
         res = offense.updateOffense(user, dataToUpdate)
-        return db.update({'_id': res['_id']}, res, 'Offense')
+        return db.update({'_id': res['_id']},
+                         res,
+                         'Offense',
+                         incrementVersion=incrementVersion)
 
     def deleteOffenseAction(self, user, data):
         offense = Offense(**data)
@@ -345,16 +351,18 @@ class UserActions(User):
     def getEmployeeDetailsAction(self, user, employeeId):
         if 'canViewEmployeeDetails' not in user['roles']['User']:
             raise ValueError(
-                'User does not have permission to get employee for dashboard')
+                'User does not have permission to view Employee Details')
 
         employee = db.read({'_id': employeeId}, 'Employee')
         return employee[0]
 
-    def getRemedialActionForEmployeeMemoAction(self, employeeId, offenseId):
+    def getRemedialActionForEmployeeMemoAction(self, employeeId, offenseId,
+                                               offenseVersion):
         employeeMemos = db.read(
             {
                 'Employee._id': employeeId,
-                'MemoCode._id': offenseId
+                'MemoCode._id': offenseId,
+                'MemoCode._version': offenseVersion
             }, 'Memo')
 
         offenseCount = len(employeeMemos)
@@ -427,10 +435,11 @@ class Memo(BaseModel):
 
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id
+        offenseVersion = self.MemoCode.version
 
         getRemedialAction = UserActions(
             user).getRemedialActionForEmployeeMemoAction(
-                employeeId, offenseId)
+                employeeId, offenseId, offenseVersion)
 
         remedialActionToString = getRemedialAction['remedialAction']
 
@@ -578,6 +587,7 @@ class Offense(BaseModel):
                 'User does not have permission to update an offense')
 
         newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
+
         return newData
 
     def deleteOffense(self, user):

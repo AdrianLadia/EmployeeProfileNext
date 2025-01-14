@@ -487,9 +487,10 @@ def get_remedial_action_for_employee_memo_action():
         userData = data['userData']
         employeeId = data['employeeId']
         offenseId = data['offenseId']
+        offenseVersion = data['offenseVersion']
         try:
             res = UserActions(userData).getRemedialActionForEmployeeMemoAction(
-                employeeId, offenseId)
+                employeeId, offenseId, offenseVersion)
             return jsonify({
                 'message': 'Employee read successfully!',
                 'data': res

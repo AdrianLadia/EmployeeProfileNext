@@ -52,7 +52,7 @@ const CreateEmployeeForm = () => {
     const confirmed = await handleConfirmation(
       "Confirm Action?",
       `${formData?.name} will be Created as an Employee`,
-      ""
+      "success"
     );
 
     setLoading(true);
@@ -437,7 +437,7 @@ const CreateEmployeeForm = () => {
         disabled={loading}
         id="submit"
       >
-        Create
+        {!loading ? "Create" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );

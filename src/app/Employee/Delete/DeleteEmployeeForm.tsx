@@ -22,6 +22,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
     handleConfirmation,
     router,
     handleImageModalClick,
+    loading, setLoading
   } = useAppContext();
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -53,6 +54,8 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
       `${formData?.name} will be Deleted forever!`,
       "error"
     );
+
+    setLoading(true);
 
     if (confirmed) {
       try {
@@ -87,6 +90,8 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
           type: "error",
           timer: 15,
         });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -389,7 +394,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
         disabled={formData?._id ? false : true}
         id="delete-employee-btn"
       >
-        Delete
+        {!loading ? "Delete" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );

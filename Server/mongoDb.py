@@ -23,7 +23,7 @@ class mongoDb:
                                       tz_aware=True)
 
         if AppConfig().getEnvironment() == 'clouddev':
-            uri = "mongodb+srv://ladia123:Bigreddog12.@cluster0.pgvpdb1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+            uri = "mongodb+srv://valletigio54:YamomoLetigio@employeemonitoring.bi6pw.mongodb.net/"
             self.client = MongoClient(uri,
                                       server_api=ServerApi('1'),
                                       tz_aware=True)

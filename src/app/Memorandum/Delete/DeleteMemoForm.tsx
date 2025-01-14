@@ -21,6 +21,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
     userData,
     handleConfirmation,
     handleImageModalClick,
+    loading, setLoading
   } = useAppContext();
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -36,9 +37,11 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `${formData?.description} for ${formData?.Employee?.name} will be deleted FOREVER!`,
+      `${formData?.subject} for ${formData?.Employee?.name} will be deleted FOREVER!`,
       "error"
     );
+
+    setLoading(true); 
 
     if (confirmed) {
       try {
@@ -74,6 +77,8 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
           type: "error",
           timer: 15,
         });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -271,7 +276,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
         disabled={formData?.subject ? false : true}
         id="delete-memo-btn"
       >
-        Delete
+        {!loading ? "Delete" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );

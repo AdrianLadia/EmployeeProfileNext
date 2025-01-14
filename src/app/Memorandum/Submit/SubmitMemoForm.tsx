@@ -24,6 +24,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     serverRequests,
     userData,
     handleConfirmation,
+    loading,
     setLoading,
   } = useAppContext();
 
@@ -118,7 +119,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     } else {
       setLoading(false);
     }
-  };
+  }; 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -178,7 +179,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
   };
 
   return (
-    <form className={` form-style `} ref={formRef} onSubmit={handleSubmit}>
+    <form className={` form-style ${ loading && " cursor-wait " } `} ref={formRef} onSubmit={handleSubmit}>
       <h2 className="font-semibold">Memorandum Submition</h2>
 
       {/* Memorandum to Submit */}
@@ -360,12 +361,12 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
       {/* submit */}
       <button
-        className="btn bg-blue-500 text-white w-full place-self-start my-6"
+        className={` btn bg-blue-500 text-white w-full place-self-start my-6`}
         type="submit"
-        disabled={formData?.subject ? false : true}
+        disabled={loading? true: formData?.subject ? false :  true}
         id="submit-memo-btn"
       >
-        Submit
+        {!loading ? "Submit" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );

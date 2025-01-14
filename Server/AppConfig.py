@@ -17,9 +17,10 @@ class Environment:
 
     def __init__(self):
         super().__init__()
-        self.environment = os.getenv('ENVIRONMENT')
+        self.environment = os.getenv('ENVIRONMENT', 'clouddev')
         if self.environment not in [
-                'localdev', 'localprod', 'clouddev', 'cloudprod', 'localTest', 'cloudTest'
+                'localdev', 'localprod', 'clouddev', 'cloudprod', 'localTest',
+                'cloudTest'
         ]:
             raise Exception("Invalid environment")
 
@@ -40,12 +41,12 @@ class Environment:
 
     def getIsDevEnvironment(self):
         return self.getEnvironment() in ['localdev', 'clouddev']
-    
+
     def getIsTestEnvironment(self):
         return self.getEnvironment() in ['localTest', 'cloudTest']
 
 
-class PubSubConfig():
+class PubSubConfig:
 
     def __init__(self):
         super().__init__()
@@ -56,13 +57,15 @@ class PubSubConfig():
         # a request to another local server that the user specified in the function to
         # mock the pubsub. If set to false the pubsub will skip this step.
         # THIS IS USED FOR TESTING PURPOSES
-        self.runLocalPubSub = os.getenv('runLocalPubSub')
-        if self.runLocalPubSub.lower() not in ['true', 'false']:
-            raise Exception("Invalid runLocalPubSub")
-        if self.runLocalPubSub.lower() == 'true':
-            self.runLocalPubSub = True
-        elif self.runLocalPubSub.lower() == 'false':
-            self.runLocalPubSub = False
+        runLocalPubSub = os.getenv('runLocalPubSub', "true").lower()
+        if runLocalPubSub not in ['true', 'false']:
+            raise ValueError(
+                "Invalid value for runLocalPubSub. Must be 'true' or 'false'.")
+
+        if runLocalPubSub == 'true':
+            runLocalPubSub == True
+        elif runLocalPubSub == 'false':
+            runLocalPubSub == False
 
     def getProjectId(self):
         return self.PROJECT_ID

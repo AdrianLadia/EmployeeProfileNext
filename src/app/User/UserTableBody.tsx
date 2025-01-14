@@ -43,8 +43,7 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
             roleToAdd
           );
           router.refresh();
-        }
-        console.log(res.message);
+        } 
         setToastOptions({open: true, message: res?.message, type: "success", timer: 5})
       }catch (e) {
         console.error(e)
@@ -59,19 +58,19 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
     category: string,
     user: User
   ) => {
-    return Object.keys(userRoles).map((key, index) => (
-      <div className="flex gap-2 my-2" key={key + index}>
+    return Object.keys(userRoles).map((key) => (
+      <div className="flex gap-2 my-2" key={key + user.displayName}>
         <input
           onChange={() =>
             handleRoleClick(user, category, key, roles.includes(key))
           }
           className="checkbox checkbox-sm"
           type="checkbox"
-          name={key}
-          id={key}
+          name={key + user.displayName}
+          id={key + user.displayName}
           checked={roles.includes(key)}
         />
-        <label htmlFor={key}>{key}</label>
+        <label htmlFor={key + user.displayName}>{key}</label>
       </div>
     ));
   };

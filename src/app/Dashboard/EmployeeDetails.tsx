@@ -20,7 +20,7 @@ const EmployeeDetails = () => {
     userData,
     loading,
     setLoading,
-    setToastOptions
+    setToastOptions,
   } = useAppContext();
 
   const dummy = React.useRef<HTMLDivElement>(null);
@@ -33,9 +33,11 @@ const EmployeeDetails = () => {
     {} as Employee
   );
 
+  const [ errorMessage, setErrorMessage ] = React.useState<string>("");
+
   const [fetchingMemos, setFetchingMemos] = React.useState<boolean>(false);
 
-  const [daysWithUs, setDaysWithUs] = React.useState<number>(0);
+  // const [daysWithUs, setDaysWithUs] = React.useState<number>(0);
 
   const detailStyle = (item: boolean) =>
     `${!item && "hidden"} ${loading && "hidden"} p-2 2xl:p-3
@@ -51,7 +53,7 @@ const EmployeeDetails = () => {
   const contentStyle = `${
     loading
       ? " hidden !m-0 xl:!p-5 !p-0 !w-0 !scale-0 "
-      : selectedEmployee._id
+      : selectedEmployeeDetails._id
       ? " block "
       : " hidden "
   }`;
@@ -64,8 +66,18 @@ const EmployeeDetails = () => {
         userData,
         selectedEmployee?._id || ""
       );
+      console.log(res)
       if (res?.data) {
         setSelectedEmployeeDetails(res.data);
+      } 
+      if (res?.error) {
+        setToastOptions({
+          open: true,
+          message: res.error,
+          type: "error",
+          timer: 5,
+        });
+        setErrorMessage(res.error);
       }
     } catch (e) {
       console.error(e);
@@ -103,16 +115,16 @@ const EmployeeDetails = () => {
 
         dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
 
-        let days = 0;
+        // let days = 0;
 
-        if (selectedEmployeeDetails.dateJoined) {
-          days =
-            (new Date().getTime() -
-              new Date(selectedEmployee.dateJoined || "").getTime()) /
-            (1000 * 60 * 60 * 24);
-        }
+        // if (selectedEmployeeDetails.dateJoined) {
+        //   days =
+        //     (new Date().getTime() -
+        //       new Date(selectedEmployee.dateJoined || "").getTime()) /
+        //     (1000 * 60 * 60 * 24);
 
-        setDaysWithUs(Math.floor(days));
+        //   // setDaysWithUs(Math.floor(days));
+        // }
       }
 
       if (!selectedEmployee._id) {
@@ -128,10 +140,15 @@ const EmployeeDetails = () => {
     setLoading(false);
   };
 
-  const handleDetailsClick = (textToCopy:string) => {
-    setToastOptions({open: true, message: "Copied to clipboard", type: "info", timer: 2})
-    navigator.clipboard.writeText(textToCopy)
-  }
+  const handleDetailsClick = (textToCopy: string) => {
+    setToastOptions({
+      open: true,
+      message: "Copied to clipboard",
+      type: "info",
+      timer: 2,
+    });
+    navigator.clipboard.writeText(textToCopy);
+  };
 
   return (
     <div
@@ -241,7 +258,10 @@ const EmployeeDetails = () => {
           loading && " hidden"
         } `}
       >
-        <h2 className="text-2xl font-semibold select-all" onClick={() => handleDetailsClick(selectedEmployeeDetails?.name)}>
+        <h2
+          className="text-2xl font-semibold select-all"
+          onClick={() => handleDetailsClick(selectedEmployeeDetails?.name)}
+        >
           {selectedEmployeeDetails?.name}
         </h2>
       </div>
@@ -250,7 +270,14 @@ const EmployeeDetails = () => {
           loading && " hidden"
         }`}
       >
-        <h3 className="select-all" onClick={() => handleDetailsClick(selectedEmployeeDetails?.address||"")}>{selectedEmployeeDetails?.address}</h3>
+        <h3
+          className="select-all"
+          onClick={() =>
+            handleDetailsClick(selectedEmployeeDetails?.address || "")
+          }
+        >
+          {selectedEmployeeDetails?.address}
+        </h3>
       </div>
 
       <div className="w-full border-b my-4 " />
@@ -266,6 +293,8 @@ const EmployeeDetails = () => {
             ? "Select an Employee"
             : selectedEmployee?._id && loading
             ? "Fetching..."
+            : errorMessage
+            ? errorMessage
             : "No Details Found"}
         </div>
 
@@ -298,8 +327,13 @@ const EmployeeDetails = () => {
           </strong>
           Daily Wage
         </div>
-        <div className={detailStyle(Boolean(selectedEmployeeDetails?.email))} >
-          <strong className="text-base select-all" onClick={() => handleDetailsClick(selectedEmployeeDetails?.email||"")}>
+        <div className={detailStyle(Boolean(selectedEmployeeDetails?.email))}>
+          <strong
+            className="text-base select-all"
+            onClick={() =>
+              handleDetailsClick(selectedEmployeeDetails?.email || "")
+            }
+          >
             {selectedEmployeeDetails?.email}
           </strong>
           Email
@@ -307,7 +341,12 @@ const EmployeeDetails = () => {
         <div
           className={detailStyle(Boolean(selectedEmployeeDetails?.phoneNumber))}
         >
-          <strong className="text-base select-all" onClick={() => handleDetailsClick(selectedEmployeeDetails?.phoneNumber||"")}>
+          <strong
+            className="text-base select-all"
+            onClick={() =>
+              handleDetailsClick(selectedEmployeeDetails?.phoneNumber || "")
+            }
+          >
             {selectedEmployeeDetails?.phoneNumber}
           </strong>
           Phone
@@ -329,7 +368,12 @@ const EmployeeDetails = () => {
         <div
           className={detailStyle(Boolean(selectedEmployeeDetails?.dateJoined))}
         >
-          <strong className="text-base">{daysWithUs?.toLocaleString()}</strong>
+          {/* <strong className="text-base">{daysWithUs?.toLocaleString()}</strong> */}
+          <strong className="text-base">
+            {selectedEmployee?.dateJoined && Math.floor((new Date().getTime() -
+              new Date(selectedEmployee?.dateJoined || "").getTime()) /
+              (1000 * 60 * 60 * 24))}
+          </strong>
           Days with Us
         </div>
       </div>

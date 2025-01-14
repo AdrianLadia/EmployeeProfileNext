@@ -53,7 +53,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     isRegular: null,
     isProductionEmployee: null,
     dailyWage: null,
-  };
+  }; 
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(
     defaultFormData as Employee
@@ -573,7 +573,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         disabled={disableSaveButton || !formData?._id || loading}
         id="save"
       >
-        Update
+        {!loading ? "Update" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );

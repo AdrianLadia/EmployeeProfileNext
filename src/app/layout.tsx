@@ -15,8 +15,10 @@ import Confirmation from "./confirmation";
 import ImageModal from "./Modals/ImageModal";
 import EmployeeMemoTableModal from "./Modals/EmployeeMemoTableModal";
 import MemoPrintModal from "./Modals/MemoPrintModal"; 
+import LoadingOverlay from "./loadingOverlay.tsx";
 
 import { Poppins } from "next/font/google";  
+
 
 const poppins = Poppins({ 
   subsets: ["latin"], display: "swap", variable: "--font-poppins", 
@@ -29,7 +31,8 @@ export default function RootLayout({
 }: Readonly<{ 
   children: React.ReactNode; 
   session: never; 
-}>) {
+}>) {  
+
   return (
     <html lang="en">
       <body className={` ${poppins.variable} overflow-x-clip `}>
@@ -37,6 +40,7 @@ export default function RootLayout({
           <ContextProvider>
             <Confirmation />
             <ProfileMenu/>   
+            <LoadingOverlay/>
             {children}  
             {/* <NavBar/> */}
             <ImageModal/>

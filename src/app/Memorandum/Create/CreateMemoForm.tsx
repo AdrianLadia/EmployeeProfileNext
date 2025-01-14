@@ -43,9 +43,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     reason: null,
     mediaList: null,
     memoPhotosList: null,
-  } as Memo);
-
-  console.log("formData", formData);
+  } as Memo); 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,7 +51,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     const confirmed = await handleConfirmation(
       "Confirm Action?",
       `Create ${formData?.subject} for ${formData?.Employee?.name}`,
-      ""
+      "success"
     );
 
     setLoading(true);
@@ -162,11 +160,12 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     }
   };
 
-  const getRemedialAction = async (id: string, number: string) => {
+  const getRemedialAction = async (employeeId: string, offenseId: string, offenseVersion: number) => {
     const res = await serverRequests.getRemedialActionForEmployeeMemoAction(
       userData,
-      id,
-      number
+      employeeId,
+      offenseId,
+      offenseVersion
     );
     if (res?.data?.remedialAction) {
       setRemedialAction(res.data.remedialAction);
@@ -175,7 +174,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
 
   React.useEffect(() => {
     if (formData?.Employee?._id && formData?.MemoCode?.number) {
-      getRemedialAction(formData?.Employee?._id, formData?.MemoCode?._id || "");
+      getRemedialAction(formData?.Employee?._id, formData?.MemoCode?._id || "", formData?.MemoCode?._version || 0);
     } else {
       setRemedialAction("");
     }
@@ -385,7 +384,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         disabled={loading}
         id="create-memo-btn"
       >
-        Create
+        {!loading ? "Create" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );

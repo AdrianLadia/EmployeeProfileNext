@@ -28,6 +28,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
     handleConfirmation,
     router,
     getOrdinal, 
+    loading, setLoading
   } = useAppContext();
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -46,10 +47,12 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
     if (confirmation) {
       confirmed = await handleConfirmation(
         "Confirm Action?",
-        `Create ${formData?.title} Offense`,
+        `Update ${formData?.title} Offense`,
         ""
       );
     }
+
+    setLoading(true);
 
     if (confirmed) {
       try {
@@ -95,6 +98,8 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
           type: "error",
           timer: 15,
         });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -299,7 +304,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
         disabled={formData?.description ? false : true}
         id="update-offense-button"
       >
-        Update
+        {!loading ? "Update" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );

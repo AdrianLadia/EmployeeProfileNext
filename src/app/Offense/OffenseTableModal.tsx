@@ -12,9 +12,9 @@ const style: React.CSSProperties = {
   overflow: "clip",
 };
 
-import html2canvas from "html2canvas-pro";
+// import html2canvas from "html2canvas-pro";
 
-import jsPDF from "jspdf";
+// import jsPDF from "jspdf";
 
 import { Offense } from "../schemas/OffenseSchema";
 
@@ -30,76 +30,131 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false); 
 
-  const resolution = 1;
-  
-
-  const convertToPdf = async () => {
-    // Ensure element exists before proceeding
+  function convertToPdf() {
     setLoading(true);
     const element = contentRef.current;
+
+    const preHtml = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head>
+        <meta charset='utf-8'>
+        <title>Export HTML To Doc</title>
+        <style> 
+          body {
+            text-align: center;
+          }
+          td {
+            padding: 15px;
+            text-align: left;
+          }  
+          th {
+            padding: 5px;
+            text-align: left;
+            background-color: #f2f2f2;
+          }
+          #violation { 
+            width: 55%;
+          }
+          #remedialActions { 
+            width: 30%;
+          }   
+          #textStart {
+            text-align: left; 
+          }
+          #textEnd {
+            padding-top: 20px;
+            text-align: right;
+          } 
+        </style>
+      </head>
+      <body>`;
+      const postHtml = "</body></html>";
+
     if (!element) {
       console.error("Element not found");
       return;
     }
+    const html = preHtml + element.innerHTML + postHtml;
 
-    try {
-      // Capture the element with html2canvas (without limiting height)
-      const canvas = await html2canvas(element, {
-        scale: resolution, // Higher scale for better quality
-        useCORS: true, // Handles cross-origin images
-        windowWidth: element?.scrollWidth, // Capture full width of the content
-        windowHeight: element?.scrollHeight, // Capture full height of the content
-      });
+    const url =
+      "data:application/vnd.ms-word;charset=utf-8," + encodeURIComponent(html);
 
-      // Get the image data from the canvas
-      const imgData = canvas.toDataURL("image/png");
+    const filename = "house-rules.doc";
 
-      // Create a new jsPDF instance
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "pt", 
+    const downloadLink = document.createElement("a");
 
-      });
+    document.body.appendChild(downloadLink);
 
-      // A4 dimensions in points
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
+    downloadLink.href = url;
+    downloadLink.download = filename;
+    downloadLink.click();
 
-      // Calculate scaling to fit the page width, maintaining the aspect ratio
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const scaleFactor = Math.min(pageWidth / imgWidth, 1); // Limit scaling to fit width, no height limitation
-
-      const scaledWidth = imgWidth * scaleFactor;
-      const scaledHeight = imgHeight * scaleFactor;
-
-      // Start adding pages if content exceeds the page height
-      let yOffset = 0; // Track the Y position for image placement on each page
-      let pageIndex = 0;
-
-      // Add image to the first page
-      pdf.addImage(imgData, "PNG", 0, yOffset, scaledWidth, scaledHeight);
-
-      // Check if content exceeds the page height and add more pages if necessary
-      while (scaledHeight + yOffset > pageHeight) {
-        pageIndex++;
-        pdf.addPage(); // Add new page
-        yOffset = -(pageHeight * pageIndex); // Adjust Y offset for the next page
-        pdf.addImage(imgData, "PNG", 0, yOffset, scaledWidth, scaledHeight); // Add the same image to the new page
-      }
-
-      // Save the generated PDF
-      pdf.save("house-rules.pdf");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    document.body.removeChild(downloadLink);
+    setLoading(false);
+  } 
 
   const [year] = React.useState(new Date().getFullYear());
+
+// image pdf
+  // const convertToPdf = async () => {
+
+  //   setLoading(true)
+
+  //   const desktopWidth = 1200; // Adjust as needed for desktop
+  //   const desktopHeight = 800; // Adjust as needed for desktop
+
+  //   // Store the original dimensions of the window
+  //   const originalWidth = window.innerWidth;
+  //   const originalHeight = window.innerHeight;
+
+  //   // Resize the window to simulate a desktop view
+  //   window.innerWidth = desktopWidth;
+  //   window.innerHeight = desktopHeight;
+
+  //   // Trigger resize event to adjust the layout (if necessary)
+  //   window.dispatchEvent(new Event("resize"));
+
+  //   const element = contentRef.current;
+  
+  //   if (!element) {
+  //     console.error("Element not found");
+  //     return;
+  //   }
+  
+  //   try {
+  //     const canvas = await html2canvas(element);
+  //     const imgData = canvas.toDataURL('image/png');
+  //     const pdf = new jsPDF();
+  
+  //     const imgWidth = 210; // Width in mm (A4 size)
+  //     const pageHeight = 297; // Height in mm (A4 size)
+  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //     let heightLeft = imgHeight;
+  
+  //     let position = 0;
+  
+  //     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  //     heightLeft -= pageHeight;
+  
+  //     while (heightLeft >= 0) {
+  //       position = heightLeft - imgHeight;
+  //       pdf.addPage();
+  //       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  //       heightLeft -= pageHeight;
+  //     }
+  
+  //     pdf.save('download.pdf');
+  //   } catch (error) {
+  //     console.error("Error generating PDF", error);
+  //   } finally {
+  //     window.innerWidth = originalWidth;
+  //     window.innerHeight = originalHeight;
+  //     window.dispatchEvent(new Event("resize"));
+  //     setLoading(false)
+  //   }
+  // };
+ 
 
   return (
     <dialog className=" modal " id="OffenseDownloadModal">
@@ -120,46 +175,50 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
           {/* </ content ref */}
           <div ref={contentRef}>
             {/* COMPANY HOUSE  */}
-            <div className="w-full flex justify-center pt-10 text-start">
+            <div className="w-full flex justify-center pt-10 text-center md:text-start">
               <h1 className="text-xl md:text-2xl xl:text-3xl tracking-wider font-bold">
                 COMPANY HOUSE RULES - {year}
               </h1>
             </div>
             {/* REMEDIAL ACTION */}
-            <div className="w-full flex justify-center pb-10 text-start">
+            <div className="w-full flex justify-center pb-10 text-center md:text-start">
               <h2 className="text-xl md:text-2xl xl:text-3xl tracking-wider font-bold">
                 TABLE OF OFFENSES AND REMEDIAL ACTION
               </h2>
             </div>
 
             {/* OffenseTable */}
-            {/* <div className=" rounded-box rounded-t-none w-full ">
-              <OffenseTable offenseList={offenseList} hideFooter={true} />
-            </div> */}
+            <div className=" rounded-box rounded-t-none w-full ">
+              <OffenseTable offenseList={offenseList} forPrint={true} />
+            </div>
 
             {/* THE MANAGEMENT */}
-            <div className="flex justify-end gap-2 px-10 pt-16">
-              <div className="text-xl w-[30%] font-bold tracking-wider">
+            <div className="flex justify-end gap-2 px-10 pt-16" >
+              <div className="text-xl w-[30%] font-bold tracking-wider" id="textEnd">
                 THE MANAGEMENT
               </div>
             </div>
 
             {/*  Printed Name< */}
-            <div className="flex items-center flex-col gap-2 px-10 pt-16 w-[80%] md:w-[40%] ">
-              <div className=" border-b w-full border-black"></div>
-              <div>Signature Over Printed Name</div>
+            <div className="flex items-center flex-col gap-2 px-10 pt-16 w-[80%] md:w-[40%] " >
+              <div className=" border-b w-full border-black h-0" >                  </div>
+              <div id="textStart">Signature Over Printed Name:</div>
             </div>
 
             {/* Date */}
-            <div className="flex items-center flex-col gap-2 px-10 pt-20 pb-10 w-[80%] md:w-[40%] ">
-              <div className=" border-b border-black w-full "></div>
-              <div>Date</div>
+            <div className="flex items-center flex-col gap-2 px-10 pt-20 pb-10 w-[80%] md:w-[40%] " >
+              <div className=" border-b border-black w-full h-0"  >                  </div>
+              <div id="textStart">Date:</div>
             </div>
           </div>
           {/* content ref /> */}
 
           <div className="absolute bottom-5 w-full justify-center flex">
-            <button onClick={convertToPdf} className="btn btn-info" disabled={loading}>
+            <button
+              onClick={convertToPdf}
+              className="btn btn-info"
+              disabled={loading}
+            >
               {!loading ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

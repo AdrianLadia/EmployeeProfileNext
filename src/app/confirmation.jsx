@@ -22,7 +22,7 @@ const Confirmation = () => {
     }  
 
   return (
-    <div 
+    <form 
         className={` ${confirmationOptions.open ? ' fixed !z-[9999] ' : ' hidden '}
             w-[99vw] h-[99vh] z-[999] top-[0%] left-1/2 right-1/2 translate-x-[-50%]  
             flex justify-center items-center backdrop-blur-sm bg-inherit alert
@@ -42,11 +42,11 @@ const Confirmation = () => {
             <span className='text-start px-10 py-4'>{confirmationOptions?.consequence}</span>
 
             <div className='flex flex-col md:flex-row-reverse gap-2 justify-evenly w-full pt-4 pb-6 px-2'>
-                <button className={`btn bg-${confirmationOptions.type} `} id='confirm-button' onClick={handleConfirm}>Confirm</button>
+                <button className={`btn bg-${confirmationOptions.type} `} type='submit' id='confirm-button' autoFocus onClick={handleConfirm}>Confirm</button>
                 <button className={`btn btn-ghost`} id='cancel-button' onClick={handleCancel}>Cancel</button>
             </div>
         </div>
-    </div>
+    </form>
   )
 }
 

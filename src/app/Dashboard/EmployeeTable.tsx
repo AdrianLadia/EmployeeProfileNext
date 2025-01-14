@@ -11,9 +11,10 @@ import { useSearchParams } from "next/navigation";
 
 interface EmployeeTableProps {
   employeeList: Employee[];
+  fetchingError?: string;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
+const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingError }) => {
   const {
     selectedEmployee,
     setSelectedEmployee,
@@ -21,6 +22,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
     setLoading,
     highlightText,
     setSearch,
+    setToastOptions
   } = useAppContext();
 
   const [filteredEmployeeList, setFilteredEmployeeList] =
@@ -29,6 +31,17 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
   const searchParams = useSearchParams();
 
   const search = searchParams.get("search") || "";
+
+  useEffect(() => {
+    if(fetchingError){
+      setToastOptions({
+        type: "error",
+        message: fetchingError||"Error fetching data",
+        timer: 5,
+        open: true, 
+      });
+    }
+  },[fetchingError])
 
   useEffect(() => {
     setLoading(true);
@@ -123,13 +136,19 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
             </td>
           </tr>
         ))}
-        {!filteredEmployeeList.length && (
+        {fetchingError ? (
+          <tr>
+            <td colSpan={3} className="text-center p-4">
+              {fetchingError}
+            </td>
+          </tr>
+        ) : !filteredEmployeeList.length ? (
           <tr>
             <td colSpan={3} className="text-center p-4">
               No results found
             </td>
           </tr>
-        )}
+        ) : null} 
       </tbody>
       {/* foot */}
       <tfoot>

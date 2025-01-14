@@ -33,6 +33,8 @@ const Page = async () => {
     userData
   );
 
+  let fetchingError;
+
   let employeeList: Employee[] = [];
 
   let employeeListLength = 0;
@@ -40,7 +42,7 @@ const Page = async () => {
   let newlyJoinedEmployeeCount = 0;
   let daysSinceJoined = 0;
 
-  if (employeeResponse.data) {
+  if (employeeResponse?.data) {
     employeeList = employeeResponse.data;
 
     employeeListLength = employeeList?.length;
@@ -52,8 +54,10 @@ const Page = async () => {
         (new Date().getTime() - new Date(employee.dateJoined || "").getTime()) /
         (1000 * 60 * 60 * 24);
       return daysSinceJoined <= 30;
-    })?.length;
-  }
+    })?.length; 
+  } else if (employeeResponse?.error){  
+    fetchingError = employeeResponse.error; 
+  } 
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
     overflow-y-auto hover:bg-base-300 hover:border-transparent
@@ -104,7 +108,7 @@ const Page = async () => {
                 <SearchBar controlled={true} />
               </div>
 
-              <EmployeeTable employeeList={employeeList} />
+              <EmployeeTable employeeList={employeeList} fetchingError={fetchingError}/>
             </div>
           </div>
         </div>

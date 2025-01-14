@@ -24,6 +24,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
     userData,
     handleConfirmation,
     getOrdinal, 
+    setLoading, loading, router
   } = useAppContext();
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -38,10 +39,12 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
     if (confirmation) {
       confirmed = await handleConfirmation(
         "Confirm Action?",
-        `Create ${formData?.title} Offense`,
-        ""
+        `Delete ${formData?.title} Offense`,
+        "error"
       );
     }
+
+    setLoading(true);
 
     if (confirmed) {
       try {
@@ -74,6 +77,9 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
           type: "error",
           timer: 15,
         });
+      } finally {
+        setLoading(false);
+        router.refresh();
       }
     }
   };
@@ -204,7 +210,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
         disabled={formData?.description ? false : true}
         id="delete-offense-btn"
       >
-        Delete
+        {!loading ? "Delete" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );

@@ -8,6 +8,7 @@ import CreateButton from "./CreateButton";
 import UpdateButton from "./UpdateButton";
 import DeleteButton from "./DeleteButton";
 import OffenseDownloadButton from "./OffenseDownloadButton";
+import RefreshButton from "./RefreshButton";
 
 import CreateOffenseModal from "./Create/CreateOffenseModal"; 
 import DeleteOffenseModal from "./Delete/DeleteOffenseModal";
@@ -44,12 +45,23 @@ const page = async () => {
 
         {/* action buttons */}
         <div className="w-full md:w-[80vw] 2xl:w-[70vw] flex flex-col md:flex-row justify-between bg-base-200 rounded-t-box px-2 border border-b-none">
-          <div className="flex justify-evenly md:justify-start items-center gap-4 px-2 py-2 ">
-            <CreateButton />
-            <UpdateButton />
-            <DeleteButton /> 
-            <OffenseDownloadButton />
+          {/* <div className="flex justify-evenly md:justify-start items-center gap-4 px-2 py-2 rounded-box"> */}
+          <div className="swap flex gap-3 items-center pl-2">
+            <input 
+              type="checkbox"
+              data-tip="Menu"
+              defaultChecked 
+              id="" className=" radio radio-xl rounded tooltip "  
+            />
+            <div className="flex  swap-on justify-evenly md:justify-start items-center gap-4 px-2 py-2 rounded-box ">
+              <CreateButton />
+              <UpdateButton />
+              <DeleteButton /> 
+              <OffenseDownloadButton />
+              <RefreshButton  />
+            </div>
           </div>
+          {/* </div> */}
           <div className="py-2 ">
             <SearchBar></SearchBar>
           </div>

@@ -396,6 +396,11 @@ def test_getRemedialActionForEmployeeMemoAction():
 
         memo = user.createMemoAction(userCreated, memoObject)
 
+        remedialAction = user.getRemedialActionForEmployeeMemoAction(memo['Employee']['_id'], memo['MemoCode']['_id'], memo['MemoCode']['_version'])
+
+        assert remedialAction['remedialAction'] == 'Written Warning'
+
+
         assert memo['remedialAction'] == 'Verbal Warning'
 
         memo2 = user.createMemoAction(userCreated, memoObject)

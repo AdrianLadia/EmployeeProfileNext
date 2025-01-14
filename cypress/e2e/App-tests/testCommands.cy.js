@@ -23,6 +23,18 @@ export function formattedDate(){
   return formattedDate;
 }
 
+export function formattedDateWithDash(){
+  const date = new Date();
+  const day = date.getDate();
+  let month = date.getMonth()+1;
+  if (month < 10) {
+    month = '0' + month;
+  }
+  const year = date.getFullYear();
+  const formattedDateWithDash = `${year}-${month}-${day}`;
+  return formattedDateWithDash;
+}
+
 export function CreateEmployee(
   name = "John Doe",
   // address = "1234 Elm Street, Springfield",
@@ -99,9 +111,9 @@ export function UpdateEmployee({
   cy.get('#dailyWage').clear().type(dailyWage)
 
   cy.get('#save').click()
-  cy.wait(1000)
+  cy.wait(3000)
   cy.get('#confirm-button').click()
-  cy.wait(4000)
+  cy.wait(6000)
 }
 
 export function DeleteEmployee(name){
@@ -196,11 +208,12 @@ export function CreateMemo(
   mediaList = 'smiley.png',
   memoPhotosList = 'mhm.png'
 ){
+  const date = formattedDateWithDash();
   cy.get('#profile-button').should('be.visible').click()
   cy.contains('Create Memorandum').click()
   cy.get('#profile-button').should('be.visible').click()
   cy.location('pathname').should('include', '/Memorandum/Create')
-  cy.get('#date').type('2024-10-31')
+  cy.get('#date').type(date)
   cy.get('#select-employee').click()
   cy.get('.css-1nmdiq5-menu')
   .contains(employee)

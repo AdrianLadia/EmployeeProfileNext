@@ -2,7 +2,7 @@ import ServerRequests from '../../../src/app/api/ServerRequests'
 import {
   CreateEmployee,
   UpdateEmployee,
-  DeleteEmployee,
+  // DeleteEmployee,
   CreateOffense,
   UpdateOffense,
   DeleteOffense,

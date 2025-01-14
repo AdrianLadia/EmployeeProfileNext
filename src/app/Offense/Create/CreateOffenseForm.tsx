@@ -217,7 +217,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
                   value={action}
                   aria-label={action}
                   key={index}
-                  id={action + index}
+                  id={action}
                 />
                 <span
                   className={`${

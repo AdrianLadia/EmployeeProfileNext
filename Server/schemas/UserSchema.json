@@ -10,7 +10,7 @@
                 }
             ],
             "default": null,
-            "title": " Id"
+            "title": "Id"
         },
         "createdAt": {
             "format": "date-time",
@@ -34,7 +34,7 @@
             "type": "object"
         },
         "_version": {
-            "title": " Version",
+            "title": "Version",
             "type": "integer"
         },
         "image": {

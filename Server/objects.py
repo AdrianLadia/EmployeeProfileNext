@@ -310,6 +310,7 @@ class UserActions(User):
                             'Employee': 1,
                             'memoPhotosList': 1,
                             'MemoCode': 1,
+                            'Code': 1,
                             'submitted': 1,
                             'reason': 1,
                             'subject': 1,
@@ -392,6 +393,7 @@ class Memo(BaseModel):
     subject: str
     description: str
     MemoCode: 'Offense'
+    Code: Optional[str]
     submitted: bool
     reason: Optional[str] = None
     remedialAction: Optional[str] = None
@@ -423,6 +425,7 @@ class Memo(BaseModel):
             'subject': self.subject,
             'description': self.description,
             'MemoCode': self.MemoCode.to_dict(),
+            'Code': self.Code,
             'submitted': self.submitted,
             'reason': self.reason,
             'remedialAction': self.remedialAction,
@@ -445,7 +448,10 @@ class Memo(BaseModel):
 
         self.remedialAction = remedialActionToString
 
+        formattedDate = self.date.strftime('%y%m%d')
+
         self.id = generateRandomString()
+        self.Code = f'{self.Employee.company}-{formattedDate}-{getRemedialAction["offenseCount"]}'
         self.submitted = False
         return self.to_dict()
 

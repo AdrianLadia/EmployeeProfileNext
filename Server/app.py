@@ -132,6 +132,7 @@ def create_employee():
                     'company': data['company'],
                     'isRegular': data['isRegular'],
                     'isProductionEmployee': data['isProductionEmployee'],
+                    'isOJT': data['isOJT'],
                     'dailyWage': data['dailyWage'],
                     '_version': 0
                 })
@@ -299,6 +300,7 @@ def create_memo():
                     'description': memo['description'],
                     '_id': None,
                     'MemoCode': memo['MemoCode'],
+                    'Code': None,
                     'submitted': False,
                     'reason': memo['reason'] or None,
                     'remedialActions': None,

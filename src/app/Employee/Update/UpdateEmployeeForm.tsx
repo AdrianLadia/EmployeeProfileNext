@@ -129,6 +129,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           userData
         );
 
+        console.log("res", res);
+
         if (res && res.message) {
           form.reset();
           setFormData(defaultFormData as Employee);

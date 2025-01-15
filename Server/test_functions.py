@@ -54,6 +54,7 @@ memoObject = {
     'memoPhotosList': ['memoPhotosList'],
     'subject': 'subject',
     'MemoCode': offenseObject,
+    'Code': None,
     'submitted': False,
     'description': 'description',
     'date': datetime.datetime.now(),
@@ -395,6 +396,11 @@ def test_getRemedialActionForEmployeeMemoAction():
         memoObject['MemoCode'] = offense
 
         memo = user.createMemoAction(userCreated, memoObject)
+
+        remedialAction = user.getRemedialActionForEmployeeMemoAction(memo['Employee']['_id'], memo['MemoCode']['_id'], memo['MemoCode']['_version'])
+
+        assert remedialAction['remedialAction'] == 'Written Warning'
+
 
         assert memo['remedialAction'] == 'Verbal Warning'
 

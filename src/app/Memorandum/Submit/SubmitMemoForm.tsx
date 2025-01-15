@@ -327,7 +327,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
           className="textarea textarea-bordered mt-1 min-h-[20vh] whitespace-pre-line"
           placeholder="Reason"
           id="reason"
-          required
+          required = { !formData?.memoPhotosList?.length }
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setFormData({ ...formData, reason: e.target.value });
           }}

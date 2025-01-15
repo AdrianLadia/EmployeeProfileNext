@@ -10,7 +10,7 @@
                 }
             ],
             "default": null,
-            "title": " Id"
+            "title": "Id"
         },
         "name": {
             "title": "Name",
@@ -148,7 +148,7 @@
             "title": "Dailywage"
         },
         "_version": {
-            "title": " Version",
+            "title": "Version",
             "type": "integer"
         }
     },

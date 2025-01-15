@@ -5,14 +5,21 @@ import ServerRequests from "@/app/api/ServerRequests";
 
 import UserTableBody from "./UserTableBody";
 
-import { getUserData } from "../api/UserData"; 
+import { getUserData, getTestUserData } from "../api/UserData"; 
 
 import {User} from "../schemas/UserSchema";
 
 
 const page = async () => {
+  let userData: User;
 
-  const userData: User = await getUserData();
+  if ( process.env.NEXT_PUBLIC_CYPRESS_IS_TEST_ENV === 'true' ) {
+    userData = await getTestUserData();
+  } else {
+    userData = await getUserData();
+  }
+
+  console.log(userData);
 
   if(!Array.isArray(userData?.roles?.User) || !userData.roles.User.includes('canUpdateUser')){
     return <div>You do not have permission to view this page</div>

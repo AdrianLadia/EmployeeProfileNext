@@ -95,7 +95,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           });
 
           form.reset();
-          setFormData({} as Memo);
+          setFormData({
+            reason: null,
+            mediaList: null,
+            memoPhotosList: null,
+          } as Memo);
 
           router.refresh();
 
@@ -254,7 +258,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         }
         isClearable
         onChange={(selectedOption) => {
-          setFormData({ ...formData, MemoCode: selectedOption as Offense });
+          setFormData({ ...formData, MemoCode: selectedOption as Offense, subject: selectedOption?.title || "" });
         }}
         id="MemoCode"
       />
@@ -293,7 +297,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             placeholder="Subject"
             id="subject"
             required
-            onChange={handleInputChange}
+            value={formData?.MemoCode?.title || ""}
+            // onChange={handleInputChange}
           />
         </label>
         {/* description */}

@@ -31,6 +31,7 @@ export type Description1 = string;
 export type Remedialactions = string[];
 export type Version1 = number;
 export type Title = string | null;
+export type Code = string | null;
 export type Submitted = boolean;
 export type Reason = string | null;
 export type Remedialaction = string | null;
@@ -45,6 +46,7 @@ export interface Memo {
   subject: Subject;
   description: Description;
   MemoCode: Offense;
+  Code: Code;
   submitted: Submitted;
   reason?: Reason;
   remedialAction?: Remedialaction;

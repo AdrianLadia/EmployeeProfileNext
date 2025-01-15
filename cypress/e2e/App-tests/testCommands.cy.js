@@ -83,7 +83,7 @@ export function UpdateEmployee({
   biodataPhotosList = 'mhm.png',
   email = "johndoe@example.com",
   dateJoined = "2024-11-01",
-  company = "TechCorp Inc.",
+  company = "PPB",
   dailyWage = "500"
 }={}){
   cy.get('#profile-button').should('be.visible').click()
@@ -105,7 +105,12 @@ export function UpdateEmployee({
   cy.get('input[type=file]#biodataPhotosList').attachFile(biodataPhotosList)
   cy.get('#email').clear().type(email)
   cy.get('#dateJoined').clear().type(dateJoined)
-  cy.get('#company').clear().type(company)
+  // cy.get('#add-option').click()
+  // cy.wait(1000)
+  // cy.get('#company').click().type(company)
+  // cy.wait(3000)
+  // cy.get('#save-option').click()
+
   cy.get('#isRegular').uncheck()
   cy.get('#isProductionEmployee').check()
   cy.get('#dailyWage').clear().type(dailyWage)

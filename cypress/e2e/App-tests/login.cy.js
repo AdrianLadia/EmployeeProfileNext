@@ -43,7 +43,7 @@ describe('Employee spec', () => {
       UpdateEmployee({
         employee :'John Doe',
         name : 'John Doe Letigio',
-        company : 'OpenAi Inc.',
+        company : 'PPB',
       })
 
       // Offense

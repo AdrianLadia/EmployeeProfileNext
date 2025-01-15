@@ -43,6 +43,7 @@ employeeObject = {
     'company': 'Pustanan',
     'isRegular': True,
     'isProductionEmployee': True,
+    'isOJT': False,
     'dailyWage': None,
     '_version': 0
 }
@@ -439,6 +440,7 @@ def test_create_employee_with_name_only():
             'company': None,
             'isRegular': None,
             'isProductionEmployee': None,
+            'isOJT': None,
             'dailyWage': None,
             '_version': 0
         }

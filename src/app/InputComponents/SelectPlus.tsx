@@ -95,6 +95,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
 
   return (
     <div
+      id="select-plus"
       className={`${className} ${disabled&&" input-disabled "} input input-bordered w-full p-0 m-0 flex items-center justify-evenly gap-3 pl-1 overflow-clip z-30`} 
     >
       {/*  */}
@@ -106,6 +107,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
         type="text"
         placeholder="Enter Option"
         value={addedOption}
+        id="company"
         onChange={(e) => {
           setAddedOption(e.target.value);
         }}
@@ -118,6 +120,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
         defaultValue={defaultValue}
         value={selectedOption?.toString() || ""} 
         onChange={(e) => handleChange(e)}
+        id="company"
         disabled={disabled}
       >
         <option selected disabled value={""}>
@@ -127,6 +130,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
           finalOptions.map((option, index) => (
             <option
               key={index}
+              id={index.toString()}
               value={getOptionLabel(option as Option | string | number)}
             >
               {getOptionLabel(option as Option | string | number)}
@@ -147,6 +151,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
             onClick={() => handleToggle()}
             data-tip="Add Option"
             disabled={disabled}
+            id="add-option"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -195,7 +200,8 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
             className={buttonStyle + " tooltip-primary "}
             disabled={disabled ? true : addedOption ? false : true}
             onClick={() => handleSave()}
-            data-tip="Save" 
+            data-tip="Save"
+            id= "save-option"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

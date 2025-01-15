@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import { useAppContext } from "@/app/GlobalContext";
 
@@ -9,6 +9,8 @@ import ImageInput from "@/app/InputComponents/ImageInput";
 import { Employee } from "@/app/schemas/EmployeeSchema";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
+
+import SelectPlus from "@/app/InputComponents/SelectPlus"; 
 
 const CreateEmployeeForm = () => {
   const [show, setShow] = useState(false);
@@ -23,6 +25,8 @@ const CreateEmployeeForm = () => {
     router,
     loading,
     setLoading,
+    imageListForModal,
+    imageModalId,
   } = useAppContext();
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -60,7 +64,7 @@ const CreateEmployeeForm = () => {
     if (confirmed) {
       try {
         const finalFormData = {
-          ...formData,
+          ...formData, 
           _id: "",
           _version: 0,
         };
@@ -140,7 +144,21 @@ const CreateEmployeeForm = () => {
           ? e.target.value
           : parseFloat(e.target.value),
     });
-  };
+  }; 
+
+  const [companyOptions] = useState([
+    { label: "Paper Boy", value: "PPB" },
+    { label: "Pustanan", value: "PPC" },
+    { label: "Best Bags", value: "BB" },
+    { label: "Starpack", value: "SP" },
+  ] as { label: string; value: string }[]);  
+  
+  useEffect(() => {  
+    setFormData({
+      ...formData,
+      [imageModalId]: imageListForModal.length ? imageListForModal : null, 
+    });
+  }, [imageListForModal, imageModalId]); 
 
   return (
     <form
@@ -150,11 +168,7 @@ const CreateEmployeeForm = () => {
       ref={formRef}
       onSubmit={(e) => handleSubmit(e)}
     >
-      <h2
-        className="font-semibold w-max" 
-      >
-        Employee Registry
-      </h2>
+      <h2 className="font-semibold w-max" >Employee Registry</h2>
 
       {/* name */}
       <div className="flex flex-col text-sm gap-2 ">
@@ -185,7 +199,10 @@ const CreateEmployeeForm = () => {
 
       {/* more details */}
       <div className="w-full flex justify-center">
-        <label className="w-max flex justify-center items-center gap-2" htmlFor="show">
+        <label
+          className="w-max flex justify-center items-center gap-2"
+          htmlFor="show"
+        >
           <input
             className="checkbox"
             type="checkbox"
@@ -250,7 +267,7 @@ const CreateEmployeeForm = () => {
             width="w-full"
             inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
-            mediaList={[formData?.photoOfPerson || ""]}
+            mediaList={ formData?.photoOfPerson ? [formData?.photoOfPerson ] : []}
             // onChangeHandler={handleFileChange}
             setFunction={setFormData}
           />
@@ -344,32 +361,20 @@ const CreateEmployeeForm = () => {
         </label>
 
         {/* company */}
-        <div className="flex flex-col text-sm gap-2 ">
-          Company
-          <label className="input input-bordered flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-4 text-gray-500"
-            >
-              <path
-                fillRule="evenodd"
-                d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <input
-              type="text"
-              className="grow"
-              placeholder="Company"
-              id="company"
-              onChange={handleInputChange}
+        <div className="flex flex-wrap justify-between text-sm gap-2 ">
+          <div className="flex flex-col text-sm gap-2 w-full">
+            Company
+            <SelectPlus
+              options={companyOptions}
+              onChange={(e, newValue) => { 
+                const valueToPass = typeof newValue == 'object' && newValue !== null ? (newValue as { value: string }).value.toString() : newValue ? newValue.toString() : null
+                setFormData({ ...formData, company: valueToPass });
+              }}
             />
-          </label>
-        </div>
+          </div>
+        </div> 
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="flex flex-wrap w-full justify-between">
           {/* isRegular */}
           <label className="label cursor-pointer flex justify-start gap-2 w-max">
             <p className="label-text text-base">Is Regular?</p>
@@ -393,6 +398,21 @@ const CreateEmployeeForm = () => {
                 setFormData({
                   ...formData,
                   isProductionEmployee: e.target.checked,
+                })
+              }
+            />
+          </label>
+          {/* isOJT */}
+          <label className="label cursor-pointer flex justify-start gap-2 w-max">
+            <p className="label-text text-base">Is OJT?</p>
+            <input
+              type="checkbox"
+              className="checkbox"
+              id="isOJT"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  isOJT: e.target.checked,
                 })
               }
             />

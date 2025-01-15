@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import { useAppContext } from "@/app/GlobalContext";
 
@@ -10,9 +10,7 @@ import { Employee } from "@/app/schemas/EmployeeSchema";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 
-import SelectPlus from "@/app/InputComponents/SelectPlus";
-
-import Option from "@/app/InputComponents/SelectPlus";
+import SelectPlus from "@/app/InputComponents/SelectPlus"; 
 
 const CreateEmployeeForm = () => {
   const [show, setShow] = useState(false);
@@ -27,6 +25,8 @@ const CreateEmployeeForm = () => {
     router,
     loading,
     setLoading,
+    imageListForModal,
+    imageModalId,
   } = useAppContext();
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -151,7 +151,14 @@ const CreateEmployeeForm = () => {
     { label: "Pustanan", value: "PPC" },
     { label: "Best Bags", value: "BB" },
     { label: "Starpack", value: "SP" },
-  ] as { label: string; value: string }[]); 
+  ] as { label: string; value: string }[]);  
+  
+  useEffect(() => {  
+    setFormData({
+      ...formData,
+      [imageModalId]: imageListForModal.length ? imageListForModal : null, 
+    });
+  }, [imageListForModal, imageModalId]); 
 
   return (
     <form
@@ -161,7 +168,7 @@ const CreateEmployeeForm = () => {
       ref={formRef}
       onSubmit={(e) => handleSubmit(e)}
     >
-      <h2 className="font-semibold w-max">Employee Registry</h2>
+      <h2 className="font-semibold w-max" >Employee Registry</h2>
 
       {/* name */}
       <div className="flex flex-col text-sm gap-2 ">
@@ -260,7 +267,7 @@ const CreateEmployeeForm = () => {
             width="w-full"
             inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
-            mediaList={[formData?.photoOfPerson || ""]}
+            mediaList={ formData?.photoOfPerson ? [formData?.photoOfPerson ] : []}
             // onChangeHandler={handleFileChange}
             setFunction={setFormData}
           />
@@ -360,7 +367,7 @@ const CreateEmployeeForm = () => {
             <SelectPlus
               options={companyOptions}
               onChange={(e, newValue) => { 
-                const valueToPass = typeof newValue == 'object' ? newValue?.value : newValue? newValue : null
+                const valueToPass = typeof newValue == 'object' && newValue !== null ? (newValue as { value: string }).value.toString() : newValue ? newValue.toString() : null
                 setFormData({ ...formData, company: valueToPass });
               }}
             />

@@ -34,7 +34,8 @@ const ImageInput: FC<ImageInputProps> = ({
   required,
   multiple,
 }) => {
-  const { handleImageModalClick } = useAppContext();
+  const { handleImageModalClick, imageModalId, setImageModalId } =
+    useAppContext();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -71,7 +72,7 @@ const ImageInput: FC<ImageInputProps> = ({
         [id]: value,
       }));
     }
-  };
+  }; 
 
   return (
     <div className={`flex flex-col ${width}`}>
@@ -86,31 +87,35 @@ const ImageInput: FC<ImageInputProps> = ({
         >
           <Image
             className={`
-              ${mediaList?.[0] && "cursor-pointer border "} 
+              ${mediaList?.length && "cursor-pointer border "} 
               h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px]
             `}
             height={imgDimensions?.height}
             width={imgDimensions?.width}
             alt={"   "}
             src={mediaList?.[0] || ""}
-            onClick={() =>
-              mediaList?.[0] && handleImageModalClick(mediaList || [])
-            }
+            onClick={() => {
+              mediaList?.[0] && handleImageModalClick(mediaList || []);
+              setImageModalId(id);
+            }}
           />
         </div>
       </div>
 
-      <input
-        type="file"
-        className={inputStyle}
-        id={id}
-        accept="image/*"
-        capture="environment" 
-        required={required}
-        disabled={disable}
-        multiple={multiple}
-        onChange={(setFunction && handleFileChange) || onChangeHandler}
-      />
+      <div className={inputStyle + " flex justify-between m-0 p-0"}>
+        <input
+          type="file"
+          className={inputStyle + " border-0 outline-none text-transparent "}
+          id={id}
+          accept="image/*"
+          capture="environment"
+          required={required}
+          disabled={disable}
+          multiple={multiple}
+          onChange={(setFunction && handleFileChange) || onChangeHandler}
+        />
+        <h3 className="h-full flex items-center text-neutral px-8">{mediaList?.length || 0} File(s)</h3>
+      </div>
     </div>
   );
 };

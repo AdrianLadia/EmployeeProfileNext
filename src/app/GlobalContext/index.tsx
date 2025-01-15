@@ -13,9 +13,7 @@ import {
 } from "../Schema";
 import { Employee } from "../schemas/EmployeeSchema";
 import { User, Roles } from "../schemas/UserSchema";
-import { Memo, Offense } from "../schemas/MemoSchema";
-
-import { StylesConfig } from "react-select";
+import { Memo } from "../schemas/MemoSchema";
 
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
@@ -65,6 +63,7 @@ interface AppContextProps {
   highlightText: (text: string) => JSX.Element[];
   setSearch: (data: string) => void;
   getOrdinal: (n: number) => string;
+  imageModalId: string, setImageModalId: (data: string) => void;
 }
 
 // Create the default context with proper types and default values
@@ -105,6 +104,7 @@ const AppContext = createContext<AppContextProps>({
   highlightText: () => [],
   setSearch: () => {},
   getOrdinal: () => "",
+  imageModalId: "", setImageModalId: () => {}
 });
 
 export default function ContextProvider({
@@ -379,6 +379,8 @@ export default function ContextProvider({
 
   const [memoForPrintModal, setMemoForPrintModal] = useState<Memo>({} as Memo);
 
+  const [imageModalId, setImageModalId] = useState<string>("");
+
   useEffect(() => {
     serverRequests
       .getEnvironment()
@@ -428,10 +430,10 @@ export default function ContextProvider({
       // setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     }
 
-    if (status === "unauthenticated" && isTestEnv === "false") { 
+    if (status === "unauthenticated" && isTestEnv === "false") {
       router.push("/api/auth/signin");
     }
-    if (status === "unauthenticated" && isTestEnv === "true") { 
+    if (status === "unauthenticated" && isTestEnv === "true") {
       router.push("/");
       setLoading(false);
       // serverRequests.deleteAllDataInCollection('User')
@@ -528,19 +530,6 @@ export default function ContextProvider({
     return `${number}${suffixes[number % 10] || "th"}`;
   };
 
-  // interface SelectStyle {
-  //   control: (base: Record<string, unknown>) => unknown;
-  //   singleValue: (base: Record<string, unknown>) => unknown;
-  // }
-
-  // const selectStyle: SelectStyle = {
-  //   control: (base: Record<string, unknown>) => ({ ...base, height: '3rem', backgroundColor: "transparent", borderRadius: "10px" }),
-  //   singleValue: (base: Record<string, unknown>) => ({
-  //     ...base,
-  //     color: 'invert',
-  //   }),
-  // }
-
   // Define the global values to be shared across the context
   const globals = {
     userData,
@@ -572,6 +561,8 @@ export default function ContextProvider({
     highlightText,
     setSearch,
     getOrdinal,
+    imageModalId,
+    setImageModalId,
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

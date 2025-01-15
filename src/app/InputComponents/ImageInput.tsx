@@ -34,7 +34,7 @@ const ImageInput: FC<ImageInputProps> = ({
   required,
   multiple,
 }) => {
-  const { handleImageModalClick, imageModalId, setImageModalId } =
+  const { handleImageModalClick, setImageModalId } =
     useAppContext();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,9 +94,11 @@ const ImageInput: FC<ImageInputProps> = ({
             width={imgDimensions?.width}
             alt={"   "}
             src={mediaList?.[0] || ""}
-            onClick={() => {
-              mediaList?.[0] && handleImageModalClick(mediaList || []);
-              setImageModalId(id);
+            onClick={() => {  
+              if(mediaList?.length){
+                handleImageModalClick(mediaList || []);
+                setImageModalId(id);
+              } 
             }}
           />
         </div>

@@ -41,13 +41,15 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
   const buttonStyle = `btn btn-circle btn-xs tooltip tooltip-left grid place-items-center z-40 bg-base-300`; 
 
   React.useEffect(() => { 
-    setSelectedOption(defaultValue);
+    if(!selectedOption){
+      setSelectedOption(defaultValue);
+    }
   }, [ defaultValue ]);
 
   React.useEffect(() => {
     if (!options) return;
     setFinalOptions(options);
-  }, [options]);
+  }, [ options ]);
 
   const handleCancel = () => {
     handleToggle();

@@ -157,8 +157,6 @@ const PrintMemorandumModal = () => {
   // };
 
   const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
-
-  console.log("memoForPrintModal", memoForPrintModal);
   return (
     <dialog className=" modal " id="MemoPrintModal">
       <div

@@ -44,6 +44,7 @@ const CreateEmployeeForm = () => {
     isRegular: null,
     isProductionEmployee: null,
     dailyWage: null,
+    isOJT: null
   };
 
   const [formData, setFormData] = useState<Employee>(
@@ -144,7 +145,7 @@ const CreateEmployeeForm = () => {
           ? e.target.value
           : parseFloat(e.target.value),
     });
-  }; 
+  };  
 
   const [companyOptions] = useState([
     { label: "Paper Boy", value: "PPB" },

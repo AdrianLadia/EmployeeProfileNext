@@ -530,6 +530,12 @@ export default function ContextProvider({
     return `${number}${suffixes[number % 10] || "th"}`;
   };
 
+  useEffect(()=>{
+    setImageModalId("")
+    setImageListForModal([])
+    setSelectedEmployee({} as Employee)
+  },[pathname])
+
   // Define the global values to be shared across the context
   const globals = {
     userData,

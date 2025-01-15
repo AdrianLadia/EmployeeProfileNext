@@ -42,6 +42,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
     isRegular: false,
     isProductionEmployee: false,
     dailyWage: 0,
+    isOJT: false,
   };
 
   const [formData, setFormData] = useState<Employee>(defaultFormData);

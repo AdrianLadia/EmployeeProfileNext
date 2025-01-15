@@ -5,7 +5,7 @@ import { useAppContext } from "../GlobalContext";
 import Image from "next/image";
 
 const ImageModal = () => {
-  const { imageListForModal, setImageListForModal, router } = useAppContext();
+  const { imageListForModal, setImageListForModal, router, imageModalId } = useAppContext(); 
 
   const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
@@ -33,7 +33,7 @@ const ImageModal = () => {
     return () => {
       imageModalRef.current?.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, []); 
 
   return (
     <dialog id="imageModal" className="modal w-full " ref={imageModalRef}>
@@ -52,8 +52,8 @@ const ImageModal = () => {
               {/* delete image */}
               <div
                 key={`item${index}`}
-                className=" absolute top-2 left-2 btn btn-error btn-sm btn-circle z-40 duration-0" 
-                onClick={() => handleDelete(index)}
+                className={`${!imageModalId?" hidden ":" "} absolute top-2 left-2 btn btn-error btn-sm btn-circle z-40 duration-0 `}
+                onClick={() => handleDelete(index)} 
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -132,6 +132,7 @@ def create_employee():
                     'company': data['company'],
                     'isRegular': data['isRegular'],
                     'isProductionEmployee': data['isProductionEmployee'],
+                    'isOJT': data['isOJT'],
                     'dailyWage': data['dailyWage'],
                     '_version': 0
                 })

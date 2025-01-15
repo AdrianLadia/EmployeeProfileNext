@@ -93,7 +93,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           });
 
           form.reset();
-          setFormData({} as Memo);
+          setFormData({
+            reason: null,
+            mediaList: null,
+            memoPhotosList: null,
+          } as Memo);
 
           router.refresh();
 

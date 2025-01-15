@@ -290,7 +290,24 @@ class UserActions(User):
     def deleteMemoAction(self, user, data):
         memo = Memo(**data)
         res = memo.deleteMemo(user)
-        return db.delete({'_id': res['_id']}, 'Memo')
+        delete = db.delete({'_id': res['_id']}, 'Memo')
+
+        employeeMemos = db.read(
+            {
+                'Employee._id': res['Employee']['_id'],
+                'MemoCode._id': res['MemoCode']['_id'],
+                'MemoCode._version': res['MemoCode']['_version']
+            }, 'Memo')
+
+        for index, memo in enumerate(employeeMemos):
+            offenseCount = index + 1
+            formattedDate = memo['date'].strftime('%y%m%d')
+            company = memo['Employee']['company']
+            newCode = f'{company}-{formattedDate}-{offenseCount}'
+            memo['Code'] = newCode
+            db.update({'_id': memo['_id']}, memo, 'Memo')
+
+        return delete
 
     def submitMemoAction(self, user, data, reason):
         memo = Memo(**data)
@@ -339,6 +356,8 @@ class UserActions(User):
                                 'photoOfPerson': 1,
                                 'dateJoined': 1,
                                 'isProductionEmployee': 1,
+                                'isOJT': 1,
+                                'isRegular': 1,
                             })
         return employees
 
@@ -461,21 +480,6 @@ class Memo(BaseModel):
         if self.submitted:
             raise ValueError('Memo has already been submitted')
 
-        employeeMemos = db.read(
-            {
-                'Employee._id': self.Employee.id,
-                'MemoCode._id': self.MemoCode.id,
-                'MemoCode._version': self.MemoCode.version
-            }, 'Memo')
-
-        offenseCount = len(employeeMemos) - 1
-        formattedDate = self.date.strftime('%y%m%d')
-        newCode = f'{self.Employee.company}-{formattedDate}-{offenseCount}'
-
-        for memo in employeeMemos:
-            memo['Code'] = newCode
-            db.update({'_id': memo['_id']}, memo, 'Memo')
-
         return self.to_dict()
 
     def submitMemo(self, user, reason):
@@ -506,6 +510,7 @@ class Employee(BaseModel):
     company: Optional[str]
     isRegular: Optional[bool]
     isProductionEmployee: Optional[bool]
+    isOJT: Optional[bool]
     dailyWage: Optional[Union[float, int]]
     version: int = Field(..., alias='_version')
 
@@ -542,6 +547,7 @@ class Employee(BaseModel):
             'company': self.company,
             'isRegular': self.isRegular,
             'isProductionEmployee': self.isProductionEmployee,
+            'isOJT': self.isOJT,
             'dailyWage': self.dailyWage,
             '_version': self.version
         }

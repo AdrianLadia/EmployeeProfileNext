@@ -375,12 +375,12 @@ class UserActions(User):
         if offenseCount >= len(remedialActions):
             return {
                 'remedialAction': remedialActions[-1],
-                'offenseCount': offenseCount
+                'offenseCount': offenseCount + 1
             }
 
         return {
             'remedialAction': remedialActions[offenseCount],
-            'offenseCount': offenseCount
+            'offenseCount': offenseCount + 1
         }
 
 
@@ -460,6 +460,21 @@ class Memo(BaseModel):
             raise ValueError('User does not have permission to delete a memo')
         if self.submitted:
             raise ValueError('Memo has already been submitted')
+
+        employeeMemos = db.read(
+            {
+                'Employee._id': self.Employee.id,
+                'MemoCode._id': self.MemoCode.id,
+                'MemoCode._version': self.MemoCode.version
+            }, 'Memo')
+
+        offenseCount = len(employeeMemos) - 1
+        formattedDate = self.date.strftime('%y%m%d')
+        newCode = f'{self.Employee.company}-{formattedDate}-{offenseCount}'
+
+        for memo in employeeMemos:
+            memo['Code'] = newCode
+            db.update({'_id': memo['_id']}, memo, 'Memo')
 
         return self.to_dict()
 

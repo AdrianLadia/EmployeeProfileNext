@@ -41,10 +41,14 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
   const buttonStyle = `btn btn-circle btn-xs tooltip tooltip-left grid place-items-center z-40 bg-base-300`; 
 
   React.useEffect(() => { 
-    if(!selectedOption){
-      setSelectedOption(defaultValue);
-    }
-  }, [ defaultValue ]);
+    // if(!selectedOption){
+      const timeout = setTimeout(() => {
+        setSelectedOption(defaultValue);
+      }, 10);
+
+      return () => clearTimeout(timeout);
+    // }  
+  }, [ defaultValue ]); 
 
   React.useEffect(() => {
     if (!options) return;
@@ -102,7 +106,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
       {/*  */}
       <input
         className={`
-          ${inputClassname} ${toggle ? " input " : " text-primary focus:text-primary"}
+          ${inputClassname} ${toggle ? " input " : "  "}
           input p-0 pl-1 input-ghost outline-none border-none
         `}
         type="text"

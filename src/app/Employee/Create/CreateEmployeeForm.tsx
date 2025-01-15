@@ -268,18 +268,9 @@ const CreateEmployeeForm = () => {
             width="w-full"
             inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
-            mediaList={ formData?.photoOfPerson ? [formData?.photoOfPerson ] : []}
-            // onChangeHandler={handleFileChange}
+            mediaList={ formData?.photoOfPerson ? [formData?.photoOfPerson ] : []} 
             setFunction={setFormData}
-          />
-          {/* <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
-                <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person    
-                    <Image src={formData?.photoOfPerson} className='h-[60px] hover:animate-pulse hover:cursor-wait' height={60} width={60} alt="photoOfPerson"  
-                    />
-                </div>
-                <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*'   
-                    onChange={handleFileChange}/>
-            </label> */}
+          /> 
 
           {/* resumePhotosList */}
           <ImageInput
@@ -292,15 +283,7 @@ const CreateEmployeeForm = () => {
             // onChangeHandler={handleFileChange}
             setFunction={setFormData}
             multiple={true}
-          />
-          {/* <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-between items-center mb-1 gap-1 relative'>Resume    
-                    <Image src={formData?.resumePhotosList[0]} className='h-[60px] hover:animate-pulse hover:cursor-wait' height={60} width={60} alt="resumePhotosList"  
-                    />
-                </div>
-                <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
-                    onChange={handleFileChange} multiple/>
-            </label> */}
+          /> 
 
           {/* biodataPhotosList */}
           <ImageInput
@@ -309,19 +292,10 @@ const CreateEmployeeForm = () => {
             width="w-full md:w-[48%]"
             inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
-            mediaList={formData?.biodataPhotosList || []}
-            // onChangeHandler={handleFileChange}
+            mediaList={formData?.biodataPhotosList || []} 
             setFunction={setFormData}
             multiple={true}
-          />
-
-          {/* <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-between items-center mb-1 gap-1 relative'>Bio Data   
-                    <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />
-                </div>
-                <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
-                    onChange={handleFileChange} multiple/>
-            </label> */}
+          /> 
         </div>
 
         {/* E-mail */}
@@ -368,7 +342,7 @@ const CreateEmployeeForm = () => {
             <SelectPlus
               options={companyOptions}
               onChange={(e, newValue) => { 
-                const valueToPass = typeof newValue == 'object' && newValue !== null ? (newValue as { value: string }).value.toString() : newValue ? newValue.toString() : null
+                const valueToPass = typeof newValue == 'object' && newValue !== null ? (newValue as { value: string }).value?.toString() : newValue ? newValue?.toString() : null
                 setFormData({ ...formData, company: valueToPass });
               }}
             />

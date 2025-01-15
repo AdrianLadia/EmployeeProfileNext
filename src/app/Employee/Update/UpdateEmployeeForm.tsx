@@ -252,7 +252,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     }),
   };
 
-  const [companyOptions] = useState([
+  const [companyOptions, setCompanyOptions] = useState([
     { label: "Paper Boy", value: "PPB" },
     { label: "Pustanan", value: "PPC" },
     { label: "Best Bags", value: "BB" },
@@ -269,6 +269,24 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       [imageModalId]: imageListForModal.length ? imageListForModal : null,
     });
   }, [imageListForModal, imageModalId]);
+
+  useEffect(() => {
+    if (selectedEmployee?._id) {
+      const res = companyOptions.find(
+        (company) => company.value == selectedEmployee.company
+      );
+      if(res == undefined || !res){ 
+        setCompanyOptions([
+          ...companyOptions,
+          {
+            label: selectedEmployee?.company || "",
+            value: selectedEmployee?.company || "",
+          }
+        ])
+      }
+    }
+  }, [selectedEmployee]);
+
 
   return (
     <form

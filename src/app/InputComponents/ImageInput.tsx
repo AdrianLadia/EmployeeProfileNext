@@ -105,6 +105,7 @@ const ImageInput: FC<ImageInputProps> = ({
         className={inputStyle}
         id={id}
         accept="image/*"
+        capture="environment" 
         required={required}
         disabled={disable}
         multiple={multiple}

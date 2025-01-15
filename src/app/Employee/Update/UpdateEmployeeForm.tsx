@@ -15,6 +15,8 @@ import ImageInput from "@/app/InputComponents/ImageInput";
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
 
+import SelectPlus from "@/app/InputComponents/SelectPlus";
+
 interface UpdateEmployeeForm {
   employeeList: Employee[];
 }
@@ -229,6 +231,14 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       color: "inherit",
     }),
   }; 
+
+    const [companyOptions] = useState([
+      { label: "Paper Boy", value: "PPB" },
+      { label: "Pustanan", value: "PPC" },
+      { label: "Best Bags", value: "BB" },
+      { label: "Starpack", value: "SP" },
+    ] as { label: string; value: string }[]); 
+  
 
   return (
     <form
@@ -466,7 +476,23 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       </label>
 
       {/* company */}
-      <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
+      <div className="flex flex-wrap justify-between text-sm gap-2 ">
+          <div className="flex flex-col text-sm gap-2 w-full">
+            Company
+            <SelectPlus
+              options={companyOptions}
+              disabled={disable}
+              defaultValue={formData?.company ? formData.company.toString() : ""}
+              onChange={(e, newValue) => { 
+                const valueToPass = typeof newValue == 'object' ? newValue?.value : newValue? newValue : null
+                setFormData({ ...formData, company: valueToPass });
+              }}
+            />
+          </div>
+        </div> 
+
+      {/* company */}
+      {/* <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
         Company
         <label className="input input-bordered flex items-center gap-2">
           <svg
@@ -491,7 +517,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             disabled={disable}
           />
         </label>
-      </div>
+      </div> */}
 
       <div className={"grid grid-cols-1 md:grid-cols-2 gap-2 "}>
         {/* isRegular */}

@@ -14,7 +14,7 @@ import SearchBar from "./Dashboard/SearchBar";
 
 import { getUserData, getTestUserData } from "./api/UserData";
 
-import UploadOffenseButton from "./UploadOffenseButton";
+// import UploadOffenseButton from "./UploadOffenseButton";
 
 export const metadata = {
   title: "| Dashboard",

@@ -72,9 +72,9 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
                   href={`/${key}`}
                   className={`${
                     pathname === `/${key}`
-                      ? " text-info underline "
-                      : "hover:text-info hover:underline"
-                  } font-semibold `}
+                      ? " border-info text-info "
+                      : " hover:text-info border-gray-300 "
+                  } font-semibold btn btn-sm badge `}
                   id={`${key}-button`}
                 >
                   {key}
@@ -87,7 +87,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
                       className={` ${
                         pathname === card.path
                           ? " border-info text-info"
-                          : " hover:bg-base-200 hover:text-white border-gray-300 "
+                          : " hover:bg-base-200 hover:text-info border-gray-300 "
                       }
                         flex justify-start mt-1 btn w-full h-12 border bg-base-100 
                       `}

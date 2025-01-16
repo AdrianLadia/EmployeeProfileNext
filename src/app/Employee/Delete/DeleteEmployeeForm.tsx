@@ -136,6 +136,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
         </div> */}
 
       <Select
+        id="Employee"
         styles={selectStyle || {}}
         options={employeeList}
         placeholder="Select Employee"

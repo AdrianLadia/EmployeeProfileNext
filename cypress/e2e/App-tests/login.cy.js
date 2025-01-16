@@ -2,7 +2,7 @@ import ServerRequests from '../../../src/app/api/ServerRequests'
 import {
   CreateEmployee,
   UpdateEmployee,
-  // DeleteEmployee,
+  DeleteEmployee,
   CreateOffense,
   UpdateOffense,
   DeleteOffense,
@@ -88,6 +88,7 @@ describe('Employee spec', () => {
         "minor.png",
       )
 
+
       // Submit memo
       SubmitMemo({
         employee: "John Doe Letigio",
@@ -95,12 +96,13 @@ describe('Employee spec', () => {
       })
 
       // Delete Employee
-      // DeleteEmployee(
-      //   "John Doe Letigio"
-      // )
+      DeleteEmployee(
+        "John Doe Letigio"
+      )
 
       // Delete Offense
       DeleteOffense('Employee was late to work multiple times')
+
       Home()
     })
   })

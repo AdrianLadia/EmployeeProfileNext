@@ -9,7 +9,7 @@ export const metadata = {
 
 const page = () => {
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center relative">
+    <div className="w-screen h-screen flex flex-col items-center justify-center relative ">
       {/* CreateEmployeeForm container */}
       <div className={` form-container `}>
         <CreateEmployeeForm />

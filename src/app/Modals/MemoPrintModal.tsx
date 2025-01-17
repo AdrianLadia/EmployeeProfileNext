@@ -8,6 +8,8 @@ import html2canvas from "html2canvas-pro";
 
 import jsPDF from "jspdf";
 
+import Image from "next/image";
+
 const style: React.CSSProperties = {
   position: "absolute",
   top: "50%",
@@ -20,28 +22,28 @@ const style: React.CSSProperties = {
 
 const PrintMemorandumModal = () => {
   const memoRef = useRef(null);
+  const memoImgRef = useRef(null);
+  const memoMediaRef = useRef(null);
 
   const { memoForPrintModal, setMemoForPrintModal } = useAppContext();
 
-  const [resolution, setResolution] = React.useState(3);
+  const [resolution, setResolution] = React.useState(1);
+
+  const [includeMediaList, setIncludeMediaList] = React.useState(false);
+  const [includeMemoPhotos, setIncludeMemoPhotos] = React.useState(false);
 
   const convertToPdf = async () => {
-    // Desktop dimensions to simulate
-    const desktopWidth = 1200; // Adjust as needed for desktop
-    const desktopHeight = 800; // Adjust as needed for desktop
+    const desktopWidth = 1200;
+    const desktopHeight = 800;
 
-    // Store the original dimensions of the window
     const originalWidth = window.innerWidth;
     const originalHeight = window.innerHeight;
 
-    // Resize the window to simulate a desktop view
     window.innerWidth = desktopWidth;
     window.innerHeight = desktopHeight;
 
-    // Trigger resize event to adjust the layout (if necessary)
     window.dispatchEvent(new Event("resize"));
 
-    // Ensure element exists before proceeding
     const element = memoRef.current;
     if (!element) {
       console.error("Element not found");
@@ -49,112 +51,96 @@ const PrintMemorandumModal = () => {
     }
 
     try {
-      // Capture the element with html2canvas
       const canvas = await html2canvas(element, {
-        scale: resolution, // Higher scale for better quality
-        useCORS: true, // Handles cross-origin images
+        scale: resolution,
+        useCORS: true,
       });
 
-      // Get the image data from the canvas
       const imgData = canvas.toDataURL("image/png");
 
-      // Define A4 paper dimensions in points (1 point = 1/72 inch)
-      const A4_WIDTH = 595.28; // A4 width in points
-      const A4_HEIGHT = 841.89; // A4 height in points
+      const A4_WIDTH = 595.28;
+      const A4_HEIGHT = 841.89;
 
-      // Calculate scaling to fit content within A4 size while maintaining aspect ratio
       const scaleX = A4_WIDTH / canvas.width;
       const scaleY = A4_HEIGHT / canvas.height;
       const scale = Math.min(scaleX, scaleY);
 
-      // Calculate scaled dimensions
       const scaledWidth = canvas.width * scale;
       const scaledHeight = canvas.height * scale;
 
-      // Create a new jsPDF instance with A4 format
       const pdf = new jsPDF({
         orientation: "portrait",
-        unit: "pt", // Points (1 pt = 1/72 inch)
-        format: "a4", // Set to A4
+        unit: "pt",
+        format: "a4",
       });
 
-      // Center the content on the A4 page
       const xOffset = (A4_WIDTH - scaledWidth) / 2;
       const yOffset = (A4_HEIGHT - scaledHeight) / 2;
 
-      // Add the image to the PDF, scaled and centered
       pdf.addImage(imgData, "PNG", xOffset, yOffset, scaledWidth, scaledHeight);
 
-      // Save the PDF with a filename based on the employee's name
+      if (memoForPrintModal?.memoPhotosList?.[0] && includeMemoPhotos) {
+        pdf.addPage();
+
+        const imgElement = memoImgRef.current;
+        if (!imgElement) {
+          console.error("Element not found");
+          return;
+        }
+
+        const memoPhoto = await html2canvas(imgElement, {
+          scale: 3,
+          useCORS: true,
+        });
+
+        const memoPhotoURL = memoPhoto.toDataURL("image/png");
+
+        pdf.addImage(
+          memoPhotoURL,
+          "PNG",
+          xOffset,
+          yOffset,
+          scaledWidth,
+          scaledHeight
+        );
+      }
+
+      if (memoForPrintModal?.mediaList?.[0] && includeMediaList) {
+        pdf.addPage();
+
+        const imgElement = memoMediaRef.current;
+        if (!imgElement) {
+          console.error("Element not found");
+          return;
+        }
+
+        const memoPhoto = await html2canvas(imgElement, {
+          scale: 3,
+          useCORS: true,
+        });
+
+        const memoPhotoURL = memoPhoto.toDataURL("image/png");
+
+        pdf.addImage(
+          memoPhotoURL,
+          "PNG",
+          xOffset,
+          yOffset,
+          scaledWidth,
+          scaledHeight
+        );
+      }
+
       pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     } finally {
-      // Restore the original window dimensions after the process
       window.innerWidth = originalWidth;
       window.innerHeight = originalHeight;
 
-      // Dispatch resize event to revert layout back to mobile (if necessary)
       window.dispatchEvent(new Event("resize"));
     }
   };
-
-  // const convertToPdf = async () => {
-  //   // Desktop dimensions to simulate
-  //   const desktopWidth = 1200; // Adjust as needed for desktop
-  //   const desktopHeight = 800; // Adjust as needed for desktop
-
-  //   // Store the original dimensions of the window
-  //   const originalWidth = window.innerWidth;
-  //   const originalHeight = window.innerHeight;
-
-  //   // Resize the window to simulate a desktop view
-  //   window.innerWidth = desktopWidth;
-  //   window.innerHeight = desktopHeight;
-
-  //   // Trigger resize event to adjust the layout (if necessary)
-  //   window.dispatchEvent(new Event("resize"));
-
-  //   // Ensure element exists before proceeding
-  //   const element = memoRef.current;
-  //   if (!element) {
-  //     console.error("Element not found");
-  //     return;
-  //   }
-
-  //   try {
-  //     // Capture the element with html2canvas
-  //     const canvas = await html2canvas(element, {
-  //       scale: resolution, // Higher scale for better quality
-  //       useCORS: true, // Handles cross-origin images
-  //     });
-
-  //     // Get the image data from the canvas
-  //     const imgData = canvas.toDataURL("image/png");
-
-  //     // Create a new jsPDF instance, setting the format to match the canvas size
-  //     const pdf = new jsPDF({
-  //       orientation: "portrait",
-  //       unit: "px",
-  //       format: [canvas.width, canvas.height], // Match the canvas size
-  //     });
-
-  //     // Add the image data to the PDF, with appropriate scaling
-  //     pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-
-  //     // Save the PDF with a filename based on the employee's name
-  //     pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
-  //   } catch (error) {
-  //     console.error("Error generating PDF:", error);
-  //   } finally {
-  //     // Restore the original window dimensions after the process
-  //     window.innerWidth = originalWidth;
-  //     window.innerHeight = originalHeight;
-
-  //     // Dispatch resize event to revert layout back to mobile (if necessary)
-  //     window.dispatchEvent(new Event("resize"));
-  //   }
-  // };
 
   const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
   return (
@@ -169,7 +155,7 @@ const PrintMemorandumModal = () => {
             data-tip={`Quality`}
           >
             <input
-              type="range" 
+              type="range"
               min={1}
               max="3"
               step="1"
@@ -178,11 +164,46 @@ const PrintMemorandumModal = () => {
               className="range z-10 opacity-50 hover:opacity-100"
               onChange={(e) => setResolution(parseInt(e.target.value))}
             />
+            {/* resolution */}
             <div className="absolute -z-10 text-xs flex justify-between w-full px-2 font-bold">
               <p className="text-xs">|</p>
               <p className="text-xs">|</p>
               <p className="text-xs">|</p>
             </div>
+          </div>
+
+          <div
+            className=" flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5"
+            data-tip="Include"
+          >
+            {memoForPrintModal?.mediaList?.[0] && (
+              <>
+                <label htmlFor="Media">Media</label>
+                <input
+                  className="checkbox tooltip tooltip-bottom "
+                  type="checkbox"
+                  name="Media"
+                  checked={includeMediaList}
+                  onChange={() => setIncludeMediaList(!includeMediaList)}
+                  id="Media"
+                  data-tip="Include Media"
+                />
+              </>
+            )}
+            {memoForPrintModal?.memoPhotosList?.[0] && (
+              <>
+                <input
+                  className="checkbox tooltip tooltip-bottom "
+                  type="checkbox"
+                  name="Memo Photo"
+                  checked={includeMemoPhotos}
+                  onChange={() => setIncludeMemoPhotos(!includeMemoPhotos)}
+                  id="Memo Photo"
+                  data-tip="Include Memo Photo"
+                />
+                <label htmlFor="Memo Photo"> Memo Photo</label>
+              </>
+            )}
           </div>
 
           <form
@@ -193,11 +214,10 @@ const PrintMemorandumModal = () => {
             <button
               onClick={() => setMemoForPrintModal({} as Memo)}
               className=" close-button "
-            >
-              
-            </button>
+            ></button>
           </form>
 
+          {/* printable div */}
           <div className="h-max w-full pt-3 px-4 pb-3 bg-white" ref={memoRef}>
             <h1 className="text-3xl"> Memorandum </h1>
 
@@ -307,6 +327,43 @@ const PrintMemorandumModal = () => {
               {" "}
               For management use only{" "}
             </div>
+          </div>
+
+          {/* medialist */}
+          <div
+            hidden={
+              memoForPrintModal?.mediaList?.[0] && includeMediaList
+                ? false
+                : true
+            }
+            className="h-full w-full py-8 px-4 bg-white"
+            ref={memoMediaRef}
+          >
+            <Image
+              className="w-full h-full"
+              src={memoForPrintModal?.mediaList?.[0] || ""}
+              width={400}
+              height={400}
+              alt="test"
+            />
+          </div>
+          {/* memoPhotosList */}
+          <div
+            hidden={
+              memoForPrintModal?.memoPhotosList?.[0] && includeMemoPhotos
+                ? false
+                : true
+            }
+            className="h-full w-full py-8 px-4 bg-white"
+            ref={memoImgRef}
+          >
+            <Image
+              className="w-full h-full"
+              src={memoForPrintModal?.memoPhotosList?.[0] || ""}
+              width={400}
+              height={400}
+              alt="test"
+            />
           </div>
         </div>
 

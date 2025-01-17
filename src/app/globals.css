@@ -18,5 +18,5 @@
 }
 
 .close-button {
-  @apply btn btn-error hover:bg-base-100/40 text-white btn-sm h-8 w-8 btn-circle
+  @apply btn btn-error hover:bg-transparent text-white btn-sm h-8 w-8 btn-circle
 }

@@ -97,7 +97,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
     if (typeof option === "object" && "value" in option) {
       return option.value?.toString();
     }
-    return option as {};
+    return option ;
   };
 
   return (
@@ -116,7 +116,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
         placeholder="Enter Option"
         value={addedOption}
         id="company"
-        onKeyDown={(e) => {e.key === "Enter" && handleSave()}}
+        onKeyDown={(e) => { if(e.key === "Enter" ){handleSave()}}}
         onChange={(e) => {
           setAddedOption(e.target.value);
         }}

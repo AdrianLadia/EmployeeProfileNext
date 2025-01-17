@@ -128,9 +128,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           selectedEmployee,
           dataToUpdate,
           userData
-        );
-
-        console.log("res", res);
+        );  
 
         if (res && res.message) {
           form.reset();
@@ -145,7 +143,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           });
           formRef.current?.scrollIntoView({ behavior: "smooth" });
           router.refresh();
-        } else {
+        } else { 
           setToastOptions({
             open: true,
             message: res.error,
@@ -274,8 +272,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     if (selectedEmployee?._id) {
       const res = companyOptions.find(
         (company) => company.value == selectedEmployee.company
-      );
-      if(res == undefined || !res){ 
+      ); 
+      if((res == undefined || !res) && selectedEmployee?.company){  
         setCompanyOptions([
           ...companyOptions,
           {
@@ -285,8 +283,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         ])
       }
     }
-  }, [selectedEmployee]);
-
+  }, [selectedEmployee]); 
 
   return (
     <form
@@ -491,7 +488,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           <SelectPlus
             options={companyOptions}
             disabled={disable}
-            defaultValue={formData?.company ? formData.company.toString() : ""}
+            defaultValue={formData?.company?.toString() || undefined}
             onChange={(e, newValue) => {
               const valueToPass =
                 typeof newValue == "object" && newValue !== null
@@ -500,6 +497,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
                   ? newValue.toString()
                   : null;
               setFormData({ ...formData, company: valueToPass });
+              setDataToUpdate({ ...dataToUpdate, company: valueToPass });
             }}
           />
         </div>

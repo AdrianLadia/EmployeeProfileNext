@@ -93,8 +93,7 @@ const EmployeeDetails = () => {
         userData,
         selectedEmployee?._id || ""
       );
-      if (res?.data) {
-        console.log(res.data, "res.data");
+      if (res?.data) { 
         setSelectedEmployeeMemos(res.data);
       }
     } catch (e) {

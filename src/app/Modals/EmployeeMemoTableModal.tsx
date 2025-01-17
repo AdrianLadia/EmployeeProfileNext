@@ -134,7 +134,7 @@ const EmployeeMemoTableModal = () => {
                     <td>
                       {" "}
                       <Image
-                        className="w-[150px] h-[150px] hover:border cursor-pointer"
+                        className={` w-[150px] h-[150px] ${memo?.mediaList?.[0] && "hover:border"} cursor-pointer `}
                         src={memo?.mediaList?.[0] || ""}
                         width={100}
                         height={100}
@@ -149,7 +149,7 @@ const EmployeeMemoTableModal = () => {
                     <td>
                       {" "}
                       <Image
-                        className="w-[150px] h-[150px] hover:border cursor-pointer"
+                        className={` w-[150px] h-[150px] ${memo?.memoPhotosList?.[0] && "hover:border"} cursor-pointer `}
                         src={memo?.memoPhotosList?.[0] || ""}
                         width={100}
                         height={100}

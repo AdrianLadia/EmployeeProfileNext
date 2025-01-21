@@ -10,7 +10,7 @@ const DashboardButton: FC<DashboardButtonProps> = ({pathname}) => {
   return (
     <Link href={"/Dashboard"}
       className={` ${pathname == '/Dashboard' ? "border-info bg-info text-white" : "border-gray-400 text-gray-400  hover:border-info hover:text-info"}
-        tooltip tooltip-top 
+        md:tooltip tooltip-top 
         backdrop-blur-xl shadow-md shadow-gray-400
         p-3 border rounded-box
       `} data-tip="Dashboard" id="dashboard-button"

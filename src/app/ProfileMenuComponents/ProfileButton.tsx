@@ -14,7 +14,7 @@ const ProfileButton: FC<ProfileButtonProps> = ({ userData, handleMenuClick, show
   return (
     <div 
         className={` 
-          z-[60] cursor-pointer w-full h-full ${!showMenu && " tooltip-left tooltip "} 
+          z-[60] cursor-pointer w-full h-full ${!showMenu && " tooltip-left md:tooltip "} 
       `}
         onClick={()=>handleMenuClick()}
         data-tip="Profile"

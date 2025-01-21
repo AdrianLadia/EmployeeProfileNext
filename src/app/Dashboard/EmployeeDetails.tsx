@@ -192,7 +192,7 @@ const EmployeeDetails = () => {
                   ? " bg-warning animate-pulse "
                   : " bg-success "
               }
-              cursor-pointer tooltip-top tooltip indicator-item badge text-white absolute `}
+              cursor-pointer tooltip-top md:tooltip indicator-item badge text-white absolute `}
             data-tip={`${
               fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
             } Memos`}

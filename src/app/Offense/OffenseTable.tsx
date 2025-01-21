@@ -96,7 +96,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
                   {offense?.remedialActions?.map((action, index) => (
                     <div
                       key={action + index}
-                      className=" flex text-start px-2 py-1 rounded-box bg-neutral text-neutral-content shadow-base-content tooltip tooltip-accent"
+                      className=" flex text-start px-2 py-1 rounded-box bg-neutral text-neutral-content shadow-base-content md:tooltip tooltip-accent"
                       data-tip={`${getOrdinal(index + 1)} Offense`}
                     >
                       <span>{highlightText(action)}</span>

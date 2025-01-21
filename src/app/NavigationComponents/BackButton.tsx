@@ -14,7 +14,7 @@ const BackButton = () => {
         router.push('/')
       }
         className=' 
-          fixed top-2 left-2 md:top-4 md:left-4 h-12 w-12 text-xl border tooltip tooltip-right
+          fixed top-2 left-2 md:top-4 md:left-4 h-12 w-12 text-xl border md:tooltip tooltip-right
           bg-base-200/80 hover:border-info hover:text-info z-40
           shadow-sm shadow-gray-600 p-4 rounded-box flex items-center justify-normal 
         '

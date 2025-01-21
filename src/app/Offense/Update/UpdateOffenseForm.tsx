@@ -263,7 +263,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
             return (
               <div
                 key={index}
-                className={` indicator ${position && "tooltip tooltip-accent"}`}
+                className={` indicator ${position && "md:tooltip tooltip-accent"}`}
                 data-tip={`Action on ${getOrdinal(position)} Offense`}
               >
                 <input

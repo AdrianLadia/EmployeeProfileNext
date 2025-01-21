@@ -38,7 +38,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
   );
 
   const inputClassname = `${toggle ? " w-[90%] " : " w-[80%] "} h-full `;
-  const buttonStyle = `btn btn-circle btn-xs tooltip tooltip-left grid place-items-center z-40 bg-base-300`; 
+  const buttonStyle = `btn btn-circle btn-xs md:tooltip tooltip-left grid place-items-center z-40 bg-base-300`; 
 
   React.useEffect(() => {    
     setSelectedOption(defaultValue); 

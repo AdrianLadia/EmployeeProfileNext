@@ -124,7 +124,7 @@ const PrintMemorandumModal = () => {
       >
         <div className="w-full h-full overflow-auto pt-8 ">
           <div
-            className=" gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom tooltip group "
+            className=" gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom md:tooltip group "
             data-tip={`Quality`}
           >
             <input
@@ -146,7 +146,7 @@ const PrintMemorandumModal = () => {
           </div>
 
           <div
-            className=" flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 tooltip tooltip-bottom" 
+            className=" flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 md:tooltip tooltip-bottom" 
             data-tip="Include"
           > 
             {memoForPrintModal?.memoPhotosList?.[0] && (

@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function Home() {  
 
-  const buttonStyle = `btn btn-outline border border-gray-300 join-item md:w-[33%] tooltip flex item-center`;
+  const buttonStyle = `btn btn-outline border border-gray-300 join-item md:w-[33%] md:tooltip flex item-center`;
 
   return (
     <>

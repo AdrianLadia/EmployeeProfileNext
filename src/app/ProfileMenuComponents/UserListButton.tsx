@@ -17,7 +17,7 @@ const UserListButton = (props: Props) => {
             href={"/User"}
             className={`${
               pathname != "/User"
-                ? " absolute top-3 right-3 tooltip tooltip-left tooltip-info hover:text-info cursor-pointer "
+                ? " absolute top-3 right-3 md:tooltip tooltip-left tooltip-info hover:text-info cursor-pointer "
                 : " hidden "
             }  `}
             data-tip={"Users"}

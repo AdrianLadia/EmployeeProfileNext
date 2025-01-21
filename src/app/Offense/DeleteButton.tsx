@@ -13,7 +13,7 @@ const DeleteButton = () => {
 
   return (
     <button
-      className="btn btn-error btn-sm tooltip tooltip-left text-white md:tooltip-top tooltip-error"
+      className="btn btn-error btn-sm md:tooltip tooltip-left text-white md:tooltip-top tooltip-error"
       onClick={handleClick}
       data-tip="Delete Offense"
     >

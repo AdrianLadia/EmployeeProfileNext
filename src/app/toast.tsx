@@ -72,7 +72,7 @@ const Toast = () => {
                 role='alert'
             >
                 <span 
-                    className={` text-start break-words tooltip tooltip-top ${getToastType()[2]} whitespace-pre-line`} 
+                    className={` text-start break-words md:tooltip tooltip-top ${getToastType()[2]} whitespace-pre-line`} 
                     data-tip="Copy and Close"
                 >{toastOptions?.message}</span>
             </div>

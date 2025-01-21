@@ -14,7 +14,7 @@ const UpdateButton = () => {
   return (
     <button
       className="btn bg-violet-500 hover:bg-violet-500 text-white
-       btn-sm tooltip tooltip-left md:tooltip-top tooltip-top"
+       btn-sm md:tooltip tooltip-left md:tooltip-top tooltip-top"
       onClick={handleClick}
       data-tip="Update Offense"
     >

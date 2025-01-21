@@ -12,7 +12,7 @@ const OffenseDownloadButton = () => {
 
   return (
     <button
-      className="btn btn-info btn-sm tooltip tooltip-left text-white md:tooltip-top tooltip-info"
+      className="btn btn-info btn-sm md:tooltip tooltip-left text-white md:tooltip-top tooltip-info"
       onClick={handleClick}
       data-tip="Download"
     >

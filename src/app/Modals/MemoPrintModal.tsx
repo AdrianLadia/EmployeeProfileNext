@@ -22,15 +22,14 @@ const style: React.CSSProperties = {
 
 const PrintMemorandumModal = () => {
   const memoRef = useRef(null);
-  const memoImgRef = useRef(null);
-  const memoMediaRef = useRef(null);
+  const memoImgRef = useRef(null); 
 
   const { memoForPrintModal, setMemoForPrintModal } = useAppContext();
 
   const [resolution, setResolution] = React.useState(1);
 
-  const [includeMediaList, setIncludeMediaList] = React.useState(false);
-  const [includeMemoPhotos, setIncludeMemoPhotos] = React.useState(false);
+  const [includeMediaList, setIncludeMediaList] = React.useState(true);
+  const [includeMemoPhotos, setIncludeMemoPhotos] = React.useState(true);
 
   const convertToPdf = async () => {
     const desktopWidth = 1200;
@@ -103,33 +102,7 @@ const PrintMemorandumModal = () => {
           scaledWidth,
           scaledHeight
         );
-      }
-
-      if (memoForPrintModal?.mediaList?.[0] && includeMediaList) {
-        pdf.addPage();
-
-        const imgElement = memoMediaRef.current;
-        if (!imgElement) {
-          console.error("Element not found");
-          return;
-        }
-
-        const memoPhoto = await html2canvas(imgElement, {
-          scale: 3,
-          useCORS: true,
-        });
-
-        const memoPhotoURL = memoPhoto.toDataURL("image/png");
-
-        pdf.addImage(
-          memoPhotoURL,
-          "PNG",
-          xOffset,
-          yOffset,
-          scaledWidth,
-          scaledHeight
-        );
-      }
+      } 
 
       pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
     } catch (error) {
@@ -173,33 +146,18 @@ const PrintMemorandumModal = () => {
           </div>
 
           <div
-            className=" flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5"
+            className=" flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 tooltip tooltip-bottom" 
             data-tip="Include"
-          >
-            {memoForPrintModal?.mediaList?.[0] && (
-              <>
-                <label htmlFor="Media">Media</label>
-                <input
-                  className="checkbox tooltip tooltip-bottom "
-                  type="checkbox"
-                  name="Media"
-                  checked={includeMediaList}
-                  onChange={() => setIncludeMediaList(!includeMediaList)}
-                  id="Media"
-                  data-tip="Include Media"
-                />
-              </>
-            )}
+          > 
             {memoForPrintModal?.memoPhotosList?.[0] && (
               <>
                 <input
-                  className="checkbox tooltip tooltip-bottom "
+                  className="checkbox "
                   type="checkbox"
                   name="Memo Photo"
                   checked={includeMemoPhotos}
                   onChange={() => setIncludeMemoPhotos(!includeMemoPhotos)}
                   id="Memo Photo"
-                  data-tip="Include Memo Photo"
                 />
                 <label htmlFor="Memo Photo"> Memo Photo</label>
               </>
@@ -327,26 +285,7 @@ const PrintMemorandumModal = () => {
               {" "}
               For management use only{" "}
             </div>
-          </div>
-
-          {/* medialist */}
-          <div
-            hidden={
-              memoForPrintModal?.mediaList?.[0] && includeMediaList
-                ? false
-                : true
-            }
-            className="h-full w-full py-8 px-4 bg-white"
-            ref={memoMediaRef}
-          >
-            <Image
-              className="w-full h-full"
-              src={memoForPrintModal?.mediaList?.[0] || ""}
-              width={400}
-              height={400}
-              alt="test"
-            />
-          </div>
+          </div> 
           {/* memoPhotosList */}
           <div
             hidden={

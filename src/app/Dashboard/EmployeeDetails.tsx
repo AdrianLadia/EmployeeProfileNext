@@ -33,7 +33,7 @@ const EmployeeDetails = () => {
     {} as Employee
   );
 
-  const [ errorMessage, setErrorMessage ] = React.useState<string>("");
+  const [errorMessage, setErrorMessage] = React.useState<string>("");
 
   const [fetchingMemos, setFetchingMemos] = React.useState<boolean>(false);
 
@@ -65,10 +65,10 @@ const EmployeeDetails = () => {
       const res = await serverRequests.getEmployeeDetailsAction(
         userData,
         selectedEmployee?._id || ""
-      ); 
+      );
       if (res?.data) {
         setSelectedEmployeeDetails(res.data);
-      } 
+      }
       if (res?.error) {
         setToastOptions({
           open: true,
@@ -93,7 +93,7 @@ const EmployeeDetails = () => {
         userData,
         selectedEmployee?._id || ""
       );
-      if (res?.data) { 
+      if (res?.data) {
         setSelectedEmployeeMemos(res.data);
       }
     } catch (e) {
@@ -112,7 +112,7 @@ const EmployeeDetails = () => {
       if (selectedEmployee._id) {
         getSelectedEmployeeDetails();
 
-        dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" }); 
+        dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       }
 
       if (!selectedEmployee._id) {
@@ -136,6 +136,48 @@ const EmployeeDetails = () => {
       timer: 2,
     });
     navigator.clipboard.writeText(textToCopy);
+  };
+
+  const detailComponent = () => {
+    const xlist = [
+      "name",
+      "address",
+      "resumePhotosList",
+      "biodataPhotosList",
+      "photoOfPerson",
+      "_id",
+      "_version",
+    ];
+
+    return (
+      <>
+        {Object.keys(selectedEmployeeDetails).map((key) => {
+          if (!xlist.includes(key)) {
+            return (
+              <div
+                key={key}
+                className={detailStyle(
+                  Boolean(selectedEmployeeDetails[key as keyof Employee])
+                )}
+              >
+                <strong className="text-base select-all">
+                  {selectedEmployeeDetails[key as keyof Employee] == true ? (
+                    <strong>✔</strong>
+                  ) : key == "dateJoined" ? (
+                    selectedEmployeeDetails[key as keyof Employee]?.toString().substring(5, 17)
+                  ) : (
+                    selectedEmployeeDetails[key as keyof Employee]
+                  )}
+                </strong>
+
+                <p className="capitalize">{key}</p>
+              </div>
+            );
+          }
+          return null;
+        })}
+      </>
+    );
   };
 
   return (
@@ -292,8 +334,21 @@ const EmployeeDetails = () => {
         <div className={skeletonStyle + " h-12 w-32 grow"}></div>
         <div className={skeletonStyle + " h-12 w-40 grow"}></div>
 
+        {detailComponent()}
+
+        <div
+          className={detailStyle(Boolean(selectedEmployeeDetails?.dateJoined))}
+        > 
+          <strong className="text-base">
+            {selectedEmployee?.dateJoined && Math.floor((new Date().getTime() -
+              new Date(selectedEmployee?.dateJoined || "").getTime()) /
+              (1000 * 60 * 60 * 24))}
+          </strong>
+          Days with Us
+        </div>
+
         {/* details */}
-        <div className={detailStyle(Boolean(selectedEmployeeDetails?.company))}>
+        {/* <div className={detailStyle(Boolean(selectedEmployeeDetails?.company))}>
           <strong className="text-base">
             {selectedEmployeeDetails?.company}
           </strong>
@@ -353,17 +408,7 @@ const EmployeeDetails = () => {
           <strong className="text-base">✔</strong>
           isRegular
         </div>
-        <div
-          className={detailStyle(Boolean(selectedEmployeeDetails?.dateJoined))}
-        >
-          {/* <strong className="text-base">{daysWithUs?.toLocaleString()}</strong> */}
-          <strong className="text-base">
-            {selectedEmployee?.dateJoined && Math.floor((new Date().getTime() -
-              new Date(selectedEmployee?.dateJoined || "").getTime()) /
-              (1000 * 60 * 60 * 24))}
-          </strong>
-          Days with Us
-        </div>
+         */}
       </div>
 
       <div className="absolute flex justify-stretch bottom-2 gap-4 w-full text-center py-1 px-4">

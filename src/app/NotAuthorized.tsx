@@ -35,7 +35,7 @@ const NotAuthorized = (props: Props) => {
           ></path>
         </svg>
         <span className="text-lg">{employeeResponse.error}</span>
-        <div className="flex flex-col md:flex-row tooltip" data-tip="Home">
+        <div className="flex flex-col md:flex-row md:tooltip" data-tip="Home">
           <Link href={"/"} className="btn btn-sm btn-neutral ">
             <svg
               xmlns="http://www.w3.org/2000/svg"

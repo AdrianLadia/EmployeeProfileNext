@@ -48,11 +48,11 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
 
     setSearch(search);
 
-    const searchQuery = search?.toLowerCase() || "";
+    const searchQuery = search?.toLowerCase() || ""; 
 
     const filteredListForTable = employeeList.filter(
-      ({ address, name, email, company, phoneNumber, dateJoined }) =>
-        [address, name, email, company, phoneNumber, dateJoined].some((field) =>
+      ({ address, name, email, company, phoneNumber, dateJoined, isOJT }) =>
+        [address, name, email, company, phoneNumber, dateJoined, isOJT ? "OJT" : ""].some((field) =>
           field?.toLowerCase().includes(searchQuery)
         )
     );
@@ -133,6 +133,14 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
               {highlightText(
                 employee.company ? employee.company.toString() : ""
               )}
+               
+              {highlightText(
+                employee.isOJT ? "(OJT)" : ""
+              )}
+
+              {/* {employee.isOJT && (
+                <span className="text-xs text-gray-500"> (OJT)</span>
+              )} */}
             </td>
           </tr>
         ))}

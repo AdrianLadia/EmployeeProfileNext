@@ -38,7 +38,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
   );
 
   const inputClassname = `${toggle ? " w-[90%] " : " w-[80%] "} h-full `;
-  const buttonStyle = `btn btn-circle btn-xs tooltip tooltip-left grid place-items-center z-40 bg-base-300`; 
+  const buttonStyle = `btn btn-circle btn-xs grid place-items-center z-40 bg-base-300`; 
 
   React.useEffect(() => {    
     setSelectedOption(defaultValue); 
@@ -156,7 +156,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
         {/* add */}
         {toggle && (
           <button
-            className={buttonStyle + "  "}
+            className={buttonStyle + "  md:tooltip md:tooltip-left  "}
             onClick={() => handleToggle()}
             data-tip="Add Option"
             disabled={disabled}
@@ -178,11 +178,11 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
             </svg>
           </button>
         )}
-        {/* save & cancel */}
+        {/* cancel & save */}
         {!toggle && (
           // cancel
           <button
-            className={buttonStyle + " btn- "}
+            className={buttonStyle + "  md:tooltip md:tooltip-left  "}
             onClick={() => handleCancel()}
             data-tip="Cancel"
             disabled={disabled}
@@ -206,7 +206,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
         {!toggle && (
           // save
           <button
-            className={buttonStyle + " tooltip-success bg-green-200 disabled:bg-gray-300 "}
+            className={buttonStyle + " tooltip tooltip-left tooltip-success bg-green-200 disabled:bg-gray-300 "}
             disabled={disabled ? true : addedOption ? false : true}
             onClick={() => handleSave()}
             data-tip="Save"

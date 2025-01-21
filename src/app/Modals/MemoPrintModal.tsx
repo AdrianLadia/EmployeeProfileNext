@@ -26,9 +26,7 @@ const PrintMemorandumModal = () => {
 
   const { memoForPrintModal, setMemoForPrintModal } = useAppContext();
 
-  const [resolution, setResolution] = React.useState(1);
-
-  const [includeMediaList, setIncludeMediaList] = React.useState(true);
+  const [resolution, setResolution] = React.useState(1); 
   const [includeMemoPhotos, setIncludeMemoPhotos] = React.useState(true);
 
   const convertToPdf = async () => {
@@ -146,7 +144,7 @@ const PrintMemorandumModal = () => {
           </div>
 
           <div
-            className=" flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 tooltip tooltip-bottom" 
+            className=" flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 md:tooltip tooltip-bottom" 
             data-tip="Include"
           > 
             {memoForPrintModal?.memoPhotosList?.[0] && (

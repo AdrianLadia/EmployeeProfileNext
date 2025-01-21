@@ -72,7 +72,7 @@ const EmployeeMemoTableModal = () => {
                     {/* print */}
                     <td className="w-max text-center ">
                       <button
-                        className="hover:text-blue-300 text-info tooltip-right tooltip"
+                        className="hover:text-blue-300 text-info tooltip-right md:tooltip"
                         data-tip="Download"
                         onClick={() => handleMemoPrintModalClick(memo)}
                       >

@@ -207,7 +207,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
             return (
               <div
                 key={index}
-                className={` indicator ${position && "tooltip tooltip-accent"}`}
+                className={` indicator ${position && "md:tooltip tooltip-accent"}`}
                 data-tip={`Action on ${getOrdinal(position)} Offense`}
               >
                 <input

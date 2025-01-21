@@ -262,6 +262,11 @@ class UserActions(User):
         return db.delete(res, 'Employee')
 
     def createOffenseAction(self, user, data):
+        if 'number' in data:
+            offense = db.read({'number': data['number']}, 'Offense')
+            if len(offense) > 0:
+                raise ValueError('Offense number already exists')
+
         offense = Offense(**data)
         res = offense.createOffense(user)
         return db.create(res, 'Offense')

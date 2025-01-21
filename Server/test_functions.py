@@ -344,6 +344,7 @@ def test_submit_and_delete_memo():
 
     finally:
         db.delete({},'User')
+        db.delete({},'Offense')
         db.delete({},'Memo')
         pass
 
@@ -457,6 +458,24 @@ def test_create_employee_with_name_only():
         db.delete({}, 'Employee')
         pass
 
+def test_create_offenses_with_same_number():
+    try:
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+
+        offense = user.createOffenseAction(userCreated, offenseObject)
+
+        with pytest.raises(ValueError, match='Offense number already exists'):
+            offense2 = user.createOffenseAction(userCreated, offenseObject)
+
+        offenses = user.readCollection('Offense')
+
+        assert len(offenses) == 1
+
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Offense')
+        pass
 
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():
@@ -473,4 +492,5 @@ if __name__ == '__main__':
     # test_delete_non_existent_offense()
     # # test_getRemedialActionForEmployeeMemoAction()
     test_create_employee_with_name_only()
+    test_create_offenses_with_same_number()
     pass

@@ -81,6 +81,8 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
         setLoading(false);
         router.refresh();
       }
+    }else{
+      setLoading(false)
     }
   };
 

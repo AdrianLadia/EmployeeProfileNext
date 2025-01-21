@@ -12,10 +12,10 @@ const OffenseMenu = () => {
   const [showMenu, setShowMenu] = React.useState(true);
 
   return (
-    <div className={` flex gap-2 w-full h-12 justify-center md:justify-start overflow-x-auto`}>
+    <div className={` flex gap-2 w-full h-12 justify-center md:justify-start `}>
       <div className="h-full items-center flex">
         <input
-          className="checkbox"
+          className="radio radio-xl rounded-box "
           checked={showMenu}
           onChange={(e) => setShowMenu(e.target.checked)}
           type="checkbox"

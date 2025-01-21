@@ -530,7 +530,7 @@ export default function ContextProvider({
     return `${number}${suffixes[number % 10] || "th"}`;
   };
 
-  useEffect(()=>{
+  useEffect(()=>{ 
     setImageModalId("")
     setImageListForModal([])
     setSelectedEmployee({} as Employee)

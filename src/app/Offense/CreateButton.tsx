@@ -13,7 +13,7 @@ const CreateButton = () => {
 
   return (
     <button
-      className="btn btn-success btn-sm md:tooltip tooltip-left md:tooltip-top tooltip-success text-white"
+      className="btn btn-success btn-sm tooltip tooltip-left md:tooltip-top tooltip-success text-white"
       onClick={handleClick}
       data-tip="Create Offense"
     >

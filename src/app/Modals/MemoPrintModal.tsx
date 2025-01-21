@@ -26,9 +26,7 @@ const PrintMemorandumModal = () => {
 
   const { memoForPrintModal, setMemoForPrintModal } = useAppContext();
 
-  const [resolution, setResolution] = React.useState(1);
-
-  const [includeMediaList, setIncludeMediaList] = React.useState(true);
+  const [resolution, setResolution] = React.useState(1); 
   const [includeMemoPhotos, setIncludeMemoPhotos] = React.useState(true);
 
   const convertToPdf = async () => {
@@ -124,7 +122,7 @@ const PrintMemorandumModal = () => {
       >
         <div className="w-full h-full overflow-auto pt-8 ">
           <div
-            className=" gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom md:tooltip group "
+            className=" gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom tooltip group "
             data-tip={`Quality`}
           >
             <input

@@ -16,11 +16,15 @@ const BackButton = () => {
     );
   };
 
-  const lastPath = localStorage.getItem("lastPath");
+  const lastPath = localStorage.getItem("lastPath"); 
 
+  
   React.useEffect(() => {
-    localStorage.setItem("lastPath", window.location.pathname);
-    localStorage.setItem("isBacked", "false");
+    const timeout = setTimeout(()=>{
+      localStorage.setItem("lastPath", window.location.pathname);
+      localStorage.setItem("isBacked", "false");
+    }, 200);
+    return () => clearTimeout(timeout);
   }, [pathname]);
 
   const transitionStyle = ` md:duration-100 md:transition-all md:ease-linear`;
@@ -30,7 +34,7 @@ const BackButton = () => {
       ? lastPath?.substring(1)
       : "Dashboard";
 
-  let backPath;
+  let backPath; 
 
   if (toDisplay != "Dashboard") {
     const pathstr = toDisplay?.split("/");
@@ -38,6 +42,7 @@ const BackButton = () => {
   } else {
     backPath = toDisplay;
   }
+
 
   return (
     <button

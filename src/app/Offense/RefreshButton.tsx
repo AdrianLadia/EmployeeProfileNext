@@ -12,7 +12,7 @@ const RefreshButton: React.FC<RefreshButtonProps> = ({ href = "/Offense" }) => {
   return (
     <a
       className="btn bg-warning hover:bg-warning text-white grid place-content-center
-           btn-sm md:tooltip tooltip-left md:tooltip-top tooltip-top tooltip-warning"
+           btn-sm tooltip tooltip-left md:tooltip-top tooltip-top tooltip-warning"
       data-tip="Refresh"
       href={href}
     >

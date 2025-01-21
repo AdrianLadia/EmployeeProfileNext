@@ -512,6 +512,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
               className="checkbox"
               id="isRegular" 
               disabled={disable}
+              checked={formData?.isRegular || false}
               onChange={(e) => {
                 setFormData({ ...formData, isRegular: e.target.checked });
                 setDataToUpdate({ ...dataToUpdate, isRegular: e.target.checked });
@@ -525,6 +526,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
               type="checkbox"
               className="checkbox"
               id="isProductionEmployee" 
+              checked={formData?.isProductionEmployee || false}
               disabled={disable}
               onChange={(e) => {
                 setFormData({ ...formData, isProductionEmployee: e.target.checked });
@@ -540,6 +542,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
               className="checkbox"
               id="isOJT" 
               disabled={disable}
+              checked={formData?.isOJT || false}
               onChange={(e) => {
                 setFormData({ ...formData, isOJT: e.target.checked });
                 setDataToUpdate({ ...dataToUpdate, isOJT: e.target.checked });

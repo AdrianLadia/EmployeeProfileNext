@@ -50,6 +50,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
 
     const searchQuery = search?.toLowerCase() || "";
 
+    console.log(employeeList)
+
     const filteredListForTable = employeeList.filter(
       ({ address, name, email, company, phoneNumber, dateJoined }) =>
         [address, name, email, company, phoneNumber, dateJoined].some((field) =>

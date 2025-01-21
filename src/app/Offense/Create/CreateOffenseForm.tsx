@@ -106,6 +106,8 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
         setLoading(false);
         router.refresh();
       }
+    }else{
+      setLoading(false)
     }
   };
 

@@ -101,6 +101,8 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
       } finally {
         setLoading(false);
       }
+    }else{
+      setLoading(false)
     }
   };
 

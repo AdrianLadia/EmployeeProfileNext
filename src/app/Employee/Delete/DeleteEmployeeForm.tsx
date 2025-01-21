@@ -94,6 +94,8 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
       } finally {
         setLoading(false);
       }
+    }else{
+      setLoading(false);
     }
   };
 

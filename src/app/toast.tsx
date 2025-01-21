@@ -1,89 +1,119 @@
-'use client';
+"use client";
 
-import React, { useState, useCallback, useEffect } from 'react'; 
-import { useAppContext } from './GlobalContext'; 
+import React, { useState, useCallback, useEffect } from "react";
+import { useAppContext } from "./GlobalContext";
 
-const Toast = () => { 
-    const { toastOptions, setToastOptions } = useAppContext();    
-    const [timer, setTimer] = useState(toastOptions?.timer);
+const Toast = () => {
+  const { toastOptions, setToastOptions } = useAppContext();
+  const [timer, setTimer] = useState(toastOptions?.timer);
 
-    const closeToast = useCallback(() => {
-        setToastOptions({ open: false, message: '', type: '', timer: 0 });
-        setTimer(0); 
-    },[setToastOptions]);  
+  const toastRef = React.useRef<HTMLDivElement>(null);
 
-    const startTimer = useCallback(() => {
-        const remainingTime = timer || 5; 
-        const decrement = remainingTime / 1000;
+  const closeToast = useCallback(() => {
+    setToastOptions({ open: false, message: "", type: "", timer: 0 });
+    setTimer(0);
+  }, [setToastOptions]);
 
-        try{
-            const interval = setInterval(() => {
-                setTimer(prevTimer => {  
-                    if (prevTimer <= 0) {
-                        clearInterval(interval);
-                        closeToast(); 
-                        return 0;
-                    }
-                    return prevTimer - decrement; 
-                });
-            }, decrement); 
-        }catch(e){
-            console.log(e)
-        }
-    }, [timer])
+  const startTimer = useCallback(() => {
+    const remainingTime = timer || 5;
+    const decrement = remainingTime / 1000;
 
-    useEffect(() => {
-        if (toastOptions?.open) {
-            setTimer(toastOptions?.timer); 
-            startTimer();
-        }
-    }, [toastOptions]);
- 
-    const getToastType = () => {
-        switch (toastOptions?.type) {
-            case 'success':
-                return ['bg-success', 'progress-success', 'tooltip-success'];
-            case 'error':
-                return ['bg-error', 'progress-error', 'tooltip-error'];
-            case 'info':
-                return ['bg-info', 'progress-info', 'tooltip-info'];
-            case 'warning':
-                return ['bg-warning', 'progress-warning', 'tooltip-warning'];
-            default:
-                return [' ', ' ', ' '];
-        }
+    try {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer <= 0) {
+            clearInterval(interval);
+            closeToast();
+            return 0;
+          }
+          return prevTimer - decrement;
+        });
+      }, decrement);
+    } catch (e) {
+      console.log(e);
     }
-  
-    return (
-        <div 
-            className={` flex items-center justify-center cursor-cell z-[100000]
-                ${toastOptions?.open ? 'toast-top toast-center lg:toast-start lg:toast-bottom' : 'hidden'} toast 
-            `}  
-                key={toastOptions?.message}
-            
+  }, [timer]);
+
+  useEffect(() => {
+    if (toastOptions?.open) {
+      setTimer(toastOptions?.timer);
+      startTimer();
+    }
+  }, [toastOptions]);
+
+  const getToastType = () => {
+    switch (toastOptions?.type) {
+      case "success":
+        return ["bg-success", "progress-success", "tooltip-success"];
+      case "error":
+        return ["bg-error", "progress-error", "tooltip-error"];
+      case "info":
+        return ["bg-info", "progress-info", "tooltip-info"];
+      case "warning":
+        return ["bg-warning", "progress-warning", "tooltip-warning"];
+      default:
+        return [" ", " ", " "];
+    }
+  };
+
+  React.useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (toastRef.current && !toastRef?.current?.contains(e.target as Node)) { 
+        if (!timer && toastOptions?.open) {
+          closeToast();
+        }
+      }
+    };
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [toastOptions]);
+
+//   console.log(toastOptions)
+
+  return (
+    <div
+      className={` flex items-center justify-center cursor-cell z-[100000]
+                ${
+                  toastOptions?.open
+                    ? "toast-top toast-center lg:toast-start lg:toast-bottom"
+                    : "hidden"
+                } toast 
+            `}
+      key={toastOptions?.message}
+      ref={toastRef}
+    >
+      <div
+        className={`min-w-[50vw] md:min-w-max md:max-w-[20vw] alert text-white text-wrap px-5 rounded ${
+          getToastType()[0]
+        }`}
+        onClick={() => {
+          closeToast();
+          navigator.clipboard.writeText(toastOptions?.message);
+        }}
+        onMouseEnter={() => setTimer(50)}
+        onMouseLeave={() => setTimer(toastOptions?.timer)}
+        role="alert"
+      >
+        <span
+          className={` text-start break-words md:tooltip tooltip-top ${
+            getToastType()[2]
+          } whitespace-pre-line`}
+          data-tip="Copy and Close"
         >
-            <div className={`min-w-[50vw] md:min-w-max md:max-w-[20vw] alert text-white text-wrap px-5 rounded ${getToastType()[0]}`}
-                onClick={() => {
-                    closeToast()
-                    navigator.clipboard.writeText(toastOptions?.message)
-                }} 
-                onMouseEnter={() => setTimer(50)} 
-                onMouseLeave={() => setTimer(toastOptions?.timer)}
-                role='alert'
-            >
-                <span 
-                    className={` text-start break-words md:tooltip tooltip-top ${getToastType()[2]} whitespace-pre-line`} 
-                    data-tip="Copy and Close"
-                >{toastOptions?.message}</span>
-            </div>
-            
-            <progress 
-                className={`progress w-full ${getToastType()[1]} rounded-none -mt-2 `} 
-                value={(timer / toastOptions?.timer) * 100 || 0} 
-                max={100} 
-            /> 
-        </div>
-    );
-}
+          {toastOptions?.message}
+        </span>
+      </div>
+
+      <progress
+        className={`progress w-full ${getToastType()[1]} rounded-none -mt-2 `}
+        value={(timer / toastOptions?.timer) * 100 || 0}
+        max={100}
+      />
+    </div>
+  );
+};
 
 export default Toast;

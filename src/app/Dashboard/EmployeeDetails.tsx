@@ -147,6 +147,7 @@ const EmployeeDetails = () => {
       "photoOfPerson",
       "_id",
       "_version",
+      "dailyWage",
     ];
 
     return (
@@ -164,7 +165,9 @@ const EmployeeDetails = () => {
                   {selectedEmployeeDetails[key as keyof Employee] == true ? (
                     <strong>✔</strong>
                   ) : key == "dateJoined" ? (
-                    selectedEmployeeDetails[key as keyof Employee]?.toString().substring(5, 17)
+                    selectedEmployeeDetails[key as keyof Employee]
+                      ?.toString()
+                      .substring(5, 17)
                   ) : (
                     selectedEmployeeDetails[key as keyof Employee]
                   )}
@@ -337,12 +340,24 @@ const EmployeeDetails = () => {
         {detailComponent()}
 
         <div
-          className={detailStyle(Boolean(selectedEmployeeDetails?.dateJoined))}
-        > 
+          className={detailStyle(Boolean(selectedEmployeeDetails?.dailyWage))}
+        >
           <strong className="text-base">
-            {selectedEmployee?.dateJoined && Math.floor((new Date().getTime() -
-              new Date(selectedEmployee?.dateJoined || "").getTime()) /
-              (1000 * 60 * 60 * 24))}
+            ₱ {selectedEmployeeDetails?.dailyWage?.toLocaleString()}
+          </strong>
+          Daily Wage
+        </div>
+
+        <div
+          className={detailStyle(Boolean(selectedEmployeeDetails?.dateJoined))}
+        >
+          <strong className="text-base">
+            {selectedEmployee?.dateJoined &&
+              Math.floor(
+                (new Date().getTime() -
+                  new Date(selectedEmployee?.dateJoined || "").getTime()) /
+                  (1000 * 60 * 60 * 24)
+              ).toLocaleString()}
           </strong>
           Days with Us
         </div>

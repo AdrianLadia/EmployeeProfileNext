@@ -22,12 +22,16 @@ const style: React.CSSProperties = {
 
 const PrintMemorandumModal = () => {
   const memoRef = useRef(null);
-  const memoImgRef = useRef(null); 
+  const memoImgRef = useRef(null);
+  const mediaListRef = useRef(null);
 
-  const { memoForPrintModal, setMemoForPrintModal } = useAppContext();
+  const { memoForPrintModal, setMemoForPrintModal, getOrdinal } =
+    useAppContext();
 
-  const [resolution, setResolution] = React.useState(1); 
+  const [resolution, setResolution] = React.useState(1);
+
   const [includeMemoPhotos, setIncludeMemoPhotos] = React.useState(true);
+  const [includeMediaList, setIncludeMediaList] = React.useState(true);
 
   const convertToPdf = async () => {
     const desktopWidth = 1200;
@@ -76,6 +80,32 @@ const PrintMemorandumModal = () => {
 
       pdf.addImage(imgData, "PNG", xOffset, yOffset, scaledWidth, scaledHeight);
 
+      if (memoForPrintModal?.mediaList?.[0] && includeMediaList) {
+        pdf.addPage();
+
+        const imgElement = mediaListRef.current;
+        if (!imgElement) {
+          console.error("Element not found");
+          return;
+        }
+
+        const memoPhoto = await html2canvas(imgElement, {
+          scale: 3,
+          useCORS: true,
+        });
+
+        const memoPhotoURL = memoPhoto.toDataURL("image/png");
+
+        pdf.addImage(
+          memoPhotoURL,
+          "PNG",
+          xOffset,
+          yOffset,
+          scaledWidth,
+          scaledHeight
+        );
+      }
+
       if (memoForPrintModal?.memoPhotosList?.[0] && includeMemoPhotos) {
         pdf.addPage();
 
@@ -100,7 +130,7 @@ const PrintMemorandumModal = () => {
           scaledWidth,
           scaledHeight
         );
-      } 
+      }
 
       pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
     } catch (error) {
@@ -144,9 +174,22 @@ const PrintMemorandumModal = () => {
           </div>
 
           <div
-            className=" flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 md:tooltip tooltip-bottom" 
+            className="opacity-50 hover:opacity-100 flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 tooltip tooltip-bottom"
             data-tip="Include"
-          > 
+          >
+            {memoForPrintModal?.mediaList?.[0] && (
+              <>
+                <label htmlFor="mediaList"> Media List</label>
+                <input
+                  className="checkbox "
+                  type="checkbox"
+                  name="mediaList"
+                  checked={includeMediaList}
+                  onChange={() => setIncludeMediaList(!includeMediaList)}
+                  id="mediaList"
+                />
+              </>
+            )}
             {memoForPrintModal?.memoPhotosList?.[0] && (
               <>
                 <input
@@ -225,55 +268,81 @@ const PrintMemorandumModal = () => {
               <br />
             </div>
 
-            <div className="my-8 w-full border-b-2" />
-
             {/* employee explanation */}
-            <div className=" w-full ">
-              <span>Please write your explanation:</span>
-              <br />
-              <br />
-              <br />
-              {memoForPrintModal?.reason ? (
-                // <p className="indent-4 whitespace-pre-line underline underline-offset-8 hyphens-auto text-justify leading-9">
-                <p className="indent-4 whitespace-pre-line ">
-                  {memoForPrintModal?.reason}
-                </p>
-              ) : (
-                [0, 1, 2, 3, 4].map((i) => (
+            {/* {console.log(memoForPrintModal)} */}
+            {!memoForPrintModal?.submitted && !memoForPrintModal.reason ? (
+              <>
+                <div className="my-8 w-full border-b-2" />
+
+                <span>Please write your explanation:</span>
+                <br />
+                <br />
+                <br />
+                {[0, 1, 2, 3, 4].map((i) => (
                   <div key={i}>
                     <div className="w-full border-b border-gray-500 mb-1.5 " />
                     <br />
                   </div>
-                ))
-              )}
-              <br />
-              <br />
-              <div className="float-end w-[75%] md:w-[50%] xl:w-[35%]  ">
-                <div className=" border-b text-center mb-2 border-black"></div>
-                <div className=" text-center text-xs">
-                  (Name, Signature, Date)
+                ))}
+                <br />
+                <br />
+                <div className="float-end w-[75%] md:w-[50%] xl:w-[35%]  ">
+                  <div className=" border-b text-center mb-2 border-black"></div>
+                  <div className=" text-center text-xs">
+                    (Name, Signature, Date)
+                  </div>
                 </div>
-              </div>
-              <br />
-              <br />
-              <br />
-            </div>
+                <br />
+                <br />
+                <br />
+              </>
+            ) : !memoForPrintModal?.submitted && memoForPrintModal.reason ? (
+              <>
+                <br />
+              </>
+            ) : (
+              <>
+                <br />
+              </>
+            )}
 
             {/* remedial actions */}
             <div className="px-2 border-t-2">
               <br />
-              <div className=" flex flex-wrap ">
-                <span className="grow-0">Gravity of Offense: </span>
-                <span className="grow border-b border-black p-3"></span>
-              </div>
-              <br />
-              <div className="flex flex-wrap">
-                Remedial Action:
-                {memoForPrintModal?.MemoCode?.remedialActions[0] && (
-                  <p className="indent-4 whitespace-pre-line underline underline-offset-8 text-red-500">
-                     {memoForPrintModal?.MemoCode?.remedialActions[0]} 
-                  </p>
-                )}
+              <div className="flex flex-col">
+                Remedial Actions:
+                <div className="flex flex-wrap gap-6 pt-2 ">
+                  {memoForPrintModal?.MemoCode?.remedialActions?.map(
+                    (action, index) => (
+                      <>
+                        <div
+                          key={index}
+                          className={`${
+                            action !== memoForPrintModal?.remedialAction
+                              ? " border border-neutral "
+                              : " bg-neutral text-neutral-content "
+                          } py-1 px-3 text-sm rounded-box relative`}
+                        >
+                          {action}
+                          <span
+                            className={`${
+                              action !== memoForPrintModal?.remedialAction
+                                ? " border border-neutral "
+                                : " bg-neutral text-neutral-content "
+                            } absolute top-[-10px] text-xs badge z-30 px-1`}
+                          >
+                            {getOrdinal(index + 1)}
+                          </span>
+                        </div>
+                      </>
+                    )
+                  )}
+                  {/* {memoForPrintModal?.MemoCode?.remedialActions[0] && (
+                    <p className="indent-4 whitespace-pre-line underline underline-offset-8 text-red-500">
+                       {memoForPrintModal?.MemoCode?.remedialActions[0]} 
+                    </p>
+                  )} */}
+                </div>
               </div>
             </div>
 
@@ -283,7 +352,27 @@ const PrintMemorandumModal = () => {
               {" "}
               For management use only{" "}
             </div>
-          </div> 
+          </div>
+
+          {/* medialist */}
+          <div
+            hidden={
+              memoForPrintModal?.mediaList?.[0] && includeMediaList
+                ? false
+                : true
+            }
+            className="h-full w-full py-8 px-4 bg-white"
+            ref={mediaListRef}
+          >
+            <Image
+              className="w-full h-full"
+              src={memoForPrintModal?.mediaList?.[0] || ""}
+              width={400}
+              height={400}
+              alt="mediaList"
+            />
+          </div>
+
           {/* memoPhotosList */}
           <div
             hidden={
@@ -299,7 +388,7 @@ const PrintMemorandumModal = () => {
               src={memoForPrintModal?.memoPhotosList?.[0] || ""}
               width={400}
               height={400}
-              alt="test"
+              alt="memoPhotosList"
             />
           </div>
         </div>
@@ -307,7 +396,7 @@ const PrintMemorandumModal = () => {
         {/* Print Memo Button */}
         <div className="w-full absolute bottom-5 flex justify-center">
           <button
-            className=" w-max btn btn-info text-white opacity-50 hover:opacity-100"
+            className=" w-max btn btn-info text-white opacity-70 hover:opacity-100 z-40" 
             onClick={() => convertToPdf()}
           >
             <svg

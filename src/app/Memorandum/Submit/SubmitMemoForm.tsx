@@ -14,6 +14,8 @@ import FirebaseUpload from "@/app/api/FirebaseUpload";
 
 import Select from "react-select";
 
+import Image from "next/image";
+
 interface CreateMemoFormProps {
   memoList: Memo[];
 }
@@ -28,6 +30,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     setLoading,
     imageListForModal,
     imageModalId,
+    handleImageModalClick,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -60,36 +63,36 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         };
 
         if (filesChanged.includes("mediaList")) {
-          try{
+          try {
             const res = await upload.Images(
               formData?.mediaList || [],
               `employees/${formData?.Employee?.name}`,
               "mediaList"
             );
             finalFormData.mediaList = res || [];
-          }catch(e){
-            console.error(e)
+          } catch (e) {
+            console.error(e);
           }
         }
 
         if (filesChanged.includes("memoPhotosList")) {
-          try{
+          try {
             const res = await upload.Images(
               formData?.memoPhotosList || [],
               `employees/${formData?.Employee?.name}`,
               "memoPhotosList"
             );
-            finalFormData.memoPhotosList = res || [];
-          }catch(e){
-            console.error(e)
+            finalFormData.memoPhotosList = res || []; 
+          } catch (e) {
+            console.error(e);
           }
         }
 
         const form = e.target as HTMLFormElement;
 
         const res = await serverRequests.submitMemo(
-          formData,
-          formData.reason || "",
+          finalFormData,
+          finalFormData.reason || "",
           userData
         );
 
@@ -129,7 +132,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     } else {
       setLoading(false);
     }
-  }; 
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -173,7 +176,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
   useEffect(() => {
     filterMemos(memoList);
-  }, [memoList, submittedMemos]);
+  }, [memoList, submittedMemos]); 
 
   const selectStyle = {
     control: (base: unknown) => ({
@@ -192,11 +195,15 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     setFormData({
       ...formData,
       [imageModalId]: imageListForModal.length ? imageListForModal : null,
-    }); 
+    });
   }, [imageListForModal]);
 
   return (
-    <form className={` form-style ${ loading && " cursor-wait " } `} ref={formRef} onSubmit={handleSubmit}>
+    <form
+      className={` form-style ${loading && " cursor-wait "} `}
+      ref={formRef}
+      onSubmit={handleSubmit}
+    >
       <h2 className="font-semibold">Memorandum Submition</h2>
 
       {/* Memorandum to Submit */}
@@ -324,10 +331,10 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         Reason
         {/* Reason */}
         <textarea
-          className="textarea textarea-bordered mt-1 min-h-[20vh] whitespace-pre-line"
+          className="textarea textarea-bordered mt-1 min-h-[15vh] whitespace-pre-line"
           placeholder="Reason"
           id="reason"
-          required = { !formData?.memoPhotosList?.length }
+          required={!formData?.memoPhotosList?.length}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setFormData({ ...formData, reason: e.target.value });
           }}
@@ -336,7 +343,36 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
       </div>
 
       {/* medialist */}
-      <ImageInput
+      {formData?.mediaList?.[0] && (
+        <div
+          className={` flex items-center justify-between p-3 gap-3 bg-base-200 rounded-box text-sm `}
+        >
+          <p className="w-[25%] text-end ">Media List: </p>
+          <div className="flex justify-evenly gap-3 w-[75%] ">
+            <div
+              className="relative w-32 h-32 group"
+              onClick={() => handleImageModalClick(formData?.mediaList || [])}
+            >
+              <span
+                className="font-semibold absolute grid place-content-center left-1/2 
+              right-1/2 top-1/2 bottom-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs opacity-75 group-hover:opacity-100 bg-base-100 p-4 rounded-full cursor-pointer"
+              >
+                {formData?.mediaList?.length}
+              </span>
+              <Image
+                src={formData?.mediaList?.[0]}
+                alt="media"
+                width={100}
+                height={100}
+                className="rounded-box cursor-pointer w-full h-full"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* medialist */}
+      {/* <ImageInput
         id="mediaList"
         title="Photo"
         width="w-full"
@@ -344,16 +380,9 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         imgDimensions={{ height: 60, width: 60 }}
         mediaList={formData?.mediaList || []}
         onChangeHandler={handleFileChange}
-        required={!formData?.mediaList?.length}
+        required={false}
         multiple={true}
-      />
-      {/* <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
-        <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
-          <Image src={formData?.mediaList?.[0]} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
-        </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*' required={formData?.mediaList?.[0]?false:true}    
-          onChange={handleFileChange} multiple/>
-      </label> */}
+      />  */}
 
       {/* memoPhotosList */}
       <ImageInput
@@ -368,19 +397,12 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         required={!formData?.memoPhotosList?.length}
         multiple={true}
       />
-      {/* <label htmlFor="memoPhotosList" className='text-sm flex flex-col w-full'>
-      <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
-        <Image src={formData?.memoPhotosList?.[0]} className={`${!formData?.memoPhotosList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
-        </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*' required={formData?.memoPhotosList?.[0]?false:true}
-          onChange={handleFileChange} multiple/>
-      </label> */}
 
       {/* submit */}
       <button
         className={` btn bg-blue-500 text-white w-full place-self-start my-6`}
         type="submit"
-        disabled={loading? true: formData?.subject ? false :  true}
+        disabled={loading ? true : formData?.subject ? false : true}
         id="submit-memo-btn"
       >
         {!loading ? "Submit" : <span className="animate-spin text-xl">C</span>}

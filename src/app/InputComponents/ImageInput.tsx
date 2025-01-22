@@ -116,7 +116,7 @@ const ImageInput: FC<ImageInputProps> = ({
           multiple={multiple}
           onChange={(setFunction && handleFileChange) || onChangeHandler}
         />
-        <h3 className="h-full flex items-center text-neutral px-8">{mediaList?.length || 0} File(s)</h3>
+        <h3 className="h-full flex items-center px-8">{mediaList?.length || 0} File(s)</h3>
       </div>
     </div>
   );

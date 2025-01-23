@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 import textwrap
 
-def generate_id_card(employee_data, output_path="id_card.png"):
+def generate_id_card(employee_data):
     name = employee_data.get("name", "Unknown")
     ref_id = employee_data.get("_id", "N/A")
     photo_path = employee_data.get("photoOfPerson", None)
@@ -57,6 +57,12 @@ def generate_id_card(employee_data, output_path="id_card.png"):
     qr_code_img = qr.make_image(fill="black", back_color="white").resize((100, 100))
     card.paste(qr_code_img, (450, 250))
 
+    directory = 'Server/EmployeeIDs/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    output_path = os.path.join(directory, f"{employee['name'].replace(' ', '_')}_id_card.png")
+
     card.save(output_path)
     print(f"ID card saved to {output_path}")
 
@@ -80,11 +86,5 @@ employee = {
     "_version": 1,
 }
 
-directory = 'Server/EmployeeIDs/'
-if not os.path.exists(directory):
-    os.makedirs(directory)
-
-output_path = os.path.join(directory, f"{employee['name'].replace(' ', '_')}_id_card.png")
-
-generate_id_card(employee, output_path)
+generate_id_card(employee)
 

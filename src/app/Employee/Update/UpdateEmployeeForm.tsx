@@ -294,8 +294,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     setSelectedEmployee(res as Employee);
     setFormData(res as Employee);
     setDisable(false);
-    setDisableSaveButton(false);
-    console.log("ran")
+    setDisableSaveButton(false); 
   }, []);
 
 

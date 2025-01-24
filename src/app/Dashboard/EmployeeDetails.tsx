@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useAppContext } from "../GlobalContext";
 
@@ -9,6 +9,7 @@ import { Employee } from "../schemas/EmployeeSchema";
 import { Memo } from "../schemas/MemoSchema";
 
 import Image from "next/image";
+import { use } from "chai";
 
 const EmployeeDetails = () => {
   const {
@@ -103,19 +104,19 @@ const EmployeeDetails = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timeout = setTimeout(() => {
       if (userData?._id && selectedEmployee?._id) {
         getMemosForEmployee();
       }
 
-      if (selectedEmployee._id) {
+      if (selectedEmployee?._id) {
         getSelectedEmployeeDetails();
 
         dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       }
 
-      if (!selectedEmployee._id) {
+      if (!selectedEmployee?._id) {
         setSelectedEmployeeDetails({} as Employee);
       }
     }, 100);
@@ -181,7 +182,7 @@ const EmployeeDetails = () => {
         })}
       </>
     );
-  };
+  }; 
 
   return (
     <div

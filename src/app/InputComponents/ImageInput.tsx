@@ -109,8 +109,7 @@ const ImageInput: FC<ImageInputProps> = ({
           type="file"
           className={inputStyle + " border-0 outline-none text-transparent "}
           id={id}
-          accept="image/*"
-          capture
+          accept="image/*" 
           required={required}
           disabled={disable}
           multiple={multiple}

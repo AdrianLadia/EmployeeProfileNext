@@ -12,9 +12,7 @@ import EmployeeTable from "./Dashboard/EmployeeTable";
 import EmployeeDetails from "./Dashboard/EmployeeDetails";
 import SearchBar from "./Dashboard/SearchBar";
 
-import { getUserData, getTestUserData } from "./api/UserData";
-
-// import UploadOffenseButton from "./UploadOffenseButton";
+import { getUserData, getTestUserData } from "./api/UserData"; 
 
 export const metadata = {
   title: "| Dashboard",
@@ -59,7 +57,7 @@ const Page = async () => {
     })?.length;
   } else if (employeeResponse?.error) {
     fetchingError = employeeResponse.error;
-  }
+  } 
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
     overflow-y-auto hover:bg-base-300 hover:border-transparent

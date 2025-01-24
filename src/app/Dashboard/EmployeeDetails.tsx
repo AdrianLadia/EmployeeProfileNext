@@ -243,7 +243,8 @@ const EmployeeDetails = () => {
             } Memos`}
             onClick={() =>
               selectedEmployeeMemos?.length &&
-              handleMemoTableModalClick(selectedEmployeeMemos)
+              handleMemoTableModalClick(selectedEmployeeMemos.reverse())
+              // handleMemoTableModalClick(selectedEmployeeMemos)
             }
           >
             {fetchingMemos ? "..." : selectedEmployeeMemos?.length}

@@ -40,31 +40,31 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
         ${showMenu ? " top-[71px] md:top-[80px] " : " hidden "} right-0
         absolute shadow-lg border backdrop-blur-lg bg-base-100/70 duration-300 transition-all
         w-[96vw] md:w-[330px] h-[83vh] md:max-h-[73vh] rounded-2xl z-50 
-        flex flex-col justify-between pb-3 border-info 
+        flex flex-col justify-between pb-1 border-info 
       `}
     >
       <BackButton />
-      <UserListButton userData={userData} pathname={pathname||""}/>
+      <UserListButton userData={userData} pathname={pathname || ""} />
 
       {/* arrow */}
       <div className="-z-10 right-[.70rem] md:right-[.89rem] -top-3 absolute w-0 h-0 border-l-[16px] border-r-[16px] border-b-[20.5px] border-transparent border-b-info border-opacity-60" />
 
-      <div className="flex flex-col items-center justify-center pt-12 pb-6 rounded-t-2xl bg-base-300 border-b border-info">
+      <div className="flex flex-col items-center justify-center pt-8 md:pt-12 pb-2 md:pb-6 rounded-t-2xl bg-base-300 border-b border-info">
         <Image
           src={userData?.image}
-          width={100}
-          height={100}
-          className="rounded-lg"
+          width={60}
+          height={60}
+          className="w-[60px] h-[60px] md:w-[100px] md:h-[100px] rounded-lg"
           alt="userImage"
         />
-        <h1 className="text-xl font-semibold mt-5">{userData?.displayName}</h1>
-        <p className="text-sm mt-2 select-all italic">{userData?.email}</p>
+        <h1 className="text-xl font-semibold mt-2 md:mt-5">
+          {userData?.displayName}
+        </h1>
+        <p className="text-sm md:mt-2 select-all italic">{userData?.email}</p>
       </div>
 
-      {/* <div className=' w-full my-4 bg-base-100/80'/> */}
-
-      <div className="flex flex-col justify-between overflow-y-auto px-6 h-[40vh] my-2 mt-3 ">
-        <div className="mt-2 w-full ">
+      <div className="flex flex-col justify-between overflow-y-auto px-6 md:h-[40vh] my-2 h-[50vh]">
+        <div className="w-full ">
           {Object.keys(cards).map((key, index) => {
             return (
               <div key={index} className="mt-3 w-full ">
@@ -114,7 +114,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
 
       <div className="flex px-6 ">
         <button
-          className=" btn shrink-0 bg-base-300 w-full flex items-center justify-center gap-3 border mt-2 hover:bg-error hover:text-white"
+          className=" btn shrink-0 bg-base-300 w-full flex items-center justify-center gap-3 border hover:bg-error hover:text-white"
           onClick={() => {
             handleSignOut();
           }}

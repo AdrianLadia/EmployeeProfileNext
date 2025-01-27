@@ -10,7 +10,7 @@
   
 
 .form-container {
-  @apply h-[85vh] overflow-y-auto shadow-md shadow-gray-400 rounded-2xl border w-[97%] md:w-[75%] lg:w-[55%] xl:w-[45%] 2xl:w-[40%] ;
+  @apply h-[85vh] overflow-y-auto shadow-md shadow-gray-400 rounded-box border w-[97%] md:w-[75%] lg:w-[55%] xl:w-[45%] 2xl:w-[40%] ;
 }
 
 .form-style {

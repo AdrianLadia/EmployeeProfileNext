@@ -198,7 +198,7 @@ const CreateEmployeeForm = () => {
         </label>
       </div>
 
-      {/* more details */}
+      {/* more details button */}
       <div className="w-full flex justify-center">
         <label
           className="w-max flex justify-center items-center gap-2"

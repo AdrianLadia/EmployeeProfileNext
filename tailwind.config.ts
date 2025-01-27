@@ -24,7 +24,7 @@ const config: Config = {
   daisyui: {
     styled: true,
     themes: [
-      "light", "dark", "cupcake", "garden", "wireframe", "lofi", "pastel", "lemonade", "winter", 
+      "light", "dark", "cupcake", "garden", "wireframe", "lofi", "pastel", "lemonade", "winter", "pastel",
       "synthwave", "luxury", "black", "dim", 
       "retro", "cyberpunk", "aqua", "valentine", 
     ],

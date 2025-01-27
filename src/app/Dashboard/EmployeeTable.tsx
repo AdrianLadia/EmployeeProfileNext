@@ -14,7 +14,10 @@ interface EmployeeTableProps {
   fetchingError?: string;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingError }) => {
+const EmployeeTable: React.FC<EmployeeTableProps> = ({
+  employeeList,
+  fetchingError,
+}) => {
   const {
     selectedEmployee,
     setSelectedEmployee,
@@ -22,7 +25,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
     setLoading,
     highlightText,
     setSearch,
-    setToastOptions
+    setToastOptions,
+    router,
   } = useAppContext();
 
   const [filteredEmployeeList, setFilteredEmployeeList] =
@@ -33,33 +37,46 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
   const search = searchParams.get("search") || "";
 
   useEffect(() => {
-    if(fetchingError){
+    if (fetchingError) {
       setToastOptions({
         type: "error",
-        message: fetchingError||"Error fetching data",
+        message: fetchingError || "Error fetching data",
         timer: 5,
-        open: true, 
+        open: true,
       });
     }
-  },[fetchingError])
+  }, [fetchingError]);
 
   useEffect(() => {
     setLoading(true);
 
     setSearch(search);
 
-    const searchQuery = search?.toLowerCase() || ""; 
+    const searchQuery = search?.toLowerCase() || "";
 
     const filteredListForTable = employeeList.filter(
       ({ address, name, email, company, phoneNumber, dateJoined, isOJT }) =>
-        [address, name, email, company, phoneNumber, dateJoined, isOJT ? "OJT" : ""].some((field) =>
-          field?.toLowerCase().includes(searchQuery)
-        )
+        [
+          address,
+          name,
+          email,
+          company,
+          phoneNumber,
+          dateJoined,
+          isOJT ? "OJT" : "",
+        ].some((field) => field?.toLowerCase().includes(searchQuery))
     );
 
     setFilteredEmployeeList(filteredListForTable as Employee[]);
     setLoading(false);
   }, [search, employeeList]);
+
+  useEffect(() => {
+    const res = filteredEmployeeList.find(
+      (employee) => employee._id == window.location.hash.split("#")[1]
+    );
+    setSelectedEmployee(res as Employee);
+  }, []);
 
   return (
     <table
@@ -87,7 +104,12 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
                     } 
                     ${loading ? "disabled cursor-wait" : ""}  
                 `}
-            onClick={() => !loading && setSelectedEmployee(employee)}
+            onClick={() => {
+              if (!loading) {
+                setSelectedEmployee(employee);
+                router.push("/");
+              }
+            }}
             data-tip={"View"}
           >
             <th className="bg-opacity-0 backdrop-blur-md ">
@@ -133,11 +155,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
               {highlightText(
                 employee.company ? employee.company.toString() : ""
               )}
-               
-              {highlightText(
-                employee.isOJT ? "(OJT)" : ""
-              )}
-
+               {highlightText(employee.isOJT ? "(OJT)" : "")}
               {/* {employee.isOJT && (
                 <span className="text-xs text-gray-500"> (OJT)</span>
               )} */}
@@ -156,7 +174,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
               No results found
             </td>
           </tr>
-        ) : null} 
+        ) : null}
       </tbody>
       {/* foot */}
       <tfoot>

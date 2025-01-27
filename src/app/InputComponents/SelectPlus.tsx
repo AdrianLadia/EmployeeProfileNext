@@ -138,7 +138,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
         {!!finalOptions.length &&
           finalOptions.map((option, index) => (
             <option
-              key={index}
+              key={index} className="indent-3"
               id={index.toString()}
               value={getOptionValue(option as Option | string | number) as string | number | readonly string[] | undefined}
             >

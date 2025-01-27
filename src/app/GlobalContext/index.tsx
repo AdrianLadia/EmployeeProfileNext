@@ -63,7 +63,8 @@ interface AppContextProps {
   highlightText: (text: string) => JSX.Element[];
   setSearch: (data: string) => void;
   getOrdinal: (n: number) => string;
-  imageModalId: string, setImageModalId: (data: string) => void;
+  imageModalId: string;
+  setImageModalId: (data: string) => void;
 }
 
 // Create the default context with proper types and default values
@@ -104,7 +105,8 @@ const AppContext = createContext<AppContextProps>({
   highlightText: () => [],
   setSearch: () => {},
   getOrdinal: () => "",
-  imageModalId: "", setImageModalId: () => {}
+  imageModalId: "",
+  setImageModalId: () => {},
 });
 
 export default function ContextProvider({
@@ -204,6 +206,29 @@ export default function ContextProvider({
               strokeLinecap="round"
               strokeLinejoin="round"
               d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 10.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
+            />
+          </svg>
+        ),
+        roles: [],
+      },
+      {
+        path: "/Employee/GenerateID",
+        id: "generate-id",
+        title: "Generate ID",
+        description: "Generate Employee ID",
+        icon: (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z"
             />
           </svg>
         ),
@@ -530,11 +555,11 @@ export default function ContextProvider({
     return `${number}${suffixes[number % 10] || "th"}`;
   };
 
-  useEffect(()=>{ 
-    setImageModalId("")
-    setImageListForModal([])
-    setSelectedEmployee({} as Employee)
-  },[pathname])
+  useEffect(() => {
+    setImageModalId("");
+    setImageListForModal([]);
+    setSelectedEmployee({} as Employee);
+  }, [pathname]);
 
   // Define the global values to be shared across the context
   const globals = {

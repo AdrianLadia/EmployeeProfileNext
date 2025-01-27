@@ -22,7 +22,7 @@ def generate_id_card(employee_data):
 
     # card = Image.new("RGB", (card_width, card_height), background_color)
     # draw = ImageDraw.Draw(card)
-    type_of_employee = "Regular Employee" if isRegular else "OJT" if isOJT else "Production Employee" if isProductionEmployee else "Unknown"
+    type_of_employee = "Regular" if isRegular else "OJT" if isOJT else "Production" if isProductionEmployee else "Unknown"
 
     background_path = "server/IDassets/"
 
@@ -63,9 +63,38 @@ def generate_id_card(employee_data):
         except Exception as e:
             print(f"Error loading photo: {e}")
 
-    draw.text((130, 530), f"{name}", fill="black", font=name_font)
-    draw.text((255, 620), f"{type_of_employee}", fill="black", font=role_font)
-    draw.text((180, 850), f"ID no.: {ref_id}", fill="black", font=ref_id_font)
+    # draw.text((130, 530), f"{name}", fill="black", font=name_font)
+    if len(name) > 30:
+        name_font = ImageFont.truetype(font_path, size=30)
+        # name = textwrap.fill(name, width=30)
+        x_text = 80
+    else:
+        x_text = 130
+
+    name_lines = textwrap.wrap(name, width=35)
+    y_text = 530
+    for line in name_lines:
+        draw.text((x_text, y_text), line, fill="black", font=name_font)
+        y_text += name_font.size + 5
+
+    # draw.text((130, 530), f"{name}", fill="black", font=name_font)
+
+    if len(type_of_employee) > 3:
+        # role_font = ImageFont.truetype(font_path, size=30)
+        # type_of_employee = textwrap.fill(type_of_employee, width=30)
+        x_text = 210
+    else:
+        x_text = 255
+
+    type_of_employee_lines = textwrap.wrap(type_of_employee, width=35)
+    y_text = 620
+    for line in type_of_employee_lines:
+        draw.text((x_text, y_text), line, fill="black", font=role_font)
+        y_text += role_font.size + 5
+    # draw.text((255, 620), f"{type_of_employee}", fill="black", font=role_font)
+
+    ref_id_font = ImageFont.truetype(font_path, size=25)
+    draw.text((40, 850), f"ID no.: {ref_id}", fill="black", font=ref_id_font)
     # draw.text((180, 140), address, fill="black", font=ref_id_font)
     # address_lines = textwrap.wrap(address, width=30)
     # y_text = 170
@@ -76,11 +105,11 @@ def generate_id_card(employee_data):
     # draw.text((300, 130), f"Date Joined: {dateJoined}", fill="black", font=ref_id_font)
     # draw.text((50, 300), f"{company}", fill="black", font=ref_id_font)
 
-    # qr = qrcode.QRCode(box_size=4, border=2)
-    # qr.add_data(qr_data)
-    # qr.make(fit=True)
-    # qr_code_img = qr.make_image(fill="black", back_color="white").resize((100, 100))
-    # background.paste(qr_code_img, (450, 250))
+    qr = qrcode.QRCode(box_size=4, border=2)
+    qr.add_data(qr_data)
+    qr.make(fit=True)
+    qr_code_img = qr.make_image(fill="black", back_color="white").resize((170, 170))
+    background.paste(qr_code_img, (215, 680))
 
     directory = 'Server/EmployeeIDs/'
     if not os.path.exists(directory):
@@ -95,35 +124,35 @@ def generate_id_card(employee_data):
 
     # back = Image.new("RGB", (card_width, card_height), background_color)
 
-    try:
-        back = Image.open(background_path).resize((card_width, card_height))
-    except Exception as e:
-        print(f"Error loading background image: {e}")
-        return
+    # try:
+    #     back = Image.open(background_path).resize((card_width, card_height))
+    # except Exception as e:
+    #     print(f"Error loading background image: {e}")
+    #     return
 
-    draw_back = ImageDraw.Draw(back)
-    terms_font = ImageFont.truetype(font_path, size=18)
+    # draw_back = ImageDraw.Draw(back)
+    # terms_font = ImageFont.truetype(font_path, size=18)
 
-    terms = "This card is the property of the company and must be returned upon request. " \
+    # terms = "This card is the property of the company and must be returned upon request. " \
 
-    terms_lines = textwrap.wrap(terms, width=60)
-    y_text = 50
-    for line in terms_lines:
-        draw_back.text((50, y_text), line, fill="black", font=terms_font)
-        y_text += terms_font.size + 5
+    # terms_lines = textwrap.wrap(terms, width=60)
+    # y_text = 50
+    # for line in terms_lines:
+    #     draw_back.text((50, y_text), line, fill="black", font=terms_font)
+    #     y_text += terms_font.size + 5
 
-    draw_back.text((50, 300), f"Property of {company}", fill="black", font=ref_id_font)
+    # draw_back.text((50, 300), f"Property of {company}", fill="black", font=ref_id_font)
 
-    # back_output_path = os.path.join(output_path, f"{name.replace(' ', '_')}_id_card_back.png")
-    back_output_path = os.path.join(directory, f"{employee['name'].replace(' ', '_')}_id_card_back.png")
-    back.save(back_output_path)
-    print(f"Back side of ID card saved to {back_output_path}")
+    # # back_output_path = os.path.join(output_path, f"{name.replace(' ', '_')}_id_card_back.png")
+    # back_output_path = os.path.join(directory, f"{employee['name'].replace(' ', '_')}_id_card_back.png")
+    # back.save(back_output_path)
+    # print(f"Back side of ID card saved to {back_output_path}")
 
 
 
 employee = {
-    "_id": "EMP1001",
-    "name": "Michael Val Letigio Flores",
+    "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
+    "name": "Michael Flores",
     "address": "123 Main Street, Cebu City, Philippines",
     "phoneNumber": "+63 912 345 6789",
     "photoOfPerson": "server/test_assets/minor.png",
@@ -131,7 +160,7 @@ employee = {
     "biodataPhotosList": ["biodata_page1.jpg"],
     "email": "michael.flores@example.com",
     "dateJoined": datetime(2024, 1, 15).date(),
-    "company": "SP",
+    "company": "PPC",
     "isRegular": False,
     "isProductionEmployee": False,
     "isOJT": True,

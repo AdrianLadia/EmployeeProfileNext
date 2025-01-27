@@ -1,17 +1,16 @@
-"use client";
-
 import React from "react";
 
 interface EmployeeIDViewProps {
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
   setPhase: (phase: 1 | 2) => void; 
+  phase: 1 | 2;
   hasEmptyFields: boolean;
   loading: boolean;
 }
 
 const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
   handleSubmit,
-  setPhase, 
+  setPhase,  
   hasEmptyFields,
   loading,
 }) => {
@@ -59,43 +58,15 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
         </div>
       </div>
     );
-  }; 
-
-  const options = {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0.1,
-  };
-
-  const elementRef = React.useRef(null);
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => { 
-      if(entry.isIntersecting){
-        setPhase(2)
-      }else{
-        setPhase(1)
-      }
-    }, options);
-
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
-
-    return () => {
-      if (elementRef.current) {
-        observer.unobserve(elementRef.current);
-      }
-    };
-  }, [options]); 
+  };   
 
   return (
     !hasEmptyFields && (
       <form
-        className="carousel-item w-full flex relative flex-col justify-start items-center "
+        className="carousel-item w-full flex relative flex-col justify-start items-center outline-none "
         onSubmit={handleSubmit}
         id="phase2"
-        ref={elementRef}
+        tabIndex={-1} 
       >
         {/*  */}
         <div className="w-[75%] md:w-[60%] lg:w-[55%] h-[83%]  shadow-md carousel rounded-box border my-4">

@@ -225,7 +225,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
         </button>
 
         <button
-          onClick={() => {
+          onClick={() => { 
             setPhase(2);
             router.push(pathname + "#phase2");
           }}

@@ -4,24 +4,36 @@ import React from "react";
 
 import { Employee } from "@/app/schemas/EmployeeSchema.ts";
 
+import { useAppContext } from "@/app/GlobalContext";
+
 interface GenerateIDFormProps {
   employeeList: Employee[];
 }
 
 import EmployeeSelection from "./EmployeeSelection";
-import GenerateEmployeeIDForm from "./GenerateEmployeeIDForm";  
+import GenerateEmployeeIDForm from "./GenerateEmployeeIDForm";
 
-const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => { 
+const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
   const [formData, setFormData] = React.useState<Employee>({} as Employee);
 
   const [hasEmptyFields, setHasEmptyFields] = React.useState<boolean>(false);
 
   const [phase, setPhase] = React.useState<1 | 2>(1);
 
+  const { setLoading, loading } = useAppContext();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    console.log("submitted");
+    try {
+      setLoading(true);
+
+      console.log("submitted");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   React.useEffect(() => {
@@ -35,14 +47,15 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
     ) {
       setHasEmptyFields(true);
     }
-  }, [formData]);  
+  }, [formData]);
 
   return (
     <>
       <div
-        className={`${phase==2?" border-transparent ":" shadow-xl "} h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
-      >  
-
+        className={`${
+          phase == 2 ? " border-transparent " : " shadow-xl "
+        } transition-all duration-500 ease-linear h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
+      >
         {/* select employee*/}
         <EmployeeSelection
           setPhase={setPhase}
@@ -53,15 +66,16 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
           employeeList={employeeList}
         />
 
-        {/* generate id */} 
-          <GenerateEmployeeIDForm
+        {/* generate id */}
+        <GenerateEmployeeIDForm 
           setPhase={setPhase}
+          loading={loading}
           hasEmptyFields={hasEmptyFields}
           handleSubmit={handleSubmit}
-        /> 
+        />
       </div>
 
-      <ul className="steps absolute bottom-[2vh] text-xs w-[97%] md:w-[75%] lg:w-[55%] xl:w-[45%] 2xl:w-[40%]">
+      <ul className=" steps absolute bottom-[2vh] text-xs w-[97%] md:w-[75%] lg:w-[55%] xl:w-[45%] 2xl:w-[40%]">
         <li className={` step step-primary `}>Choose Employee</li>
         <li className={` step ${phase == 2 && "step-primary"} `}>
           Generate ID

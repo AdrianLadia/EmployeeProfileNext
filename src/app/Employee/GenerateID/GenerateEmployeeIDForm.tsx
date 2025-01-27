@@ -69,7 +69,7 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
         tabIndex={-1} 
       >
         {/*  */}
-        <div className="w-[75%] md:w-[60%] lg:w-[55%] h-[83%]  shadow-md carousel rounded-box border my-4">
+        <div className="w-[75%] md:w-[480px] lg:w-[480px] h-[83%]  shadow-md carousel rounded-box border my-4">
           {renderPlaceholder()}
           <div className="flex flex-col min-w-full h-full bg-base-200 "></div>
         </div>

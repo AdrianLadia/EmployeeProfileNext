@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { useAppContext } from "../GlobalContext";
 
@@ -34,6 +34,18 @@ const EmployeeMemoTableModal = () => {
     };
   }, []); 
 
+  const [sortedMemos, setSortedMemos] = React.useState<Memo[]>([]);
+
+  React.useEffect(() => {
+    if (!memoForTableModal) return; 
+
+    const sorted = memoForTableModal.sort((a, b) => {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }); 
+
+    setSortedMemos(sorted);
+  }, [memoForTableModal]);
+
   return (
     <dialog id="EmployeeMemoModal" className="modal " ref={memoTableModalRef}>
       <div className=" bg-transparent shadow-none gap-2 p-0 w-max">
@@ -48,7 +60,7 @@ const EmployeeMemoTableModal = () => {
           <h3 className="text-xl font-semibold w-full text-start ">
             Memos{" "}
             <span className="text-base">
-              ( {memoForTableModal?.[0]?.Employee?.name} )
+              ( {sortedMemos?.[0]?.Employee?.name} )
             </span>{" "}
           </h3>
           <div className="w-full h-full overflow-auto rounded-box ">
@@ -67,7 +79,7 @@ const EmployeeMemoTableModal = () => {
                 </tr>
               </thead>
               <tbody>
-                {memoForTableModal?.map((memo) => (
+                {sortedMemos?.map((memo) => (
                   <tr key={memo._id} className="hover:bg-base-100">
                     {/* print */}
                     <td className="w-max text-center ">

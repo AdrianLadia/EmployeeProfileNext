@@ -18,9 +18,9 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
   const [hasEmptyFields, setHasEmptyFields] = React.useState<boolean>(false);
 
-  const [phase, setPhase] = React.useState<1 | 2>(1);
+  const [phase, setPhase] = React.useState<1 | 2>(1); 
 
-  const { setLoading, loading } = useAppContext();
+  const { setLoading, loading } = useAppContext(); 
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -47,7 +47,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
     ) {
       setHasEmptyFields(true);
     }
-  }, [formData]);
+  }, [formData]); 
 
   return (
     <>
@@ -78,7 +78,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
       <ul className=" steps absolute bottom-[2vh] text-xs w-[97%] md:w-[75%] lg:w-[55%] xl:w-[45%] 2xl:w-[40%]">
         <li className={` step step-primary `}>Choose Employee</li>
-        <li className={` step ${phase == 2 && "step-primary"} `}>
+        <li className={` step ${ phase == 2 && "step-primary"} `}>
           Generate ID
         </li>
       </ul>

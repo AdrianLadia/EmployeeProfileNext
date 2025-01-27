@@ -110,8 +110,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
       ],
     };
 
-    return (
-      // formData?._id && (
+    return ( 
       <>
         <div className="flex flex-wrap gap-4">
           {formData?.photoOfPerson ? (
@@ -176,8 +175,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
             </div>
           ))}
         </div>
-      </>
-      // )
+      </> 
     );
   };
 

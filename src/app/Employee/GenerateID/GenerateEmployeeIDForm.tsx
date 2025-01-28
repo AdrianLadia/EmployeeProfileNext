@@ -10,7 +10,7 @@ interface EmployeeIDViewProps {
 
 const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
   handleSubmit,
-  setPhase,  
+  setPhase,
   hasEmptyFields,
   loading,
 }) => {

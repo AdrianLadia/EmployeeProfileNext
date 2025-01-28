@@ -132,7 +132,7 @@ def create_employee():
                     'dateJoined': data['dateJoined'],
                     'company': data['company'],
                     'isRegular': data['isRegular'],
-                    'isProductionEmployee': data['isProductionEmployee'],
+                    'companyRole': data['companyRole'],
                     'isOJT': data['isOJT'],
                     'dailyWage': data['dailyWage'],
                     '_version': 0

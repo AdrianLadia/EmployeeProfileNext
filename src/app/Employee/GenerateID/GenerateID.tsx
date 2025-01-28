@@ -18,17 +18,27 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
   const [hasEmptyFields, setHasEmptyFields] = React.useState<boolean>(false);
 
-  const [phase, setPhase] = React.useState<1 | 2>(1); 
+  const [phase, setPhase] = React.useState<1 | 2>(1);
 
-  const { setLoading, loading } = useAppContext(); 
+  const { setLoading, loading, serverRequests } = useAppContext();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       setLoading(true);
 
-      console.log("submitted");
+      const res = await serverRequests.generateEmployeeID(formData);
+
+      console.log(res);
+
+      if (res?.error) {
+        console.error(res.error);
+      }
+
+      if (res?.data) {
+        console.log(res);
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -45,16 +55,17 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
         formData?.dateJoined &&
         formData?.photoOfPerson
       )
-    ) { 
+    ) {
       setHasEmptyFields(true);
     }
-  }, [formData, hasEmptyFields]); 
+    console.log(formData);
+  }, [formData, hasEmptyFields]);
 
   return (
     <>
       <div
         className={`${
-          phase == 2 ? " border-transparent " : " shadow-xl " 
+          phase == 2 ? " border-transparent " : " shadow-xl "
         } overflow-x-hidden transition-all duration-500 ease-linear h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
       >
         {/* select employee*/}
@@ -68,7 +79,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
         />
 
         {/* generate id */}
-        <GenerateEmployeeIDForm 
+        <GenerateEmployeeIDForm
           setPhase={setPhase}
           phase={phase}
           loading={loading}
@@ -79,7 +90,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
       <ul className=" steps absolute bottom-[2vh] text-xs w-[97%] md:w-[75%] lg:w-[55%] xl:w-[45%] 2xl:w-[40%]">
         <li className={` step step-primary `}>Choose Employee</li>
-        <li className={` step ${ phase == 2 && "step-primary"} `}>
+        <li className={` step ${phase == 2 && "step-primary"} `}>
           Generate ID
         </li>
       </ul>

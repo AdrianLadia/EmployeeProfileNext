@@ -87,8 +87,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       {/* head */}
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Address</th>
+          <th className="min-w-[40vw] md:min-w-[15vw]">Name</th>
+          <th className="min-w-[50vw] md:min-w-full">Address</th>
           <th>Company</th>
         </tr>
       </thead>

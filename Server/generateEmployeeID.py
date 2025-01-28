@@ -14,16 +14,17 @@ def generate_id_card(employee_data):
     phoneNumber = employee_data.get("phoneNumber", "N/A")
     dateJoined = employee_data.get("dateJoined", "N/A")
     company = employee_data.get("company", "N/A")
-    isRegular = employee_data.get("isRegular", False)
-    isProductionEmployee = employee_data.get("isProductionEmployee", False)
-    isOJT = employee_data.get("isOJT", False)
+    # isRegular = employee_data.get("isRegular", False)
+    # isProductionEmployee = employee_data.get("isProductionEmployee", False)
+    # isOJT = employee_data.get("isOJT", False)
+    type_of_employee = employee_data.get("companyRole", "N/A")
 
     card_width, card_height = 591, 1004
     background_color = (255, 255, 255)
 
     # card = Image.new("RGB", (card_width, card_height), background_color)
     # draw = ImageDraw.Draw(card)
-    type_of_employee = "Regular" if isRegular else "OJT" if isOJT else "Production" if isProductionEmployee else "Unknown"
+    # type_of_employee = "Regular" if isRegular else "OJT" if isOJT else "Production" if isProductionEmployee else "Unknown"
 
     background_path = "server/IDassets/"
 
@@ -177,7 +178,7 @@ employee = {
     "dateJoined": datetime(2024, 1, 15).date(),
     "company": "PPC",
     "isRegular": False,
-    "isProductionEmployee": False,
+    "companyRole": "IT",
     "isOJT": True,
     "dailyWage": 800.50,
     "_version": 1,

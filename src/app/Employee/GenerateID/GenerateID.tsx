@@ -42,12 +42,13 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
         formData?.name &&
         formData?.address &&
         formData?.phoneNumber &&
-        formData?.dateJoined
+        formData?.dateJoined &&
+        formData?.photoOfPerson
       )
-    ) {
+    ) { 
       setHasEmptyFields(true);
     }
-  }, [formData]); 
+  }, [formData, hasEmptyFields]); 
 
   return (
     <>

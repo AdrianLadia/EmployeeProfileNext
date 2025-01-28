@@ -8,8 +8,7 @@ import { Employee } from "../schemas/EmployeeSchema";
 
 import { Memo } from "../schemas/MemoSchema";
 
-import Image from "next/image";
-import { use } from "chai";
+import Image from "next/image"; 
 
 const EmployeeDetails = () => {
   const {

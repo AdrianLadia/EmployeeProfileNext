@@ -559,9 +559,10 @@ def removeRolefromUser():
 def generate_employee_id():
     if request.is_json:
         data = request.get_json()
+        userData = data['userData']
         employee_data = data['employee_data']
         try:
-            res = generateEmployeeID.generate_id_card(employee_data)
+            res = UserActions(userData).createEmployeeIDAction(userData, employee_data)
             return jsonify({
                 'message': 'Employee ID generated successfully!',
                 'data': res

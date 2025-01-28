@@ -32,15 +32,15 @@ offenseObject = {
 
 employeeObject = {
     '_id': None,
-    'name': 'name',
+    'name': 'Val Letigio',
     'email': 'email',
     'address': 'address',
     'phoneNumber': 'phone',
-    'photoOfPerson': 'photoOfPerson',
+    'photoOfPerson': 'Server/test_assets/minor.png',
     'resumePhotosList': ['resumePhotosList'],
     'biodataPhotosList': ['biodataPhotosList'],
     'dateJoined': datetime.datetime.now(),
-    'company': 'Pustanan',
+    'company': 'PPC',
     'isRegular': True,
     'companyRole': 'IT',
     'isOJT': False,
@@ -477,6 +477,29 @@ def test_create_offenses_with_same_number():
         db.delete({}, 'Offense')
         pass
 
+def test_create_employee_and_employee_id():
+    try:
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+
+        employee = user.createEmployeeAction(userCreated, employeeObject)
+
+        employeeList = user.readCollection('Employee')
+
+        assert len(employeeList) == 1
+
+        employeeId = user.createEmployeeIDAction(userCreated, employeeList[0])
+
+        employeeIdList = user.readCollection('EmployeeID')
+
+        assert len(employeeIdList) == 1
+
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Employee')
+        db.delete({}, 'EmployeeID')
+        pass
+
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():
         raise ValueError('Not to be run in cloud production environment')
@@ -493,4 +516,5 @@ if __name__ == '__main__':
     # # test_getRemedialActionForEmployeeMemoAction()
     test_create_employee_with_name_only()
     test_create_offenses_with_same_number()
+    test_create_employee_and_employee_id()
     pass

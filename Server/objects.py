@@ -5,6 +5,7 @@ from utils import *
 import re
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Union, List
+from generateEmployeeID import EmployeeIDCard
 
 # db = mongoDb("EmployeeManagementBackup")
 db = mongoDb()
@@ -26,6 +27,9 @@ class Roles:
                 },
                 'canViewEmployeeDetails': {
                     'description': 'can view employee details'
+                },
+                'canGenerateEmployeeID': {
+                    'description': 'can generate employee ID'
                 },
             },
             'Memo': {
@@ -406,6 +410,15 @@ class UserActions(User):
             'remedialAction': remedialActions[offenseCount],
             'offenseCount': offenseCount + 1
         }
+    
+    def createEmployeeIDAction(self, user, employee):
+        if 'canGenerateEmployeeID' not in user['roles']['User']:
+            raise ValueError('User does not have permission to generate Employee ID')
+
+        idGenerated = EmployeeIDCard(**employee).generate_id_card()
+        print(idGenerated)
+        db.create(idGenerated, 'EmployeeID')
+        return idGenerated['IDCardURL']
 
 
 class Memo(BaseModel):

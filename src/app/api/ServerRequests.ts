@@ -460,6 +460,20 @@ class ServerRequests extends Server {
     } 
   }
 
+  async generateEmployeeID(Employee: Employee): Promise<any> {
+    try {
+      const res = await fetch(`${this.url}/generateEmployeeID`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ employee: Employee }),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
 }
 
 export default ServerRequests;

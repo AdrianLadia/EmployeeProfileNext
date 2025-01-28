@@ -7,6 +7,7 @@ from AppConfig import AppConfig
 import logging
 from firebaseAuthenticator import firebaseAuthenticator
 from datetime import datetime, timezone
+import generateEmployeeID
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -553,6 +554,23 @@ def removeRolefromUser():
         except Exception as e:
             logging.exception("Error removing Role: %s", e)
             return jsonify({'error': e.args[0]}), 400
+        
+@app.route('/generateEmployeeID', methods=['POST'])
+def generate_employee_id():
+    if request.is_json:
+        data = request.get_json()
+        employee_data = data['employee_data']
+        try:
+            res = generateEmployeeID.generate_id_card(employee_data)
+            return jsonify({
+                'message': 'Employee ID generated successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error generating Employee ID: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+    else:
+        return jsonify({"error": "Request must be JSON"}), 400
 
 
 if __name__ == '__main__':

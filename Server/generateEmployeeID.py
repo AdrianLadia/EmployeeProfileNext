@@ -3,6 +3,7 @@ import qrcode
 import os
 from datetime import datetime
 import textwrap
+from firebase_admin import credentials, storage, initialize_app
 
 def generate_id_card(employee_data):
     name = employee_data.get("name", "Unknown")
@@ -119,6 +120,20 @@ def generate_id_card(employee_data):
 
     background.save(output_path)
     print(f"ID card saved to {output_path}")
+
+    cred = credentials.Certificate("Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json")
+    initialize_app(cred, {"storageBucket": "pustananemployeeprofile.firebasestorage.app"})
+
+    bucket = storage.bucket()
+    blob = bucket.blob(f"EmployeeIDs/{employee['name'].replace(' ', '_')}_id_card.png")
+    blob.upload_from_filename(output_path)
+    blob.make_public()
+
+    download_url = blob.public_url
+    print(f"ID card uploaded to Firebase Storage" + download_url)
+
+    return download_url
+
 
     # back side of ID card
 

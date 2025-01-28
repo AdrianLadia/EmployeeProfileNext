@@ -514,7 +514,7 @@ class Employee(BaseModel):
     dateJoined: Optional[datetime.datetime]
     company: Optional[str]
     isRegular: Optional[bool]
-    isProductionEmployee: Optional[bool]
+    companyRole: Optional[str]
     isOJT: Optional[bool]
     dailyWage: Optional[Union[float, int]]
     version: int = Field(..., alias='_version')
@@ -551,7 +551,7 @@ class Employee(BaseModel):
             'dateJoined': self.dateJoined,
             'company': self.company,
             'isRegular': self.isRegular,
-            'isProductionEmployee': self.isProductionEmployee,
+            'companyRole': self.companyRole,
             'isOJT': self.isOJT,
             'dailyWage': self.dailyWage,
             '_version': self.version

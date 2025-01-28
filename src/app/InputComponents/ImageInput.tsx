@@ -104,10 +104,10 @@ const ImageInput: FC<ImageInputProps> = ({
         </div>
       </div>
 
-      <div className={inputStyle + " flex justify-between m-0 p-0"}>
+      <div className={inputStyle + " flex flex-wrap m-0 p-0"}>
         <input
           type="file"
-          className={inputStyle + " border-0 outline-none text-transparent "}
+          className={inputStyle + " focus:outline-none border-0 outline-none text-transparent grow max-w-[80%] bg-transparent"}
           id={id}
           accept="image/*" 
           required={required}
@@ -115,7 +115,7 @@ const ImageInput: FC<ImageInputProps> = ({
           multiple={multiple}
           onChange={(setFunction && handleFileChange) || onChangeHandler}
         />
-        <h3 className="h-full flex items-center px-8">{mediaList?.length || 0} File(s)</h3>
+        <h3 className="h-full flex items-center justify-end grow max-w-[15%]">{mediaList?.length || 0} File(s)</h3>
       </div>
     </div>
   );

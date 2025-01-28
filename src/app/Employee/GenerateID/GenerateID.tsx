@@ -33,6 +33,8 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
       const res = await serverRequests.generateEmployeeID(formData, userData);
 
+      console.log(res)
+
       if (res?.error) {
         console.error(res.error);
       }

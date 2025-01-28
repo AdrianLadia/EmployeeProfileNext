@@ -24,7 +24,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
   hasEmptyFields = false,
   setPhase,
 }) => {
-  const { router, pathname } = useAppContext();
+  const { router, pathname } = useAppContext(); 
 
   const handleSelectChange = (selectedOption: Employee): void => {
     if (selectedOption?._id != formData?._id) {
@@ -32,6 +32,8 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
       setHasEmptyFields(false);
     }
   };
+
+
 
   const selectStyle = {
     control: (base: unknown) => ({
@@ -216,6 +218,8 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
     );
   };
 
+
+
   return (
     <div
       className="carousel-item w-full flex flex-col h-full relative overscroll-contain"
@@ -247,7 +251,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
       {/* actions */}
       <div className="flex gap-2 justify-center absolute bottom-5 left-0 w-full ">
         <button
-          onClick={() => {
+          onClick={() => { 
             router.push("/Employee/Update#" + formData?._id);
           }}
           hidden={hasEmptyFields ? false : true}

@@ -554,12 +554,13 @@ def removeRolefromUser():
         except Exception as e:
             logging.exception("Error removing Role: %s", e)
             return jsonify({'error': e.args[0]}), 400
-        
+
+
 @app.route('/generateEmployeeID', methods=['POST'])
 def generate_employee_id():
     if request.is_json:
         data = request.get_json()
-        employee_data = data['employee_data']
+        employee_data = data['employee']
         try:
             res = generateEmployeeID.generate_id_card(employee_data)
             return jsonify({

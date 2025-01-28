@@ -1,11 +1,14 @@
 import React from "react";
 
+import Image from "next/image";
+
 interface EmployeeIDViewProps {
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
   setPhase: (phase: 1 | 2) => void; 
   phase: 1 | 2;
   hasEmptyFields: boolean;
   loading: boolean;
+  idURL: string;
 }
 
 const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
@@ -13,6 +16,7 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
   setPhase,
   hasEmptyFields,
   loading,
+  idURL
 }) => {
 
   const renderPlaceholder = () => {
@@ -69,8 +73,8 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
         tabIndex={-1} 
       >
         {/*  */}
-        <div className="w-[75%] md:w-[480px] h-[83%]  shadow-md carousel rounded-box border my-4">
-          {renderPlaceholder()}
+        <div className="w-[75%] md:w-[480px] h-[83%]  shadow-md carousel border my-4">
+          {!idURL ? renderPlaceholder() : <Image className="min-w-full h-full" src={idURL||""} height={300} width={300} alt="ID"/>}
           <div className="flex flex-col min-w-full h-full bg-base-200 "></div>
         </div>
 
@@ -86,13 +90,11 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
           </a>
           <button
             type="submit"
-            disabled={hasEmptyFields}
+            disabled={hasEmptyFields || Boolean(idURL)}
             tabIndex={-1}
-            className={`${
-              loading && "animate-spin"
-            } btn-primary btn w-[43%] h-12 `}
+            className={` btn-primary btn w-[43%] h-12 `}
           >
-            {loading ? "C" : "Generate"}
+            {loading ? <p className={`${loading&&"animate-spin"} `}>C</p> : "Generate"}
           </button>
         </div>
       </form>

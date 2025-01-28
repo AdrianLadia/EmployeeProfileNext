@@ -20,24 +20,25 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
   const [phase, setPhase] = React.useState<1 | 2>(1);
 
-  const { setLoading, loading, serverRequests } = useAppContext();
+  const { setLoading, loading, serverRequests, userData } = useAppContext();
+
+  const [idURL, setIdURL] = React.useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
+      setIdURL("");
       setLoading(true);
 
-      const res = await serverRequests.generateEmployeeID(formData);
-
-      console.log(res);
+      const res = await serverRequests.generateEmployeeID(formData, userData);
 
       if (res?.error) {
         console.error(res.error);
       }
 
       if (res?.data) {
-        console.log(res);
+        setIdURL(res.data);
       }
     } catch (e) {
       console.error(e);
@@ -58,7 +59,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
     ) {
       setHasEmptyFields(true);
     }
-    console.log(formData);
+    setIdURL("");
   }, [formData, hasEmptyFields]);
 
   return (
@@ -66,7 +67,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
       <div
         className={`${
           phase == 2 ? " border-transparent " : " shadow-xl "
-        } overflow-x-hidden transition-all duration-500 ease-linear h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
+        } overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
       >
         {/* select employee*/}
         <EmployeeSelection
@@ -85,6 +86,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
           loading={loading}
           hasEmptyFields={hasEmptyFields}
           handleSubmit={handleSubmit}
+          idURL={idURL}
         />
       </div>
 

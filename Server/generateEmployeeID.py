@@ -3,7 +3,8 @@ import qrcode
 import os
 from datetime import datetime
 import textwrap
-from firebase_admin import credentials, storage, initialize_app
+from firebase_admin import credentials, storage, initialize_app, _apps
+
 
 def generate_id_card(employee_data):
     name = employee_data.get("name", "Unknown")
@@ -38,7 +39,8 @@ def generate_id_card(employee_data):
         background_path += "spIDfront.png"
 
     try:
-        background = Image.open(background_path).resize((card_width, card_height))
+        background = Image.open(background_path).resize(
+            (card_width, card_height))
     except Exception as e:
         print(f"Error loading background image: {e}")
         return
@@ -53,7 +55,8 @@ def generate_id_card(employee_data):
     border_color = (0, 0, 0)
     border_width = 10
     draw.rectangle(
-        [(border_width, border_width), (card_width - border_width, card_height - border_width)],
+        [(border_width, border_width),
+         (card_width - border_width, card_height - border_width)],
         outline=border_color,
         width=border_width,
     )
@@ -110,23 +113,31 @@ def generate_id_card(employee_data):
     qr = qrcode.QRCode(box_size=4, border=2)
     qr.add_data(qr_data)
     qr.make(fit=True)
-    qr_code_img = qr.make_image(fill="black", back_color="white").resize((170, 170))
+    qr_code_img = qr.make_image(fill="black", back_color="white").resize(
+        (170, 170))
     background.paste(qr_code_img, (215, 680))
 
     directory = 'Server/EmployeeIDs/'
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    output_path = os.path.join(directory, f"{employee['name'].replace(' ', '_')}_id_card.png")
+    output_path = os.path.join(
+        directory, f"{employee['name'].replace(' ', '_')}_id_card.png")
 
     background.save(output_path)
     print(f"ID card saved to {output_path}")
 
-    cred = credentials.Certificate("Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json")
-    initialize_app(cred, {"storageBucket": "pustananemployeeprofile.firebasestorage.app"})
+    if not _apps:
+        cred = credentials.Certificate(
+            "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
+        )
+        initialize_app(
+            cred,
+            {"storageBucket": "pustananemployeeprofile.firebasestorage.app"})
 
     bucket = storage.bucket()
-    blob = bucket.blob(f"EmployeeIDs/{employee['name'].replace(' ', '_')}_id_card.png")
+    blob = bucket.blob(
+        f"EmployeeIDs/{employee['name'].replace(' ', '_')}_id_card.png")
     blob.upload_from_filename(output_path)
     blob.make_public()
 
@@ -134,7 +145,6 @@ def generate_id_card(employee_data):
     print(f"ID card uploaded to Firebase Storage" + download_url)
 
     return download_url
-
 
     # back side of ID card
 
@@ -165,7 +175,6 @@ def generate_id_card(employee_data):
     # print(f"Back side of ID card saved to {back_output_path}")
 
 
-
 employee = {
     "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
     "name": "Michael Flores",
@@ -184,5 +193,4 @@ employee = {
     "_version": 1,
 }
 
-generate_id_card(employee)
-
+# generate_id_card(employee)

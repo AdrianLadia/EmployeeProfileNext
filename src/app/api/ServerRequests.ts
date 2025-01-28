@@ -460,12 +460,12 @@ class ServerRequests extends Server {
     } 
   }
 
-  async generateEmployeeID(Employee: Employee): Promise<any> {
+  async generateEmployeeID(Employee: Employee, UserData: User): Promise<any> {
     try { 
       const res = await fetch(`${this.url}/generateEmployeeID`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ employee: Employee }),
+        body: JSON.stringify({ employee: Employee, user: UserData }),
         cache: 'no-store',
       });
       return await res.json();

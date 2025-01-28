@@ -15,7 +15,7 @@ import ImageInput from "@/app/InputComponents/ImageInput";
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
 
-import SelectPlus from "@/app/InputComponents/SelectPlus"; 
+import SelectPlus from "@/app/InputComponents/SelectPlus";
 
 interface UpdateEmployeeForm {
   employeeList: Employee[];
@@ -31,8 +31,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     loading,
     setLoading,
     imageListForModal,
-    imageModalId, 
-    pathname
+    imageModalId,
+    pathname,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -56,10 +56,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     dateJoined: null,
     company: null,
     isRegular: null,
-    isProductionEmployee: null,
+    companyRole: null,
     dailyWage: null,
     isOJT: null,
-  }; 
+  };
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(
     defaultFormData as Employee
@@ -144,6 +144,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           });
           formRef.current?.scrollIntoView({ behavior: "smooth" });
           router.refresh();
+          console.log(res)
         } else {
           setToastOptions({
             open: true,
@@ -162,7 +163,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         });
       } finally {
         setLoading(false);
-        router.push(pathname)
+        router.push(pathname);
       }
     } else {
       setLoading(false);
@@ -285,7 +286,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         ]);
       }
     }
-  }, [selectedEmployee]); 
+  }, [selectedEmployee]);
 
   useEffect(() => {
     const res = employeeList.find(
@@ -294,10 +295,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     setSelectedEmployee(res as Employee);
     setFormData(res as Employee);
     setDisable(false);
-    setDisableSaveButton(false); 
+    setDisableSaveButton(false);
   }, []);
-
-
 
   return (
     <form
@@ -517,6 +516,22 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         </div>
       </div>
 
+      {/* company role */}
+      <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
+        Company Role
+        <label className="input input-bordered flex items-center gap-2">
+          <input
+            type="companyRole"
+            className="grow"
+            placeholder="Company Role"
+            id="companyRole"
+            value={formData?.companyRole || ""}
+            onChange={handleInputChange}
+            disabled={disable}
+          />
+        </label>
+      </div>
+
       <div className="flex flex-wrap w-full justify-between">
         {/* isRegular */}
         <label className="label cursor-pointer flex justify-start gap-2 w-max">
@@ -534,7 +549,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           />
         </label>
         {/* isProductionEmployee */}
-        <label className="label cursor-pointer flex justify-start gap-2 w-max">
+        {/* <label className="label cursor-pointer flex justify-start gap-2 w-max">
           <p className="label-text text-base">Is Production Employee?</p>
           <input
             type="checkbox"
@@ -553,7 +568,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
               });
             }}
           />
-        </label>
+        </label> */}
         {/* isOJT */}
         <label className="label cursor-pointer flex justify-start gap-2 w-max">
           <p className="label-text text-base">Is OJT?</p>

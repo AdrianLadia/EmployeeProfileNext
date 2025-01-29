@@ -32,6 +32,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     setLoading,
     imageListForModal,
     imageModalId,
+    pathname,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -55,9 +56,9 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     dateJoined: null,
     company: null,
     isRegular: null,
-    isProductionEmployee: null,
+    companyRole: null,
     dailyWage: null,
-    isOJT: null
+    isOJT: null,
   };
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(
@@ -128,7 +129,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           selectedEmployee,
           dataToUpdate,
           userData
-        );  
+        );
 
         if (res && res.message) {
           form.reset();
@@ -143,7 +144,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           });
           formRef.current?.scrollIntoView({ behavior: "smooth" });
           router.refresh();
-        } else { 
+          console.log(res)
+        } else {
           setToastOptions({
             open: true,
             message: res.error,
@@ -161,6 +163,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         });
       } finally {
         setLoading(false);
+        router.push(pathname);
       }
     } else {
       setLoading(false);
@@ -272,18 +275,28 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     if (selectedEmployee?._id) {
       const res = companyOptions.find(
         (company) => company.value == selectedEmployee.company
-      ); 
-      if((res == undefined || !res) && selectedEmployee?.company){  
+      );
+      if ((res == undefined || !res) && selectedEmployee?.company) {
         setCompanyOptions([
           ...companyOptions,
           {
             label: selectedEmployee?.company || "",
             value: selectedEmployee?.company || "",
-          }
-        ])
+          },
+        ]);
       }
     }
-  }, [selectedEmployee]); 
+  }, [selectedEmployee]);
+
+  useEffect(() => {
+    const res = employeeList.find(
+      (employee) => employee._id == window.location.hash.split("#")[1]
+    );
+    setSelectedEmployee(res as Employee);
+    setFormData(res as Employee);
+    setDisable(false);
+    setDisableSaveButton(false);
+  }, []);
 
   return (
     <form
@@ -409,7 +422,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           mediaList={formData?.photoOfPerson ? [formData?.photoOfPerson] : []}
           onChangeHandler={handleFileChange}
           disable={disable}
-        /> 
+        />
 
         {/* resumePhotosList */}
         <ImageInput
@@ -422,7 +435,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChangeHandler={handleFileChange}
           disable={disable}
           multiple={true}
-        /> 
+        />
 
         {/* biodataPhotosList */}
         <ImageInput
@@ -435,7 +448,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChangeHandler={handleFileChange}
           disable={disable}
           multiple={true}
-        /> 
+        />
       </div>
 
       {/* E-mail */}
@@ -501,55 +514,77 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             }}
           />
         </div>
-      </div> 
+      </div>
+
+      {/* company role */}
+      <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
+        Company Role
+        <label className="input input-bordered flex items-center gap-2">
+          <input
+            type="companyRole"
+            className="grow"
+            placeholder="Company Role"
+            id="companyRole"
+            value={formData?.companyRole || ""}
+            onChange={handleInputChange}
+            disabled={disable}
+          />
+        </label>
+      </div>
 
       <div className="flex flex-wrap w-full justify-between">
-          {/* isRegular */}
-          <label className="label cursor-pointer flex justify-start gap-2 w-max">
-            <p className="label-text text-base">Is Regular?</p>
-            <input
-              type="checkbox"
-              className="checkbox"
-              id="isRegular" 
-              disabled={disable}
-              checked={formData?.isRegular || false}
-              onChange={(e) => {
-                setFormData({ ...formData, isRegular: e.target.checked });
-                setDataToUpdate({ ...dataToUpdate, isRegular: e.target.checked });
-              }}
-            />
-          </label>
-          {/* isProductionEmployee */}
-          <label className="label cursor-pointer flex justify-start gap-2 w-max">
-            <p className="label-text text-base">Is Production Employee?</p>
-            <input
-              type="checkbox"
-              className="checkbox"
-              id="isProductionEmployee" 
-              checked={formData?.isProductionEmployee || false}
-              disabled={disable}
-              onChange={(e) => {
-                setFormData({ ...formData, isProductionEmployee: e.target.checked });
-                setDataToUpdate({ ...dataToUpdate, isProductionEmployee: e.target.checked });
-              }}
-            />
-          </label>
-          {/* isOJT */}
-          <label className="label cursor-pointer flex justify-start gap-2 w-max">
-            <p className="label-text text-base">Is OJT?</p>
-            <input
-              type="checkbox"
-              className="checkbox"
-              id="isOJT" 
-              disabled={disable}
-              checked={formData?.isOJT || false}
-              onChange={(e) => {
-                setFormData({ ...formData, isOJT: e.target.checked });
-                setDataToUpdate({ ...dataToUpdate, isOJT: e.target.checked });
-              }}
-            />
-          </label>
-        </div> 
+        {/* isRegular */}
+        <label className="label cursor-pointer flex justify-start gap-2 w-max">
+          <p className="label-text text-base">Is Regular?</p>
+          <input
+            type="checkbox"
+            className="checkbox"
+            id="isRegular"
+            disabled={disable}
+            checked={formData?.isRegular || false}
+            onChange={(e) => {
+              setFormData({ ...formData, isRegular: e.target.checked });
+              setDataToUpdate({ ...dataToUpdate, isRegular: e.target.checked });
+            }}
+          />
+        </label>
+        {/* isProductionEmployee */}
+        {/* <label className="label cursor-pointer flex justify-start gap-2 w-max">
+          <p className="label-text text-base">Is Production Employee?</p>
+          <input
+            type="checkbox"
+            className="checkbox"
+            id="isProductionEmployee"
+            checked={formData?.isProductionEmployee || false}
+            disabled={disable}
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                isProductionEmployee: e.target.checked,
+              });
+              setDataToUpdate({
+                ...dataToUpdate,
+                isProductionEmployee: e.target.checked,
+              });
+            }}
+          />
+        </label> */}
+        {/* isOJT */}
+        <label className="label cursor-pointer flex justify-start gap-2 w-max">
+          <p className="label-text text-base">Is OJT?</p>
+          <input
+            type="checkbox"
+            className="checkbox"
+            id="isOJT"
+            disabled={disable}
+            checked={formData?.isOJT || false}
+            onChange={(e) => {
+              setFormData({ ...formData, isOJT: e.target.checked });
+              setDataToUpdate({ ...dataToUpdate, isOJT: e.target.checked });
+            }}
+          />
+        </label>
+      </div>
 
       {/* Daily wage */}
       <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
@@ -597,3 +632,4 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 };
 
 export default UpdateEmployeeForm;
+

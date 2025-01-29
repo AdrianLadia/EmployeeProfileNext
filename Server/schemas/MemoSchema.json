@@ -12,7 +12,7 @@
                         }
                     ],
                     "default": null,
-                    "title": "Id"
+                    "title": " Id"
                 },
                 "name": {
                     "title": "Name",
@@ -135,6 +135,17 @@
                     ],
                     "title": "Isproductionemployee"
                 },
+                "isOJT": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Isojt"
+                },
                 "dailyWage": {
                     "anyOf": [
                         {
@@ -150,7 +161,7 @@
                     "title": "Dailywage"
                 },
                 "_version": {
-                    "title": "Version",
+                    "title": " Version",
                     "type": "integer"
                 }
             },
@@ -166,6 +177,7 @@
                 "company",
                 "isRegular",
                 "isProductionEmployee",
+                "isOJT",
                 "dailyWage",
                 "_version"
             ],
@@ -184,7 +196,7 @@
                         }
                     ],
                     "default": null,
-                    "title": "Id"
+                    "title": " Id"
                 },
                 "number": {
                     "title": "Number",
@@ -202,7 +214,7 @@
                     "type": "array"
                 },
                 "_version": {
-                    "title": "Version",
+                    "title": " Version",
                     "type": "integer"
                 },
                 "title": {
@@ -239,7 +251,7 @@
                 }
             ],
             "default": null,
-            "title": "Id"
+            "title": " Id"
         },
         "date": {
             "format": "date-time",
@@ -328,7 +340,7 @@
             "title": "Remedialaction"
         },
         "_version": {
-            "title": "Version",
+            "title": " Version",
             "type": "integer"
         }
     },

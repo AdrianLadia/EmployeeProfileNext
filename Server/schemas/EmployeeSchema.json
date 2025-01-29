@@ -10,7 +10,7 @@
                 }
             ],
             "default": null,
-            "title": "Id"
+            "title": " Id"
         },
         "name": {
             "title": "Name",
@@ -133,6 +133,17 @@
             ],
             "title": "Isproductionemployee"
         },
+        "isOJT": {
+            "anyOf": [
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Isojt"
+        },
         "dailyWage": {
             "anyOf": [
                 {
@@ -148,7 +159,7 @@
             "title": "Dailywage"
         },
         "_version": {
-            "title": "Version",
+            "title": " Version",
             "type": "integer"
         }
     },
@@ -164,6 +175,7 @@
         "company",
         "isRegular",
         "isProductionEmployee",
+        "isOJT",
         "dailyWage",
         "_version"
     ],

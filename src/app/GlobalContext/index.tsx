@@ -451,25 +451,27 @@ export default function ContextProvider({
     if(userData?._id){
       const userRoles = userData.roles;
 
-      let filteredCards: { [key: string]: any } = {}
+      const filteredCards: { [key: string]: unknown[] } = {}
 
       Object.entries(userRoles).map(([key, value]) => {
         if (Array.isArray(value) && value.length) {
           // console.log(cards[key])
-          cards[key]&&cards[key].map((item)=>{
-            // console.log(key)
-            const isAuthorized = value.includes(item.roles[0]) 
-            if(isAuthorized){
-              filteredCards[key] = [
-                ...filteredCards?.[key] || [],
-                item
-              ]
-            }
-          })
+          if(cards[key]){
+            cards[key].map((item)=>{
+              // console.log(key)
+              const isAuthorized = value.includes(item.roles[0]) 
+              if(isAuthorized){
+                filteredCards[key] = [
+                  ...filteredCards?.[key] || [],
+                  item
+                ]
+              }
+            })
+          }
         }
       })
 
-      setCards(filteredCards)
+      setCards(filteredCards as CardsSchema)
     } 
   },[userData])
 

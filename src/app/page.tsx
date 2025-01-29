@@ -40,7 +40,7 @@ const Page = async () => {
   let employeeList: Employee[] = [];
 
   let employeeListLength = 0;
-  let productionEmployeeCount = 0;
+  let regularEmployeeCount = 0;
   let newlyJoinedEmployeeCount = 0;
   let daysSinceJoined = 0;
 
@@ -48,8 +48,8 @@ const Page = async () => {
     employeeList = employeeResponse.data;
 
     employeeListLength = employeeList?.length;
-    productionEmployeeCount = employeeList.filter(
-      (employee) => employee.isProductionEmployee
+    regularEmployeeCount = employeeList.filter(
+      (employee) => employee.isRegular
     )?.length;
     newlyJoinedEmployeeCount = employeeList.filter((employee) => {
       daysSinceJoined =
@@ -89,8 +89,8 @@ const Page = async () => {
 
           {/* Production Employee Count */}
           <div className={cardStyle}>
-            <h3 className="text-lg font-semibold ">Production</h3>
-            <p className="text-4xl font-bold">{productionEmployeeCount}</p>
+            <h3 className="text-lg font-semibold ">Regular</h3>
+            <p className="text-4xl font-bold">{regularEmployeeCount}</p>
             <span className="opacity-80 text-sm">Employee</span>
           </div>
 

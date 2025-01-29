@@ -147,7 +147,7 @@ const EmployeeDetails = () => {
       "photoOfPerson",
       "_id",
       "_version",
-      "dailyWage",
+      "dailyWage", 
     ];
 
     return (

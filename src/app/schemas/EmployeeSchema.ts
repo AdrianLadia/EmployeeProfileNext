@@ -16,7 +16,7 @@ export type Email = string | null;
 export type Datejoined = string | null;
 export type Company = string | null;
 export type Isregular = boolean | null;
-export type Isproductionemployee = boolean | null;
+export type Companyrole = string | null;
 export type Isojt = boolean | null;
 export type Dailywage = number | null;
 export type Version = number;
@@ -33,7 +33,7 @@ export interface Employee {
   dateJoined: Datejoined;
   company: Company;
   isRegular: Isregular;
-  isProductionEmployee: Isproductionemployee;
+  companyRole: Companyrole;
   isOJT: Isojt;
   dailyWage: Dailywage;
   _version: Version;

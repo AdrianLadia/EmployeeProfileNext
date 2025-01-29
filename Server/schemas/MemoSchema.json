@@ -124,16 +124,16 @@
                     ],
                     "title": "Isregular"
                 },
-                "isProductionEmployee": {
+                "companyRole": {
                     "anyOf": [
                         {
-                            "type": "boolean"
+                            "type": "string"
                         },
                         {
                             "type": "null"
                         }
                     ],
-                    "title": "Isproductionemployee"
+                    "title": "Companyrole"
                 },
                 "isOJT": {
                     "anyOf": [
@@ -176,7 +176,7 @@
                 "dateJoined",
                 "company",
                 "isRegular",
-                "isProductionEmployee",
+                "companyRole",
                 "isOJT",
                 "dailyWage",
                 "_version"

@@ -135,7 +135,7 @@ export default function ContextProvider({
 
   const [search, setSearch] = useState<string>("");
 
-  const cards = {
+  const [cards, setCards] = useState<CardsSchema>({
     Employee: [
       {
         path: "/Employee/Create",
@@ -158,7 +158,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canCreateEmployee"],
       },
       {
         path: "/Employee/Update",
@@ -186,7 +186,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canUpdateEmployee"],
       },
       {
         path: "/Employee/Delete",
@@ -209,7 +209,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canDeleteEmployee"],
       },
       {
         path: "/Employee/GenerateID",
@@ -232,7 +232,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canGenerateEmployeeID"],
       },
     ],
     Offense: [
@@ -257,7 +257,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canCreateOffense"],
       },
       {
         path: "/Offense/Update",
@@ -280,7 +280,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canUpdateOffense"],
       },
       {
         path: "/Offense/Delete",
@@ -303,10 +303,10 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canDeleteOffense"],
       },
     ],
-    Memorandum: [
+    Memo: [
       {
         path: "/Memorandum/Create",
         id: "create-memorandum",
@@ -328,7 +328,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canCreateMemo"],
       },
       {
         path: "/Memorandum/Submit",
@@ -351,7 +351,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canSubmitMemo"],
       },
       {
         path: "/Memorandum/Delete",
@@ -374,10 +374,10 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canDeleteMemo"],
       },
     ],
-  };
+  });
 
   const [toastOptions, setToastOptions] = useState({
     open: false,
@@ -468,6 +468,33 @@ export default function ContextProvider({
       });
     }
   }, [session, status, router, isTestEnv]);
+
+  // filter cards
+  useEffect(() => {
+    if(userData?._id){
+      const userRoles = userData.roles;
+
+      let filteredCards: { [key: string]: any } = {}
+
+      Object.entries(userRoles).map(([key, value]) => {
+        if (Array.isArray(value) && value.length) {
+          // console.log(cards[key])
+          cards[key]&&cards[key].map((item)=>{
+            // console.log(key)
+            const isAuthorized = value.includes(item.roles[0]) 
+            if(isAuthorized){
+              filteredCards[key] = [
+                ...filteredCards?.[key] || [],
+                item
+              ]
+            }
+          })
+        }
+      })
+
+      setCards(filteredCards)
+    } 
+  },[userData])
 
   const handleConfirmation = (
     question: string,

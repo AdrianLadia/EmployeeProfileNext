@@ -17,7 +17,7 @@ class Environment:
 
     def __init__(self):
         super().__init__()
-        self.environment = os.getenv('ENVIRONMENT', 'clouddev')
+        self.environment = os.getenv('ENVIRONMENT', 'localdev')
         if self.environment not in [
                 'localdev', 'localprod', 'clouddev', 'cloudprod', 'localTest',
                 'cloudTest'

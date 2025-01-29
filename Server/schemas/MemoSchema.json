@@ -124,7 +124,18 @@
                     ],
                     "title": "Isregular"
                 },
-                "isProductionEmployee": {
+                "companyRole": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Companyrole"
+                },
+                "isOJT": {
                     "anyOf": [
                         {
                             "type": "boolean"
@@ -133,7 +144,7 @@
                             "type": "null"
                         }
                     ],
-                    "title": "Isproductionemployee"
+                    "title": "Isojt"
                 },
                 "dailyWage": {
                     "anyOf": [
@@ -165,7 +176,8 @@
                 "dateJoined",
                 "company",
                 "isRegular",
-                "isProductionEmployee",
+                "companyRole",
+                "isOJT",
                 "dailyWage",
                 "_version"
             ],
@@ -288,6 +300,17 @@
         "MemoCode": {
             "$ref": "#/$defs/Offense"
         },
+        "Code": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Code"
+        },
         "submitted": {
             "title": "Submitted",
             "type": "boolean"
@@ -329,6 +352,7 @@
         "subject",
         "description",
         "MemoCode",
+        "Code",
         "submitted",
         "_version"
     ],

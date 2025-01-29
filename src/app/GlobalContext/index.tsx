@@ -13,9 +13,7 @@ import {
 } from "../Schema";
 import { Employee } from "../schemas/EmployeeSchema";
 import { User, Roles } from "../schemas/UserSchema";
-import { Memo, Offense } from "../schemas/MemoSchema";
-
-import { StylesConfig } from "react-select";
+import { Memo } from "../schemas/MemoSchema";
 
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
@@ -65,6 +63,8 @@ interface AppContextProps {
   highlightText: (text: string) => JSX.Element[];
   setSearch: (data: string) => void;
   getOrdinal: (n: number) => string;
+  imageModalId: string;
+  setImageModalId: (data: string) => void;
 }
 
 // Create the default context with proper types and default values
@@ -105,6 +105,8 @@ const AppContext = createContext<AppContextProps>({
   highlightText: () => [],
   setSearch: () => {},
   getOrdinal: () => "",
+  imageModalId: "",
+  setImageModalId: () => {},
 });
 
 export default function ContextProvider({
@@ -133,7 +135,7 @@ export default function ContextProvider({
 
   const [search, setSearch] = useState<string>("");
 
-  const cards = {
+  const [cards, setCards] = useState<CardsSchema>({
     Employee: [
       {
         path: "/Employee/Create",
@@ -156,7 +158,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canCreateEmployee"],
       },
       {
         path: "/Employee/Update",
@@ -184,7 +186,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canUpdateEmployee"],
       },
       {
         path: "/Employee/Delete",
@@ -207,8 +209,8 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
-      },
+        roles: ["canDeleteEmployee"],
+      }, 
     ],
     Offense: [
       {
@@ -232,7 +234,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canCreateOffense"],
       },
       {
         path: "/Offense/Update",
@@ -255,7 +257,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canUpdateOffense"],
       },
       {
         path: "/Offense/Delete",
@@ -278,10 +280,10 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canDeleteOffense"],
       },
     ],
-    Memorandum: [
+    Memo: [
       {
         path: "/Memorandum/Create",
         id: "create-memorandum",
@@ -303,7 +305,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canCreateMemo"],
       },
       {
         path: "/Memorandum/Submit",
@@ -326,7 +328,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canSubmitMemo"],
       },
       {
         path: "/Memorandum/Delete",
@@ -349,10 +351,10 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canDeleteMemo"],
       },
     ],
-  };
+  });
 
   const [toastOptions, setToastOptions] = useState({
     open: false,
@@ -378,6 +380,8 @@ export default function ContextProvider({
   const [memoForTableModal, setMemoForTableModal] = useState<Memo[]>([]);
 
   const [memoForPrintModal, setMemoForPrintModal] = useState<Memo>({} as Memo);
+
+  const [imageModalId, setImageModalId] = useState<string>("");
 
   useEffect(() => {
     serverRequests
@@ -428,10 +432,10 @@ export default function ContextProvider({
       // setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     }
 
-    if (status === "unauthenticated" && isTestEnv === "false") { 
+    if (status === "unauthenticated" && isTestEnv === "false") {
       router.push("/api/auth/signin");
     }
-    if (status === "unauthenticated" && isTestEnv === "true") { 
+    if (status === "unauthenticated" && isTestEnv === "true") {
       router.push("/");
       setLoading(false);
       // serverRequests.deleteAllDataInCollection('User')
@@ -441,6 +445,35 @@ export default function ContextProvider({
       });
     }
   }, [session, status, router, isTestEnv]);
+
+  // filter cards
+  useEffect(() => {
+    if(userData?._id){
+      const userRoles = userData.roles;
+
+      const filteredCards: { [key: string]: unknown[] } = {}
+
+      Object.entries(userRoles).map(([key, value]) => {
+        if (Array.isArray(value) && value.length) {
+          // console.log(cards[key])
+          if(cards[key]){
+            cards[key].map((item)=>{
+              // console.log(key)
+              const isAuthorized = value.includes(item.roles[0]) 
+              if(isAuthorized){
+                filteredCards[key] = [
+                  ...filteredCards?.[key] || [],
+                  item
+                ]
+              }
+            })
+          }
+        }
+      })
+
+      setCards(filteredCards as CardsSchema)
+    } 
+  },[userData])
 
   const handleConfirmation = (
     question: string,
@@ -528,18 +561,11 @@ export default function ContextProvider({
     return `${number}${suffixes[number % 10] || "th"}`;
   };
 
-  // interface SelectStyle {
-  //   control: (base: Record<string, unknown>) => unknown;
-  //   singleValue: (base: Record<string, unknown>) => unknown;
-  // }
-
-  // const selectStyle: SelectStyle = {
-  //   control: (base: Record<string, unknown>) => ({ ...base, height: '3rem', backgroundColor: "transparent", borderRadius: "10px" }),
-  //   singleValue: (base: Record<string, unknown>) => ({
-  //     ...base,
-  //     color: 'invert',
-  //   }),
-  // }
+  useEffect(() => {
+    setImageModalId("");
+    setImageListForModal([]);
+    setSelectedEmployee({} as Employee);
+  }, [pathname]);
 
   // Define the global values to be shared across the context
   const globals = {
@@ -572,6 +598,8 @@ export default function ContextProvider({
     highlightText,
     setSearch,
     getOrdinal,
+    imageModalId,
+    setImageModalId,
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

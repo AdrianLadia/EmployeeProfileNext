@@ -1,0 +1,531 @@
+[{
+  "_id": "4GPFxDI7JTI7HdtU01W1xmruRA0I1oVd",
+  "number": 1,
+  "description": "• Unnecessary delay of instruction in a reasonable period of time. Refusal to obey legitimate, order, disrespect.\n\n• Insolence and like behavior.\n\n• Intentionally not following orders such as wearing prescribed uniforms (company uniform, mask, hairnet etc.) inside the company premises.\n\n• Intentionally wearing of earrings at work (male).",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "INSUBORDINATION"
+},
+{
+  "_id": "DfSvvFcUNrijChjh6hhyXm6Jbb8r84oE",
+  "number": 2,
+  "description": "• Absence without leave (AWOL) is a big offense as it disrupts company operations.\n\n• An employee is guilty of AWOL if he absents himself without approved leave of absence (LOA).\n\n• Fails to report to work after expiration of the authorized leave, or fails to inform his supervisor about his unplanned of absence.\n\n• Unable to work due to hangover.\n\n• One day absence without permission is still AWOL.\n\n• If sick, need to submit a Medical Certificate.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "1 Day Suspension",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "ABSENCE WITHOUT OFFICIAL LEAVE"
+},
+{
+  "_id": "IPqcik22l5nRog8WkvoITh1IYpQoctXb",
+  "number": 3,
+  "description": "• An employee should be in his designed location on or before his designated time (reckoned monthly).",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "TARDINESS"
+},
+{
+  "_id": "vxspI9fNrbgEKFtqQg1uy9jk3WuHm8Wi",
+  "number": 4,
+  "description": "• Idleness, wasting time, unauthorized participation in activities within duty hours which are outside of regularly assigned duties.\n\n• Lengthily talking or entertaining of acquaintance while on duty, going away from work.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "LOAFING"
+},
+{
+  "_id": "QMrImLVciYRLXMbQ4z8zd8OXrcp7GqSQ",
+  "number": 5,
+  "description": "• The offense is minor if there is no actual danger to safety persons or property.\n\n• It is a major offense if it causes danger to a person’s property or in all cases when the employee’s concerned if responsible for the safeguarding of property and person.",
+  "remedialActions": [
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "SLEEPING ON DUTY"
+},
+{
+  "_id": "8SJS8pzSA3JkcmRqvwbMTMGlKEyWpV3y",
+  "number": 6,
+  "description": "• Spoilage or waste of materials or delay in production, covering up or attempting to conceal defective work without permission is to failure to do assigned tasks.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal based on Offense Severity"
+  ],
+  "_version": 0,
+  "title": "CARELESS WORKMANSHIP OR  NEGLIGENCE"
+},
+{
+  "_id": "v58wTgBTmwLdGH5I9R9dQUDVHwscXe3R",
+  "number": 7,
+  "description": "• Includes discrepancies in cash and failure to safeguard company property.\n\n• Loss of any borrowed company property such as tools, etc.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "LOSS OR DAMAGE TO, UNAUTHORIZED USE OR WILLFUL DESTRUCTION OF COMPANY PROPERTY, RECORDS OR INFORMATION"
+},
+{
+  "_id": "4TuQgGaRp11i2BDFLnEQ8Z8ks31l66Ig",
+  "number": 8,
+  "description": "• Actual or attempted taking and carrying away company property or property of others.\n\n• Stealing of goods (intended for company operation’s consumption and use such as gas, inks/paints, toluene, thinners, chemicals, metals, equipment and the like) for personal motive/use.",
+  "remedialActions": [
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "THEFT"
+},
+{
+  "_id": "lX88Bjw13CvHyPlMEiTFASEEAmbBk2Fr",
+  "number": 9,
+  "description": "• Making false of malicious statements against other employees, supervisors or officials that harm or destroy the reputation, authority or official standing of those concerned.\n\n• Fraud, Falsification, Exaggeration, concealment of a material fact in connection with any official document or withholding of material facts in connection with matters under official investigation.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "5 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "FALSE STATEMENTS, MISREPRESENTATION, DEFAMATION"
+},
+{
+  "_id": "zZxBFvSeTMZbGQ2OqN0hTfm8sWn6qcqJ",
+  "number": 10,
+  "description": "• Rude, boisterous display, use of disrespectful, abusive or offensive language, quarreling or inciting to quarrel.\n\n• Fighting, Threatening or inflicting bodily harm on others, physical resistance to competent authority; indecent to immoral conduct.",
+  "remedialActions": [
+    "7 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "DISORDERLY CONDUCT / MISBEHAVIOR"
+},
+{
+  "_id": "1AuTaXzrmp4yXqAncxnYfMdlgHV4dnK2",
+  "number": 11,
+  "description": "• Promotion, or assistance in the operation of Gambling or participation in gambling in any of the company buildings/units, and their premises.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "7 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "GAMBLING"
+},
+{
+  "_id": "GR9KJi6aHUNQ8c6jQju2Uh9c1mgS7pMr",
+  "number": 12,
+  "description": "• Drinking or possessing intoxicants on duty.\n\n• Being on duty or reporting for duty under the influence of intoxicants as to be unable to perform assigned duties, or as to be hazard to self or others.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "7 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "USE OF INTOXICANTS"
+},
+{
+  "_id": "a1gomfONGvhPM1mKfadZa7UwvOURAOdz",
+  "number": 13,
+  "description": "• Unless authorized, an employee cannot bring in and out any item belong to the company it with any of his possessions without permission.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "7 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "UNAUTHORIZED POSSESSION OR TRAFFICKING OF ITEMS"
+},
+{
+  "_id": "3SSV6vxzEVeh1cORJwXFtQZ0TdquFWud",
+  "number": 14,
+  "description": "• If by his action or concern he/she has caused any interruption or disruption of operation in any of the company units, he or she is answerable to it.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "INTERRUPTION OR DISRUPTION OF OPERATIONS"
+},
+{
+  "_id": "LpWTEcQKOfFfds5GWpfAyVb3uA70JxAO",
+  "number": 15,
+  "description": "• Leaving the job site and or the company before time – out without management permission or filing of undertime slip.\n\n• Inability to report to work in more than one day without notifying the management.",
+  "remedialActions": [
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "ABANDONMENT OF WORK"
+},
+{
+  "_id": "0HXntUq4YtycyG4FhD2Js8sx7R3AC0Pn",
+  "number": 16,
+  "description": "• Refusal to testify or provide information in connection with official adverse action or grievance hearing, unless such testimony would tend to incriminate him or her.",
+  "remedialActions": [
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "REFUSAL TO TESTIFY"
+},
+{
+  "_id": "AXJWWRByFE9ND80NhGkv7KwwMHhuifZ6",
+  "number": 17,
+  "description": "• Making negative comments against the company, divulging of confidential matters.",
+  "remedialActions": [
+    "Verbal And Written Reprimand",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "DISLOYALTY TO THE COMPANY"
+},
+{
+  "_id": "tfREz3u53gowpud91S4r43mbEOFZnhcU",
+  "number": 18,
+  "description": "• Disorderly or any misconduct in the job which damages the company’s name and reputation.\n\n• Engaged in Sexual Harassment/Sexual attempt\n\n• Showing Public Display of Affection (PDA) while at work.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal based on Offense Severity"
+  ],
+  "_version": 0,
+  "title": "INDECENCY / INDECENT MISCONDUCT"
+},
+{
+  "_id": "9C0L5K0pOjpO4mT9ZqXBESrR3lQgzzyh",
+  "number": 19,
+  "description": "• Writing on the walls and company fixtures tearing or defacing posters and posted announcements and any announcement or any material.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "VANDALISM"
+},
+{
+  "_id": "jyjeFbd6lIPDtw3tuMOfxfOaGzmCKoRq",
+  "number": 20,
+  "description": "• Accepting and favor or gratitude, directly or indirectly from anyone conducting procurement activities or business transactions of any sort with the company.\n\n• If such favor or gratuity might influence or might reasonable be interpreted as seeking to influence the employee impartially. ",
+  "remedialActions": [
+    "Written-Reprimand",
+    "7 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "GRATUITIES"
+},
+{
+  "_id": "u0Yr3axdyzOmHEMLLe1GDAbpziV5JtGs",
+  "number": 21,
+  "description": "• Unauthorized canvassing, soliciting or peddling among employees and or members of the company.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "7 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "CANVASSING, SOLICITING AND PEDDLING"
+},
+{
+  "_id": "cKU3fMugwNBdD0M7fHV5ghud4zPvuNBz",
+  "number": 22,
+  "description": "• Grave and aggravated violations of administrative rules or regulations, involving offenses of a serious nature such as any form of drug involvement.\n\n• Willful entry into exclusive areas, picture taking of similar nature not covered by a rule or regulations.",
+  "remedialActions": [
+    "Written Reprimand / Suspension / Dismissal"
+  ],
+  "_version": 0,
+  "title": "VIOLATION OF OTHER ADMINISTRATIVE RULES OR REGULATIONS NOT SPECIFICALLY MENTIONED HEREIN"
+},
+{
+  "_id": "9VY0A9sFjzoPeBzVmUp51X2fTyTBgaWK",
+  "number": 23,
+  "description": "• Another form of fraud, falsification, exaggeration and other aggravated violations and destroying company’s reputation and customer’s trust.\n\n• Intentionally doing malicious actions for personal agenda resulting to harming both company’s and customer’s operation.\n\n• Example: Quality in printing and cutting incorrect declaration of number of pieces and kilo or lacking pieces in one pack. ",
+  "remedialActions": [
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "GRAVE MISCONDUCT"
+},
+{
+  "_id": "tMFX9eT6JiAwqMhycknNvMcfphgB65Ua",
+  "number": 24,
+  "description": "• The company is not allowing having an employee who has a fraternity and sorority. \n\n• In case, a newly hired employee is being recruited by a co – worker in the company and able to join or participate will be automatically dismissed. For any reason. And so the recruiter.\n\n• An existing Fraternity and Sorority in the group will face consequences when he/she is making ally to his/her co – worker.",
+  "remedialActions": [
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "BROTHERHOOD / FRATERNITY AND SISTERHOOD / SORORITY"
+},
+{
+  "_id": "ibt5jro08vAmnVMXAo3SsOkM89fxck4I",
+  "number": 25,
+  "description": "• The company is not allowing any employee to have affection with any co-employee moreover when it is legally committed outside.",
+  "remedialActions": [
+    "Verbal Reprimand",
+    "5 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "NO RELATIONSHIP"
+},
+{
+  "_id": "ERZO8WEh9caxZFsDIZ2BMVs9UyA6y1HP",
+  "number": 26,
+  "description": "• Subordinates are required to obtain an approval from superiors prior to use of overtime.\n\n• Employees who anticipate the need for overtime to complete the week’s work must notify the superiors in advance and obtain approval before working hours that extend their normal schedule.\n\n• During busy periods employees must or maybe required to work extended hours.",
+  "remedialActions": [
+    "Verbal And Written Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "MANDATORY OVERTIME"
+},
+{
+  "_id": "hzwCVggF5OlgMtGMD1qw8ZI3NK2m43pK",
+  "number": 27,
+  "description": "• Stating Absence due to sickness or having relative through text or call, but not really sick.\n\n• Unable to provide proof of absences.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "FEIGNING SICKNESS / MALINGERING"
+},
+{
+  "_id": "AryaNxwxKTYHCzSLlz2ipvZkfR7sMUfu",
+  "number": 28,
+  "description": "• Uttering foul words/insults, engaging gossips or rumors and /or showing disrespectful moves against the authorities (owners of the company, management, immediate superiors, team, team leaders and security guards).",
+  "remedialActions": [
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "DISRESPECTFUL TOWARDS AUTHORITIES"
+},
+{
+  "_id": "Artb6kAKoJu9MJAXEyC4xuMBuVvt8Kk2",
+  "number": 29,
+  "description": "• Uttering foul words/insults, engaging gossips or rumors and /or showing untoward moves to co-workers.",
+  "remedialActions": [
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "DISRESPECTFUL TOWARDS CO-EMPLOYEES"
+},
+{
+  "_id": "6CmGM0lgsj81FHLPNZCxB6kx5nw16fdF",
+  "number": 30,
+  "description": "• Bringing MP3 or MP4, cell phones, headsets, digital cameras and like during working hours without unless if your superior told you to bring your gadget for some work related).",
+  "remedialActions": [
+    "3 Days Suspension + 7 Days Gadget Confiscation",
+    "7 Days Suspension + 15 Days Gadget Confiscation",
+    "15 Days Suspension + 30 Days Gadget Confiscation",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "UNAUTHORIZED BRINGING OF PERSONAL GADGET AT WORK"
+},
+{
+  "_id": "cGkL6vFQ4201071kEUj1jlmRhngYVeM8",
+  "number": 31,
+  "description": "• Failure to clean, tidy, file and or arrange the working space to assigned area.",
+  "remedialActions": [
+    "Verbal Reprimand",
+    "Written-Reprimand",
+    "1 Day Suspension",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "UNCLEANLINESS / UNTIDINESS / DISORDERLINESS OF WORKING SPACE OR ASSIGNED AREA"
+},
+{
+  "_id": "XihVQu1kMODhxp9M2q7JNx9lVVv6AdUO",
+  "number": 32,
+  "description": "• Failure to wear proper uniform.\n\n• Incomplete uniform.\n\n• Not wearing of company uniform, hairnet, close shoes, pants and etc.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "NOT WEARING OF COMPLETE UNIFORM"
+},
+{
+  "_id": "FvRNvt1EDuGZjAVdYZ6CkBjwykTHeVCc",
+  "number": 33,
+  "description": "• Rough play in which people push and hit each other.\n\n• Behave in a silly way.\n\n• Playing like a child in the production area.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "HORSEPLAY"
+},
+{
+  "_id": "UvOqQ9sNhwSLLrnDBPdUunIXvgu0l3RR",
+  "number": 34,
+  "description": "• Bringing of Children inside the production area is strictly prohibited.\n\n• Children should only be staying at the waiting area/guard house.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "BRINGING OF CHILDREN INSIDE THE PRODUCTION AREA"
+},
+{
+  "_id": "2YlTYaBjJ4ofpLWQdQxhPGdRKrUvm03n",
+  "number": 35,
+  "description": "• The number of bales produced didn’t coincide with the report and in the actual count.",
+  "remedialActions": [
+    "1 Day Suspension",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "THERE IS A VARIANCE BETWEEN THE ACTUAL COUNT AND THE MACHINE REPORT REGARDING THE NUMBER OF BALES PRODUCED"
+},
+{
+  "_id": "5jufaGD4qCkmTCEbyx61sPSGdjUNWuuS",
+  "number": 36,
+  "description": "• Unable to write total output in job order, unable to hand over filled in job order to next process ( operators , delivery in-charge , job order in-charge / office )\n\n• Continuously  writing all outputs in a job order of one specific item without reviewing the required kilos / pieces on it ( it may lead to sluggishness in forwarding all job order in the office )",
+  "remedialActions": [
+    "Written-Reprimand",
+    "1 Day Suspension",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "INTENTIONALLY NOT PERFORMING IMPORTANT TASK IN LINE OF A CERTAIN WORK PROCESS THAT MAY LEAD TO INTERRUPTION OF NEXT PROCESS"
+},
+{
+  "_id": "ztEICkkdZnrp2IV2i59eJ1dSqoJX1PhC",
+  "number": 37,
+  "description": "• Smoking in all premises is strictly prohibited.\n\n• Bringing of cigarette inside the compound.",
+  "remedialActions": [
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "NO SMOKING INSIDE THE COMPOUND"
+},
+{
+  "_id": "YDsF2O6VK4IOiFeOJWMMo1gyNNPxXiWl",
+  "number": 38,
+  "description": "• Double check if there is lacking of quantity that has been packed or delivered.",
+  "remedialActions": [
+    "1 Day Suspension",
+    "3 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "LACKING OF QUANTITY IN EVERY BUNDLE / BALE / SACKS"
+},
+{
+  "_id": "3lQqMisNkmrubQ8a3x4X4OoNKuqlp1kt",
+  "number": 39,
+  "description": "• Severe absences (reckoned weekly or monthly)\n\n• If sick, need to submit a medical certificate.",
+  "remedialActions": [
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "EXCESSIVE ABSENCES FOR PAPERBOY GATHERS"
+},
+{
+  "_id": "UlyO91J4IE0WwTtl0v80JD5Q9B2voZ2b",
+  "number": 40,
+  "description": "• Using of prohibited or illegal drugs at work.\n\n• Bringing of drugs at work.",
+  "remedialActions": [
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "USE OF ILLEGAL DRUGS"
+},
+{
+  "_id": "v3UMnHzExvVcpkvOMvy2rbfPOIEZsaew",
+  "number": 41,
+  "description": "• Lacking or incomplete machine reports for both gathers and operators.",
+  "remedialActions": [
+    "Written-Reprimand",
+    "1 Day Suspension",
+    "3 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "Dismissal"
+  ],
+  "_version": 0,
+  "title": "INCOMPLETE MACHINE REPORTS"
+},
+{
+  "_id": "r9XkfLJ9E22kpCPFtuKRSqUBY6S4KbqZ",
+  "number": "0",
+  "description": "test0",
+  "remedialActions": [
+    "Written-Reprimand",
+    "Verbal Reprimand",
+    "Verbal And Written Reprimand",
+    "3 Days Suspension"
+  ],
+  "_version": 0,
+  "title": "test0"
+}]

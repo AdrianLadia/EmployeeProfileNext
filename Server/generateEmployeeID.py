@@ -15,9 +15,9 @@ class EmployeeIDCard(BaseModel):
     photoOfPerson: str
     dateJoined: datetime
     company: str
-    isRegular: bool
+    isRegular: Optional[bool] = False
     companyRole: str
-    isOJT: bool
+    isOJT: Optional[bool] = False
 
     def to_dict(self):
         return {

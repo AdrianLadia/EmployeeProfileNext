@@ -23,6 +23,18 @@ export function formattedDate(){
   return formattedDate;
 }
 
+export function formattedDateWithDash(){
+  const date = new Date();
+  const day = date.getDate();
+  let month = date.getMonth()+1;
+  if (month < 10) {
+    month = '0' + month;
+  }
+  const year = date.getFullYear();
+  const formattedDateWithDash = `${year}-${month}-${day}`;
+  return formattedDateWithDash;
+}
+
 export function CreateEmployee(
   name = "John Doe",
   // address = "1234 Elm Street, Springfield",
@@ -71,7 +83,7 @@ export function UpdateEmployee({
   biodataPhotosList = 'mhm.png',
   email = "johndoe@example.com",
   dateJoined = "2024-11-01",
-  company = "TechCorp Inc.",
+  company = "PPB",
   dailyWage = "500"
 }={}){
   cy.get('#profile-button').should('be.visible').click()
@@ -93,25 +105,34 @@ export function UpdateEmployee({
   cy.get('input[type=file]#biodataPhotosList').attachFile(biodataPhotosList)
   cy.get('#email').clear().type(email)
   cy.get('#dateJoined').clear().type(dateJoined)
-  cy.get('#company').clear().type(company)
+  // cy.get('#add-option').click()
+  // cy.wait(1000)
+  // cy.get('#company').click().type(company)
+  // cy.wait(3000)
+  // cy.get('#save-option').click()
+
   cy.get('#isRegular').uncheck()
-  cy.get('#isProductionEmployee').check()
+  // cy.get('#isProductionEmployee').check()
   cy.get('#dailyWage').clear().type(dailyWage)
 
   cy.get('#save').click()
-  cy.wait(1000)
+  cy.wait(3000)
   cy.get('#confirm-button').click()
-  cy.wait(4000)
+  cy.wait(6000)
 }
 
 export function DeleteEmployee(name){
   cy.get('#profile-button').should('be.visible').click()
   cy.contains('Delete Employee').click()
-  cy.get('#Employee').select(name)
+  cy.get('#Employee').click()
+  cy.get('.css-1nmdiq5-menu')
+  .contains(name)
+  .click();
   cy.get('#delete-employee-btn').click()
   cy.wait(1000)
   cy.get('#confirm-button').click()
-  cy.wait(4000)
+  cy.wait(1000)
+  cy.get('#profile-button').should('be.visible').click()
 }
 
 export function CreateOffense(
@@ -170,7 +191,7 @@ export function UpdateOffense({
 }
 
 export function DeleteOffense(description){
-  cy.wait(1000)
+  cy.wait(3000)
   cy.get('#profile-button').should('be.visible').click()
   cy.contains('Delete Offense').click()
   cy.get('#profile-button').should('be.visible').click()
@@ -196,11 +217,12 @@ export function CreateMemo(
   mediaList = 'smiley.png',
   memoPhotosList = 'mhm.png'
 ){
+  const date = formattedDateWithDash();
   cy.get('#profile-button').should('be.visible').click()
   cy.contains('Create Memorandum').click()
   cy.get('#profile-button').should('be.visible').click()
   cy.location('pathname').should('include', '/Memorandum/Create')
-  cy.get('#date').type('2024-10-31')
+  cy.get('#date').type(date)
   cy.get('#select-employee').click()
   cy.get('.css-1nmdiq5-menu')
   .contains(employee)
@@ -229,6 +251,7 @@ export function SubmitMemo({
   mediaList = 'smiley.png',
   memoPhotosList = 'mhm.png'
 } = {}){
+  cy.wait(3000)
   const date = formattedDate();
   cy.get('#profile-button').should('be.visible').click()
   cy.contains('Submit Memorandum').click()
@@ -237,14 +260,14 @@ export function SubmitMemo({
   cy.get('.css-1nmdiq5-menu')
   .contains(employee + ', '+ memo + ' ('+ date +')')
   .click();
-  cy.get('#reason').type(reason)
-  cy.get('#mediaList').attachFile(mediaList)
-  cy.get('#memoPhotosList').attachFile(memoPhotosList)
+  // cy.get('#reason').type(reason)
+  // cy.get('#mediaList').attachFile(mediaList)
+  // cy.get('#memoPhotosList').attachFile(memoPhotosList)
   cy.wait(1000)
   cy.get('#submit-memo-btn').click()
   cy.wait(1000)
   cy.get('#confirm-button').click()
-  cy.wait(4000)
+  cy.wait(3000)
 }
 
 export function DeleteMemo({

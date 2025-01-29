@@ -106,6 +106,8 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
         setLoading(false);
         router.refresh();
       }
+    }else{
+      setLoading(false)
     }
   };
 
@@ -205,7 +207,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
             return (
               <div
                 key={index}
-                className={` indicator ${position && "tooltip tooltip-accent"}`}
+                className={` indicator ${position && "md:tooltip tooltip-accent"}`}
                 data-tip={`Action on ${getOrdinal(position)} Offense`}
               >
                 <input
@@ -217,7 +219,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
                   value={action}
                   aria-label={action}
                   key={index}
-                  id={action + index}
+                  id={action}
                 />
                 <span
                   className={`${

@@ -262,6 +262,11 @@ class UserActions(User):
         return db.delete(res, 'Employee')
 
     def createOffenseAction(self, user, data):
+        if 'number' in data:
+            offense = db.read({'number': data['number']}, 'Offense')
+            if len(offense) > 0:
+                raise ValueError('Offense number already exists')
+
         offense = Offense(**data)
         res = offense.createOffense(user)
         return db.create(res, 'Offense')
@@ -290,7 +295,24 @@ class UserActions(User):
     def deleteMemoAction(self, user, data):
         memo = Memo(**data)
         res = memo.deleteMemo(user)
-        return db.delete({'_id': res['_id']}, 'Memo')
+        delete = db.delete({'_id': res['_id']}, 'Memo')
+
+        employeeMemos = db.read(
+            {
+                'Employee._id': res['Employee']['_id'],
+                'MemoCode._id': res['MemoCode']['_id'],
+                'MemoCode._version': res['MemoCode']['_version']
+            }, 'Memo')
+
+        for index, memo in enumerate(employeeMemos):
+            offenseCount = index + 1
+            formattedDate = memo['date'].strftime('%y%m%d')
+            company = memo['Employee']['company']
+            newCode = f'{company}-{formattedDate}-{offenseCount}'
+            memo['Code'] = newCode
+            db.update({'_id': memo['_id']}, memo, 'Memo')
+
+        return delete
 
     def submitMemoAction(self, user, data, reason):
         memo = Memo(**data)
@@ -310,6 +332,7 @@ class UserActions(User):
                             'Employee': 1,
                             'memoPhotosList': 1,
                             'MemoCode': 1,
+                            'Code': 1,
                             'submitted': 1,
                             'reason': 1,
                             'subject': 1,
@@ -337,7 +360,9 @@ class UserActions(User):
                                 'company': 1,
                                 'photoOfPerson': 1,
                                 'dateJoined': 1,
-                                'isProductionEmployee': 1,
+                                'companyRole': 1,
+                                'isOJT': 1,
+                                'isRegular': 1,
                             })
         return employees
 
@@ -374,12 +399,12 @@ class UserActions(User):
         if offenseCount >= len(remedialActions):
             return {
                 'remedialAction': remedialActions[-1],
-                'offenseCount': offenseCount
+                'offenseCount': offenseCount + 1
             }
 
         return {
             'remedialAction': remedialActions[offenseCount],
-            'offenseCount': offenseCount
+            'offenseCount': offenseCount + 1
         }
 
 
@@ -392,6 +417,7 @@ class Memo(BaseModel):
     subject: str
     description: str
     MemoCode: 'Offense'
+    Code: Optional[str]
     submitted: bool
     reason: Optional[str] = None
     remedialAction: Optional[str] = None
@@ -423,6 +449,7 @@ class Memo(BaseModel):
             'subject': self.subject,
             'description': self.description,
             'MemoCode': self.MemoCode.to_dict(),
+            'Code': self.Code,
             'submitted': self.submitted,
             'reason': self.reason,
             'remedialAction': self.remedialAction,
@@ -445,7 +472,10 @@ class Memo(BaseModel):
 
         self.remedialAction = remedialActionToString
 
+        formattedDate = self.date.strftime('%y%m%d')
+
         self.id = generateRandomString()
+        self.Code = f'{self.Employee.company}-{formattedDate}-{getRemedialAction["offenseCount"]}'
         self.submitted = False
         return self.to_dict()
 
@@ -484,7 +514,8 @@ class Employee(BaseModel):
     dateJoined: Optional[datetime.datetime]
     company: Optional[str]
     isRegular: Optional[bool]
-    isProductionEmployee: Optional[bool]
+    companyRole: Optional[str]
+    isOJT: Optional[bool]
     dailyWage: Optional[Union[float, int]]
     version: int = Field(..., alias='_version')
 
@@ -520,7 +551,8 @@ class Employee(BaseModel):
             'dateJoined': self.dateJoined,
             'company': self.company,
             'isRegular': self.isRegular,
-            'isProductionEmployee': self.isProductionEmployee,
+            'companyRole': self.companyRole,
+            'isOJT': self.isOJT,
             'dailyWage': self.dailyWage,
             '_version': self.version
         }

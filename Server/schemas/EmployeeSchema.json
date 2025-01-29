@@ -122,7 +122,18 @@
             ],
             "title": "Isregular"
         },
-        "isProductionEmployee": {
+        "companyRole": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Companyrole"
+        },
+        "isOJT": {
             "anyOf": [
                 {
                     "type": "boolean"
@@ -131,7 +142,7 @@
                     "type": "null"
                 }
             ],
-            "title": "Isproductionemployee"
+            "title": "Isojt"
         },
         "dailyWage": {
             "anyOf": [
@@ -163,7 +174,8 @@
         "dateJoined",
         "company",
         "isRegular",
-        "isProductionEmployee",
+        "companyRole",
+        "isOJT",
         "dailyWage",
         "_version"
     ],

@@ -80,6 +80,8 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
       } finally {
         setLoading(false);
       }
+    }else{
+      setLoading(false)
     }
   };
 

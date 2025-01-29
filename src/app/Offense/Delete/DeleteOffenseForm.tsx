@@ -81,6 +81,8 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
         setLoading(false);
         router.refresh();
       }
+    }else{
+      setLoading(false)
     }
   };
 
@@ -169,7 +171,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
             return (
               <div
                 key={index}
-                className={` indicator ${position && "tooltip tooltip-accent"}`}
+                className={` indicator ${position && "md:tooltip tooltip-accent"}`}
                 data-tip={`Action on ${getOrdinal(position)} Offense`}
               >
                 <input

@@ -43,7 +43,7 @@ describe('Employee spec', () => {
       UpdateEmployee({
         employee :'John Doe',
         name : 'John Doe Letigio',
-        company : 'OpenAi Inc.',
+        company : 'PPB',
       })
 
       // Offense
@@ -88,6 +88,7 @@ describe('Employee spec', () => {
         "minor.png",
       )
 
+
       // Submit memo
       SubmitMemo({
         employee: "John Doe Letigio",
@@ -95,12 +96,13 @@ describe('Employee spec', () => {
       })
 
       // Delete Employee
-      // DeleteEmployee(
-      //   "John Doe Letigio"
-      // )
+      DeleteEmployee(
+        "John Doe Letigio"
+      )
 
       // Delete Offense
       DeleteOffense('Employee was late to work multiple times')
+
       Home()
     })
   })

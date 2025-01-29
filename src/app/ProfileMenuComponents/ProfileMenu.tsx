@@ -32,6 +32,12 @@ const ProfileMenu = () => {
     };
   }, []); 
 
+  React.useEffect(()=>{ 
+    if(window.innerWidth<768){
+      setShowMenu(false)
+    }
+  },[pathname])
+
   return (
     <div 
       className={` ${pathname == "/Dashboard"&&"hidden"}

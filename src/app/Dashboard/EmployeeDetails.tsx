@@ -8,8 +8,7 @@ import { Employee } from "../schemas/EmployeeSchema";
 
 import { Memo } from "../schemas/MemoSchema";
 
-import Image from "next/image";
-import { use } from "chai";
+import Image from "next/image"; 
 
 const EmployeeDetails = () => {
   const {
@@ -244,7 +243,7 @@ const EmployeeDetails = () => {
             } Memos`}
             onClick={() =>
               selectedEmployeeMemos?.length &&
-              handleMemoTableModalClick(selectedEmployeeMemos.reverse())
+              handleMemoTableModalClick(selectedEmployeeMemos)
               // handleMemoTableModalClick(selectedEmployeeMemos)
             }
           >

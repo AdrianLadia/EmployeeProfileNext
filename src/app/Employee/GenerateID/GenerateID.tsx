@@ -20,15 +20,28 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
   const [phase, setPhase] = React.useState<1 | 2>(1);
 
-  const { setLoading, loading } = useAppContext();
+  const { setLoading, loading, serverRequests, userData } = useAppContext();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const [idURL, setIdURL] = React.useState<string>("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
+      setIdURL("");
       setLoading(true);
 
-      console.log("submitted");
+      const res = await serverRequests.generateEmployeeID(formData, userData);
+
+      console.log(res)
+
+      if (res?.error) {
+        console.error(res.error);
+      }
+
+      if (res?.data) {
+        setIdURL(res.data);
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -42,19 +55,21 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
         formData?.name &&
         formData?.address &&
         formData?.phoneNumber &&
-        formData?.dateJoined
+        formData?.dateJoined &&
+        formData?.photoOfPerson
       )
     ) {
       setHasEmptyFields(true);
     }
-  }, [formData]);
+    setIdURL("");
+  }, [formData, hasEmptyFields]);
 
   return (
     <>
       <div
         className={`${
-          phase == 2 ? " border-transparent " : " shadow-xl " 
-        } overflow-x-hidden transition-all duration-500 ease-linear h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
+          phase == 2 ? " border-transparent " : " shadow-xl "
+        } overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
       >
         {/* select employee*/}
         <EmployeeSelection
@@ -67,12 +82,13 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
         />
 
         {/* generate id */}
-        <GenerateEmployeeIDForm 
+        <GenerateEmployeeIDForm
           setPhase={setPhase}
           phase={phase}
           loading={loading}
           hasEmptyFields={hasEmptyFields}
           handleSubmit={handleSubmit}
+          idURL={idURL}
         />
       </div>
 

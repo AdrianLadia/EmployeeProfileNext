@@ -22,7 +22,8 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
     handleConfirmation,
     router,
     handleImageModalClick,
-    loading, setLoading
+    loading,
+    setLoading,
   } = useAppContext();
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -40,7 +41,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
     dateJoined: "",
     company: "",
     isRegular: false,
-    isProductionEmployee: false,
+    companyRole: "",
     dailyWage: 0,
     isOJT: false,
   };
@@ -94,7 +95,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
       } finally {
         setLoading(false);
       }
-    }else{
+    } else {
       setLoading(false);
     }
   };
@@ -336,19 +337,33 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
         </label>
       </div>
 
+      {/* company role */}
+      <div className={`flex flex-col text-sm gap-2 `}>
+        Company Role
+        <label className="input input-bordered flex items-center gap-2">
+          <input
+            type="companyRole"
+            className="grow"
+            placeholder="Company Role"
+            id="companyRole"
+            value={formData?.companyRole || ""} 
+          />
+        </label>
+      </div>
+
       <div className="flex flex-wrap w-full justify-between">
-          {/* isRegular */}
-          <label className="label cursor-pointer flex justify-start gap-2 w-max">
-            <p className="label-text text-base">Is Regular?</p>
-            <input
-              type="checkbox"
-              className="checkbox"
-              id="isRegular"  
-              checked={formData?.isRegular || false}
-            />
-          </label>
-          {/* isProductionEmployee */}
-          <label className="label cursor-pointer flex justify-start gap-2 w-max">
+        {/* isRegular */}
+        <label className="label cursor-pointer flex justify-start gap-2 w-max">
+          <p className="label-text text-base">Is Regular?</p>
+          <input
+            type="checkbox"
+            className="checkbox"
+            id="isRegular"
+            checked={formData?.isRegular || false}
+          />
+        </label>
+        {/* isProductionEmployee */}
+        {/* <label className="label cursor-pointer flex justify-start gap-2 w-max">
             <p className="label-text text-base">Is Production Employee?</p>
             <input
               type="checkbox"
@@ -356,18 +371,18 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
               id="isProductionEmployee"  
               checked={formData?.isProductionEmployee || false}
             />
-          </label>
-          {/* isOJT */}
-          <label className="label cursor-pointer flex justify-start gap-2 w-max">
-            <p className="label-text text-base">Is OJT?</p>
-            <input
-              type="checkbox"
-              className="checkbox"
-              id="isOJT"  
-              checked={formData?.isOJT || false}
-            />
-          </label>
-        </div> 
+          </label> */}
+        {/* isOJT */}
+        <label className="label cursor-pointer flex justify-start gap-2 w-max">
+          <p className="label-text text-base">Is OJT?</p>
+          <input
+            type="checkbox"
+            className="checkbox"
+            id="isOJT"
+            checked={formData?.isOJT || false}
+          />
+        </label>
+      </div>
 
       {/* Daily wage */}
       <div className="flex flex-col text-sm gap-2 ">

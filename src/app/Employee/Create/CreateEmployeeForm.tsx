@@ -42,7 +42,7 @@ const CreateEmployeeForm = () => {
     dateJoined: null,
     company: null,
     isRegular: null,
-    isProductionEmployee: null,
+    companyRole: null,
     dailyWage: null,
     isOJT: null
   };
@@ -349,6 +349,20 @@ const CreateEmployeeForm = () => {
           </div>
         </div> 
 
+        {/* company role */}
+        <div className="flex flex-col text-sm gap-2 ">
+          Company Role
+          <label className="input input-bordered flex items-center gap-2"> 
+            <input
+              type="companyRole"
+              className="grow"
+              placeholder="Company Role"
+              id="companyRole"
+              onChange={handleInputChange}
+            />
+          </label>
+        </div>
+
         <div className="flex flex-wrap w-full justify-between">
           {/* isRegular */}
           <label className="label cursor-pointer flex justify-start gap-2 w-max">
@@ -363,7 +377,7 @@ const CreateEmployeeForm = () => {
             />
           </label>
           {/* isProductionEmployee */}
-          <label className="label cursor-pointer flex justify-start gap-2 w-max">
+          {/* <label className="label cursor-pointer flex justify-start gap-2 w-max">
             <p className="label-text text-base">Is Production Employee?</p>
             <input
               type="checkbox"
@@ -376,7 +390,7 @@ const CreateEmployeeForm = () => {
                 })
               }
             />
-          </label>
+          </label> */}
           {/* isOJT */}
           <label className="label cursor-pointer flex justify-start gap-2 w-max">
             <p className="label-text text-base">Is OJT?</p>

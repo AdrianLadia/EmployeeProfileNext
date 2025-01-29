@@ -6,6 +6,13 @@ from typing import Optional
 import textwrap
 from firebase_admin import credentials, storage, initialize_app, get_app, _apps
 from pydantic import BaseModel, Field, field_validator
+import requests
+from io import BytesIO
+from dotenv import load_dotenv
+
+load_dotenv()
+
+isTest = os.getenv("NEXT_PUBLIC_CYPRESS_IS_TEST_ENV")
 
 class EmployeeIDCard(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
@@ -48,6 +55,8 @@ class EmployeeIDCard(BaseModel):
 
         card_width, card_height = 591, 1004
 
+        print(photo_path, 'photo_path')
+
         background_path = "server/IDassets/"
 
         if company == "PPC":
@@ -84,7 +93,12 @@ class EmployeeIDCard(BaseModel):
 
         if photo_path:
             try:
-                photo = Image.open(photo_path).resize((205, 200))
+                if photo_path.startswith("http"):
+                    response = requests.get(photo_path)
+                    response.raise_for_status()
+                    photo = Image.open(BytesIO(response.content)).resize((205, 200))
+                else:
+                    photo = Image.open(photo_path).resize((205, 200))
                 background.paste(photo, (195, 260))
             except Exception as e:
                 print(f"Error loading photo: {e}")

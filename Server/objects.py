@@ -27,10 +27,7 @@ class Roles:
                 },
                 'canViewEmployeeDetails': {
                     'description': 'can view employee details'
-                },
-                'canGenerateEmployeeID': {
-                    'description': 'can generate employee ID'
-                },
+                }
             },
             'Memo': {
                 'canDeleteMemo': {
@@ -52,6 +49,9 @@ class Roles:
                 },
                 'canDeleteEmployee': {
                     'description': 'can delete an employee'
+                },
+                'canGenerateEmployeeID': {
+                    'description': 'can generate employee ID'
                 },
             },
             'Offense': {
@@ -412,7 +412,7 @@ class UserActions(User):
         }
     
     def createEmployeeIDAction(self, user, employee):
-        if 'canGenerateEmployeeID' not in user['roles']['User']:
+        if 'canGenerateEmployeeID' not in user['roles']['Employee']:
             raise ValueError('User does not have permission to generate Employee ID')
 
         idGenerated = EmployeeIDCard(**employee).generate_id_card()

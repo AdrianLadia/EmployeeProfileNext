@@ -33,8 +33,6 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
     }
   };
 
-
-
   const selectStyle = {
     control: (base: unknown) => ({
       ...(base || {}),
@@ -217,8 +215,6 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
       </>
     );
   };
-
-
 
   return (
     <div

@@ -99,12 +99,14 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
           </a>
           <button
             type="submit"
-            disabled={hasEmptyFields || Boolean(idURL)}
+            disabled={hasEmptyFields }
             tabIndex={-1}
             className={` btn-primary btn w-[43%] h-12 `}
           >
             {loading ? (
               <p className={`${loading && "animate-spin"} `}>C</p>
+            ) : idURL? (
+              "Update"
             ) : (
               "Generate"
             )}

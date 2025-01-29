@@ -60,9 +60,33 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
       )
     ) {
       setHasEmptyFields(true);
+    }else{
+      fetchEmployeeID()
     }
     setIdURL("");
   }, [formData, hasEmptyFields]);
+
+  const fetchEmployeeID = async () => {
+    try {
+      setLoading(true);
+
+      const res = await serverRequests.getAllEmployeeID() 
+
+      const chosenID = res.data.find((ID: any) => ID._id == formData._id) 
+
+      if(chosenID){
+        setIdURL(chosenID.IDCardURL)
+      }
+      
+      if (res?.error) {
+        console.error(res.error);
+      } 
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }  
 
   return (
     <>

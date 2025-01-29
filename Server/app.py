@@ -561,6 +561,10 @@ def generate_employee_id():
         data = request.get_json()
         userData = data['userData']
         employee_data = data['employee_data']
+
+        if employee_data['dateJoined']:
+            employee_data['dateJoined'] = datetime.strptime(
+                employee_data['dateJoined'], "%Y-%m-%d")
         try:
             res = UserActions(userData).createEmployeeIDAction(userData, employee_data)
             return jsonify({

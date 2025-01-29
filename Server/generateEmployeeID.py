@@ -151,7 +151,7 @@ class EmployeeIDCard(BaseModel):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        output_path = os.path.join(directory, f"{employee['name'].replace(' ', '_')}_id_card.png")
+        output_path = os.path.join(directory, f"{self.name.replace(' ', '_')}_id_card.png")
 
         background.save(output_path)
         print(f"ID card saved to {output_path}")
@@ -162,7 +162,7 @@ class EmployeeIDCard(BaseModel):
             initialize_app(cred, {"storageBucket": "pustananemployeeprofile.firebasestorage.app"})
 
         bucket = storage.bucket()
-        blob = bucket.blob(f"EmployeeIDs/{employee['name'].replace(' ', '_')}_id_card.png")
+        blob = bucket.blob(f"EmployeeIDs/{self.name.replace(' ', '_')}_id_card.png")
         blob.upload_from_filename(output_path)
         blob.make_public()
 

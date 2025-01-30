@@ -259,7 +259,7 @@ class UserActions(User):
     def deleteEmployeeAction(self, user, data):
         employee = Employee(**data)
         res = employee.deleteEmployee(user)
-        return db.delete(res, 'Employee')
+        return db.update({'_id': res['_id']}, res, 'Employee')
 
     def createOffenseAction(self, user, data):
         if 'number' in data:
@@ -354,7 +354,8 @@ class UserActions(User):
                             'Employee',
                             projection={
                                 '_id': 1,
-                                'name': 1,
+                                'firstName': 1,
+                                'lastName': 1,
                                 'address': 1,
                                 'phoneNumber': 1,
                                 'company': 1,
@@ -406,6 +407,17 @@ class UserActions(User):
             'remedialAction': remedialActions[offenseCount],
             'offenseCount': offenseCount + 1
         }
+
+    def updateEmployeeProfilePictureAction(self, user, employeeId, photo):
+        if 'canUpdateEmployee' not in user['roles']['Employee']:
+            raise ValueError(
+                'User does not have permission to update an employee')
+        employee = db.read({'_id': employeeId}, 'Employee')
+        if len(employee) == 0:
+            raise ValueError('Employee does not exist')
+
+        employee[0]['photoOfPerson'] = photo
+        return db.update({'_id': employeeId}, employee[0], 'Employee')
 
 
 class Memo(BaseModel):
@@ -504,7 +516,8 @@ class Memo(BaseModel):
 
 class Employee(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
-    name: str
+    firstName: str
+    lastName: str
     address: Optional[str]
     phoneNumber: Optional[str]
     photoOfPerson: Optional[str]
@@ -517,6 +530,7 @@ class Employee(BaseModel):
     companyRole: Optional[str]
     isOJT: Optional[bool]
     dailyWage: Optional[Union[float, int]]
+    isDeleted: Optional[bool] = False
     version: int = Field(..., alias='_version')
 
     @field_validator("dateJoined", mode='before', check_fields=True)
@@ -541,7 +555,8 @@ class Employee(BaseModel):
     def to_dict(self):
         return {
             '_id': self.id,
-            'name': self.name,
+            'firstName': self.firstName,
+            'lastName': self.lastName,
             'address': self.address,
             'phoneNumber': self.phoneNumber,
             'photoOfPerson': self.photoOfPerson,
@@ -554,6 +569,7 @@ class Employee(BaseModel):
             'companyRole': self.companyRole,
             'isOJT': self.isOJT,
             'dailyWage': self.dailyWage,
+            'isDeleted': self.isDeleted,
             '_version': self.version
         }
 
@@ -582,6 +598,7 @@ class Employee(BaseModel):
         employee = db.read({'_id': self.id}, 'Employee')
         if len(employee) == 0:
             raise ValueError('Employee does not exist')
+        self.isDeleted = True
 
         return self.to_dict()
 

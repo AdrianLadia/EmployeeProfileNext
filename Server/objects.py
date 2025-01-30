@@ -364,6 +364,7 @@ class UserActions(User):
                                 'companyRole': 1,
                                 'isOJT': 1,
                                 'isRegular': 1,
+                                'isDeleted': 1,
                             })
         return employees
 
@@ -418,12 +419,19 @@ class UserActions(User):
 
         employee[0]['photoOfPerson'] = photo
         return db.update({'_id': employeeId}, employee[0], 'Employee')
-    
-    def fetchEmployeeListAction(self, user, page=1, limit=10, sort={'keyToSort': None, 'sortOrder': None}):
+
+    def fetchEmployeeListAction(self,
+                                user,
+                                page=1,
+                                limit=10,
+                                sort={
+                                    'keyToSort': None,
+                                    'sortOrder': None
+                                }):
         if 'canGetEmployeeForDashboard' not in user['roles']['User']:
             raise ValueError(
                 'User does not have permission to get employee for dashboard')
-        
+
         if page == None:
             page = 1
         if limit == None:
@@ -431,23 +439,11 @@ class UserActions(User):
         if sort == None:
             sort = {'keyToSort': None, 'sortOrder': None}
 
-        employees = db.readWithPagination({'isDeleted': False}, 'Employee', projection={
-            '_id': 1,
-            'firstName': 1,
-            'lastName': 1,
-            'address': 1,
-            'phoneNumber': 1,
-            'company': 1,
-            'photoOfPerson': 1,
-            'dateJoined': 1,
-            'companyRole': 1,
-            'isOJT': 1,
-            'isRegular': 1,
-        },
-            page=page,
-            limit=limit,
-            sort=sort
-        )
+        employees = db.readWithPagination({'isDeleted': False},
+                                          'Employee',
+                                          page=page,
+                                          limit=limit,
+                                          sort=sort)
         return employees
 
 

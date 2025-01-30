@@ -150,6 +150,7 @@ const EmployeeDetails = () => {
       "dailyWage",
       "firstName",
       "lastName",
+      "isDeleted",
     ];
 
     return (
@@ -236,7 +237,7 @@ const EmployeeDetails = () => {
       <div
         className={`${
           (!selectedEmployee._id || loading) && "hidden"
-        } absolute top-0 left-0 cursor-pointer hover:bg-error`}
+        } absolute top-0 right-0 cursor-pointer hover:bg-error`}
         onClick={onClear}
       >
         <svg
@@ -288,7 +289,7 @@ const EmployeeDetails = () => {
             {/* avatar Image */}
             <div
               className={` ${loading && "hidden"}
-              w-24 xl:w-32 h-24 xl:h-32 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
+              w-24 2xl:w-32 h-24 2xl:h-32 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
               onClick={() =>
                 selectedEmployeeDetails?.photoOfPerson &&
                 handleImageModalClick([
@@ -340,7 +341,7 @@ const EmployeeDetails = () => {
         <div
           className={` ${
             loading && " hidden"
-          } text-center md:text-start w-full `}
+          } ${!selectedEmployeeDetails?.address && "hidden"} text-center md:text-start w-full `}
         >
           <h3
             className="select-all"

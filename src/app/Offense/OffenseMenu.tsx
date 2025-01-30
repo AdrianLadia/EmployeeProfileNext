@@ -6,7 +6,7 @@ import CreateButton from "./CreateButton";
 import UpdateButton from "./UpdateButton";
 import DeleteButton from "./DeleteButton";
 import OffenseDownloadButton from "./OffenseDownloadButton";
-// import RefreshButton from "./RefreshButton";
+import RefreshButton from "./RefreshButton";
 
 const OffenseMenu = () => {
   const [showMenu, setShowMenu] = React.useState(true);
@@ -33,7 +33,7 @@ const OffenseMenu = () => {
         <UpdateButton />
         <DeleteButton />
         <OffenseDownloadButton />
-        {/* <RefreshButton /> */}
+        <RefreshButton />
       </div>
     </div>
     // <div className=" swap flex gap-3 items-center justify-start pl-2 ">

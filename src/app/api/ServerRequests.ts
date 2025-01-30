@@ -347,6 +347,20 @@ class ServerRequests extends Server {
     } 
   }
 
+  // async getEmployeeForDashboardAction(userObject: User): Promise<any> {
+  //   try {
+  //     const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ userData: userObject }),
+  //       cache: 'no-store',
+  //     });
+  //     return await res.json();
+  //   } catch (error:unknown) {
+  //     return (error as Error).message;
+  //   }
+  // }
+
   async getEmployeeForDashboardAction(userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
@@ -355,7 +369,12 @@ class ServerRequests extends Server {
         body: JSON.stringify({ userData: userObject }),
         cache: 'no-store',
       });
-      return await res.json();
+      // return await res.json();
+      const data = await res.json();
+      if(data?.data){
+        data.data = data.data.filter((employee: any) => employee.isDeleted === false);
+        return data;
+      }
     } catch (error:unknown) {
       return (error as Error).message;
     }

@@ -37,7 +37,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `${formData?.subject} for ${formData?.Employee?.name} will be deleted FOREVER!`,
+      `${formData?.subject} for ${formData?.Employee?.firstName} will be deleted FOREVER!`,
       "error"
     );
 
@@ -112,31 +112,17 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
 
   return (
     <form className={` form-style `} ref={formRef} onSubmit={handleSubmit}>
-      <h2 className="font-semibold">Memorandum Deletion</h2>
+      <h2 className="font-semibold text-error">Memorandum Deletion</h2>
 
       {/* Memorandum to Submit */}
-      {/* <div className='flex flex-col text-sm gap-2 '>Memo to Delete 
-        <select className="select select-bordered w-full " id='select-memo' required
-          value={formData?.subject || ''}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
-            const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData(e.target.value=="null"?{} as Memo:{ ...filteredMemos[selectedIndex], reason: filteredMemos[selectedIndex].reason || '' })
-          }}  
-        >
-          <option disabled selected value={""}>Select Memo </option>
-          {filteredMemos&&filteredMemos.map((memo, index) => (
-            <option key={index} value={memo?.subject}>{`${memo?.Employee?.name}, (${memo?.subject})`}</option>
-          ))}
-          <option value="null">None</option>
-        </select>
-      </div> */}
+
       <Select
         styles={selectStyle}
         options={filteredMemos}
         placeholder="Select Memo"
         value={formData?._id ? formData : null}
         getOptionLabel={(option) =>
-          `${option.Employee?.name}, ${
+          `${option.Employee?.firstName} ${option.Employee?.lastName}, ${
             option?.MemoCode?.title
           } (${option?.date?.substring(5, 16)})` || ""
         }
@@ -184,7 +170,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
             className="grow"
             placeholder="Name"
             id="name"
-            value={formData?.Employee?.name || ""}
+            value={formData?.Employee?.firstName || ""}
           />
         </label>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import Link from "next/link";
 
@@ -17,7 +17,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   fixed,
   position = { x: "", y: "" },
 }) => {
-  const { pathname } = useAppContext();
+  const { pathname, loading, router, setLoading } = useAppContext();
 
   const [pathArray, setPathArray] = React.useState<string[] | null>(null);
 
@@ -38,13 +38,16 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
       <div
         className={`
         ${fixed && `${position.x} ${position.y} fixed z-30`} 
-        breadcrumbs text-sm h-16
-        flex items-center overflow-hidden
+        breadcrumbs text-sm 
+        flex md:flex-col 2xl:flex-row items-center md:items-start 2xl:items-center overflow-hidden
       `}
       >
-        <ul className="flex !justify-start !items-start text-start md:!flex-col 2xl:!flex-row">
+        <ul className="flex !justify-start !items-start text-start md:!flex-col 2xl:!flex-row relative ">
           <li className=" hover:text-info ">
-            <span className="hidden md:block">       </span><Link href="/" id="Home">Home</Link>
+            <span className="hidden md:block">       </span>
+            <Link href="/" id="Home">
+              Home
+            </Link>
           </li>
           {pathArray?.map((path, index) => {
             const href = "/" + pathArray.slice(0, index + 1).join("/");
@@ -63,6 +66,30 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             );
           })}
         </ul>
+
+        <a
+          href={window.location.origin + pathname}
+          className="text-xs flex md:mt-1 2xl:mt-0 "
+          title="Refresh"
+        >
+                 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className={`${
+              loading ? "animate-spin" : "hover:rotate-45 "
+            } text-info size-6 duration-200`}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+            />
+          </svg>
+        </a>
       </div>
     )
   );

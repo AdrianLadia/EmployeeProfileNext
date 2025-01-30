@@ -46,7 +46,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
   const defaultFormData = {
     _id: "",
-    name: "",
+    lastName: "",
+    firstName: "",
     address: null,
     phoneNumber: null,
     photoOfPerson: null,
@@ -73,7 +74,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `Update changes you've made for ${formData?.name}`,
+      `Update changes you've made for ${formData?.firstName}`,
       ""
     );
 
@@ -88,7 +89,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           try {
             const res = await upload.Images(
               [formData.photoOfPerson || ""],
-              `employees/${formData.name}`,
+              `employees/${formData.firstName} ${formData.lastName}`,
               "photoOfPerson"
             );
             dataToUpdate.photoOfPerson = res[0] || "";
@@ -101,7 +102,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           try {
             const res = await upload.Images(
               formData.biodataPhotosList || [],
-              `employees/${formData.name}`,
+              `employees/${formData.firstName} ${formData.lastName}`,
               "biodataPhotosList"
             );
             dataToUpdate.biodataPhotosList = res || [];
@@ -114,7 +115,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           try {
             const res = await upload.Images(
               formData.resumePhotosList || [],
-              `employees/${formData.name}`,
+              `employees/${formData.firstName} ${formData.lastName}`,
               "resumePhotosList"
             );
             dataToUpdate.resumePhotosList = res || [];
@@ -143,7 +144,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             timer: 5,
           });
           formRef.current?.scrollIntoView({ behavior: "smooth" });
-          router.refresh(); 
+          router.refresh();
         } else {
           setToastOptions({
             open: true,
@@ -220,7 +221,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
   };
 
   useEffect(() => {
-    if (selectedEmployee?.name) {
+    if (selectedEmployee?.firstName) {
       setDisable(false);
     } else {
       setDisable(true);
@@ -303,13 +304,13 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       ref={formRef}
       onSubmit={(e) => handleSubmit(e)}
     >
-      <h2 className="font-semibold">Update Employee</h2>
+      <h2 className="font-semibold text-violet-500">Update Employee</h2>
 
       <Select
         styles={selectStyle}
         options={employeeList}
         placeholder="Select Employee"
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option.firstName + " " + option.lastName}
         isClearable
         value={selectedEmployee?._id ? selectedEmployee : null}
         onChange={(selectedOption) => {
@@ -334,28 +335,30 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       />
 
       {/* name */}
-      <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
-        Name
-        <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-4 text-gray-500"
-          >
-            <path
-              fillRule="evenodd"
-              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-              clipRule="evenodd"
-            />
-          </svg>
+      <div
+        className={`flex flex-wrap justify-between text-sm gap-2 ${labelStyle}`}
+      >
+        <span className="w-full md:w-[48%]">First Name</span>
+        <span className="w-full md:w-[48%]">Last Name</span>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%]">
           <input
             type="text"
             className="grow"
-            placeholder="Name"
-            id="name"
+            placeholder="First Name"
+            id="firstName"
             disabled={disable}
-            value={formData?.name || ""}
+            value={formData?.firstName || ""}
+            onChange={handleInputChange}
+          />
+        </label>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%]">
+          <input
+            type="text"
+            className="grow"
+            placeholder="Last Name"
+            id="lastName"
+            disabled={disable}
+            value={formData?.lastName || ""}
             onChange={handleInputChange}
           />
         </label>
@@ -631,4 +634,3 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 };
 
 export default UpdateEmployeeForm;
-

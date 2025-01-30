@@ -61,7 +61,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
         <p className="text-sm mt-2 select-all italic">{userData?.email}</p>
       </div> 
 
-      <div className="flex flex-col justify-between px-6 bg-base-100">
+      <div className="flex flex-col justify-between px-6 bg-base-100 grow">
         <div className="mt-2 w-full ">
           {Object.keys(cards).map((key, index) => {
             return (

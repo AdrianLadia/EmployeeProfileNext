@@ -51,8 +51,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
     const searchQuery = search?.toLowerCase() || ""; 
 
     const filteredListForTable = employeeList.filter(
-      ({ address, name, email, company, phoneNumber, dateJoined, isOJT }) =>
-        [address, name, email, company, phoneNumber, dateJoined, isOJT ? "OJT" : ""].some((field) =>
+      ({ address, firstName, lastName, email, company, phoneNumber, dateJoined, isOJT }) =>
+        [address, firstName, lastName, email, company, phoneNumber, dateJoined, isOJT ? "OJT" : ""].some((field) =>
           field?.toLowerCase().includes(searchQuery)
         )
     );
@@ -78,10 +78,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
       <tbody>
         {filteredEmployeeList.map((employee) => (
           <tr
-            key={employee.name}
+            key={employee.firstName}
             className={`
                     ${
-                      selectedEmployee?.name == employee?.name
+                      selectedEmployee?.firstName == employee?.firstName
                         ? "bg-base-300 "
                         : "hover:bg-base-200 "
                     } 
@@ -112,7 +112,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList, fetchingErr
                 </div>
                 <div className="text-start">
                   <div className="font-bold">
-                    {highlightText(employee?.name)}
+                    {highlightText(employee?.firstName + " " + employee?.lastName)}
                   </div>
                   <div className="text-sm opacity-80">
                     {highlightText(

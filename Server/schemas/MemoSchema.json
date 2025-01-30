@@ -14,8 +14,12 @@
                     "default": null,
                     "title": " Id"
                 },
-                "name": {
-                    "title": "Name",
+                "firstName": {
+                    "title": "Firstname",
+                    "type": "string"
+                },
+                "lastName": {
+                    "title": "Lastname",
                     "type": "string"
                 },
                 "address": {
@@ -160,13 +164,26 @@
                     ],
                     "title": "Dailywage"
                 },
+                "isDeleted": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": false,
+                    "title": "Isdeleted"
+                },
                 "_version": {
                     "title": " Version",
                     "type": "integer"
                 }
             },
             "required": [
-                "name",
+                "firstName",
+                "lastName",
                 "address",
                 "phoneNumber",
                 "photoOfPerson",

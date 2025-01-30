@@ -6,7 +6,8 @@
  */
 
 export type Id = string | null;
-export type Name = string;
+export type Firstname = string;
+export type Lastname = string;
 export type Address = string | null;
 export type Phonenumber = string | null;
 export type Photoofperson = string | null;
@@ -19,11 +20,13 @@ export type Isregular = boolean | null;
 export type Companyrole = string | null;
 export type Isojt = boolean | null;
 export type Dailywage = number | null;
+export type Isdeleted = boolean | null;
 export type Version = number;
 
 export interface Employee {
   _id?: Id;
-  name: Name;
+  firstName: Firstname;
+  lastName: Lastname;
   address: Address;
   phoneNumber: Phonenumber;
   photoOfPerson: Photoofperson;
@@ -36,5 +39,6 @@ export interface Employee {
   companyRole: Companyrole;
   isOJT: Isojt;
   dailyWage: Dailywage;
+  isDeleted?: Isdeleted;
   _version: Version;
 }

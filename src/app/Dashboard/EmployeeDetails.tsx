@@ -44,7 +44,7 @@ const EmployeeDetails = () => {
   `;
 
   const skeletonStyle = `
-    ${selectedEmployeeDetails.name && !loading ? " hidden " : " block "} 
+    ${selectedEmployeeDetails._id && !loading ? " hidden " : " block "} 
     ${loading ? " skeleton block" : " bg-base-300 rounded-xl "} shrink-0 
   `;
 
@@ -107,11 +107,11 @@ const EmployeeDetails = () => {
         getMemosForEmployee();
       }
 
-      if (selectedEmployee._id ) {
-        getSelectedEmployeeDetails(); 
+      if (selectedEmployee._id) {
+        getSelectedEmployeeDetails();
       }
 
-      if(window.innerWidth < 768){
+      if (window.innerWidth < 768) {
         dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       }
 
@@ -123,10 +123,10 @@ const EmployeeDetails = () => {
     return () => clearTimeout(timeout);
   }, [selectedEmployee, userData]);
 
-  // const onClear = () => {
-  //   setSelectedEmployee({} as Employee);
-  //   setLoading(false);
-  // };
+  const onClear = () => {
+    setSelectedEmployee({} as Employee);
+    setLoading(false);
+  };
 
   const handleDetailsClick = (textToCopy: string) => {
     setToastOptions({
@@ -148,6 +148,8 @@ const EmployeeDetails = () => {
       "_id",
       "_version",
       "dailyWage",
+      "firstName",
+      "lastName",
     ];
 
     return (
@@ -178,11 +180,11 @@ const EmployeeDetails = () => {
   };
 
   const detailSkeleton = () => {
-    return (!selectedEmployeeDetails._id||loading) ? (
+    return !selectedEmployeeDetails._id || loading ? (
       <>
         <div className={`w-full flex flex-wrap items-center gap-3`}>
           <div
-            className={` ${skeletonStyle} w-24 xl:w-32 h-24 xl:h-32 rounded-full`}
+            className={` ${skeletonStyle} w-24 xl:w-32 h-24 xl:h-32 !rounded-full`}
           >
              
           </div>
@@ -190,7 +192,8 @@ const EmployeeDetails = () => {
             <div className={`${skeletonStyle} w-full h-[35%] `}> </div>
             <div className={`${skeletonStyle} w-[65%] h-[35%] `}> </div>
           </div>
-          <div className={`${skeletonStyle} w-full h-12`}> </div>
+          <div className={`${skeletonStyle} w-full h-3`}> </div>
+          <div className={`${skeletonStyle} w-full h-3`}> </div>
         </div>
         <div className="w-full mt-2 mb-1 border-b"></div>
         <div
@@ -211,10 +214,16 @@ const EmployeeDetails = () => {
         <div className={` ${skeletonStyle} md:20 md:w-24 h-12 grow`}> </div>
         <div className={` ${skeletonStyle} md:20 md:w-24 h-12 grow`}> </div>
         <div className={` ${skeletonStyle} md:24 md:w-32 h-12 grow`}> </div>
-        <div className={` ${skeletonStyle} md:20 md:w-24 h-12 grow hidden xl:block`}> </div>
+        <div
+          className={` ${skeletonStyle} md:20 md:w-24 h-12 grow hidden xl:block`}
+        >
+           
+        </div>
       </>
-    ):null
+    ) : null;
   };
+
+  console.log(selectedEmployeeDetails)
 
   return (
     <div
@@ -224,8 +233,32 @@ const EmployeeDetails = () => {
       ref={dummy}
     >
       {/* avatar, name, address */}
+
+      {/* clear button */}
       <div
-        className={` flex flex-wrap w-full gap-3 items-center md:items-start justify-center md:justify-start h-max border-b pb-3 mb-2 md:pb-6 md:mb-6 ${
+        className={`${
+          (!selectedEmployee._id || loading) && "hidden"
+        } absolute top-0 left-0 cursor-pointer hover:bg-error`}
+        onClick={onClear}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
+      </div>
+
+      <div
+        className={` flex flex-wrap w-full gap-3 items-center md:items-start justify-center md:justify-start h-max border-b pb-3 mb-2 lg:pb-6 lg:mb-6 ${
           Boolean(!selectedEmployeeDetails?._id) && "hidden"
         } `}
       >
@@ -269,7 +302,7 @@ const EmployeeDetails = () => {
                 <Image
                   className={` w-full h-full`}
                   src={selectedEmployeeDetails?.photoOfPerson || "/avatar.png"}
-                  alt={selectedEmployeeDetails?.name}
+                  alt={selectedEmployeeDetails?.firstName}
                   fill
                   sizes="(max-width: 768px) 100vw, 700px"
                   loading="lazy"
@@ -291,9 +324,17 @@ const EmployeeDetails = () => {
         >
           <h2
             className="text-2xl xl:text-3xl 2xl:text-4xl font-semibold select-all"
-            onClick={() => handleDetailsClick(selectedEmployeeDetails?.name)}
+            onClick={() =>
+              handleDetailsClick(
+                selectedEmployeeDetails?.firstName +
+                  " " +
+                  selectedEmployeeDetails?.lastName
+              )
+            }
           >
-            {selectedEmployeeDetails?.name}
+            {selectedEmployeeDetails?.firstName +
+              " " +
+              selectedEmployeeDetails?.lastName}
           </h2>
         </div>
 
@@ -309,7 +350,7 @@ const EmployeeDetails = () => {
               handleDetailsClick(selectedEmployeeDetails?.address || "")
             }
           >
-            {selectedEmployeeDetails?.address || " "}
+            {selectedEmployeeDetails?.address || ""}
           </h3>
         </div>
       </div>

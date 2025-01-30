@@ -52,7 +52,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `Create ${formData?.subject} for ${formData?.Employee?.name}`,
+      `Create ${formData?.subject} for ${formData?.Employee?.firstName} ${formData?.Employee?.lastName}?`,
       "success"
     );
 
@@ -67,7 +67,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         if (formData?.mediaList) {
           const res = await upload.Images(
             formData?.mediaList,
-            `employees/${formData?.Employee?.name}`,
+            `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
             "mediaList"
           );
           finalFormData.mediaList = res || [];
@@ -76,7 +76,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         if (formData?.memoPhotosList) {
           const res = await upload.Images(
             formData?.memoPhotosList,
-            `employees/${formData?.Employee?.name}`,
+            `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
             "memoPhotosList"
           );
           finalFormData.memoPhotosList = res || [];
@@ -220,7 +220,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       ref={formRef}
       onSubmit={handleSubmit}
     >
-      <h2 className="font-semibold">Memorandum Creation</h2>
+      <h2 className="font-semibold text-blue-500">Memorandum Creation</h2>
 
       {/* date */}
       <label className="flex flex-col items-start gap-2 text-sm">
@@ -240,7 +240,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         options={employeeList}
         value={formData?.Employee ? formData.Employee : null}
         placeholder="Select Employee"
-        getOptionLabel={(option) => option.name || ""}
+        getOptionLabel={(option) => option.firstName + " " + option.lastName || ""}
         isClearable
         onChange={(selectedOption) => {
           setFormData({ ...formData, Employee: selectedOption as Employee });

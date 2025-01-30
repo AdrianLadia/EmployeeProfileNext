@@ -10,7 +10,7 @@ import { Employee } from "@/app/schemas/EmployeeSchema";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 
-import SelectPlus from "@/app/InputComponents/SelectPlus"; 
+import SelectPlus from "@/app/InputComponents/SelectPlus";
 
 const CreateEmployeeForm = () => {
   const [show, setShow] = useState(false);
@@ -32,7 +32,8 @@ const CreateEmployeeForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   const defaultFormData = {
-    name: "",
+    firstName: "",
+    lastName: "",
     address: null,
     phoneNumber: null,
     photoOfPerson: null,
@@ -44,7 +45,7 @@ const CreateEmployeeForm = () => {
     isRegular: null,
     companyRole: null,
     dailyWage: null,
-    isOJT: null
+    isOJT: null,
   };
 
   const [formData, setFormData] = useState<Employee>(
@@ -56,7 +57,7 @@ const CreateEmployeeForm = () => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `${formData?.name} will be Created as an Employee`,
+      `${formData?.firstName} ${formData?.lastName} will be Created as an Employee`,
       "success"
     );
 
@@ -65,7 +66,7 @@ const CreateEmployeeForm = () => {
     if (confirmed) {
       try {
         const finalFormData = {
-          ...formData, 
+          ...formData,
           _id: "",
           _version: 0,
         };
@@ -73,7 +74,7 @@ const CreateEmployeeForm = () => {
         if (formData.photoOfPerson) {
           const photoOfPerson = await upload.Images(
             [formData.photoOfPerson],
-            `employees/${formData.name}`,
+            `employees/${formData.firstName}${formData.lastName}`,
             "photoOfPerson"
           );
           finalFormData.photoOfPerson = photoOfPerson[0];
@@ -81,7 +82,7 @@ const CreateEmployeeForm = () => {
         if (formData.resumePhotosList && formData.resumePhotosList[0]) {
           const resumePhotosList = await upload.Images(
             formData.resumePhotosList,
-            `employees/${formData.name}`,
+            `employees/${formData.firstName}${formData.firstName}`,
             "resumePhotosList"
           );
           finalFormData.resumePhotosList = resumePhotosList;
@@ -89,7 +90,7 @@ const CreateEmployeeForm = () => {
         if (formData?.biodataPhotosList && formData?.biodataPhotosList[0]) {
           const biodataPhotosList = await upload.Images(
             formData.biodataPhotosList,
-            `employees/${formData.name}`,
+            `employees/${formData.firstName}${formData.firstName}`,
             "biodataPhotosList"
           );
           finalFormData.biodataPhotosList = biodataPhotosList;
@@ -145,21 +146,22 @@ const CreateEmployeeForm = () => {
           ? e.target.value
           : parseFloat(e.target.value),
     });
-  };  
+  };
 
   const [companyOptions] = useState([
     { label: "Paper Boy", value: "PPB" },
     { label: "Pustanan", value: "PPC" },
     { label: "Best Bags", value: "BB" },
     { label: "Starpack", value: "SP" },
-  ] as { label: string; value: string }[]);  
-  
-  useEffect(() => {  
+  ] as { label: string; value: string }[]);
+
+  useEffect(() => {
     setFormData({
       ...formData,
-      [imageModalId]: imageListForModal.length ? imageListForModal : null, 
+      [imageModalId]: imageListForModal.length ? imageListForModal : null,
     });
-  }, [imageListForModal, imageModalId]); 
+  }, [imageListForModal, imageModalId]);
+  
 
   return (
     <form
@@ -169,29 +171,28 @@ const CreateEmployeeForm = () => {
       ref={formRef}
       onSubmit={(e) => handleSubmit(e)}
     >
-      <h2 className="font-semibold w-max" >Employee Registry</h2>
+      <h2 className="font-semibold w-max text-blue-500">Employee Registry</h2>
 
       {/* name */}
-      <div className="flex flex-col text-sm gap-2 ">
-        Name
-        <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-4 text-gray-500"
-          >
-            <path
-              fillRule="evenodd"
-              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-              clipRule="evenodd"
-            />
-          </svg>
+      <div className="flex flex-wrap text-sm gap-2 justify-between">
+        <span className="w-full md:w-[48%]">First Name</span>
+        <span className="w-full md:w-[48%]">Last Name</span>
+        <label className="input input-bordered flex items-center gap-2 md:w-[48%]">
           <input
             type="text"
             className="grow"
-            placeholder="Name"
-            id="name"
+            placeholder="First Name"
+            id="firstName"
+            required
+            onChange={handleInputChange}
+          />
+        </label>
+        <label className="input input-bordered flex items-center gap-2 md:w-[48%]">
+          <input
+            type="text"
+            className="grow"
+            placeholder="Last Name"
+            id="lastName"
             required
             onChange={handleInputChange}
           />
@@ -268,9 +269,9 @@ const CreateEmployeeForm = () => {
             width="w-full"
             inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
-            mediaList={ formData?.photoOfPerson ? [formData?.photoOfPerson ] : []} 
+            mediaList={formData?.photoOfPerson ? [formData?.photoOfPerson] : []}
             setFunction={setFormData}
-          /> 
+          />
 
           {/* resumePhotosList */}
           <ImageInput
@@ -283,7 +284,7 @@ const CreateEmployeeForm = () => {
             // onChangeHandler={handleFileChange}
             setFunction={setFormData}
             multiple={true}
-          /> 
+          />
 
           {/* biodataPhotosList */}
           <ImageInput
@@ -292,10 +293,10 @@ const CreateEmployeeForm = () => {
             width="w-full md:w-[48%]"
             inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
-            mediaList={formData?.biodataPhotosList || []} 
+            mediaList={formData?.biodataPhotosList || []}
             setFunction={setFormData}
             multiple={true}
-          /> 
+          />
         </div>
 
         {/* E-mail */}
@@ -341,18 +342,23 @@ const CreateEmployeeForm = () => {
             Company
             <SelectPlus
               options={companyOptions}
-              onChange={(e, newValue) => { 
-                const valueToPass = typeof newValue == 'object' && newValue !== null ? (newValue as { value: string }).value?.toString() : newValue ? newValue?.toString() : null
+              onChange={(e, newValue) => {
+                const valueToPass =
+                  typeof newValue == "object" && newValue !== null
+                    ? (newValue as { value: string }).value?.toString()
+                    : newValue
+                    ? newValue?.toString()
+                    : null;
                 setFormData({ ...formData, company: valueToPass });
               }}
             />
           </div>
-        </div> 
+        </div>
 
         {/* company role */}
         <div className="flex flex-col text-sm gap-2 ">
           Company Role
-          <label className="input input-bordered flex items-center gap-2"> 
+          <label className="input input-bordered flex items-center gap-2">
             <input
               type="companyRole"
               className="grow"
@@ -453,4 +459,3 @@ const CreateEmployeeForm = () => {
 };
 
 export default CreateEmployeeForm;
-

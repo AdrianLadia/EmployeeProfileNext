@@ -568,6 +568,64 @@ def test_create_employee_without_photoOfPerson_then_update():
         db.delete({}, 'Employee')
         pass
 
+def test_create_employee_then_fetch_employee_list_with_pagination():
+    try:
+        db.delete({}, 'Employee')
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+
+        employeeObject = {
+            '_id': None,
+            'firstName': 'firstName',
+            'lastName': 'lastName',
+            'email': None,
+            'address': None,
+            'phoneNumber': None,
+            'photoOfPerson': None,
+            'resumePhotosList': None,
+            'biodataPhotosList': None,
+            'dateJoined': None,
+            'company': None,
+            'isRegular': None,
+            'companyRole': None,
+            'isOJT': None,
+            'dailyWage': None,
+            '_version': 0
+        }
+
+        employee = user.createEmployeeAction(userCreated, employeeObject)
+
+        employeeObject2 = {
+            '_id': None,
+            'firstName': 'firstName',
+            'lastName': 'lastName2',
+            'email': None,
+            'address': None,
+            'phoneNumber': None,
+            'photoOfPerson': None,
+            'resumePhotosList': None,
+            'biodataPhotosList': None,
+            'dateJoined': None,
+            'company': None,
+            'isRegular': None,
+            'companyRole': None,
+            'isOJT': None,
+            'dailyWage': None,
+            '_version': 0
+        }
+
+        employee2 = user.createEmployeeAction(userCreated, employeeObject2)
+
+        employeeList = user.fetchEmployeeListAction(userCreated, 1, 1)
+
+        assert len(employeeList['data']) == 1
+        assert employeeList['data'][0]['firstName'] == employeeObject2['firstName']
+
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Employee')
+        pass
+
 
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():

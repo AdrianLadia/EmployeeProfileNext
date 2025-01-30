@@ -574,6 +574,25 @@ def update_employee_profile_picture():
             logging.exception("Error updating Profile Picture: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
+@app.route('/fetchEmployeeList', methods=['POST'])
+def fetch_employee_list():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+
+        page = data['page']
+        limit = data['limit']
+        sort = data['sort']
+
+        try:
+            res = UserActions(userData).fetchEmployeeListAction(userData, page, limit, sort)
+            return jsonify({
+                'message': 'Employee read successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Employee: %s", e)
+            return jsonify({'error': e.args[0]}), 400
 
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):

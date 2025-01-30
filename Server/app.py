@@ -121,7 +121,8 @@ def create_employee():
             res = UserActions(userData).createEmployeeAction(
                 userData, {
                     '_id': None,
-                    'name': data['name'],
+                    'firstName': data['firstName'],
+                    'lastName': data['lastName'],
                     'address': data['address'],
                     'phoneNumber': data['phoneNumber'],
                     'photoOfPerson': data['photoOfPerson'],
@@ -134,6 +135,7 @@ def create_employee():
                     'companyRole': data['companyRole'],
                     'isOJT': data['isOJT'],
                     'dailyWage': data['dailyWage'],
+                    'isDeleted': False,
                     '_version': 0
                 })
 
@@ -552,6 +554,24 @@ def removeRolefromUser():
             }), 200
         except Exception as e:
             logging.exception("Error removing Role: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+
+@app.route('/updateEmployeeProfilePicture', methods=['POST'])
+def update_employee_profile_picture():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employeeID = data['employeeID']
+        picture = data['picture']
+        try:
+            res = UserActions(userData).updateEmployeeProfilePictureAction(
+                userData, employeeID, picture)
+            return jsonify({
+                'message': 'Profile Picture updated successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error updating Profile Picture: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
 

@@ -39,7 +39,8 @@ offenseObject = {
 
 employeeObject = {
     '_id': None,
-    'name': 'name',
+    'firstName': 'firstname',
+    'lastName': 'lastname',
     'email': 'email',
     'address': 'address',
     'phoneNumber': 'phone',
@@ -178,7 +179,7 @@ def test_create_offense_employee_memo():
                               'Employee',
                               findOne=True)
 
-        assert getEmployee['name'] == employee['name']
+        assert getEmployee['firstName'] == employee['firstName']
 
         memoObject['Employee'] = getEmployee
         memoObject['MemoCode'] = getOffense
@@ -294,32 +295,34 @@ def test_create_update_delete_employee():
         employeeDetails = user.getEmployeeDetailsAction(
             userCreated, employee['_id'])
 
-        assert employeeDetails['name'] == employee['name']
+        assert employeeDetails['firstName'] == employee['firstName']
 
         getEmployee = db.read({'_id': employee['_id']},
                               'Employee',
                               findOne=True)
 
-        assert getEmployee['name'] == employee['name']
+        assert getEmployee['firstName'] == employee['firstName']
 
         updateEmployee = user.updateEmployeeAction(userCreated, employee,
-                                                   {'name': 'name2'})
+                                                   {'firstName': 'name2'})
 
         getEmployee = db.read({'_id': updateEmployee[0]['_id']},
                               'Employee',
                               findOne=True)
 
-        assert getEmployee['name'] == 'name2'
+        assert getEmployee['firstName'] == 'name2'
 
         deleteEmployee = user.deleteEmployeeAction(userCreated, getEmployee)
 
         employees = user.readCollection('Employee')
 
-        assert len(employees) == 0
+        assert len(employees) == 1
+
+        assert employees[0]['isDeleted'] == True
 
         employeeDashboard = user.getEmployeeForDashboardAction(userCreated)
 
-        assert len(employeeDashboard) == 0
+        assert len(employeeDashboard) == 1
 
     finally:
         db.delete({}, 'User')
@@ -474,7 +477,8 @@ def test_create_employee_with_name_only():
         # create full employee object
         employeeObject = {
             '_id': None,
-            'name': 'name',
+            'firstName': 'firstName',
+            'lastName': 'lastName',
             'email': None,
             'address': None,
             'phoneNumber': None,
@@ -496,7 +500,7 @@ def test_create_employee_with_name_only():
 
         assert len(employeeList) == 1
 
-        assert employeeList[0]['name'] == employee['name']
+        assert employeeList[0]['firstName'] == employee['firstName']
     finally:
         db.delete({}, 'User')
         db.delete({}, 'Employee')
@@ -522,6 +526,48 @@ def test_create_offenses_with_same_number():
         db.delete({}, 'Offense')
         pass
 
+def test_create_employee_without_photoOfPerson_then_update():
+    try:
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+
+        employeeObject = {
+            '_id': None,
+            'firstName': 'firstName',
+            'lastName': 'lastName',
+            'email': None,
+            'address': None,
+            'phoneNumber': None,
+            'photoOfPerson': None,
+            'resumePhotosList': None,
+            'biodataPhotosList': None,
+            'dateJoined': None,
+            'company': None,
+            'isRegular': None,
+            'companyRole': None,
+            'isOJT': None,
+            'dailyWage': None,
+            '_version': 0
+        }
+
+        employee = user.createEmployeeAction(userCreated, employeeObject)
+
+        employeeList = user.readCollection('Employee')
+
+        assert len(employeeList) == 1
+
+        assert employeeList[0]['firstName'] == employee['firstName']
+
+        employeeID = employeeList[0]['_id']
+
+        updatedEmployee = user.updateEmployeeProfilePictureAction(userCreated, employeeID, 'photoOfPerson')
+
+        assert updatedEmployee[0]['photoOfPerson'] == 'photoOfPerson'
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Employee')
+        pass
+
 
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():
@@ -539,4 +585,5 @@ if __name__ == '__main__':
     # # test_getRemedialActionForEmployeeMemoAction()
     test_create_employee_with_name_only()
     test_create_offenses_with_same_number()
+    test_create_employee_without_photoOfPerson_then_update()
     pass

@@ -42,9 +42,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         flex items-center overflow-hidden
       `}
       >
-        <ul>
+        <ul className="flex !justify-start !items-start text-start md:!flex-col 2xl:!flex-row">
           <li className=" hover:text-info ">
-            <Link href="/" id="Home">Home</Link>
+            <span className="hidden md:block">       </span><Link href="/" id="Home">Home</Link>
           </li>
           {pathArray?.map((path, index) => {
             const href = "/" + pathArray.slice(0, index + 1).join("/");

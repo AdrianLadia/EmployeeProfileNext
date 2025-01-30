@@ -25,7 +25,7 @@ const config: Config = {
     styled: true,
     themes: [
       "light", "dark", "cupcake", "garden", "wireframe", "lofi", "pastel", "lemonade", "winter", 
-      "synthwave", "luxury", "black", "dim", 
+      "synthwave", "luxury", "black", "dim", "lofi", 
       "retro", "cyberpunk", "aqua", "valentine", 
     ],
     base: true,

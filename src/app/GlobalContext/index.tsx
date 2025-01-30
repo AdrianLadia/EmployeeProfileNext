@@ -285,7 +285,7 @@ export default function ContextProvider({
     ],
     Memo: [
       {
-        path: "/Memorandum/Create",
+        path: "/Memo/Create",
         id: "create-memorandum",
         title: "Create Memorandum",
         description: "Create a Memorandum",
@@ -308,7 +308,7 @@ export default function ContextProvider({
         roles: ["canCreateMemo"],
       },
       {
-        path: "/Memorandum/Submit",
+        path: "/Memo/Submit",
         id: "submit-memorandum",
         title: "Submit Memorandum",
         description: "Submit a Memorandum",
@@ -331,7 +331,7 @@ export default function ContextProvider({
         roles: ["canSubmitMemo"],
       },
       {
-        path: "/Memorandum/Delete",
+        path: "/Memo/Delete",
         id: "delete-memorandum",
         title: "Delete Memorandum",
         description: "Delete a Memorandum",

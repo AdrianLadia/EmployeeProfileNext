@@ -39,10 +39,10 @@ const EmployeeDetails = () => {
 
   // const [daysWithUs, setDaysWithUs] = React.useState<number>(0);
 
-  const detailStyle = (item: boolean) =>
-    ` ${loading && "hidden"} p-2 2xl:p-3
+  const detailStyle = () =>
+    ` ${loading && "hidden"} ${!selectedEmployeeDetails?._id && "hidden"} 
     tracking-widest flex grow flex-col text-center  border border-base-300 rounded-xl bg-base-100 
-    hover:bg-base-300 
+    hover:bg-base-300 p-2 2xl:p-3
   `;
 
   const skeletonStyle = `
@@ -155,12 +155,7 @@ const EmployeeDetails = () => {
         {Object.keys(selectedEmployeeDetails).map((key) => {
           if (!xlist.includes(key)) {
             return (
-              <div
-                key={key}
-                className={detailStyle(
-                  Boolean(selectedEmployeeDetails[key as keyof Employee])
-                )}
-              >
+              <div key={key} className={detailStyle()}>
                 <strong className="text-base select-all">
                   {selectedEmployeeDetails[key as keyof Employee] == true ? (
                     <strong>✔</strong>
@@ -219,9 +214,7 @@ const EmployeeDetails = () => {
             </span>
             {/* avatar Image */}
             <div
-              className={`${!selectedEmployeeDetails?._id && "hidden"} ${
-                loading && "hidden"
-              }
+              className={` ${loading && "hidden"}
               w-24 xl:w-36 h-24 xl:h-36 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
               onClick={() =>
                 selectedEmployeeDetails?.photoOfPerson &&
@@ -293,23 +286,14 @@ const EmployeeDetails = () => {
 
         {detailComponent()}
 
-        <div
-          className={
-            detailStyle(Boolean(selectedEmployeeDetails?.dailyWage)) +
-            ` ${!selectedEmployeeDetails?._id && "hidden"}`
-          }
-        >
+        <div className={detailStyle()}>
           <strong className="text-base">
             ₱ {selectedEmployeeDetails?.dailyWage?.toLocaleString() || " ? "}
           </strong>
           Daily Wage
         </div>
 
-        <div
-          className={
-            detailStyle(Boolean(selectedEmployeeDetails?.dateJoined)) + ` `
-          }
-        >
+        <div className={detailStyle()}>
           <strong className="text-base">
             {(selectedEmployee?.dateJoined &&
               Math.floor(
@@ -321,16 +305,14 @@ const EmployeeDetails = () => {
           </strong>
           Days with Us
         </div>
-
         <div
           onClick={() =>
+            selectedEmployeeDetails?.resumePhotosList &&
             handleImageModalClick(
               selectedEmployeeDetails?.resumePhotosList || []
             )
           }
-          className={`${detailStyle(
-            Boolean(selectedEmployeeDetails?.resumePhotosList?.[0])
-          )} !flex-row ${loading && "hidden"} 
+          className={`${detailStyle()} !flex-row ${loading && "hidden"} 
                 p-2 xl:p-4 flex items-center justify-evenly cursor-pointer w-full rounded-xl`}
         >
           Resume
@@ -346,13 +328,12 @@ const EmployeeDetails = () => {
 
         <div
           onClick={() =>
+            selectedEmployeeDetails?.biodataPhotosList &&
             handleImageModalClick(
               selectedEmployeeDetails?.biodataPhotosList || []
             )
           }
-          className={`${detailStyle(
-            Boolean(selectedEmployeeDetails?.biodataPhotosList?.[0])
-          )} !flex-row ${loading && "hidden"} 
+          className={`${detailStyle()} !flex-row ${loading && "hidden"} 
              items-center justify-evenly cursor-pointer w-full rounded-xl`}
         >
           Bio-data

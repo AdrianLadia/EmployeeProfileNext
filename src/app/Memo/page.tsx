@@ -37,7 +37,7 @@ const page = () => {
             <p>Create Memorandum</p>
             <div className="card-actions justify-end">
               <Link
-                href={"/Memorandum/Create"}
+                href={"/Memo/Create"}
                 className="mt-2 btn btn-sm btn-outline btn-info group"
               >
                 <span className="group-hover:text-white">Create </span>Now
@@ -67,7 +67,7 @@ const page = () => {
             <p>Submit Memorandum</p>
             <div className="card-actions justify-end">
               <Link
-                href={"/Memorandum/Submit"}
+                href={"/Memo/Submit"}
                 className="mt-2 btn btn-sm btn-outline hover:bg-violet-500 border-violet-500 text-violet-500 group "
               >
                 <span className="group-hover:text-white">Update </span>
@@ -98,7 +98,7 @@ const page = () => {
             <p>Delete Memorandum</p>
             <div className="card-actions justify-end">
               <Link
-                href={"/Memorandum/Delete"}
+                href={"/Memo/Delete"}
                 className="mt-2 btn btn-sm btn-outline btn-error group"
               >
                 <span className="group-hover:text-white">Delete </span>Now

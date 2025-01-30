@@ -3,8 +3,7 @@
 @tailwind utilities; 
 
 * { 
-  font-family: var(--font-poppins); 
-  transition: transform 0.2s ; 
+  font-family: var(--font-poppins);  
   scrollbar-width: thin; 
 }
   

@@ -143,8 +143,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             timer: 5,
           });
           formRef.current?.scrollIntoView({ behavior: "smooth" });
-          router.refresh();
-          console.log(res)
+          router.refresh(); 
         } else {
           setToastOptions({
             open: true,

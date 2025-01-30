@@ -350,7 +350,7 @@ class UserActions(User):
             raise ValueError(
                 'User does not have permission to get employee for dashboard')
 
-        employees = db.read({},
+        employees = db.read({'isDeleted': False},
                             'Employee',
                             projection={
                                 '_id': 1,

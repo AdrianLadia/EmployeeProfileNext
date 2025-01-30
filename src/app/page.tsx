@@ -62,7 +62,7 @@ const Page = async () => {
   }
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
-    overflow-y-auto hover:bg-base-300 hover:border-transparent
+    hover:bg-base-300 hover:border-transparent overflow-y-auto md:overflow-y-clip
     pl-4 p-2 shadow-lg rounded-xl flex flex-col items-start justify-evenly gap-2 border tracking-tighter`;
 
   return (
@@ -73,7 +73,7 @@ const Page = async () => {
 
       {/* <UploadOffenseButton/> */}
 
-      <div className=" md:h-[93vh] overflow-auto w-[99vw] lg:w-[97vw] justify-between flex flex-wrap ">
+      <div className=" md:h-[93vh] overflow-auto lg:overflow-clip w-[99vw] lg:w-[97vw] justify-between flex flex-wrap ">
         <div className=" h-12 w-[45%] lg:w-[85%] flex items-center pl-4 ">
           <h1 className="text-2xl font-semibold tracking-wider">Dashboard</h1>
         </div>

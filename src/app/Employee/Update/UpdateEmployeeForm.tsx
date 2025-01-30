@@ -273,7 +273,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
   useEffect(() => {
     if (selectedEmployee?._id) {
-      const res = companyOptions.find(
+      const res = companyOptions?.find(
         (company) => company.value == selectedEmployee.company
       );
       if ((res == undefined || !res) && selectedEmployee?.company) {
@@ -289,7 +289,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
   }, [selectedEmployee]);
 
   useEffect(() => {
-    const res = employeeList.find(
+    const res = employeeList?.find(
       (employee) => employee._id == window.location.hash.split("#")[1]
     );
     setSelectedEmployee(res as Employee);

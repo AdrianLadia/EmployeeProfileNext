@@ -6,6 +6,10 @@ import { Offense, Employee } from "@/app/schemas/MemoSchema";
 
 import ServerRequests from "@/app/api/ServerRequests";
 
+import { getUserData, getTestUserData } from "../../api/UserData";
+
+import { User } from "../../schemas/UserSchema";
+
 export const metadata = {
   title: "| Create Memorandum",
   description: "Create Memo Form",
@@ -14,12 +18,20 @@ export const metadata = {
 const page = async () => {
   const serverRequests = new ServerRequests();
 
+    let userData: User;
+  
+    if (process.env.NEXT_PUBLIC_CYPRESS_IS_TEST_ENV === "true") {
+      userData = await getTestUserData();
+    } else {
+      userData = await getUserData();
+    }
+
   const [employeeRes, offenseRes] = await Promise.all([
-    serverRequests.fetchEmployeeList(),
+    serverRequests.fetchEmployeeList(userData, 1, 9999, null),
     serverRequests.fetchOffenseList(),
   ]);
 
-  const employeeList: Employee[] = employeeRes?.data || [];
+  const employeeList: Employee[] = employeeRes?.data.data || [];
   const offenseList: Offense[] = offenseRes?.data || [];
 
   return (

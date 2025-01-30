@@ -32,10 +32,8 @@ const ProfileMenu = () => {
     };
   }, []); 
 
-  React.useEffect(()=>{ 
-    if(window.innerWidth<768){
-      setShowMenu(false)
-    }
+  React.useEffect(()=>{  
+    setShowMenu(false) 
   },[pathname])
 
   return (

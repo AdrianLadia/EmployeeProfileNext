@@ -223,8 +223,6 @@ const EmployeeDetails = () => {
     ) : null;
   };
 
-  console.log(selectedEmployeeDetails)
-
   return (
     <div
       className={` ${

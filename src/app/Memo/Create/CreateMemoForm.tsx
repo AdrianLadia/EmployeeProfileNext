@@ -28,11 +28,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     serverRequests,
     userData,
     handleConfirmation,
-    router,
     loading,
     setLoading,
     imageModalId,
     imageListForModal,
+    handleMemoPrintModalClick,
   } = useAppContext();
 
   const [remedialAction, setRemedialAction] = useState<string>("");
@@ -46,6 +46,32 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     mediaList: null,
     memoPhotosList: null,
   } as Memo);
+
+  const [memoForPrint, setMemoForPrint] = useState<Memo | null>(null);
+
+  const printMemo = async () => {
+    try {
+      const confirmed = await handleConfirmation(
+        "Download Created Memo?",
+        `${memoForPrint?.subject} for ${memoForPrint?.Employee?.firstName}`,
+        "neutral"
+      );
+
+      if (confirmed) {
+        handleMemoPrintModalClick(memoForPrint as Memo);
+      }
+    } catch (e) {
+      console.error("Error printing memo: ", e);
+    } finally {
+      setMemoForPrint(null);
+    }
+  };
+
+  React.useEffect(() => {
+    if (memoForPrint) {
+      printMemo();
+    }
+  }, [memoForPrint]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,6 +113,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         const res = await serverRequests.createMemo(finalFormData, userData);
 
         if (res && res.data) {
+          setMemoForPrint(res.data);
+
           setToastOptions({
             open: true,
             message: res?.message || "Memo created successfully",
@@ -100,8 +128,6 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             mediaList: null,
             memoPhotosList: null,
           } as Memo);
-
-          router.refresh();
 
           formRef.current?.scrollIntoView({ behavior: "smooth" });
         } else {

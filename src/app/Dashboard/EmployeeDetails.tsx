@@ -257,12 +257,12 @@ const EmployeeDetails = () => {
       </div>
 
       <div
-        className={` flex flex-wrap w-full gap-3 items-center md:items-start justify-center md:justify-start h-max border-b pb-3 mb-2 lg:pb-6 lg:mb-6 ${
+        className={` flex flex-wrap w-full gap-3 items-center md:items-start justify-center h-max border-b pb-3 pt-3 mb-2 lg:pb-4 lg:mb-6 ${
           Boolean(!selectedEmployeeDetails?._id) && "hidden"
         } `}
       >
         {/* avatar */}
-        <div className={"flex justify-center " + contentStyle}>
+        <div className={"flex justify-center items-center self-stretch " + contentStyle}>
           <div className=" indicator ">
             {/* indicator */}
             <span
@@ -289,7 +289,7 @@ const EmployeeDetails = () => {
             {/* avatar Image */}
             <div
               className={` ${loading && "hidden"}
-              w-24 2xl:w-32 h-24 2xl:h-32 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
+              w-20 2xl:w-28 h-20 2xl:h-28 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
               onClick={() =>
                 selectedEmployeeDetails?.photoOfPerson &&
                 handleImageModalClick([
@@ -319,29 +319,24 @@ const EmployeeDetails = () => {
         <div
           className={` ${
             loading && " hidden"
-          } pl-2 self-stretch max-w-[55%] xl:grow flex items-center justify-start`}
+          } pl-2 self-stretch min-w-[45%] max-w-[55%] xl:grow flex flex-wrap items-center justify-start select-all text-2xl xl:text-3xl 2xl:text-4xl font-semibold `}
+          onClick={() =>
+            handleDetailsClick(
+              selectedEmployeeDetails?.firstName +
+                " " +
+                selectedEmployeeDetails?.lastName
+            )
+          }
         >
-          <h2
-            className="text-2xl xl:text-3xl 2xl:text-4xl font-semibold select-all"
-            onClick={() =>
-              handleDetailsClick(
-                selectedEmployeeDetails?.firstName +
-                  " " +
-                  selectedEmployeeDetails?.lastName
-              )
-            }
-          >
-            {selectedEmployeeDetails?.firstName +
-              " " +
-              selectedEmployeeDetails?.lastName}
-          </h2>
+          <h2>{selectedEmployeeDetails?.firstName + " "}</h2> 
+          <h2>{selectedEmployeeDetails?.lastName}</h2>  
         </div>
 
         {/* address */}
         <div
-          className={` ${
-            loading && " hidden"
-          } ${!selectedEmployeeDetails?.address && "hidden"} text-center md:text-start w-full `}
+          className={` ${loading && " hidden"} ${
+            !selectedEmployeeDetails?.address && "hidden"
+          } text-center capitalize w-full`}
         >
           <h3
             className="select-all"

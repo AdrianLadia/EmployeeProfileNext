@@ -262,14 +262,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
   ] as { label: string; value: string }[]);
 
   useEffect(() => {
-    setFormData({
-      ...formData,
-      [imageModalId]: imageListForModal.length ? imageListForModal : null,
-    });
-    setDataToUpdate({
-      ...dataToUpdate,
-      [imageModalId]: imageListForModal.length ? imageListForModal : null,
-    });
+    if(imageListForModal.length){
+      setFormData({
+        ...formData,
+        [imageModalId]: imageListForModal.length ? imageListForModal : null,
+      });
+      setDataToUpdate({
+        ...dataToUpdate,
+        [imageModalId]: imageListForModal.length ? imageListForModal : null,
+      });
+    }
   }, [imageListForModal, imageModalId]);
 
   useEffect(() => {

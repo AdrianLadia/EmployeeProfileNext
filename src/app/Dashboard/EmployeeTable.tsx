@@ -100,17 +100,13 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
         {filteredEmployeeList.map((employee) => (
           <tr
             key={employee.firstName}
-            className={`
-                    ${
-                      selectedEmployee?.firstName == employee?.firstName
-                        ? "bg-base-300 "
-                        : "hover:bg-base-200 "
-                    } 
-                    ${loading ? "disabled cursor-wait" : ""}  
-                    max-h-
-                `}
+            className={` ${
+              selectedEmployee?.firstName == employee?.firstName
+                ? "bg-base-300 "
+                : "hover:bg-base-200 "
+            }  ${loading ? "disabled cursor-wait" : ""}  `}
             onClick={() => !loading && setSelectedEmployee(employee)}
-            data-tip={"View"}
+            title="Select Employee"
           >
             <th className="bg-opacity-0 backdrop-blur-md ">
               <div className="flex items-center gap-3 ">
@@ -148,10 +144,12 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 </div>
               </div>
             </th>
-            <td className="capitalize">
-              {highlightText(
-                employee.address ? employee.address.toString() : ""
-              )}
+            <td className="capitalize ">
+              <div className="min-w-[45vw] md:min-w-[20vw]">
+                {highlightText(
+                  employee.address ? employee.address.toString() : ""
+                )}
+              </div>
             </td>
             <td>
               {highlightText(
@@ -169,7 +167,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 <div
                   tabIndex={0}
                   role="button"
-                  className="btn btn-sm btn-neutral btn-outline btn-circle"
+                  className="btn btn-sm btn-circle btn-neutral btn-outline border border-gray-400 bg-base-100"
                   title="Menu"
                 >
                   <svg
@@ -178,7 +176,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                     viewBox="0 0 24 24"
                     strokeWidth={2}
                     stroke="currentColor"
-                    className="size-4"
+                    className="size-5 "
                   >
                     <path
                       strokeLinecap="round"
@@ -189,9 +187,9 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 </div>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu border bg-base-100 rounded-box w-max z-[1] p-0.5 shadow text-xs lg:text-sm font-semibold"
+                  className="dropdown-content menu border border-gray-300 bg-base-100 rounded-box w-max z-[1] p-0.5 shadow text-xs lg:text-sm font-semibold"
                 >
-                  <li>
+                  <li title="Delete Employee">
                     <a
                       className=""
                       onClick={() =>
@@ -215,7 +213,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       Delete
                     </a>
                   </li>
-                  <li>
+                  <li title="Update Employee">
                     <a
                       className=""
                       onClick={() =>
@@ -244,7 +242,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       Update
                     </a>
                   </li>
-                  <li>
+                  <li title="Create Memo for Employee">
                     <a
                       className=""
                       onClick={() =>

@@ -51,7 +51,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         <ul className="flex !justify-start !items-start text-start md:!flex-col 2xl:!flex-row relative ">
           <li>
              
-            <svg
+            {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -69,13 +69,27 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                 strokeLinejoin="round"
                 d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z"
               />
+            </svg> */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className=" size-4 text-gray-500 "
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"
+              />
             </svg>
               
             <Link className="hover:text-info" href="/" id="Dashboard">
               Dashboard
             </Link>
           </li>
-          
+
           {pathArray?.map((path, index) => {
             const href = "/" + pathArray.slice(0, index + 1).join("/");
             const isLast = index === pathArray.length - 1;
@@ -87,7 +101,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                     {path.replace(/-/g, " ")}
                   </Link>
                 ) : (
-                  <span>{path.replace(/-/g, " ")}</span>
+                  <span className="text-info underline">{path.replace(/-/g, " ")}</span>
                 )}
               </li>
             );

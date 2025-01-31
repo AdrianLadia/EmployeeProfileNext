@@ -240,7 +240,7 @@ const EmployeeDetails = () => {
         className={`${
           (!selectedEmployee._id || loading) && "hidden"
         } absolute top-1 right-1 cursor-pointer hover:text-error`}
-        onClick={onClear}
+        onClick={onClear} title="Clear"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -265,7 +265,7 @@ const EmployeeDetails = () => {
       >
         {/* avatar */}
         <div className={"flex justify-center items-center self-stretch " + contentStyle}>
-          <div className=" indicator ">
+          <div className=" indicator  ">
             {/* indicator */}
             <span
               className={`
@@ -277,8 +277,12 @@ const EmployeeDetails = () => {
                   ? " bg-warning animate-pulse "
                   : " bg-success "
               }
-              cursor-pointer tooltip-top tooltip tooltip-right indicator-item badge text-white absolute `}
-              data-tip={`${
+              cursor-pointer indicator-start indicator-item badge text-white absolute `}
+              // cursor-pointer tooltip-top tooltip tooltip-right indicator-start indicator-item badge text-white absolute 
+              // data-tip={`${
+              //   fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
+              // } Memos`}
+              title={`${
                 fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
               } Memos`}
               onClick={() =>

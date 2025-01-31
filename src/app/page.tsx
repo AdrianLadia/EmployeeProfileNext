@@ -9,8 +9,9 @@ import { User } from "@/app/schemas/UserSchema";
 import ServerRequests from "@/app/api/ServerRequests";
 
 import EmployeeTable from "./Dashboard/EmployeeTable";
+import DashMenu from "./Dashboard/DashboardMenu";
 import EmployeeDetails from "./Dashboard/EmployeeDetails";
-import SearchBar from "./Dashboard/SearchBar";
+import SearchBar from "./Dashboard/SearchBar"; 
 
 import { getUserData, getTestUserData } from "./api/UserData";
 
@@ -74,7 +75,8 @@ const Page = async () => {
       {/* <UploadOffenseButton/> */}
 
       <div className=" md:h-[93vh] overflow-auto lg:overflow-clip w-[99vw] lg:w-[97vw] justify-between flex flex-wrap ">
-        <div className=" h-12 w-[45%] lg:w-[85%] flex items-center pl-4 ">
+        <div className=" h-12 w-[45%] lg:w-[85%] flex items-center pl-4 gap-4 ">
+          <DashMenu/>
           <h1 className="text-2xl font-semibold tracking-wider">Dashboard</h1>
         </div>
 
@@ -84,21 +86,27 @@ const Page = async () => {
           <div className={cardStyle}>
             <h3 className="text-lg font-semibold ">Employees</h3>
             <p className="text-4xl font-bold">{employeeListLength}</p>
-            <span className="opacity-80 text-sm lg:hidden 2xl:block">Total Employee</span>
+            <span className="opacity-80 text-sm lg:hidden 2xl:block">
+              Total Employee
+            </span>
           </div>
 
           {/* Production Employee Count */}
           <div className={cardStyle}>
             <h3 className="text-lg font-semibold ">Regular</h3>
             <p className="text-4xl font-bold">{regularEmployeeCount}</p>
-            <span className="opacity-80 text-sm lg:hidden 2xl:block">Employee</span>
+            <span className="opacity-80 text-sm lg:hidden 2xl:block">
+              Employee
+            </span>
           </div>
 
           {/*  Newly Joined Employee Count */}
           <div className={cardStyle}>
             <h3 className="text-lg font-semibold ">New (30 Days)</h3>
             <p className="text-4xl font-bold">{newlyJoinedEmployeeCount}</p>
-            <span className="opacity-80 text-sm lg:hidden 2xl:block">Employee</span>
+            <span className="opacity-80 text-sm lg:hidden 2xl:block">
+              Employee
+            </span>
           </div>
 
           {/* Table */}

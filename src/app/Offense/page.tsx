@@ -9,7 +9,7 @@ import OffenseMenu from "./OffenseMenu.tsx";
 import CreateOffenseModal from "./Create/CreateOffenseModal"; 
 import DeleteOffenseModal from "./Delete/DeleteOffenseModal";
 import UpdateOffenseModal from "./Update/UpdateOffenseModal";  
-import OffenseTableModal from "./OffenseTableModal";
+
 
 import OffenseTable from "./OffenseTable";
 
@@ -31,8 +31,7 @@ const page = async () => {
     <>
       <CreateOffenseModal />
       <UpdateOffenseModal />
-      <DeleteOffenseModal />
-      <OffenseTableModal offenseList={offenseList}/>
+      <DeleteOffenseModal /> 
         
       <div
         className={`relative h-screen flex flex-col justify-center items-center px-2 overflow-clip `}
@@ -43,7 +42,7 @@ const page = async () => {
         <div className="w-full md:w-[80vw] 2xl:w-[70vw] flex flex-col md:flex-row justify-between bg-base-200 rounded-t-box px-2 border border-b-none"> 
 
           <OffenseMenu
-          
+            offenseList={offenseList}
           />
           
           <div className="py-2 ">

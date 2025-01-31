@@ -54,7 +54,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `${formData?.firstName} will be Deleted forever!`,
+      `${formData?.firstName} will be Deleted`,
       "error"
     );
 

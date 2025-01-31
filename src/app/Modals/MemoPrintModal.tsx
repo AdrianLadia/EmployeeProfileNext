@@ -274,7 +274,6 @@ const PrintMemorandumModal = () => {
             </div>
 
             {/* employee explanation */}
-            {/* {console.log(memoForPrintModal)} */}
             {!memoForPrintModal?.submitted && !memoForPrintModal.reason ? (
               <>
                 <div className="my-8 w-full border-b-2" />

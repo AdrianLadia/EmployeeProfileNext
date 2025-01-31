@@ -441,7 +441,6 @@ export default function ContextProvider({
       // serverRequests.deleteAllDataInCollection('User')
       serverRequests.getUserForTesting().then((res) => {
         setUserData(res.data);
-        console.log(res.data);
       });
     }
   }, [session, status, router, isTestEnv]);
@@ -455,10 +454,8 @@ export default function ContextProvider({
 
       Object.entries(userRoles).map(([key, value]) => {
         if (Array.isArray(value) && value.length) {
-          // console.log(cards[key])
           if(cards[key]){
             cards[key].map((item)=>{
-              // console.log(key)
               const isAuthorized = value.includes(item.roles[0]) 
               if(isAuthorized){
                 filteredCards[key] = [

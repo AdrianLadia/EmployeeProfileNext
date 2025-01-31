@@ -148,7 +148,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 </div>
               </div>
             </th>
-            <td>
+            <td className="capitalize">
               {highlightText(
                 employee.address ? employee.address.toString() : ""
               )}

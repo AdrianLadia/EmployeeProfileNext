@@ -45,10 +45,6 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
   const [filesChanged, setFilesChanged] = useState<string[]>([]);
 
-  const [memoForPrint, setMemoForPrint] = useState<Memo | null>(null);
-
-  console.log(memoForPrint)
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -101,8 +97,6 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         );
         
         if (res && res.data) {
-          setMemoForPrint(res.data);
-
           setToastOptions({
             open: true,
             message: res?.message || "Memo created successfully",
@@ -267,7 +261,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
             className="grow"
             placeholder="Name"
             id="name"
-            value={formData?.Employee?.firstName + " " + formData?.Employee?.lastName || ""}
+            value={formData?.Employee?.firstName ? formData?.Employee?.firstName + " " + formData?.Employee?.lastName : ""}
           />
         </label>
       </div>

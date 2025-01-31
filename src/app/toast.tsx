@@ -30,7 +30,7 @@ const Toast = () => {
         });
       }, decrement);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }, [timer]);
 
@@ -70,8 +70,6 @@ const Toast = () => {
       document.removeEventListener("click", handleClick);
     };
   }, [toastOptions]);
-
-//   console.log(toastOptions)
 
   return (
     <div

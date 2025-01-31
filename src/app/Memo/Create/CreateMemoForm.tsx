@@ -255,6 +255,24 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     >
       <h2 className="font-semibold text-blue-500">Memorandum Creation</h2>
 
+      <div className="flex flex-col gap-2">
+        <span className="text-sm">Employee</span>
+        <Select
+          styles={selectStyle}
+          options={employeeList}
+          value={formData?.Employee ? formData.Employee : null}
+          placeholder="Select Employee"
+          getOptionLabel={(option) =>
+            option.firstName + " " + option.lastName || ""
+          }
+          isClearable
+          onChange={(selectedOption) => {
+            setFormData({ ...formData, Employee: selectedOption as Employee });
+          }}
+          id="select-employee"
+        />
+      </div>
+
       {/* date */}
       <label className="flex flex-col items-start gap-2 text-sm">
         Date
@@ -268,39 +286,27 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         />
       </label>
 
-      <Select
-        styles={selectStyle}
-        options={employeeList}
-        value={formData?.Employee ? formData.Employee : null}
-        placeholder="Select Employee"
-        getOptionLabel={(option) =>
-          option.firstName + " " + option.lastName || ""
-        }
-        isClearable
-        onChange={(selectedOption) => {
-          setFormData({ ...formData, Employee: selectedOption as Employee });
-        }}
-        id="select-employee"
-      />
-
-      <Select
-        styles={selectStyle}
-        options={offenseList}
-        placeholder="Select Offense"
-        value={formData?.MemoCode ? formData.MemoCode : null}
-        getOptionLabel={(option) =>
-          `(${option.number}) - ${option.title}` || ""
-        }
-        isClearable
-        onChange={(selectedOption) => {
-          setFormData({
-            ...formData,
-            MemoCode: selectedOption as Offense,
-            subject: selectedOption?.title || "",
-          });
-        }}
-        id="MemoCode"
-      />
+      <div className="flex flex-col gap-2">
+        <span className="text-sm">Offense</span>
+        <Select
+          styles={selectStyle}
+          options={offenseList}
+          placeholder="Select Offense"
+          value={formData?.MemoCode ? formData.MemoCode : null}
+          getOptionLabel={(option) =>
+            `(${option.number}) - ${option.title}` || ""
+          }
+          isClearable
+          onChange={(selectedOption) => {
+            setFormData({
+              ...formData,
+              MemoCode: selectedOption as Offense,
+              subject: selectedOption?.title || "",
+            });
+          }}
+          id="MemoCode"
+        />
+      </div>
 
       {remedialAction && (
         <div className="flex flex-col text-sm gap-2 ">

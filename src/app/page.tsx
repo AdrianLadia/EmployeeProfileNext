@@ -63,7 +63,7 @@ const Page = async () => {
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
     hover:bg-base-300 hover:border-transparent overflow-y-auto md:overflow-y-clip
-    pl-4 p-2 shadow-lg rounded-xl flex flex-col items-start justify-evenly gap-2 border tracking-tighter`;
+    pl-4 p-2 shadow-lg rounded-box flex flex-col items-start justify-evenly gap-2 border tracking-tighter`;
 
   return (
     <div className=" flex flex-col items-center justify-center h-max md:h-[100vh] ">
@@ -84,25 +84,25 @@ const Page = async () => {
           <div className={cardStyle}>
             <h3 className="text-lg font-semibold ">Employees</h3>
             <p className="text-4xl font-bold">{employeeListLength}</p>
-            <span className="opacity-80 text-sm">Total Employee</span>
+            <span className="opacity-80 text-sm lg:hidden 2xl:block">Total Employee</span>
           </div>
 
           {/* Production Employee Count */}
           <div className={cardStyle}>
             <h3 className="text-lg font-semibold ">Regular</h3>
             <p className="text-4xl font-bold">{regularEmployeeCount}</p>
-            <span className="opacity-80 text-sm">Employee</span>
+            <span className="opacity-80 text-sm lg:hidden 2xl:block">Employee</span>
           </div>
 
           {/*  Newly Joined Employee Count */}
           <div className={cardStyle}>
             <h3 className="text-lg font-semibold ">New (30 Days)</h3>
             <p className="text-4xl font-bold">{newlyJoinedEmployeeCount}</p>
-            <span className="opacity-80 text-sm">Employee</span>
+            <span className="opacity-80 text-sm lg:hidden 2xl:block">Employee</span>
           </div>
 
           {/* Table */}
-          <div className="w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-lg rounded-xl flex flex-col items-start justify-between border ">
+          <div className="w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-lg rounded-box flex flex-col items-start justify-between border ">
             <div className=" w-full overflow-auto h-full">
               <div className="flex flex-col md:flex-row p-1 justify-between items-center w-full">
                 <h2 className="text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full">

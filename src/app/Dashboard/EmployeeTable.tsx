@@ -189,7 +189,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 </div>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu border-neutral border bg-base-100 rounded-box w-max z-[1] p-0.5 shadow text-xs font-semibold"
+                  className="dropdown-content menu border bg-base-100 rounded-box w-max z-[1] p-0.5 shadow text-xs lg:text-sm font-semibold"
                 >
                   <li>
                     <a

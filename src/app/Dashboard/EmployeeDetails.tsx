@@ -22,8 +22,7 @@ const EmployeeDetails = () => {
     setLoading,
     setToastOptions,
   } = useAppContext();
-
-  const dummy = React.useRef<HTMLDivElement>(null);
+  
 
   const [selectedEmployeeMemos, setSelectedEmployeeMemos] = React.useState(
     [] as Memo[]
@@ -111,14 +110,18 @@ const EmployeeDetails = () => {
         getSelectedEmployeeDetails();
       }
 
-      if (window.innerWidth < 768) {
-        dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      if (userData?._id && selectedEmployee?._id && window.innerWidth < 768) {
+        // dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+        window.scrollTo({
+          top: 10000,
+          behavior: "smooth", // Enables smooth scrolling
+        });
       }
 
       if (!selectedEmployee._id) {
         setSelectedEmployeeDetails({} as Employee);
       }
-    }, 100);
+    }, 200);
 
     return () => clearTimeout(timeout);
   }, [selectedEmployee, userData]);
@@ -228,8 +231,7 @@ const EmployeeDetails = () => {
     <div
       className={` ${
         loading && "cursor-wait"
-      } relative h-full w-full flex flex-col overflow-auto rounded-xl shadow-lg border p-4 pt-5`}
-      ref={dummy}
+      } relative h-full w-full flex flex-col overflow-auto rounded-box shadow-lg border p-4 pt-5`}
     >
       {/* avatar, name, address */}
 
@@ -237,7 +239,7 @@ const EmployeeDetails = () => {
       <div
         className={`${
           (!selectedEmployee._id || loading) && "hidden"
-        } absolute top-0 right-0 cursor-pointer hover:bg-error`}
+        } absolute top-1 right-1 cursor-pointer hover:text-error`}
         onClick={onClear}
       >
         <svg
@@ -275,7 +277,7 @@ const EmployeeDetails = () => {
                   ? " bg-warning animate-pulse "
                   : " bg-success "
               }
-              cursor-pointer tooltip-top tooltip indicator-item badge text-white absolute `}
+              cursor-pointer tooltip-top tooltip tooltip-right indicator-item badge text-white absolute `}
               data-tip={`${
                 fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
               } Memos`}

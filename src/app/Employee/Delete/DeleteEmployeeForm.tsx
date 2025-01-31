@@ -114,6 +114,13 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
     }),
   };
 
+  React.useEffect(() => {
+    const res = employeeList?.find(
+      (employee) => employee._id == window.location.hash.split("#")[1]
+    );
+    setFormData(res as Employee);  
+  }, []);
+
   return (
     <form
       className={` form-style `}

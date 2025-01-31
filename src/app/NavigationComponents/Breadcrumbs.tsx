@@ -33,12 +33,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     throw new Error("Position prop is required when fixed is true");
   }
 
-  const xpaths = [
-    '/Offense'
-  ]
+  const xpaths = ["/Offense"];
 
-  if(xpaths.includes(pathname)){
-    return null
+  if (xpaths.includes(pathname)) {
+    return null;
   }
 
   return (
@@ -53,31 +51,31 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         <ul className="flex !justify-start !items-start text-start md:!flex-col 2xl:!flex-row relative ">
           <li>
              
-            <a>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-4 w-4 text-gray-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                />
-              </svg>
-            </a>  
-            <Link className="hover:text-info" href="/" id="Home">
-              Home
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-4 text-gray-500"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z"
+              />
+            </svg>
+              
+            <Link className="hover:text-info" href="/" id="Dashboard">
+              Dashboard
             </Link>
           </li>
-          {/* <li className=" hover:text-info flex justify-start w-full">  
-            <Link href="/" id="Home">
-              Home
-            </Link>
-          </li> */}
+          
           {pathArray?.map((path, index) => {
             const href = "/" + pathArray.slice(0, index + 1).join("/");
             const isLast = index === pathArray.length - 1;
@@ -101,7 +99,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           className="text-xs flex md:mt-1 2xl:mt-0 tooltip tooltip-right"
           title="Refresh"
           data-tip="Refresh"
-        > 
+        >
           <span className=" md:hidden 2xl:block">       </span>
           <span className=" 2xl:hidden"> </span>
           <svg
@@ -113,7 +111,6 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             className={`${
               loading ? "animate-spin" : "hover:rotate-45 "
             } text-info size-[1.2rem] duration-200 `}
-           
           >
             <path
               strokeLinecap="round"

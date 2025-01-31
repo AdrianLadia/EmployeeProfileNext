@@ -211,8 +211,15 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     setFormData({
       ...formData,
       [imageModalId]: imageListForModal.length ? imageListForModal : null,
-    }); 
+    });
   }, [imageListForModal, imageModalId]);
+
+  React.useEffect(() => {
+    const res = employeeList?.find(
+      (employee) => employee._id == window.location.hash.split("#")[1]
+    );
+    setFormData({ ...formData, Employee: res as Employee });
+  }, []);
 
   return (
     <form
@@ -240,7 +247,9 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         options={employeeList}
         value={formData?.Employee ? formData.Employee : null}
         placeholder="Select Employee"
-        getOptionLabel={(option) => option.firstName + " " + option.lastName || ""}
+        getOptionLabel={(option) =>
+          option.firstName + " " + option.lastName || ""
+        }
         isClearable
         onChange={(selectedOption) => {
           setFormData({ ...formData, Employee: selectedOption as Employee });
@@ -258,7 +267,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         }
         isClearable
         onChange={(selectedOption) => {
-          setFormData({ ...formData, MemoCode: selectedOption as Offense, subject: selectedOption?.title || "" });
+          setFormData({
+            ...formData,
+            MemoCode: selectedOption as Offense,
+            subject: selectedOption?.title || "",
+          });
         }}
         id="MemoCode"
       />
@@ -337,7 +350,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         onChangeHandler={handleFileChange}
         multiple={true}
         required={false}
-      /> 
+      />
 
       {/* memoPhotosList */}
       {/* <ImageInput

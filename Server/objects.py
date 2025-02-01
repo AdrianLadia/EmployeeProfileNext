@@ -345,27 +345,59 @@ class UserActions(User):
 
         return memos
 
-    def getEmployeeForDashboardAction(self, user):
+    def getEmployeeForDashboardAction(
+            self,
+            user,
+            page=1,
+            sort={'keyToSort': None, 'sortOrder': None},
+            ):
         if 'canGetEmployeeForDashboard' not in user['roles']['User']:
             raise ValueError(
                 'User does not have permission to get employee for dashboard')
 
-        employees = db.read({'isDeleted': False},
-                            'Employee',
-                            projection={
-                                '_id': 1,
-                                'firstName': 1,
-                                'lastName': 1,
-                                'address': 1,
-                                'phoneNumber': 1,
-                                'company': 1,
-                                'photoOfPerson': 1,
-                                'dateJoined': 1,
-                                'companyRole': 1,
-                                'isOJT': 1,
-                                'isRegular': 1,
-                                'isDeleted': 1,
-                            })
+        if page == None:
+            page = 1
+        if sort == None:
+            sort = {'keyToSort': None, 'sortOrder': None}
+
+        # employees = db.read({'isDeleted': False},
+        #                     'Employee',
+        #                     projection={
+        #                         '_id': 1,
+        #                         'firstName': 1,
+        #                         'lastName': 1,
+        #                         'address': 1,
+        #                         'phoneNumber': 1,
+        #                         'company': 1,
+        #                         'photoOfPerson': 1,
+        #                         'dateJoined': 1,
+        #                         'companyRole': 1,
+        #                         'isOJT': 1,
+        #                         'isRegular': 1,
+        #                         'isDeleted': 1,
+        #                     })
+
+        employees = db.readWithPagination({'isDeleted': False},
+                                          'Employee',
+                                          projection={
+                                                '_id': 1,
+                                                'firstName': 1,
+                                                'lastName': 1,
+                                                'address': 1,
+                                                'phoneNumber': 1,
+                                                'company': 1,
+                                                'photoOfPerson': 1,
+                                                'dateJoined': 1,
+                                                'companyRole': 1,
+                                                'isOJT': 1,
+                                                'isRegular': 1,
+                                                'isDeleted': 1,
+                                            },
+                                          page=1,
+                                          limit=10,
+                                          sort=sort
+                                          )
+
         return employees
 
     def getAllMemoThatsNotSubmittedAction(self, user):

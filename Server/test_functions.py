@@ -290,7 +290,7 @@ def test_create_update_delete_employee():
 
         employeeDashboard = user.getEmployeeForDashboardAction(userCreated)
 
-        assert len(employeeDashboard) == 1
+        assert len(employeeDashboard['data']) == 1
 
         employeeDetails = user.getEmployeeDetailsAction(
             userCreated, employee['_id'])
@@ -321,8 +321,7 @@ def test_create_update_delete_employee():
         assert employees[0]['isDeleted'] == True
 
         employeeDashboard = user.getEmployeeForDashboardAction(userCreated)
-
-        assert len(employeeDashboard) == 1
+        assert len(employeeDashboard['data']) == 0
 
     finally:
         db.delete({}, 'User')

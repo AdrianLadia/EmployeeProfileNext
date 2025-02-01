@@ -415,8 +415,11 @@ def get_employee_for_dashboard_action():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
+        page = data['page']
+        sort = data['sort']
+
         try:
-            res = UserActions(userData).getEmployeeForDashboardAction(userData)
+            res = UserActions(userData).getEmployeeForDashboardAction(userData, page, sort)
             return jsonify({
                 'message': 'Employee read successfully!',
                 'data': res

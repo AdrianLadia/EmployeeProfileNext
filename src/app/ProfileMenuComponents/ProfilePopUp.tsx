@@ -45,23 +45,22 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
     >
       <BackButton />
       <UserListButton userData={userData} pathname={pathname||""}/>
-
-      {/* arrow */}
-      {/* <div className="z-10 right-[.70rem] md:right-[.89rem] -top-6 absolute w-0 h-0 border-l-[16px] border-r-[16px] border-b-[20.5px] border-transparent border-b-info border-opacity-60" /> */}
-
-      <div className="flex flex-col items-center justify-center pt-12 pb-6 rounded-t-2xl ">
+      
+      <div className="flex flex-wrap items-center justify-center rounded-t-2xl gap-2 ">
+        <div className="w-full h-[2.3rem]"/>
         <Image
           className="rounded-box"
           src={userData?.image}
-          width={96}
-          height={96} 
+          width={72}
+          height={72} 
           alt="userImage"
         />
-        <h1 className="text-xl font-semibold mt-5">{userData?.displayName}</h1>
-        <p className="text-sm mt-2 select-all italic">{userData?.email}</p>
+        <h1 className="text-2xl font-semibold capitalize text-center max-w-full px-2">{userData?.displayName}</h1> 
+        <p className="text-md select-all italic w-full text-center">{userData?.email}</p>
+        <div className="w-full h-4"/> 
       </div> 
 
-      <div className="flex flex-col justify-between px-6 bg-base-100">
+      <div className="flex flex-col justify-between px-6 bg-base-100 grow">
         <div className="mt-2 w-full ">
           {Object.keys(cards).map((key, index) => {
             return (

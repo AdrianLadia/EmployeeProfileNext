@@ -22,8 +22,7 @@ const EmployeeDetails = () => {
     setLoading,
     setToastOptions,
   } = useAppContext();
-
-  const dummy = React.useRef<HTMLDivElement>(null);
+  
 
   const [selectedEmployeeMemos, setSelectedEmployeeMemos] = React.useState(
     [] as Memo[]
@@ -37,16 +36,14 @@ const EmployeeDetails = () => {
 
   const [fetchingMemos, setFetchingMemos] = React.useState<boolean>(false);
 
-  // const [daysWithUs, setDaysWithUs] = React.useState<number>(0);
-
   const detailStyle = () =>
-    ` ${loading && "hidden"} ${!selectedEmployeeDetails?._id && "hidden"} 
+    ` ${loading && "hidden"} 
     tracking-widest flex grow flex-col text-center  border border-base-300 rounded-xl bg-base-100 
     hover:bg-base-300 p-2 2xl:p-3
   `;
 
   const skeletonStyle = `
-    ${selectedEmployeeDetails.name && !loading ? " hidden " : " block "} 
+    ${selectedEmployeeDetails._id && !loading ? " hidden " : " block "} 
     ${loading ? " skeleton block" : " bg-base-300 rounded-xl "} shrink-0 
   `;
 
@@ -111,14 +108,20 @@ const EmployeeDetails = () => {
 
       if (selectedEmployee._id) {
         getSelectedEmployeeDetails();
+      }
 
-        dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      if (userData?._id && selectedEmployee?._id && window.innerWidth < 768) {
+        // dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+        window.scrollTo({
+          top: 10000,
+          behavior: "smooth", // Enables smooth scrolling
+        });
       }
 
       if (!selectedEmployee._id) {
         setSelectedEmployeeDetails({} as Employee);
       }
-    }, 100);
+    }, 200);
 
     return () => clearTimeout(timeout);
   }, [selectedEmployee, userData]);
@@ -148,6 +151,9 @@ const EmployeeDetails = () => {
       "_id",
       "_version",
       "dailyWage",
+      "firstName",
+      "lastName",
+      "isDeleted",
     ];
 
     return (
@@ -172,103 +178,28 @@ const EmployeeDetails = () => {
               </div>
             );
           }
-          return null;
         })}
       </>
     );
   };
 
-  return (
-    <div
-      className={` ${
-        loading && "cursor-wait"
-      } relative h-full w-full flex flex-col overflow-auto rounded-xl shadow-lg border p-4 `}
-      ref={dummy}
-    >
-      {/* avatar, name, address */}
-      <div className="flex flex-wrap w-full gap-3 items-start justify-start h-max">
-        {/* avatar */}
-        <div className={"flex justify-center " + contentStyle}>
-          <div className=" indicator ">
-            {/* indicator */}
-            <span
-              className={`
-              ${loading && "hidden"} 
-              ${
-                selectedEmployeeMemos.length
-                  ? " badge-error hover:bg-red-200 "
-                  : fetchingMemos
-                  ? " bg-warning animate-pulse "
-                  : " bg-success "
-              }
-              cursor-pointer tooltip-top tooltip indicator-item badge text-white absolute `}
-              data-tip={`${
-                fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
-              } Memos`}
-              onClick={() =>
-                selectedEmployeeMemos?.length &&
-                handleMemoTableModalClick(selectedEmployeeMemos)
-              }
-            >
-              {fetchingMemos ? "..." : selectedEmployeeMemos?.length}
-            </span>
-            {/* avatar Image */}
-            <div
-              className={` ${loading && "hidden"}
-              w-24 xl:w-36 h-24 xl:h-36 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
-              onClick={() =>
-                selectedEmployeeDetails?.photoOfPerson &&
-                handleImageModalClick([
-                  selectedEmployeeDetails?.photoOfPerson || "",
-                ])
-              }
-            >
-              {selectedEmployeeDetails?.photoOfPerson ? (
-                <Image
-                  className={` w-full h-full`}
-                  src={selectedEmployeeDetails?.photoOfPerson || "/avatar.png"}
-                  alt={selectedEmployeeDetails?.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 700px"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="h-full w-full bg-base-300 grid place-items-center text-2xl font-bold">
-                  ?
-                </div>
-              )}
-            </div>
+  const detailSkeleton = () => {
+    return !selectedEmployeeDetails._id || loading ? (
+      <>
+        <div className={`w-full flex flex-wrap items-center gap-3`}>
+          <div
+            className={` ${skeletonStyle} w-24 xl:w-32 h-24 xl:h-32 !rounded-full`}
+          >
+             
           </div>
+          <div className={`w-[60%] h-24 xl:h-32 flex flex-col justify-evenly`}>
+            <div className={`${skeletonStyle} w-full h-[35%] `}> </div>
+            <div className={`${skeletonStyle} w-[65%] h-[35%] `}> </div>
+          </div>
+          <div className={`${skeletonStyle} w-full h-3`}> </div>
+          <div className={`${skeletonStyle} w-full h-3`}> </div>
         </div>
-
-        <div
-          className={` ${
-            loading && " hidden"
-          } pl-2 grow self-stretch max-w-[60%] flex items-center justify-start`}
-        >
-          <h2
-            className="text-2xl font-semibold select-all"
-            onClick={() => handleDetailsClick(selectedEmployeeDetails?.name)}
-          >
-            {selectedEmployeeDetails?.name}
-          </h2>
-        </div>
-
-        <div className={` ${loading && " hidden"} `}>
-          <h3
-            className="select-all"
-            onClick={() =>
-              handleDetailsClick(selectedEmployeeDetails?.address || "")
-            }
-          >
-            {selectedEmployeeDetails?.address || " "}
-          </h3>
-        </div>
-      </div>
-
-      <div className="w-full border-b my-4 " />
-
-      <div className="flex flex-wrap gap-3 h-max w-full text-xs pb-2 ">
+        <div className="w-full mt-2 mb-1 border-b"></div>
         <div
           className={
             skeletonStyle +
@@ -283,17 +214,168 @@ const EmployeeDetails = () => {
             ? errorMessage
             : "No Details Found"}
         </div>
+        <div className={` ${skeletonStyle} md:24 md:w-32 h-12 grow`}> </div>
+        <div className={` ${skeletonStyle} md:20 md:w-24 h-12 grow`}> </div>
+        <div className={` ${skeletonStyle} md:20 md:w-24 h-12 grow`}> </div>
+        <div className={` ${skeletonStyle} md:24 md:w-32 h-12 grow`}> </div>
+        <div
+          className={` ${skeletonStyle} md:20 md:w-24 h-12 grow hidden xl:block`}
+        >
+           
+        </div>
+      </>
+    ) : null;
+  };
+
+  return (
+    <div
+      className={` ${
+        loading && "cursor-wait"
+      } relative h-full w-full flex flex-col overflow-auto rounded-box shadow-lg border p-4 pt-5`}
+    >
+      {/* avatar, name, address */}
+
+      {/* clear button */}
+      <div
+        className={`${
+          (!selectedEmployee._id || loading) && "hidden"
+        } absolute top-1 right-1 cursor-pointer hover:text-error`}
+        onClick={onClear} title="Clear"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
+      </div>
+
+      <div
+        className={` flex flex-wrap w-full gap-3 items-center md:items-start justify-center h-max border-b pb-3 pt-3 mb-2 lg:pb-4 lg:mb-6 ${
+          Boolean(!selectedEmployeeDetails?._id) && "hidden"
+        } `}
+      >
+        {/* avatar */}
+        <div className={"flex justify-center items-center self-stretch " + contentStyle}>
+          <div className=" indicator  ">
+            {/* indicator */}
+            <span
+              className={`
+              ${loading && "hidden"} 
+              ${
+                selectedEmployeeMemos.length
+                  ? " badge-error hover:bg-red-200 "
+                  : fetchingMemos
+                  ? " bg-warning animate-pulse "
+                  : " bg-success "
+              }
+              cursor-pointer indicator-start indicator-item badge text-white absolute `}
+              // cursor-pointer tooltip-top tooltip tooltip-right indicator-start indicator-item badge text-white absolute 
+              // data-tip={`${
+              //   fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
+              // } Memos`}
+              title={`${
+                fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
+              } Memos`}
+              onClick={() =>
+                selectedEmployeeMemos?.length &&
+                handleMemoTableModalClick(selectedEmployeeMemos)
+              }
+            >
+              {fetchingMemos ? "..." : selectedEmployeeMemos?.length}
+            </span>
+            {/* avatar Image */}
+            <div
+              className={` ${loading && "hidden"}
+              w-20 2xl:w-28 h-20 2xl:h-28 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
+              onClick={() =>
+                selectedEmployeeDetails?.photoOfPerson &&
+                handleImageModalClick([
+                  selectedEmployeeDetails?.photoOfPerson || "",
+                ])
+              }
+            >
+              {selectedEmployeeDetails?.photoOfPerson ? (
+                <Image
+                  className={` w-full h-full`}
+                  src={selectedEmployeeDetails?.photoOfPerson || "/avatar.png"}
+                  alt={selectedEmployeeDetails?.firstName}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 700px"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="h-full w-full bg-base-300 grid place-items-center text-2xl font-bold">
+                  ?
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* name */}
+        <div
+          className={` ${
+            loading && " hidden"
+          } pl-2 self-stretch min-w-[45%] max-w-[55%] xl:grow flex flex-wrap items-center justify-start select-all text-2xl xl:text-3xl 2xl:text-4xl font-semibold `}
+          onClick={() =>
+            handleDetailsClick(
+              selectedEmployeeDetails?.firstName +
+                " " +
+                selectedEmployeeDetails?.lastName
+            )
+          }
+        >
+          <h2>{selectedEmployeeDetails?.firstName + " "}</h2> 
+          <h2>{selectedEmployeeDetails?.lastName}</h2>  
+        </div>
+
+        {/* address */}
+        <div
+          className={` ${loading && " hidden"} ${
+            !selectedEmployeeDetails?.address && "hidden"
+          } text-center capitalize w-full`}
+        >
+          <h3
+            className="select-all"
+            onClick={() =>
+              handleDetailsClick(selectedEmployeeDetails?.address || "")
+            }
+          >
+            {selectedEmployeeDetails?.address || ""}
+          </h3>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-3 h-max w-full text-xs pb-2 ">
+        {detailSkeleton()}
 
         {detailComponent()}
 
-        <div className={detailStyle()}>
+        <div
+          className={
+            detailStyle() + ` ${!selectedEmployeeDetails._id && "hidden"}`
+          }
+        >
           <strong className="text-base">
             ₱ {selectedEmployeeDetails?.dailyWage?.toLocaleString() || " ? "}
           </strong>
           Daily Wage
         </div>
 
-        <div className={detailStyle()}>
+        <div
+          className={
+            detailStyle() + ` ${!selectedEmployeeDetails._id && "hidden"}`
+          }
+        >
           <strong className="text-base">
             {(selectedEmployee?.dateJoined &&
               Math.floor(
@@ -305,98 +387,55 @@ const EmployeeDetails = () => {
           </strong>
           Days with Us
         </div>
+
+        {/* Resume */}
         <div
+          className={
+            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            ` ${!selectedEmployeeDetails._id && "hidden"}`
+          }
           onClick={() =>
             selectedEmployeeDetails?.resumePhotosList &&
             handleImageModalClick(
               selectedEmployeeDetails?.resumePhotosList || []
             )
           }
-          className={`${detailStyle()} !flex-row ${loading && "hidden"} 
-                p-2 xl:p-4 flex items-center justify-evenly cursor-pointer w-full rounded-xl`}
         >
           Resume
           <Image
             className={`w-8 h-8`}
             src={selectedEmployeeDetails?.resumePhotosList?.[0] || ""}
-            alt={selectedEmployeeDetails?.name}
+            alt={"Resume"}
             width={100}
             height={100}
             loading="lazy"
           ></Image>
         </div>
 
+        {/* Bio-data */}
         <div
+          className={
+            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            ` ${!selectedEmployeeDetails._id && "hidden"}`
+          }
           onClick={() =>
             selectedEmployeeDetails?.biodataPhotosList &&
             handleImageModalClick(
               selectedEmployeeDetails?.biodataPhotosList || []
             )
           }
-          className={`${detailStyle()} !flex-row ${loading && "hidden"} 
-             items-center justify-evenly cursor-pointer w-full rounded-xl`}
         >
           Bio-data
           <Image
             className={`w-8 h-8`}
             src={selectedEmployeeDetails?.biodataPhotosList?.[0] || ""}
-            alt={selectedEmployeeDetails?.name}
+            alt={"Bio-data"}
             width={100}
             height={100}
             loading="lazy"
           ></Image>
         </div>
       </div>
-
-      {/* <div className="absolute flex justify-stretch bottom-2 gap-4 w-full text-center py-1 px-4"> 
- 
-        <div
-          onClick={() =>
-            handleImageModalClick(
-              selectedEmployeeDetails?.resumePhotosList || []
-            )
-          }
-          className={`${
-            !selectedEmployeeDetails?.resumePhotosList?.[0] && "hidden"
-          } ${loading && "hidden"} 
-                p-2 xl:p-4 flex items-center justify-evenly bg-base-200 hover:bg-base-300 cursor-pointer hover:text-white w-full rounded-xl`}
-        >
-          Resume
-          <Image
-            className={`w-8 h-8`}
-            src={selectedEmployeeDetails?.resumePhotosList?.[0] || ""}
-            alt={selectedEmployeeDetails?.name}
-            width={100}
-            height={100}
-            loading="lazy"
-          ></Image>
-        </div> 
-
-
-        <div
-          onClick={() =>
-            handleImageModalClick(
-              selectedEmployeeDetails?.biodataPhotosList || []
-            )
-          }
-          className={`${
-            !selectedEmployeeDetails?.biodataPhotosList?.[0] && "hidden"
-          } ${loading && "hidden"} 
-            p-2 xl:p-4 flex items-center justify-evenly bg-base-200 hover:bg-base-300 cursor-pointer hover:text-white w-full rounded-xl`}
-        >
-          Bio-data
-          <Image
-            className={`w-8 h-8`}
-            src={selectedEmployeeDetails?.biodataPhotosList?.[0] || ""}
-            alt={selectedEmployeeDetails?.name}
-            width={100}
-            height={100}
-            loading="lazy"
-          ></Image>
-        </div>
-      </div> */}
-
-      {/* <div className="py-6 pt-14 "> </div> */}
     </div>
   );
 };

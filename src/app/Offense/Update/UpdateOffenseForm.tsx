@@ -147,7 +147,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
 
   return (
     <form className="form-style" onSubmit={handleSubmit} ref={formRef}>
-      <h2 className="font-semibold">Update Offense</h2>
+      <h2 className="font-semibold text-violet-500">Update Offense</h2>
 
       {/* Ofense to Update */}
       {/* <div className='flex flex-col text-sm gap-2 '>Offense to Update 

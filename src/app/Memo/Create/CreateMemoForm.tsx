@@ -28,11 +28,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     serverRequests,
     userData,
     handleConfirmation,
-    router,
     loading,
     setLoading,
     imageModalId,
     imageListForModal,
+    handleMemoPrintModalClick,
   } = useAppContext();
 
   const [remedialAction, setRemedialAction] = useState<string>("");
@@ -47,12 +47,38 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     memoPhotosList: null,
   } as Memo);
 
+  const [memoForPrint, setMemoForPrint] = useState<Memo | null>(null);
+
+  const printMemo = async () => {
+    try {
+      const confirmed = await handleConfirmation(
+        "Download Created Memo?",
+        `${memoForPrint?.subject} for ${memoForPrint?.Employee?.firstName}`,
+        "neutral"
+      );
+
+      if (confirmed) {
+        handleMemoPrintModalClick(memoForPrint as Memo);
+      }
+    } catch (e) {
+      console.error("Error printing memo: ", e);
+    } finally {
+      setMemoForPrint(null);
+    }
+  };
+
+  React.useEffect(() => {
+    if (memoForPrint) {
+      printMemo();
+    }
+  }, [memoForPrint]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `Create ${formData?.subject} for ${formData?.Employee?.name}`,
+      `Create ${formData?.subject} for ${formData?.Employee?.firstName} ${formData?.Employee?.lastName}?`,
       "success"
     );
 
@@ -67,7 +93,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         if (formData?.mediaList) {
           const res = await upload.Images(
             formData?.mediaList,
-            `employees/${formData?.Employee?.name}`,
+            `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
             "mediaList"
           );
           finalFormData.mediaList = res || [];
@@ -76,7 +102,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         if (formData?.memoPhotosList) {
           const res = await upload.Images(
             formData?.memoPhotosList,
-            `employees/${formData?.Employee?.name}`,
+            `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
             "memoPhotosList"
           );
           finalFormData.memoPhotosList = res || [];
@@ -87,6 +113,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         const res = await serverRequests.createMemo(finalFormData, userData);
 
         if (res && res.data) {
+          setMemoForPrint(res.data);
+
           setToastOptions({
             open: true,
             message: res?.message || "Memo created successfully",
@@ -100,8 +128,6 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             mediaList: null,
             memoPhotosList: null,
           } as Memo);
-
-          router.refresh();
 
           formRef.current?.scrollIntoView({ behavior: "smooth" });
         } else {
@@ -211,8 +237,15 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     setFormData({
       ...formData,
       [imageModalId]: imageListForModal.length ? imageListForModal : null,
-    }); 
+    });
   }, [imageListForModal, imageModalId]);
+
+  React.useEffect(() => {
+    const res = employeeList?.find(
+      (employee) => employee._id == window.location.hash.split("#")[1]
+    );
+    setFormData({ ...formData, Employee: res as Employee });
+  }, []);
 
   return (
     <form
@@ -220,7 +253,25 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       ref={formRef}
       onSubmit={handleSubmit}
     >
-      <h2 className="font-semibold">Memorandum Creation</h2>
+      <h2 className="font-semibold text-blue-500">Memorandum Creation</h2>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm">Employee</span>
+        <Select
+          styles={selectStyle}
+          options={employeeList}
+          value={formData?.Employee ? formData.Employee : null}
+          placeholder="Select Employee"
+          getOptionLabel={(option) =>
+            option.firstName + " " + option.lastName || ""
+          }
+          isClearable
+          onChange={(selectedOption) => {
+            setFormData({ ...formData, Employee: selectedOption as Employee });
+          }}
+          id="select-employee"
+        />
+      </div>
 
       {/* date */}
       <label className="flex flex-col items-start gap-2 text-sm">
@@ -235,33 +286,27 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         />
       </label>
 
-      <Select
-        styles={selectStyle}
-        options={employeeList}
-        value={formData?.Employee ? formData.Employee : null}
-        placeholder="Select Employee"
-        getOptionLabel={(option) => option.name || ""}
-        isClearable
-        onChange={(selectedOption) => {
-          setFormData({ ...formData, Employee: selectedOption as Employee });
-        }}
-        id="select-employee"
-      />
-
-      <Select
-        styles={selectStyle}
-        options={offenseList}
-        placeholder="Select Offense"
-        value={formData?.MemoCode ? formData.MemoCode : null}
-        getOptionLabel={(option) =>
-          `(${option.number}) - ${option.title}` || ""
-        }
-        isClearable
-        onChange={(selectedOption) => {
-          setFormData({ ...formData, MemoCode: selectedOption as Offense, subject: selectedOption?.title || "" });
-        }}
-        id="MemoCode"
-      />
+      <div className="flex flex-col gap-2">
+        <span className="text-sm">Offense</span>
+        <Select
+          styles={selectStyle}
+          options={offenseList}
+          placeholder="Select Offense"
+          value={formData?.MemoCode ? formData.MemoCode : null}
+          getOptionLabel={(option) =>
+            `(${option.number}) - ${option.title}` || ""
+          }
+          isClearable
+          onChange={(selectedOption) => {
+            setFormData({
+              ...formData,
+              MemoCode: selectedOption as Offense,
+              subject: selectedOption?.title || "",
+            });
+          }}
+          id="MemoCode"
+        />
+      </div>
 
       {remedialAction && (
         <div className="flex flex-col text-sm gap-2 ">
@@ -337,7 +382,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         onChangeHandler={handleFileChange}
         multiple={true}
         required={false}
-      /> 
+      />
 
       {/* memoPhotosList */}
       {/* <ImageInput

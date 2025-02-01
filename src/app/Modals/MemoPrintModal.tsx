@@ -132,7 +132,7 @@ const PrintMemorandumModal = () => {
         );
       }
 
-      pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
+      pdf.save(`${memoForPrintModal?.Employee?.firstName}-Memorandum.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     } finally {
@@ -229,7 +229,7 @@ const PrintMemorandumModal = () => {
             <div className="my-5 border-l pl-4 grid grid-cols-1 lg:grid-cols-5 items-center lg:gap-4">
               <div className="col-span-1 font-semibold">To:</div>
               <div className={headerTextStyle}>
-                {memoForPrintModal?.Employee?.name}
+                {memoForPrintModal?.Employee?.firstName} {memoForPrintModal?.Employee?.lastName}
               </div>
 
               <div className="col-span-1 font-semibold">From:</div>
@@ -258,7 +258,7 @@ const PrintMemorandumModal = () => {
             <div className="px-2 ">
               <h3>
                 Dear Mr./Ms.{" "}
-                <strong>{memoForPrintModal?.Employee?.name}</strong> ,
+                <strong>{memoForPrintModal?.Employee?.firstName} {memoForPrintModal?.Employee?.lastName}</strong> ,
               </h3>
               <br />
               {/* <p className="indent-4 whitespace-pre-line underline underline-offset-8 hyphens-auto text-justify leading-9"> */}
@@ -274,7 +274,6 @@ const PrintMemorandumModal = () => {
             </div>
 
             {/* employee explanation */}
-            {/* {console.log(memoForPrintModal)} */}
             {!memoForPrintModal?.submitted && !memoForPrintModal.reason ? (
               <>
                 <div className="my-8 w-full border-b-2" />

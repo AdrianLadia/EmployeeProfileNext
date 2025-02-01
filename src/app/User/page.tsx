@@ -19,8 +19,6 @@ const page = async () => {
     userData = await getUserData();
   }
 
-  console.log(userData);
-
   if(!Array.isArray(userData?.roles?.User) || !userData.roles.User.includes('canUpdateUser')){
     return <div>You do not have permission to view this page</div>
   } 

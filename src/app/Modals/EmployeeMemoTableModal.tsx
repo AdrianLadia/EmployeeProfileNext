@@ -48,7 +48,7 @@ const EmployeeMemoTableModal = () => {
           <h3 className="text-xl font-semibold w-full text-start ">
             Memos{" "}
             <span className="text-base">
-              ( {memoForTableModal?.[0]?.Employee?.name} )
+              ( {memoForTableModal?.[0]?.Employee?.firstName} {memoForTableModal?.[0]?.Employee?.lastName} )
             </span>{" "}
           </h3>
           <div className="w-full h-full overflow-auto rounded-box ">

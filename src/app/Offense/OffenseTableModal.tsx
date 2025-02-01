@@ -10,27 +10,20 @@ const style: React.CSSProperties = {
   boxShadow: "24px",
   outline: 0,
   overflow: "clip",
-};
-
-// import html2canvas from "html2canvas-pro";
-
-// import jsPDF from "jspdf";
-
-import { Offense } from "../schemas/OffenseSchema";
+}; 
 
 import OffenseTable from "./OffenseTable"; 
 
+import { useAppContext } from "../GlobalContext";
 
-interface OffenseTableModalProps {
-  offenseList: Offense[];
-}
+const OffenseTableModal= () => {
+  const { offenseListForModal, pathname } = useAppContext();
 
-const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
-  offenseList,
-}) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
   const [loading, setLoading] = React.useState(false); 
+
+  const [hidden, setHidden] = React.useState(false);
 
   function convertToPdf() {
     setLoading(true);
@@ -94,67 +87,15 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
     setLoading(false);
   } 
 
+  React.useEffect(() => {
+    if (pathname === "/") {
+      setHidden(true);
+    }else{
+      setHidden(false);
+    }
+  },[pathname])
+
   const [year] = React.useState(new Date().getFullYear());
-
-// image pdf
-  // const convertToPdf = async () => {
-
-  //   setLoading(true)
-
-  //   const desktopWidth = 1200; // Adjust as needed for desktop
-  //   const desktopHeight = 800; // Adjust as needed for desktop
-
-  //   // Store the original dimensions of the window
-  //   const originalWidth = window.innerWidth;
-  //   const originalHeight = window.innerHeight;
-
-  //   // Resize the window to simulate a desktop view
-  //   window.innerWidth = desktopWidth;
-  //   window.innerHeight = desktopHeight;
-
-  //   // Trigger resize event to adjust the layout (if necessary)
-  //   window.dispatchEvent(new Event("resize"));
-
-  //   const element = contentRef.current;
-  
-  //   if (!element) {
-  //     console.error("Element not found");
-  //     return;
-  //   }
-  
-  //   try {
-  //     const canvas = await html2canvas(element);
-  //     const imgData = canvas.toDataURL('image/png');
-  //     const pdf = new jsPDF();
-  
-  //     const imgWidth = 210; // Width in mm (A4 size)
-  //     const pageHeight = 297; // Height in mm (A4 size)
-  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //     let heightLeft = imgHeight;
-  
-  //     let position = 0;
-  
-  //     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-  //     heightLeft -= pageHeight;
-  
-  //     while (heightLeft >= 0) {
-  //       position = heightLeft - imgHeight;
-  //       pdf.addPage();
-  //       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-  //       heightLeft -= pageHeight;
-  //     }
-  
-  //     pdf.save('download.pdf');
-  //   } catch (error) {
-  //     console.error("Error generating PDF", error);
-  //   } finally {
-  //     window.innerWidth = originalWidth;
-  //     window.innerHeight = originalHeight;
-  //     window.dispatchEvent(new Event("resize"));
-  //     setLoading(false)
-  //   }
-  // };
- 
 
   return (
     <dialog className=" modal " id="OffenseDownloadModal">
@@ -189,31 +130,31 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
 
             {/* OffenseTable */}
             <div className=" rounded-box rounded-t-none w-full ">
-              <OffenseTable offenseList={offenseList} forPrint={true} />
+              <OffenseTable offenseList={offenseListForModal} forPrint={true} />
             </div>
 
             {/* THE MANAGEMENT */}
-            <div className="flex justify-end gap-2 px-10 pt-16" >
+            <div className={`${hidden&&"hidden"} flex justify-end gap-2 px-10 pt-16`} >
               <div className="text-xl w-[30%] font-bold tracking-wider" id="textEnd">
                 THE MANAGEMENT
               </div>
             </div>
 
             {/*  Printed Name< */}
-            <div className="flex items-center flex-col gap-2 px-10 pt-16 w-[80%] md:w-[40%] " >
+            <div className={`${hidden&&"hidden"} flex items-center flex-col gap-2 px-10 pt-16 w-[80%] md:w-[40%]`} >
               <div className=" border-b w-full border-black h-0" >                  </div>
               <div id="textStart">Signature Over Printed Name:</div>
             </div>
 
             {/* Date */}
-            <div className="flex items-center flex-col gap-2 px-10 pt-20 pb-10 w-[80%] md:w-[40%] " >
+            <div className={`${hidden&&"hidden"} flex items-center flex-col gap-2 px-10 pt-20 pb-10 w-[80%] md:w-[40%] `} >
               <div className=" border-b border-black w-full h-0"  >                  </div>
               <div id="textStart">Date:</div>
             </div>
           </div>
           {/* content ref /> */}
 
-          <div className="absolute bottom-5 w-full justify-center flex">
+          <div className={`${hidden&&"hidden"} absolute bottom-5 w-full justify-center flex`}>
             <button
               onClick={convertToPdf}
               className="btn btn-info"

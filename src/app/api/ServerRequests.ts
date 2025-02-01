@@ -311,18 +311,26 @@ class ServerRequests extends Server {
     // }
   } 
 
-  async fetchEmployeeList(): Promise<any> { 
-    try {
-      const res = await fetch(`${this.url}/readAllDataInCollection`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ collection: "Employee" }),
-        cache: 'no-store',
-      });
+  async fetchEmployeeList(userData: User, page:number, limit:number, sort: {'keyToSort': null, 'sortOrder': null} | null): Promise<any> { 
+
+    const data = {
+      userData: userData,
+      page: page,
+      limit: limit,
+      sort: sort
+    };
+
+    try{ 
+      const res = await fetch(`${this.url}/fetchEmployeeList`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+          cache: 'no-store',
+        });
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
-    }
+    } 
   }  
 
   async fetchOffenseList(): Promise<any> {
@@ -339,6 +347,20 @@ class ServerRequests extends Server {
     } 
   }
 
+  // async getEmployeeForDashboardAction(userObject: User): Promise<any> {
+  //   try {
+  //     const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ userData: userObject }),
+  //       cache: 'no-store',
+  //     });
+  //     return await res.json();
+  //   } catch (error:unknown) {
+  //     return (error as Error).message;
+  //   }
+  // }
+
   async getEmployeeForDashboardAction(userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
@@ -347,7 +369,12 @@ class ServerRequests extends Server {
         body: JSON.stringify({ userData: userObject }),
         cache: 'no-store',
       });
-      return await res.json();
+      // return await res.json();
+      const data = await res.json();
+      if(data?.data){
+        data.data = data.data.filter((employee: any) => employee.isDeleted === false);
+        return data;
+      }
     } catch (error:unknown) {
       return (error as Error).message;
     }

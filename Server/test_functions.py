@@ -569,7 +569,6 @@ def test_create_employee_without_photoOfPerson_then_update():
 
 def test_create_employee_then_fetch_employee_list_with_pagination():
     try:
-        db.delete({}, 'Employee')
         user = UserActions(userObject)
         userCreated = user.createFirstUserAction('id1')
 
@@ -623,6 +622,43 @@ def test_create_employee_then_fetch_employee_list_with_pagination():
     finally:
         db.delete({}, 'User')
         db.delete({}, 'Employee')
+        pass
+
+def test_create_employee_offense_memo_then_get_all_recent_memos():
+    try:
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+
+        offense = user.createOffenseAction(userCreated, offenseObject)
+
+        employee = user.createEmployeeAction(userCreated, employeeObject)
+
+        memoObject['Employee'] = employee
+        memoObject['MemoCode'] = offense
+
+        memoObject['date'] = datetime.datetime.now() - datetime.timedelta(days=1)
+        memo = user.createMemoAction(userCreated, memoObject)
+
+        memoObject['date'] = datetime.datetime.now() - datetime.timedelta(days=2)
+        memo2 = user.createMemoAction(userCreated, memoObject)
+
+        memoObject['date'] = datetime.datetime.now() - datetime.timedelta(days=3)
+        memo3 = user.createMemoAction(userCreated, memoObject)
+
+        memoObject['date'] = datetime.datetime.now() - datetime.timedelta(days=4)
+        memo4 = user.createMemoAction(userCreated, memoObject)
+
+        memoObject['date'] = datetime.datetime.now() - datetime.timedelta(days=5)
+        memo5 = user.createMemoAction(userCreated, memoObject)
+
+        memos = user.getAllRecentMemoAction(userCreated)
+
+        assert len(memos) == 5
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Offense')
+        db.delete({}, 'Employee')
+        db.delete({}, 'Memo')
         pass
 
 

@@ -28,8 +28,6 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     handleConfirmation,
     loading,
     setLoading,
-    imageListForModal,
-    imageModalId,
     handleImageModalClick,
   } = useAppContext();
 

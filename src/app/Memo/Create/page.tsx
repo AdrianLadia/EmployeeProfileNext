@@ -31,7 +31,11 @@ const page = async () => {
     serverRequests.fetchOffenseList(),
   ]);
 
-  const employeeList: Employee[] = employeeRes?.data.data || [];
+  if(!employeeRes?.data || !offenseRes?.data) { 
+    return <div>Failed to fetch data</div>
+  }
+
+  const employeeList: Employee[] = employeeRes?.data?.data || [];
   const offenseList: Offense[] = offenseRes?.data || [];
 
   return (

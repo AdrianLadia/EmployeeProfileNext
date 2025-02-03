@@ -30,8 +30,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     router,
     loading,
     setLoading,
-    imageListForModal,
-    imageModalId,
     pathname,
   } = useAppContext();
 

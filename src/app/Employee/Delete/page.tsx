@@ -29,7 +29,11 @@ const page = async () => {
 
   const res = await serverRequests.fetchEmployeeList(userData, 1, 9999, null);
 
-  const employeeList: Employee[] = res.data.data;
+  if(!res?.data) {
+    return <div>Something went wrong</div>;
+  }
+
+  const employeeList: Employee[] = res?.data?.data;
 
   return (
     <div className="w-screen h-screen flex items-center justify-center ">

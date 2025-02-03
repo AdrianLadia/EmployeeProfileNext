@@ -18,6 +18,10 @@ const page = async () => {
     serverRequests.getAllMemoThatsNotSubmitted(),
   ]);
 
+  if (!memoRes?.data) {
+    return <div>Failed to fetch data</div>;
+  }
+
   const memoList: Memo[] = memoRes?.data || [];
 
   return (

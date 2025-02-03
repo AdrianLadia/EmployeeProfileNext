@@ -23,6 +23,10 @@ const page = async () => {
 
   const res = await serverRequests.fetchOffenseList();
 
+  if(!res?.data){
+    return <div>Failed to load data</div>
+  }
+
   let offenseList: Offense[] = res.data || []; 
 
   offenseList = offenseList.sort((a, b) => a.number - b.number);

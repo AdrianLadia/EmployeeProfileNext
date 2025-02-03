@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useAppContext } from "../GlobalContext";
 
@@ -15,6 +15,21 @@ const EmployeeMemoTableModal = () => {
   } = useAppContext();
 
   const memoTableModalRef = React.useRef<HTMLDialogElement>(null);
+
+  const [isForSingleEmployee, setIsForSingleEmployee] = React.useState(true);
+
+  useEffect(() => {
+    if(memoForTableModal.length > 0){
+      const x1 = memoForTableModal[0]?.Employee?._id;
+      const x2 = memoForTableModal[1]?.Employee?._id;
+  
+      if(x1 === x2 || memoForTableModal.length === 1){
+        setIsForSingleEmployee(true);
+      }else{
+        setIsForSingleEmployee(false);
+      }
+    }
+  }, [memoForTableModal])
 
   const handleClose = () => {
     setMemoForTableModal([] as Memo[]);
@@ -46,9 +61,10 @@ const EmployeeMemoTableModal = () => {
           </form>
 
           <h3 className="text-xl font-semibold w-full text-start ">
-            Memos{" "}
             <span className="text-base">
-              ( {memoForTableModal?.[0]?.Employee?.firstName} {memoForTableModal?.[0]?.Employee?.lastName} )
+              {isForSingleEmployee?`Memos ( ${memoForTableModal?.[0]?.Employee?.firstName} ${memoForTableModal?.[0]?.Employee?.lastName} )`:(
+                `Recent Memos (${memoForTableModal.length})`
+              )}
             </span>{" "}
           </h3>
           <div className="w-full h-full overflow-auto rounded-box ">
@@ -58,6 +74,7 @@ const EmployeeMemoTableModal = () => {
                 <tr className="bg-gray-500 text-white">
                   <th></th>
                   <th className="min-w-[150px]">Date</th>
+                  {!isForSingleEmployee&&<th className="min-w-[150px]">Employee</th>}
                   <th className="min-w-[200px]">Memo</th>
                   <th className="min-w-[20vw]">Offense</th>
                   <th className="min-w-[150px]">Photos</th>
@@ -95,6 +112,10 @@ const EmployeeMemoTableModal = () => {
 
                     {/* Date */}
                     <td className="w-max "> {memo?.date?.substring(0, 16)} </td>
+
+                    {/* Employee */}
+                    {!isForSingleEmployee&&<td className="w-max font-bold ">{memo?.Employee?.firstName} {memo?.Employee?.lastName}</td>}
+
                     {/* Memo */}
                     <td
                       className=" "
@@ -186,6 +207,7 @@ const EmployeeMemoTableModal = () => {
                 <tr className="bg-gray-500 text-white">
                   <th></th>
                   <th>Date</th>
+                  {!isForSingleEmployee&&<th className="min-w-[150px]">Employee</th>}
                   <th>Memo</th>
                   <th>Offense</th>
                   <th>Photos</th>

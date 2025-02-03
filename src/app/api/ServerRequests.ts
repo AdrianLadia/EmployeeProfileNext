@@ -492,6 +492,20 @@ class ServerRequests extends Server {
     } 
   }
 
+  async getAllRecentMemo(userData: User): Promise<any> {
+    try {
+      const res = await fetch(`${this.url}/getAllRecentMemo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userData }),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
 }
 
 export default ServerRequests;

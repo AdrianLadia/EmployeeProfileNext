@@ -5,7 +5,7 @@ import React from "react";
 import { useAppContext } from "../GlobalContext";
 
 const DashboardMenu = () => {
-  const { serverRequests, loading, setLoading, handleOffenseListClick } = useAppContext();
+  const { serverRequests, loading, setLoading, handleOffenseListClick, userData, handleMemoTableModalClick } = useAppContext();
 
   const fetchOffenseList = async () => {
     setLoading(true);
@@ -13,6 +13,22 @@ const DashboardMenu = () => {
       const res = await serverRequests.fetchOffenseList();
       if(res?.data){
         handleOffenseListClick(res.data);
+      }else{
+        console.error(res?.message);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchRecentMemo = async () => {
+    setLoading(true);
+    try {
+      const res = await serverRequests.getAllRecentMemo(userData);
+      if(res?.data){
+        handleMemoTableModalClick(res.data);
       }else{
         console.error(res?.message);
       }
@@ -52,14 +68,14 @@ const DashboardMenu = () => {
         className="dropdown-content menu bg-base-100 rounded-lg z-[1] w-max shadow border-2 p-0 border-neutral font-semibold py-1 "
       >
         <li>
-          <a>
+          <a onClick={fetchRecentMemo} title="Recent Memos">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-5"
+              className={`${loading&&" loading text-info "} size-5`}
             >
               <path
                 strokeLinecap="round"

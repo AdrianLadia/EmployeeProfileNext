@@ -16,20 +16,21 @@ const EmployeeMemoTableModal = () => {
 
   const memoTableModalRef = React.useRef<HTMLDialogElement>(null);
 
-  const [isForSingleEmployee, setIsForSingleEmployee] = React.useState(true);
+  const [isForSingleEmployee, setIsForSingleEmployee] = React.useState(false);
 
   useEffect(() => {
-    if(memoForTableModal.length > 0){
-      const x1 = memoForTableModal[0]?.Employee?._id;
-      const x2 = memoForTableModal[1]?.Employee?._id;
-  
-      if(x1 === x2 || memoForTableModal.length === 1){
-        setIsForSingleEmployee(true);
-      }else{
+    if (memoForTableModal.length > 0) {
+      const res = memoForTableModal.map((memo) => memo.Employee._id);
+
+      const uniqueArray = [...new Set(res)];
+
+      if (uniqueArray.length > 1) {
         setIsForSingleEmployee(false);
+      } else {
+        setIsForSingleEmployee(true);
       }
     }
-  }, [memoForTableModal])
+  }, [memoForTableModal]);
 
   const handleClose = () => {
     setMemoForTableModal([] as Memo[]);
@@ -47,7 +48,7 @@ const EmployeeMemoTableModal = () => {
     return () => {
       memoTableModalRef.current?.removeEventListener("keydown", handleKeyDown);
     };
-  }, []); 
+  }, []);
 
   return (
     <dialog id="EmployeeMemoModal" className="modal " ref={memoTableModalRef}>
@@ -55,16 +56,17 @@ const EmployeeMemoTableModal = () => {
         <div className=" max-h-[80vh] w-[98vw] md:w-[80vw] rounded-box py-8 bg-base-200 px-6 flex justify-center items-center flex-col gap-2 relative ">
           {/*  */}
           <form className="absolute top-2 right-2" method="dialog">
-            <button onClick={() => handleClose()} className=" close-button ">
-              
-            </button>
+            <button
+              onClick={() => handleClose()}
+              className=" close-button "
+            ></button>
           </form>
 
           <h3 className="text-xl font-semibold w-full text-start ">
             <span className="text-base">
-              {isForSingleEmployee?`Memos ( ${memoForTableModal?.[0]?.Employee?.firstName} ${memoForTableModal?.[0]?.Employee?.lastName} )`:(
-                `Recent Memos (${memoForTableModal.length})`
-              )}
+              {isForSingleEmployee
+                ? `Memos ( ${memoForTableModal?.[0]?.Employee?.firstName} ${memoForTableModal?.[0]?.Employee?.lastName} )`
+                : `Recent Memos ( ${memoForTableModal.length} )`}
             </span>{" "}
           </h3>
           <div className="w-full h-full overflow-auto rounded-box ">
@@ -74,7 +76,9 @@ const EmployeeMemoTableModal = () => {
                 <tr className="bg-gray-500 text-white">
                   <th></th>
                   <th className="min-w-[150px]">Date</th>
-                  {!isForSingleEmployee&&<th className="min-w-[150px]">Employee</th>}
+                  {!isForSingleEmployee && (
+                    <th className="min-w-[150px]">Employee</th>
+                  )}
                   <th className="min-w-[200px]">Memo</th>
                   <th className="min-w-[20vw]">Offense</th>
                   <th className="min-w-[150px]">Photos</th>
@@ -114,7 +118,11 @@ const EmployeeMemoTableModal = () => {
                     <td className="w-max "> {memo?.date?.substring(0, 16)} </td>
 
                     {/* Employee */}
-                    {!isForSingleEmployee&&<td className="w-max font-bold ">{memo?.Employee?.firstName} {memo?.Employee?.lastName}</td>}
+                    {!isForSingleEmployee && (
+                      <td className="w-max font-bold ">
+                        {memo?.Employee?.firstName} {memo?.Employee?.lastName}
+                      </td>
+                    )}
 
                     {/* Memo */}
                     <td
@@ -142,7 +150,7 @@ const EmployeeMemoTableModal = () => {
                           {/* <p className='btn btn-xs text-[.70rem] btn-neutral truncate' >{"remedialAction"}</p> */}
                           <div className="collapse-content flex flex-wrap gap-1 ">
                             <p className="btn btn-xs text-[.70rem] btn-neutral truncate">
-                              {memo?.remedialAction || " "} 
+                              {memo?.remedialAction || " "}
                             </p>
                             {/* {memo?.remedialAction?.map((action: string, index: number) => (
                                 <p className='btn btn-xs text-[.70rem] btn-neutral truncate' key={index}>{action}</p>
@@ -155,7 +163,9 @@ const EmployeeMemoTableModal = () => {
                     <td>
                       {" "}
                       <Image
-                        className={` w-[150px] h-[150px] ${memo?.mediaList?.[0] && "hover:border"} cursor-pointer `}
+                        className={` w-[150px] h-[150px] ${
+                          memo?.mediaList?.[0] && "hover:border"
+                        } cursor-pointer `}
                         src={memo?.mediaList?.[0] || ""}
                         width={100}
                         height={100}
@@ -170,7 +180,9 @@ const EmployeeMemoTableModal = () => {
                     <td>
                       {" "}
                       <Image
-                        className={` w-[150px] h-[150px] ${memo?.memoPhotosList?.[0] && "hover:border"} cursor-pointer `}
+                        className={` w-[150px] h-[150px] ${
+                          memo?.memoPhotosList?.[0] && "hover:border"
+                        } cursor-pointer `}
                         src={memo?.memoPhotosList?.[0] || ""}
                         width={100}
                         height={100}
@@ -207,7 +219,9 @@ const EmployeeMemoTableModal = () => {
                 <tr className="bg-gray-500 text-white">
                   <th></th>
                   <th>Date</th>
-                  {!isForSingleEmployee&&<th className="min-w-[150px]">Employee</th>}
+                  {!isForSingleEmployee && (
+                    <th className="min-w-[150px]">Employee</th>
+                  )}
                   <th>Memo</th>
                   <th>Offense</th>
                   <th>Photos</th>

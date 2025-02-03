@@ -54,7 +54,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       const confirmed = await handleConfirmation(
         "Download Created Memo?",
         `${memoForPrint?.subject} for ${memoForPrint?.Employee?.firstName}`,
-        "neutral"
+        "accent"
       );
 
       if (confirmed) {

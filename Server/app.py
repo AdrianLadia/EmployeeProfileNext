@@ -597,7 +597,7 @@ def fetch_employee_list():
             logging.exception("Error processing Employee: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
-@app.rout('/getAllRecentMemo', methods=['POST'])
+@app.route('/getAllRecentMemo', methods=['POST'])
 def get_all_recent_memo():
     if request.is_json:
         data = request.get_json()

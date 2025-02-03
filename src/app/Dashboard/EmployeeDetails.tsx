@@ -155,6 +155,7 @@ const EmployeeDetails = () => {
       "firstName",
       "lastName",
       "isDeleted",
+      "employeeSignature"
     ];
 
     return (
@@ -396,6 +397,30 @@ const EmployeeDetails = () => {
               " ? "}
           </strong>
           Days with Us
+        </div>
+
+        {/* employee Signature */}
+        <div
+          className={
+            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            ` ${!selectedEmployeeDetails._id && "hidden"}`
+          }
+          onClick={() =>
+            selectedEmployeeDetails?.employeeSignature &&
+            handleImageModalClick(
+              [selectedEmployeeDetails?.employeeSignature || ""]
+            )
+          }
+        >
+          Signature
+          <Image
+            className={`w-8 h-8`}
+            src={selectedEmployeeDetails?.employeeSignature || ""}
+            alt={"employeeSignature"}
+            width={100}
+            height={100}
+            loading="lazy"
+          ></Image>
         </div>
 
         {/* Resume */}

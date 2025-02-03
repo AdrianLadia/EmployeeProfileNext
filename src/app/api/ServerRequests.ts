@@ -506,6 +506,26 @@ class ServerRequests extends Server {
     }
   }
 
+  async updateEmployeeProfilePicture(employeeId: string, photoURL: string, userObject: User): Promise<any> {
+    const data = {
+      userData: userObject,
+      employeeID: employeeId,
+      picture: photoURL
+    }
+
+    try {
+      const res = await fetch(`${this.url}/updateEmployeeProfilePicture`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
 }
 
 export default ServerRequests;

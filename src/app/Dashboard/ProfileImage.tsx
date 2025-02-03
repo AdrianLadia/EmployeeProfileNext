@@ -72,7 +72,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
 
     const timeout = setTimeout(() => {
       handleSave(reader.result as string);
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timeout);
   };
@@ -101,11 +101,13 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
           photoURL = uploadRes[0];
         }
 
-        const res = await serverRequests.updateEmployee(
-          employee,
-          { photoOfPerson: photoURL },
-          userData
-        );
+        // const res = await serverRequests.updateEmployee(
+        //   employee,
+        //   { photoOfPerson: photoURL },
+        //   userData
+        // );
+
+        const res = await serverRequests.updateEmployeeProfilePicture(employee?._id || "", photoURL || "", userData);
 
         if (res?.data) {
           console.log(res.data)

@@ -25,7 +25,7 @@ const PrintMemorandumModal = () => {
   const memoImgRef = useRef(null);
   const mediaListRef = useRef(null);
 
-  const { memoForPrintModal, setMemoForPrintModal, getOrdinal } =
+  const { memoForPrintModal, setMemoForPrintModal, getOrdinal, loading, setLoading } =
     useAppContext();
 
   const [resolution, setResolution] = React.useState(1);
@@ -34,6 +34,8 @@ const PrintMemorandumModal = () => {
   const [includeMediaList, setIncludeMediaList] = React.useState(true);
 
   const convertToPdf = async () => {
+    setLoading(true);
+
     const desktopWidth = 1200;
     const desktopHeight = 800;
 
@@ -140,6 +142,8 @@ const PrintMemorandumModal = () => {
       window.innerHeight = originalHeight;
 
       window.dispatchEvent(new Event("resize"));
+
+      setLoading(false)
     }
   };
 
@@ -401,7 +405,7 @@ const PrintMemorandumModal = () => {
         <div className="w-full absolute bottom-5 flex justify-center">
           <button
             className=" w-max btn btn-info text-white opacity-70 hover:opacity-100 z-40" 
-            onClick={() => convertToPdf()}
+            onClick={() => !loading && convertToPdf()} 
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -409,7 +413,7 @@ const PrintMemorandumModal = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className={`${loading&&"loading "} size-6`}
             >
               <path
                 strokeLinecap="round"
@@ -417,7 +421,7 @@ const PrintMemorandumModal = () => {
                 d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
               />
             </svg>
-            <span className=" ">Download</span>
+            <span >Download</span>
           </button>
         </div>
       </div>

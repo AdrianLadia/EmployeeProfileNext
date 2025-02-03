@@ -53,6 +53,8 @@ employeeObject = {
     'companyRole': "Software Engineer",
     'isOJT': False,
     'dailyWage': None,
+    'isDeleted': False,
+    'employeeSignature': 'employeeSignature',
     '_version': 0
 }
 

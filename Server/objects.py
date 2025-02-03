@@ -602,6 +602,7 @@ class Employee(BaseModel):
     isOJT: Optional[bool]
     dailyWage: Optional[Union[float, int]]
     isDeleted: Optional[bool] = False
+    employeeSignature: Optional[str] = None
     version: int = Field(..., alias='_version')
 
     @field_validator("dateJoined", mode='before', check_fields=True)
@@ -641,6 +642,7 @@ class Employee(BaseModel):
             'isOJT': self.isOJT,
             'dailyWage': self.dailyWage,
             'isDeleted': self.isDeleted,
+            'employeeSignature': self.employeeSignature,
             '_version': self.version
         }
 

@@ -136,6 +136,7 @@ def create_employee():
                     'isOJT': data['isOJT'],
                     'dailyWage': data['dailyWage'],
                     'isDeleted': False,
+                    'employeeSignature': data['employeeSignature'] or None,
                     '_version': 0
                 })
 

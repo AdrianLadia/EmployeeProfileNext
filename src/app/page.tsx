@@ -32,9 +32,17 @@ const Page = async () => {
     ? await getUserData()
     : await getTestUserData();
 
-  const employeeResponse = await serverRequests.getEmployeeForDashboardAction(
-    userData
+  const res = await serverRequests.getEmployeeForDashboardAction(
+    userData,
+    1,
+    null
   );
+
+  let employeeResponse;
+
+  if(res?.data){
+    employeeResponse = res.data;
+  }
 
   let fetchingError;
 
@@ -77,7 +85,7 @@ const Page = async () => {
       <div className=" md:h-[93vh] overflow-auto lg:overflow-clip w-[99vw] lg:w-[97vw] justify-between flex flex-wrap ">
         <div className=" h-12 w-[45%] lg:w-[85%] flex items-center pl-4 gap-4 ">
           <DashMenu/>
-          <h1 className="text-2xl font-semibold tracking-wider">Dashboard</h1>
+          <a href="/" className="text-2xl font-semibold tracking-wider">Dashboard</a>
         </div>
 
         {/* cards and table */}

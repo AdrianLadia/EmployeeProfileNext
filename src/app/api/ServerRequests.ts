@@ -311,7 +311,7 @@ class ServerRequests extends Server {
     // }
   } 
 
-  async fetchEmployeeList(userData: User, page:number, limit:number, sort: {'keyToSort': null, 'sortOrder': null} | null): Promise<any> { 
+  async fetchEmployeeList(userData: User, page:number, limit:number, sort: {'keyToSort': string, 'sortOrder': unknown} | null): Promise<any> { 
 
     const data = {
       userData: userData,
@@ -347,6 +347,25 @@ class ServerRequests extends Server {
     } 
   }
 
+  async getEmployeeForDashboardAction(userObject: User, page:number, sort: {'keyToSort': string, 'sortOrder': unknown} | null): Promise<any> {
+    const data = {
+      userData: userObject,
+      page: page,
+      sort: sort
+    }
+    try {
+      const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
   // async getEmployeeForDashboardAction(userObject: User): Promise<any> {
   //   try {
   //     const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
@@ -355,30 +374,16 @@ class ServerRequests extends Server {
   //       body: JSON.stringify({ userData: userObject }),
   //       cache: 'no-store',
   //     });
-  //     return await res.json();
+  //     // return await res.json();
+  //     const data = await res.json();
+  //     if(data?.data){
+  //       data.data = data.data.filter((employee: any) => employee.isDeleted === false);
+  //       return data;
+  //     }
   //   } catch (error:unknown) {
   //     return (error as Error).message;
   //   }
   // }
-
-  async getEmployeeForDashboardAction(userObject: User): Promise<any> {
-    try {
-      const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userData: userObject }),
-        cache: 'no-store',
-      });
-      // return await res.json();
-      const data = await res.json();
-      if(data?.data){
-        data.data = data.data.filter((employee: any) => employee.isDeleted === false);
-        return data;
-      }
-    } catch (error:unknown) {
-      return (error as Error).message;
-    }
-  }
 
   async getEmployeeDetailsAction(userObject: User, employeeId: string): Promise<any> {
     try {

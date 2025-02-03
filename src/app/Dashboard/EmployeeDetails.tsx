@@ -10,6 +10,8 @@ import { Memo } from "../schemas/MemoSchema";
 
 import Image from "next/image";
 
+import ProfileImage from "./ProfileImage";
+
 const EmployeeDetails = () => {
   const {
     selectedEmployee,
@@ -22,7 +24,6 @@ const EmployeeDetails = () => {
     setLoading,
     setToastOptions,
   } = useAppContext();
-  
 
   const [selectedEmployeeMemos, setSelectedEmployeeMemos] = React.useState(
     [] as Memo[]
@@ -240,7 +241,8 @@ const EmployeeDetails = () => {
         className={`${
           (!selectedEmployee._id || loading) && "hidden"
         } absolute top-1 right-1 cursor-pointer hover:text-error`}
-        onClick={onClear} title="Clear"
+        onClick={onClear}
+        title="Clear"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -264,7 +266,11 @@ const EmployeeDetails = () => {
         } `}
       >
         {/* avatar */}
-        <div className={"flex justify-center items-center self-stretch " + contentStyle}>
+        <div
+          className={
+            "flex justify-center items-center self-stretch " + contentStyle
+          }
+        >
           <div className=" indicator  ">
             {/* indicator */}
             <span
@@ -276,15 +282,11 @@ const EmployeeDetails = () => {
                   : fetchingMemos
                   ? " bg-warning animate-pulse "
                   : " bg-success "
-              }
-              cursor-pointer indicator-start indicator-item badge text-white absolute `}
-              // cursor-pointer tooltip-top tooltip tooltip-right indicator-start indicator-item badge text-white absolute 
-              // data-tip={`${
-              //   fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
-              // } Memos`}
-              title={`${
+              } 
+              cursor-pointer tooltip-top tooltip tooltip-right indicator-start indicator-item badge text-white absolute`}
+              data-tip={`${
                 fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
-              } Memos`}
+              } Memos`} 
               onClick={() =>
                 selectedEmployeeMemos?.length &&
                 handleMemoTableModalClick(selectedEmployeeMemos)
@@ -293,7 +295,15 @@ const EmployeeDetails = () => {
               {fetchingMemos ? "..." : selectedEmployeeMemos?.length}
             </span>
             {/* avatar Image */}
+
             <div
+              className={` ${loading && "hidden"}
+              w-20 2xl:w-28 h-20 2xl:h-28 relative`}
+            >
+              <ProfileImage employee={selectedEmployeeDetails} />
+            </div>
+
+            {/* <div
               className={` ${loading && "hidden"}
               w-20 2xl:w-28 h-20 2xl:h-28 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
               onClick={() =>
@@ -317,7 +327,7 @@ const EmployeeDetails = () => {
                   ?
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -334,8 +344,8 @@ const EmployeeDetails = () => {
             )
           }
         >
-          <h2>{selectedEmployeeDetails?.firstName + " "}</h2> 
-          <h2>{selectedEmployeeDetails?.lastName}</h2>  
+          <h2>{selectedEmployeeDetails?.firstName + " "}</h2>
+          <h2>{selectedEmployeeDetails?.lastName}</h2>
         </div>
 
         {/* address */}

@@ -49,7 +49,7 @@ const DashboardMenu = () => {
 
       <ul
         tabIndex={0}
-        className="dropdown-content menu bg-base-100 rounded-lg z-[1] w-max shadow border p-0 border-neutral font-semibold py-1 "
+        className="dropdown-content menu bg-base-100 rounded-lg z-[1] w-max shadow border-2 p-0 border-neutral font-semibold py-1 "
       >
         <li>
           <a>

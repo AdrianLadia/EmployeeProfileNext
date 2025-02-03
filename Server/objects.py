@@ -478,6 +478,18 @@ class UserActions(User):
                                           sort=sort)
         return employees
 
+    def getAllRecentMemoAction(self, user):
+        if 'canGetMemoList' not in user['roles']['User']:
+            raise ValueError('User does not have permission to get memo list')
+
+        memos = db.readWithPagination({}, 'Memo', page=1, limit=20,
+        sort={
+            'keyToSort': 'date',
+            'sortOrder': -1
+        })
+
+        return memos['data']
+
 
 class Memo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')

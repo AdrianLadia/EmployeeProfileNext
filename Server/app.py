@@ -597,6 +597,21 @@ def fetch_employee_list():
             logging.exception("Error processing Employee: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
+@app.route('/getAllRecentMemo', methods=['POST'])
+def get_all_recent_memo():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        try:
+            res = UserActions(userData).getAllRecentMemoAction(userData)
+            return jsonify({
+                'message': 'Memo read successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Memo: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):
         print(

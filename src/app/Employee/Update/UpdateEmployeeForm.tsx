@@ -60,6 +60,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     companyRole: null,
     dailyWage: null,
     isOJT: null,
+    employeeSignature: null,
   };
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(
@@ -68,7 +69,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
   const [formData, setFormData] = useState<Employee>(
     defaultFormData as Employee
   );
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -94,6 +94,22 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
               "photoOfPerson"
             );
             dataToUpdate.photoOfPerson = res[0] || "";
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        if (
+          dataToUpdate?.employeeSignature &&
+          typeof dataToUpdate.employeeSignature != "string"
+        ) {
+          try {
+            const res = await upload.Images(
+              [formData.employeeSignature || ""],
+              `employees/${formData.firstName} ${formData.lastName}`,
+              "employeeSignature"
+            );
+            dataToUpdate.employeeSignature = res[0] || "";
           } catch (e) {
             console.error(e);
           }
@@ -171,6 +187,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     }
   };
 
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -204,7 +221,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           // Check if all files have been processed
           if (fileDataUrls.length === files.length) {
             const finalResult =
-              e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+              e.target.id === "photoOfPerson" || e.target.id === "employeeSignature" ? fileDataUrls[0] : fileDataUrls;
 
             setFormData({
               ...formData,
@@ -261,18 +278,18 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     { label: "Starpack", value: "SP" },
   ] as { label: string; value: string }[]);
 
-  useEffect(() => {
-    if(imageListForModal.length){
-      setFormData({
-        ...formData,
-        [imageModalId]: imageListForModal.length ? imageListForModal : null,
-      });
-      setDataToUpdate({
-        ...dataToUpdate,
-        [imageModalId]: imageListForModal.length ? imageListForModal : null,
-      });
-    }
-  }, [imageListForModal, imageModalId]);
+  // useEffect(() => {
+  //   if (imageListForModal.length) {
+  //     setFormData({
+  //       ...formData,
+  //       [imageModalId]: imageListForModal.length ? imageListForModal : null,
+  //     });
+  //     setDataToUpdate({
+  //       ...dataToUpdate,
+  //       [imageModalId]: imageListForModal.length ? imageListForModal : null,
+  //     });
+  //   }
+  // }, [imageListForModal, imageModalId]);
 
   useEffect(() => {
     if (selectedEmployee?._id) {
@@ -453,6 +470,18 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChangeHandler={handleFileChange}
           disable={disable}
           multiple={true}
+        />
+
+        {/* employeeSignature */}
+        <ImageInput
+          id="employeeSignature"
+          title="Employee Signature"
+          width="w-full"
+          inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
+          imgDimensions={{ height: 60, width: 60 }}
+          mediaList={formData?.employeeSignature ? [formData?.employeeSignature] : []}
+          onChangeHandler={handleFileChange}
+          disable={disable}
         />
       </div>
 

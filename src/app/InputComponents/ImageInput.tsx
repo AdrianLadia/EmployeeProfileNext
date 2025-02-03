@@ -56,7 +56,7 @@ const ImageInput: FC<ImageInputProps> = ({
           // Check if all files have been processed
           if (fileDataUrls.length === files.length) {
             const finalResult =
-              e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+              e.target.id === "photoOfPerson" || e.target.id === "employeeSignature" ? fileDataUrls[0] : fileDataUrls;
 
             settingFunction(finalResult, e.target.id);
           }

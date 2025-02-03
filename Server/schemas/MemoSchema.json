@@ -176,6 +176,18 @@
                     "default": false,
                     "title": "Isdeleted"
                 },
+                "employeeSignature": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Employeesignature"
+                },
                 "_version": {
                     "title": " Version",
                     "type": "integer"

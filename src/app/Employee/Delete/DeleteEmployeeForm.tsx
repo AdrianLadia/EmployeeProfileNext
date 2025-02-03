@@ -45,6 +45,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
     companyRole: "",
     dailyWage: 0,
     isOJT: false,
+    employeeSignature: "",
   };
 
   const [formData, setFormData] = useState<Employee>(defaultFormData);
@@ -260,6 +261,25 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
               onClick={() => {
                 if (formData?.resumePhotosList?.[0]) {
                   handleImageModalClick(formData?.biodataPhotosList || []);
+                }
+              }}
+            />
+          </div>
+        </label>
+
+        {/* employeeSignature */}
+        <label htmlFor="employeeSignature" className="text-sm flex flex-col w-full">
+          <div className="flex justify-evenly items-center mb-1 gap-1 relative bg-base-200 p-1 rounded-lg">
+            Photo Of Person 
+            <Image
+              src={formData?.employeeSignature || ""}
+              className="h-[60px] cursor-pointer"
+              height={100}
+              width={100}
+              alt="employeeSignature"
+              onClick={() => {
+                if (formData?.employeeSignature) {
+                  handleImageModalClick([formData?.employeeSignature || ""]);
                 }
               }}
             />

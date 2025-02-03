@@ -46,6 +46,7 @@ const CreateEmployeeForm = () => {
     companyRole: null,
     dailyWage: null,
     isOJT: null,
+    employeeSignature: null,
   };
 
   const [formData, setFormData] = useState<Employee>(
@@ -76,6 +77,14 @@ const CreateEmployeeForm = () => {
             [formData.photoOfPerson],
             `employees/${formData.firstName}${formData.lastName}`,
             "photoOfPerson"
+          );
+          finalFormData.photoOfPerson = photoOfPerson[0];
+        }
+        if (formData.employeeSignature) {
+          const photoOfPerson = await upload.Images(
+            [formData.employeeSignature],
+            `employees/${formData.firstName}${formData.lastName}`,
+            "employeeSignature"
           );
           finalFormData.photoOfPerson = photoOfPerson[0];
         }
@@ -155,13 +164,12 @@ const CreateEmployeeForm = () => {
     { label: "Starpack", value: "SP" },
   ] as { label: string; value: string }[]);
 
-  useEffect(() => {
-    setFormData({
-      ...formData,
-      [imageModalId]: imageListForModal.length ? imageListForModal : null,
-    });
-  }, [imageListForModal, imageModalId]);
-  
+  // useEffect(() => {
+  //   setFormData({
+  //     ...formData,
+  //     [imageModalId]: imageListForModal.length ? imageListForModal : null,
+  //   });
+  // }, [imageListForModal, imageModalId]);
 
   return (
     <form
@@ -296,6 +304,16 @@ const CreateEmployeeForm = () => {
             mediaList={formData?.biodataPhotosList || []}
             setFunction={setFormData}
             multiple={true}
+          />
+
+          <ImageInput
+            id="employeeSignature"
+            title="Employee Signature"
+            width="w-full"
+            inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
+            imgDimensions={{ height: 60, width: 60 }}
+            mediaList={formData?.employeeSignature ? [formData?.employeeSignature] : []}
+            setFunction={setFormData}
           />
         </div>
 

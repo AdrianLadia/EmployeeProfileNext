@@ -15,10 +15,6 @@ interface ProfileImageProps {
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
-  if (!employee?._id) {
-    return null;
-  }
-
   const {
     handleImageModalClick,
     handleConfirmation,
@@ -36,6 +32,10 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
   const [uploadedPhoto, setUploadedPhoto] = React.useState<string | null>(null);
 
   const [loading, setLoading] = React.useState(false);
+
+  if (!employee?._id) {
+    return null;
+  } 
 
   const containerStyle = `w-full h-full flex items-center justify-center bg-base-300 `;
 

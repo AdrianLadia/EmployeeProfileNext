@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 
 import { useAppContext } from "@/app/GlobalContext";
 
@@ -25,8 +25,6 @@ const CreateEmployeeForm = () => {
     router,
     loading,
     setLoading,
-    imageListForModal,
-    imageModalId,
   } = useAppContext();
 
   const formRef = useRef<HTMLFormElement>(null);

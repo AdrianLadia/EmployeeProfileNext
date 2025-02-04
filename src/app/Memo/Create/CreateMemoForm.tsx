@@ -30,8 +30,6 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     handleConfirmation,
     loading,
     setLoading,
-    imageModalId,
-    imageListForModal,
     handleMemoPrintModalClick,
   } = useAppContext();
 

@@ -346,11 +346,14 @@ class UserActions(User):
         return memos
 
     def getEmployeeForDashboardAction(
-            self,
-            user,
-            page=1,
-            sort={'keyToSort': None, 'sortOrder': None},
-            ):
+        self,
+        user,
+        page=1,
+        sort={
+            'keyToSort': None,
+            'sortOrder': None
+        },
+    ):
         if 'canGetEmployeeForDashboard' not in user['roles']['User']:
             raise ValueError(
                 'User does not have permission to get employee for dashboard')
@@ -380,23 +383,22 @@ class UserActions(User):
         employees = db.readWithPagination({'isDeleted': False},
                                           'Employee',
                                           projection={
-                                                '_id': 1,
-                                                'firstName': 1,
-                                                'lastName': 1,
-                                                'address': 1,
-                                                'phoneNumber': 1,
-                                                'company': 1,
-                                                'photoOfPerson': 1,
-                                                'dateJoined': 1,
-                                                'companyRole': 1,
-                                                'isOJT': 1,
-                                                'isRegular': 1,
-                                                'isDeleted': 1,
-                                            },
+                                              '_id': 1,
+                                              'firstName': 1,
+                                              'lastName': 1,
+                                              'address': 1,
+                                              'phoneNumber': 1,
+                                              'company': 1,
+                                              'photoOfPerson': 1,
+                                              'dateJoined': 1,
+                                              'companyRole': 1,
+                                              'isOJT': 1,
+                                              'isRegular': 1,
+                                              'isDeleted': 1,
+                                          },
                                           page=1,
-                                          limit=10,
-                                          sort=sort
-                                          )
+                                          limit=99999,
+                                          sort=sort)
 
         return employees
 
@@ -482,11 +484,14 @@ class UserActions(User):
         if 'canGetMemoList' not in user['roles']['User']:
             raise ValueError('User does not have permission to get memo list')
 
-        memos = db.readWithPagination({}, 'Memo', page=1, limit=20,
-        sort={
-            'keyToSort': 'date',
-            'sortOrder': -1
-        })
+        memos = db.readWithPagination({},
+                                      'Memo',
+                                      page=1,
+                                      limit=20,
+                                      sort={
+                                          'keyToSort': 'date',
+                                          'sortOrder': -1
+                                      })
 
         return memos['data']
 

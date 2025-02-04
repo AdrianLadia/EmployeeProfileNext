@@ -12,6 +12,8 @@ import FirebaseUpload from "@/app/api/FirebaseUpload";
 
 import SelectPlus from "@/app/InputComponents/SelectPlus";
 
+import SignatureComponent from "../Signature/SignatureComponent";
+
 const CreateEmployeeForm = () => {
   const [show, setShow] = useState(false);
 
@@ -304,7 +306,7 @@ const CreateEmployeeForm = () => {
             multiple={true}
           />
 
-          <ImageInput
+          {/* <ImageInput
             id="employeeSignature"
             title="Employee Signature"
             width="w-full"
@@ -312,7 +314,14 @@ const CreateEmployeeForm = () => {
             imgDimensions={{ height: 60, width: 60 }}
             mediaList={formData?.employeeSignature ? [formData?.employeeSignature] : []}
             setFunction={setFormData}
-          />
+          /> */}
+          <div className="flex flex-col w-full text-sm gap-2 ">
+            Employee Signature
+            <SignatureComponent
+              employeeId="employeeSignature"
+              setSignatureImageUrl={url => { setFormData({ ...formData, employeeSignature: url }) }}
+            />
+          </div>
         </div>
 
         {/* E-mail */}

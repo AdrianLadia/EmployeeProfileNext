@@ -612,6 +612,24 @@ def get_all_recent_memo():
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
             return jsonify({'error': e.args[0]}), 400
+        
+@app.route('/updateUrlPhotoOfSignature', methods=['POST'])
+def update_url_photo_of_signature():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employeeID = data['employeeID']
+        signatureUrl = data['signatureUrl']
+        try:
+            res = UserActions(userData).updateUrlPhotoOfSignatureAction(
+                userData, employeeID, signatureUrl)
+            return jsonify({
+                'message': 'Photo of Signature updated successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error updating Photo of Signature: %s", e)
+            return jsonify({'error': e.args[0]}), 400
 
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):

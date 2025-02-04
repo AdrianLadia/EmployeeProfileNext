@@ -22,7 +22,7 @@ REM Create backup directory if it doesn't exist
 if not exist "%DUMP_DIR%" mkdir "%DUMP_DIR%"
 
 REM Set the MongoDB URI for Employee Profile
-set ""
+set "mongodb+srv://reader:<db_password>@employeeprofile.16dh3jg.mongodb.net/?retryWrites=true&w=majority&appName=EmployeeProfile"
 
 REM Debug: Log the URI (remove this in production)
 echo MongoDB URI: "!MONGO_URI!"

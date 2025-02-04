@@ -526,6 +526,26 @@ class ServerRequests extends Server {
     }
   }
 
+  async updateUrlPhotoOfSignature(userData: User,  employeeId: string, signatureUrl: string): Promise<any> {
+    const data = {
+      userData: userData,
+      employeeID: employeeId,
+      signatureUrl: signatureUrl
+    }
+
+    try {
+      const res = await fetch(`${this.url}/updateUrlPhotoOfSignature`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
 }
 
 export default ServerRequests;

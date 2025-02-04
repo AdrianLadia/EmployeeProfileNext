@@ -490,6 +490,17 @@ class UserActions(User):
 
         return memos['data']
 
+    def updateUrlPhotoOfSignatureAction(self, user, employeeId, photo):
+        if 'canUpdateEmployee' not in user['roles']['Employee']:
+            raise ValueError(
+                'User does not have permission to update an employee')
+        employee = db.read({'_id': employeeId}, 'Employee')
+        if len(employee) == 0:
+            raise ValueError('Employee does not exist')
+
+        employee[0]['employeeSignature'] = photo
+        return db.update({'_id': employeeId}, employee[0], 'Employee')
+
 
 class Memo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')

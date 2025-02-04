@@ -15,7 +15,8 @@ import Confirmation from "./confirmation";
 import ImageModal from "./Modals/ImageModal";
 import EmployeeMemoTableModal from "./Modals/EmployeeMemoTableModal";
 import MemoPrintModal from "./Modals/MemoPrintModal";
-import OffenseTableModal from "./Offense/OffenseTableModal";
+
+// import OffenseTableModal from "./Offense/OffenseTableModal";
 
 import LoadingOverlay from "./loadingOverlay.tsx";
 
@@ -48,7 +49,7 @@ export default function RootLayout({
             <ImageModal />
             <EmployeeMemoTableModal />
             <MemoPrintModal />
-            <OffenseTableModal />
+            {/* <OffenseTableModal /> */}
             <Toast />
           </ContextProvider>
         </SessionProvider>

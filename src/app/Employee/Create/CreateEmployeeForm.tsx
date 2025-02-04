@@ -19,6 +19,10 @@ const CreateEmployeeForm = () => {
 
   const upload = new FirebaseUpload();
 
+  // const [confirmSave, setConfirmSave] = useState(false);
+
+  const [signatureImageUrl, setSignatureImageUrl] = useState<string | null>(null);
+
   const {
     setToastOptions,
     serverRequests,
@@ -63,6 +67,7 @@ const CreateEmployeeForm = () => {
     );
 
     setLoading(true);
+    // setConfirmSave(true);
 
     if (confirmed) {
       try {
@@ -80,14 +85,14 @@ const CreateEmployeeForm = () => {
           );
           finalFormData.photoOfPerson = photoOfPerson[0];
         }
-        if (formData.employeeSignature) {
-          const photoOfPerson = await upload.Images(
-            [formData.employeeSignature],
-            `employees/${formData.firstName}${formData.lastName}`,
-            "employeeSignature"
-          );
-          finalFormData.photoOfPerson = photoOfPerson[0];
-        }
+        // if (formData.employeeSignature) {
+        //   const photoOfPerson = await upload.Images(
+        //     [formData.employeeSignature],
+        //     `employees/${formData.firstName}${formData.lastName}`,
+        //     "employeeSignature"
+        //   );
+        //   finalFormData.photoOfPerson = photoOfPerson[0];
+        // }
         if (formData.resumePhotosList && formData.resumePhotosList[0]) {
           const resumePhotosList = await upload.Images(
             formData.resumePhotosList,
@@ -104,6 +109,10 @@ const CreateEmployeeForm = () => {
           );
           finalFormData.biodataPhotosList = biodataPhotosList;
         }
+
+        console.log("Signature Image URL:", signatureImageUrl);
+
+        finalFormData.employeeSignature = signatureImageUrl;
 
         const form = e.target as HTMLFormElement;
 
@@ -140,9 +149,11 @@ const CreateEmployeeForm = () => {
           timer: 15,
         });
       } finally {
+        // setConfirmSave(false);
         setLoading(false);
       }
     } else {
+      // setConfirmSave(false);
       setLoading(false);
     }
   };
@@ -318,8 +329,8 @@ const CreateEmployeeForm = () => {
           <div className="flex flex-col w-full text-sm gap-2 ">
             Employee Signature
             <SignatureComponent
-              employeeId="employeeSignature"
-              setSignatureImageUrl={url => { setFormData({ ...formData, employeeSignature: url }) }}
+              // employeeId="employeeSignature"
+              setSignatureImageUrl={url => { setSignatureImageUrl(url) }}
             />
           </div>
         </div>

@@ -6,15 +6,16 @@ import { useAppContext } from "@/app/GlobalContext";
 
 
 interface SignatureComponentProps {
-    employeeId: string;
+    // employeeId: string;
     setSignatureImageUrl: (url: string) => void;
+    // confirmSave: boolean
 }
 
-const SignatureComponent: React.FC<SignatureComponentProps> = ({ employeeId, setSignatureImageUrl }) => {
+const SignatureComponent: React.FC<SignatureComponentProps> = ({ setSignatureImageUrl }) => {
   const sigCanvas = useRef<SignatureCanvas | null>(null);
-  const { storage, serverRequests, userData } = useAppContext();
+  const { storage } = useAppContext();
 
-  const save = () => {
+  const saveSignature = () => {
     if (!sigCanvas.current) return;
 
     const signatureURL = sigCanvas.current
@@ -43,11 +44,18 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({ employeeId, set
 
       getDownloadURL(snapshot.ref).then((downloadURL) => {
         console.log("File available at", downloadURL);
-        serverRequests.updateUrlPhotoOfSignature(userData, employeeId, downloadURL);
+        // serverRequests.updateUrlPhotoOfSignature(userData, employeeId, downloadURL);
         setSignatureImageUrl(downloadURL);
       });
     });
   };
+
+    // if (confirmSave) {
+    //     const timeout = setTimeout(() => {
+    //         saveSignature();
+    //     }, 1000);
+    //     clearTimeout(timeout);
+    // }
 
   return (
     <Box sx={{ maxWidth: 400, margin: "auto", padding: 2 }}>
@@ -60,7 +68,11 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({ employeeId, set
         />
       </div>
       <Box sx={{ mt: 2 }}>
-        <Button onClick={save} variant="contained" color="primary">
+        {/* disable save if there are no changes  */}
+        <Button onClick={saveSignature}
+            variant="contained"
+            color="primary"
+            >
           Save
         </Button>
         <Button

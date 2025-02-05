@@ -44,32 +44,13 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
       <div
         className={`
         ${fixed && `${position.x} ${position.y} fixed z-30`} 
-        breadcrumbs text-sm 
-        flex md:flex-col 2xl:flex-row items-center md:items-start 2xl:items-center overflow-hidden
+        breadcrumbs text-sm w-[70%]
+        flex md:flex-col 2xl:flex-row items-center md:items-start 2xl:items-center md:overflow-hidden
       `}
       >
         <ul className="flex !justify-start !items-start text-start md:!flex-col 2xl:!flex-row relative ">
           <li>
              
-            {/* <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-4 text-gray-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z"
-              />
-            </svg> */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

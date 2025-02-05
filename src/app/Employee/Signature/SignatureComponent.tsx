@@ -71,13 +71,13 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
           <input
             onClick={() => save()}
             type="button"
-            className=" grow hover:text-info-content hover:bg-info bg-base-100"
+            className=" grow hover:text-info-content hover:bg-info bg-white"
             value={"Save"}
           />
           <input
             onClick={() => clear()}
             type="button"
-            className="p-2 grow hover:text-error-content hover:bg-error bg-base-100"
+            className="p-2 grow hover:text-error-content hover:bg-error bg-white"
             value={"Clear"}
           />
         </div>

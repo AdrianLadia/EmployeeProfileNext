@@ -53,8 +53,6 @@ const CreateEmployeeForm = () => {
     defaultFormData as Employee
   );
 
-  console.log(formData);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -199,8 +197,6 @@ const CreateEmployeeForm = () => {
             setSignatureImageUrl={(url) => {
               if (url) {
                 setFormData({ ...formData, employeeSignature: url });
-              } else {
-                setFormData({ ...formData, employeeSignature: null });
               }
               setUpdateSignature(false);
             }}

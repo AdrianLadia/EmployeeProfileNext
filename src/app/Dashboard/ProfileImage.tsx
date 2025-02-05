@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Employee } from "../schemas/EmployeeSchema";
 
@@ -32,6 +32,14 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
   const [uploadedPhoto, setUploadedPhoto] = React.useState<string | null>(null);
 
   const [loading, setLoading] = React.useState(false);
+
+  const [hideTakePhoto, setHideTakePhoto] = React.useState(false);
+
+  useEffect(() => {
+    if(window.innerWidth > 1023){
+      setHideTakePhoto(true)
+    }
+  }, []);
 
   if (!employee?._id) {
     return null;
@@ -233,7 +241,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
             View Image
           </a>
         </li>
-        <li hidden={window.innerWidth > 1023}>
+        <li hidden={hideTakePhoto}>
           <a onClick={handleTakePhotoClick}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

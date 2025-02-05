@@ -19,6 +19,10 @@ const CreateEmployeeForm = () => {
 
   const upload = new FirebaseUpload();
 
+  // const [confirmSave, setConfirmSave] = useState(false);
+
+  const [signatureImageUrl, setSignatureImageUrl] = useState<string | null>(null);
+
   const {
     setToastOptions,
     serverRequests,
@@ -65,6 +69,7 @@ const CreateEmployeeForm = () => {
     );
 
     setLoading(true);
+    // setConfirmSave(true);
 
     if (confirmed) {
       try {
@@ -107,6 +112,10 @@ const CreateEmployeeForm = () => {
           finalFormData.biodataPhotosList = biodataPhotosList;
         }
 
+        console.log("Signature Image URL:", signatureImageUrl);
+
+        finalFormData.employeeSignature = signatureImageUrl;
+
         const form = e.target as HTMLFormElement;
 
         const res = await serverRequests.createEmployee(
@@ -142,9 +151,11 @@ const CreateEmployeeForm = () => {
           timer: 15,
         });
       } finally {
+        // setConfirmSave(false);
         setLoading(false);
       }
     } else {
+      // setConfirmSave(false);
       setLoading(false);
     }
   };

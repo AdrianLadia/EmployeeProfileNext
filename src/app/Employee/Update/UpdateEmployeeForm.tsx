@@ -16,6 +16,7 @@ import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
 
 import SelectPlus from "@/app/InputComponents/SelectPlus";
+import SignatureComponent from "../Signature/SignatureComponent";
 
 interface UpdateEmployeeForm {
   employeeList: Employee[];
@@ -39,6 +40,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
   const [disable, setDisable] = useState(true);
   const [disableSaveButton, setDisableSaveButton] = useState(true);
+
+  const [updateSignature, setUpdateSignature] = useState(false);
 
   const [dataToUpdate, setDataToUpdate] = useState<DataToUpdate>({});
 
@@ -185,7 +188,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     }
   };
 
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -219,7 +221,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           // Check if all files have been processed
           if (fileDataUrls.length === files.length) {
             const finalResult =
-              e.target.id === "photoOfPerson" || e.target.id === "employeeSignature" ? fileDataUrls[0] : fileDataUrls;
+              e.target.id === "photoOfPerson" ||
+              e.target.id === "employeeSignature"
+                ? fileDataUrls[0]
+                : fileDataUrls;
 
             setFormData({
               ...formData,
@@ -251,6 +256,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       setDataToUpdate({});
     } else {
       setDisableSaveButton(false);
+    }
+
+    if (formData?.employeeSignature == "") {
+      setUpdateSignature(false);
     }
   }, [selectedEmployee, formData]);
 
@@ -315,6 +324,42 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     setDisable(false);
     setDisableSaveButton(false);
   }, []);
+
+  const employeeSignatureComponent = () => {
+    return (
+      <>
+        {formData?.employeeSignature && !updateSignature ? (
+          <>
+            Employee Signature
+            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2">
+              <img
+                src={formData?.employeeSignature as string}
+                alt="Employee Signature"
+                className="w-max h-[300px] m-1"
+              />
+              <input
+                className="p-2 hover:text-secondary-content hover:bg-secondary bg-base-100 w-full border-t-2 border-black"
+                onClick={() => setUpdateSignature(true)}
+                type="button"
+                value="Update Signature"
+              />
+            </div>
+          </>
+        ) : (
+          <SignatureComponent
+            title="Employee Signature"
+            setSignatureImageUrl={(url) => {
+              if (url) {
+                setFormData({ ...formData, employeeSignature: url });
+                setDataToUpdate({ ...dataToUpdate, employeeSignature: url });
+              }
+              setUpdateSignature(false);
+            }}
+          />
+        )}
+      </>
+    );
+  };
 
   return (
     <form
@@ -468,18 +513,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChangeHandler={handleFileChange}
           disable={disable}
           multiple={true}
-        />
-
-        {/* employeeSignature */}
-        <ImageInput
-          id="employeeSignature"
-          title="Employee Signature"
-          width="w-full"
-          inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-          imgDimensions={{ height: 60, width: 60 }}
-          mediaList={formData?.employeeSignature ? [formData?.employeeSignature] : []}
-          onChangeHandler={handleFileChange}
-          disable={disable}
         />
       </div>
 
@@ -648,6 +681,9 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             onChange={handleInputChange}
           />
         </label>
+        <div className="flex flex-col w-full text-sm gap-2 mt-2">
+          {employeeSignatureComponent()}
+        </div>
       </div>
 
       {/* submit */}

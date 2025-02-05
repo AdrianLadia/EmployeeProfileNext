@@ -1,82 +1,88 @@
-import { useRef } from "react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import SignatureCanvas from "react-signature-canvas";
-import { Box, Button } from "@mui/material";
-import { useAppContext } from "@/app/GlobalContext";
+import { useRef, useState, useEffect } from "react";
 
+import SignatureCanvas from "react-signature-canvas";
 
 interface SignatureComponentProps {
-    employeeId: string;
-    setSignatureImageUrl: (url: string) => void;
+  title?: string;
+  setSignatureImageUrl: (url: string) => void;
 }
 
-const SignatureComponent: React.FC<SignatureComponentProps> = ({ employeeId, setSignatureImageUrl }) => {
+const SignatureComponent: React.FC<SignatureComponentProps> = ({
+  title = "Sign Here",
+  setSignatureImageUrl,
+}) => {
   const sigCanvas = useRef<SignatureCanvas | null>(null);
-  const { storage, serverRequests, userData } = useAppContext();
+
+  const canvasContainer = useRef<HTMLDivElement>(null);
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const save = () => {
+    setLoading(true);
     if (!sigCanvas.current) return;
 
     const signatureURL = sigCanvas.current
       .getTrimmedCanvas()
       .toDataURL("image/png");
-    console.log("Signature URL:", signatureURL);
+
+    // console.log("Signature URL:", signatureURL);
     setSignatureImageUrl(signatureURL);
 
-    const dataURLtoBlob = (dataUrl: string): Blob => {
-      const arr = dataUrl.split(",");
-      const mime = arr[0].match(/:(.*?);/)?.[1] || "";
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      return new Blob([u8arr], { type: mime });
-    };
-
-    const signatureBlob = dataURLtoBlob(signatureURL);
-
-    const storageRef = ref(storage, `signatures/${Date.now()}_signature.png`);
-    uploadBytes(storageRef, signatureBlob).then((snapshot) => {
-      console.log("Uploaded a blob or file!", snapshot);
-
-      getDownloadURL(snapshot.ref).then((downloadURL) => {
-        console.log("File available at", downloadURL);
-        serverRequests.updateUrlPhotoOfSignature(userData, employeeId, downloadURL);
-        setSignatureImageUrl(downloadURL);
-      });
-    });
+    setLoading(false);
   };
 
+  const clear = () => {
+    setLoading(true);
+    if (sigCanvas.current) {
+      sigCanvas.current.clear();
+      setSignatureImageUrl("");
+    }
+    setLoading(false);
+  };
+
+  const [canvasWidth, setCanvasWidth] = useState<number>(0);
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setCanvasWidth(window.innerWidth * 0.8);
+    } else {
+      setCanvasWidth(500);
+    }
+  }, []);
+
   return (
-    <Box sx={{ maxWidth: 400, margin: "auto", padding: 2 }}>
-      <h2>Sign Here</h2>
-      <div className="bg-white mt-3 border-2 border-black rounded-md">
+    <div
+      ref={canvasContainer}
+      className="flex flex-col items-center w-full h-full "
+    >
+      <span className="w-[100%]">{title}</span>
+      <div className="bg-white mt-3 border-2 border-black rounded-md w-max relative overflow-clip">
         <SignatureCanvas
           ref={sigCanvas}
           penColor="black"
-          canvasProps={{ width: 400, height: 200, className: "sigCanvas" }}
-        />
-      </div>
-      <Box sx={{ mt: 2 }}>
-        <Button onClick={save} variant="contained" color="primary">
-          Save
-        </Button>
-        <Button
-          onClick={() => {
-            if (sigCanvas.current) {
-              sigCanvas.current.clear();
-            }
+          canvasProps={{
+            width: canvasWidth,
+            height: 300,
+            className: "sigCanvas",
           }}
-          variant="contained"
-          color="secondary"
-          sx={{ ml: 2 }}
-        >
-            Clear
-        </Button>
-      </Box>
-    </Box>
+        />
+        <span className={`${loading&&"loading text-info"}`}></span>
+        <div className="flex w-full bg-black flex-wrap items-stretch gap-0.5 border-t-2 border-black">
+          <input
+            onClick={() => save()}
+            type="button"
+            className=" grow hover:text-info-content hover:bg-info bg-base-100"
+            value={"Save"}
+          />
+          <input
+            onClick={() => clear()}
+            type="button"
+            className="p-2 grow hover:text-error-content hover:bg-error bg-base-100"
+            value={"Clear"}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 

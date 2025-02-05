@@ -268,7 +268,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
         </label>
 
         {/* employeeSignature */}
-        <label htmlFor="employeeSignature" className="text-sm flex flex-col w-full">
+        {/* <label htmlFor="employeeSignature" className="text-sm flex flex-col w-full">
           <div className="flex justify-evenly items-center mb-1 gap-1 relative bg-base-200 p-1 rounded-lg">
             Photo Of Person 
             <Image
@@ -284,7 +284,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
               }}
             />
           </div>
-        </label>
+        </label> */}
       </div>
 
       {/* E-mail */}
@@ -427,6 +427,17 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
             value={formData?.dailyWage ?? ""}
           />
         </label>
+
+        <>
+            Employee Signature
+            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2">
+              <img
+                src={formData?.employeeSignature as string}
+                alt="Employee Signature"
+                className="w-max h-[300px] m-1"
+              />
+            </div>
+          </>
       </div>
 
       {/* submit */}

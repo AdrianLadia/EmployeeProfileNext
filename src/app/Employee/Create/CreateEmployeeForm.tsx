@@ -15,7 +15,7 @@ import SelectPlus from "@/app/InputComponents/SelectPlus";
 import SignatureComponent from "../Signature/SignatureComponent";
 
 const CreateEmployeeForm = () => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const upload = new FirebaseUpload();
 
@@ -53,6 +53,8 @@ const CreateEmployeeForm = () => {
     defaultFormData as Employee
   );
 
+  console.log(formData);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -81,12 +83,12 @@ const CreateEmployeeForm = () => {
           finalFormData.photoOfPerson = photoOfPerson[0];
         }
         if (formData.employeeSignature) {
-          const photoOfPerson = await upload.Images(
+          const employeeSignature = await upload.Images(
             [formData.employeeSignature],
             `employees/${formData.firstName}${formData.lastName}`,
             "employeeSignature"
           );
-          finalFormData.photoOfPerson = photoOfPerson[0];
+          finalFormData.employeeSignature = employeeSignature[0];
         }
         if (formData.resumePhotosList && formData.resumePhotosList[0]) {
           const resumePhotosList = await upload.Images(
@@ -183,9 +185,9 @@ const CreateEmployeeForm = () => {
 
       {/* name */}
       <div className="flex flex-wrap text-sm gap-2 justify-between">
-        <span className="w-full md:w-[48%]">First Name</span>
-        <span className="w-full md:w-[48%]">Last Name</span>
-        <label className="input input-bordered flex items-center gap-2 md:w-[48%]">
+        <span className="w-full md:w-[48%] order-1">First Name</span>
+        <span className="w-full md:w-[48%] order-3 md:order-2">Last Name</span>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-2 md:order-3">
           <input
             type="text"
             className="grow"
@@ -195,7 +197,7 @@ const CreateEmployeeForm = () => {
             onChange={handleInputChange}
           />
         </label>
-        <label className="input input-bordered flex items-center gap-2 md:w-[48%]">
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-4 ">
           <input
             type="text"
             className="grow"
@@ -315,13 +317,6 @@ const CreateEmployeeForm = () => {
             mediaList={formData?.employeeSignature ? [formData?.employeeSignature] : []}
             setFunction={setFormData}
           /> */}
-          <div className="flex flex-col w-full text-sm gap-2 ">
-            Employee Signature
-            <SignatureComponent
-              employeeId="employeeSignature"
-              setSignatureImageUrl={url => { setFormData({ ...formData, employeeSignature: url }) }}
-            />
-          </div>
         </div>
 
         {/* E-mail */}
@@ -467,6 +462,16 @@ const CreateEmployeeForm = () => {
               onChange={handleInputChange}
             />
           </label>
+        </div>
+
+          {/* Employee Signature */}
+        <div className="flex flex-col w-full text-sm gap-2 mt-2">
+          <SignatureComponent
+            title="Employee Signature"
+            setSignatureImageUrl={(url) => {
+              setFormData({ ...formData, employeeSignature: url });
+            }}
+          />
         </div>
       </div>
 

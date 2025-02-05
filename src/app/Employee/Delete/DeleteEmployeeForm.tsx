@@ -145,9 +145,9 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
 
       {/* name */}
       <div className="flex flex-wrap justify-between text-sm gap-2 ">
-        <span className="w-full md:w-[48%]">First Name</span>
-        <span className="w-full md:w-[48%]">Last Name</span>
-        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%]">
+        <span className="w-full md:w-[48%] order-1">First Name</span>
+        <span className="w-full md:w-[48%] order-3 md:order-2">Last Name</span>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-2 md:order-3">
           <input
             type="text"
             className="grow"
@@ -156,7 +156,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
             value={formData?.firstName}
           />
         </label>
-        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%]">
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-4">
           <input
             type="text"
             className="grow"

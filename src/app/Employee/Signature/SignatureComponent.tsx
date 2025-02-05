@@ -53,10 +53,10 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
   return (
     <div
       ref={canvasContainer}
-      className="flex flex-col items-center w-full h-full "
+      className="flex flex-col items-center w-full h-full"
     >
       <span className="w-[100%]">{title}</span>
-      <div className="bg-white mt-3 border-2 border-black rounded-md w-max relative overflow-clip">
+      <div className="bg-white mt-2 border-2 border-black rounded-box w-max relative overflow-clip ">
         <SignatureCanvas
           ref={sigCanvas}
           penColor="black"

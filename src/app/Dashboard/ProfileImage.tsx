@@ -214,7 +214,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
         tabIndex={0}
         className="dropdown-content menu bg-base-100 rounded-lg z-[1] w-max shadow border p-0 border-neutral font-semibold py-1 "
       >
-        <li>
+        <li hidden={employee?.photoOfPerson ? false : true}>
           <a onClick={handleViewImage}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

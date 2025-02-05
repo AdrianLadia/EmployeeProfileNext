@@ -84,10 +84,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
     if (confirmed) {
       try {
-        if (
-          dataToUpdate?.photoOfPerson &&
-          typeof dataToUpdate.photoOfPerson != "string"
-        ) {
+        if (dataToUpdate?.photoOfPerson) {
           try {
             const res = await upload.Images(
               [formData.photoOfPerson || ""],
@@ -100,10 +97,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           }
         }
 
-        if (
-          dataToUpdate?.employeeSignature &&
-          typeof dataToUpdate.employeeSignature != "string"
-        ) {
+        if (dataToUpdate?.employeeSignature) {
           try {
             const res = await upload.Images(
               [formData.employeeSignature || ""],
@@ -312,6 +306,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           },
         ]);
       }
+      console.log(selectedEmployee);
     }
   }, [selectedEmployee]);
 
@@ -329,14 +324,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     return (
       <>
         {formData?.employeeSignature && !updateSignature ? (
-          <>
-            Employee Signature
-            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2">
-              <img
-                src={formData?.employeeSignature as string}
-                alt="Employee Signature"
-                className="w-max h-[300px] m-1"
-              />
+          <div className="flex flex-col w-full items-center">
+            <span className="w-full">Employee Signature</span>
+            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip">
+              <div className="h-[300px] flex items-center justify-center relative w-full">
+                <img
+                  src={formData?.employeeSignature as string}
+                  alt="Employee Signature"
+                  className=" m-1 h-full w-max"
+                />
+              </div>
               <input
                 className="p-2 hover:text-secondary-content hover:bg-secondary bg-base-100 w-full border-t-2 border-black"
                 onClick={() => setUpdateSignature(true)}
@@ -344,7 +341,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
                 value="Update Signature"
               />
             </div>
-          </>
+          </div>
         ) : (
           <SignatureComponent
             title="Employee Signature"
@@ -352,6 +349,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
               if (url) {
                 setFormData({ ...formData, employeeSignature: url });
                 setDataToUpdate({ ...dataToUpdate, employeeSignature: url });
+              } else {
+                setDataToUpdate({ ...dataToUpdate, employeeSignature: null });
               }
               setUpdateSignature(false);
             }}
@@ -401,9 +400,9 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       <div
         className={`flex flex-wrap justify-between text-sm gap-2 ${labelStyle}`}
       >
-        <span className="w-full md:w-[48%]">First Name</span>
-        <span className="w-full md:w-[48%]">Last Name</span>
-        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%]">
+        <span className="w-full md:w-[48%] order-1">First Name</span>
+        <span className="w-full md:w-[48%] order-3 md:order-2">Last Name</span>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-2 md:order-3">
           <input
             type="text"
             className="grow"
@@ -414,7 +413,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             onChange={handleInputChange}
           />
         </label>
-        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%]">
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-4">
           <input
             type="text"
             className="grow"

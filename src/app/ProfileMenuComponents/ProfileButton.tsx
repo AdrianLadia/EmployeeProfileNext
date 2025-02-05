@@ -18,7 +18,7 @@ const ProfileButton: FC<ProfileButtonProps> = ({
     <div
       className={` 
           z-[60] cursor-pointer w-full h-full ${
-            !showMenu && " tooltip-left  tooltip relative"
+            !showMenu && " md:tooltip-left  md:tooltip relative"
           } 
       `}
       onClick={(e) => {

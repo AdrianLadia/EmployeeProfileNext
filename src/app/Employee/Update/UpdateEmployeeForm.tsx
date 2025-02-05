@@ -306,7 +306,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           },
         ]);
       }
-      console.log(selectedEmployee);
     }
   }, [selectedEmployee]);
 

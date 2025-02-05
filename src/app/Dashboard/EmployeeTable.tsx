@@ -77,7 +77,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
         ].some((field) => field?.toLowerCase().includes(searchQuery))
     );
 
-    setFilteredEmployeeList(filteredListForTable as Employee[]);
+    setFilteredEmployeeList(filteredListForTable.reverse() as Employee[]);
     setLoading(false);
   }, [search, employeeList]);
 

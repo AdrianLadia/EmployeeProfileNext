@@ -133,12 +133,12 @@ const EmployeeDetails = () => {
   };
 
   const handleDetailsClick = (textToCopy: string) => {
-    setToastOptions({
-      open: true,
-      message: "Copied to clipboard",
-      type: "info",
-      timer: 2,
-    });
+    // setToastOptions({
+    //   open: true,
+    //   message: "Copied to clipboard",
+    //   type: "info",
+    //   timer: 2,
+    // });
     navigator.clipboard.writeText(textToCopy);
   };
 
@@ -198,8 +198,8 @@ const EmployeeDetails = () => {
             <div className={`${skeletonStyle} w-full h-[35%] `}> </div>
             <div className={`${skeletonStyle} w-[65%] h-[35%] `}> </div>
           </div>
-          <div className={`${skeletonStyle} w-full h-3`}> </div>
-          <div className={`${skeletonStyle} w-full h-3`}> </div>
+          <div className={`${skeletonStyle} w-full h-6`}> </div>
+          <div className={`${skeletonStyle} w-full h-6`}> </div>
         </div>
         <div className="w-full mt-2 mb-1 border-b"></div>
         <div
@@ -336,7 +336,9 @@ const EmployeeDetails = () => {
         <div
           className={` ${
             loading && " hidden"
-          } pl-2 self-stretch min-w-[45%] max-w-[55%] xl:grow flex flex-wrap items-center justify-start select-all text-2xl xl:text-3xl 2xl:text-4xl font-semibold `}
+          } pl-2 self-stretch min-w-[45%] max-w-[55%] xl:grow 
+          flex flex-wrap items-center justify-start select-all 
+          text-2xl xl:text-3xl 2xl:text-4xl font-semibold `}
           onClick={() =>
             handleDetailsClick(
               selectedEmployeeDetails?.firstName +

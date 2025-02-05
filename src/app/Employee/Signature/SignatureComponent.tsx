@@ -17,6 +17,8 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
 
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [isClear, setIsClear] = useState<boolean>(true);
+
   const save = () => {
     setLoading(true);
     if (!sigCanvas.current) return;
@@ -33,12 +35,23 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
 
   const clear = () => {
     setLoading(true);
-    if (sigCanvas.current) {
+    if (sigCanvas.current) { 
+      setIsClear(true);
       sigCanvas.current.clear();
-      setSignatureImageUrl("");
     }
     setLoading(false);
   };
+
+  const back = () => {
+    setLoading(true);
+    setSignatureImageUrl("");
+    setLoading(false);
+  }
+
+  const handleEnd = ( ) => {
+    const canvas = sigCanvas.current?.isEmpty();
+    setIsClear(Boolean(canvas));
+  }
 
   const [canvasWidth, setCanvasWidth] = useState<number>(0);
 
@@ -48,7 +61,7 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
     } else {
       setCanvasWidth(500);
     }
-  }, []);
+  }, []); 
 
   return (
     <div
@@ -59,26 +72,35 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
       <div className="bg-white mt-2 border-2 border-black rounded-box w-max relative overflow-clip ">
         <SignatureCanvas
           ref={sigCanvas}
+          onEnd={() => handleEnd()}
           penColor="black"
           canvasProps={{
             width: canvasWidth,
             height: 300,
-            className: "sigCanvas",
+            className: "sigCanvas cursor-crosshair",
           }}
         />
         <span className={`${loading&&"loading text-info"}`}></span>
-        <div className="flex w-full bg-black flex-wrap items-stretch gap-0.5 border-t-2 border-black">
+        <div className="flex w-full bg-black items-stretch gap-0.5 border-t-2 border-black h-10">
           <input
             onClick={() => save()}
             type="button"
-            className=" grow hover:text-info-content hover:bg-info bg-white"
+            className=" w-[50%] hover:text-info-content hover:bg-info bg-white"
             value={"Save"}
           />
           <input
             onClick={() => clear()}
             type="button"
-            className="p-2 grow hover:text-error-content hover:bg-error bg-white"
+            hidden={isClear}
+            className=" w-[50%] hover:text-error-content hover:bg-error bg-white"
             value={"Clear"}
+          />
+          <input
+            onClick={() => back()}
+            type="button"
+            hidden={!isClear}
+            className=" w-[50%] hover:text-error-content hover:bg-error bg-white"
+            value={"Back"}
           />
         </div>
       </div>

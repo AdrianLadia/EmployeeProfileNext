@@ -304,31 +304,6 @@ const EmployeeDetails = () => {
               <ProfileImage employee={selectedEmployeeDetails} />
             </div>
 
-            {/* <div
-              className={` ${loading && "hidden"}
-              w-20 2xl:w-28 h-20 2xl:h-28 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
-              onClick={() =>
-                selectedEmployeeDetails?.photoOfPerson &&
-                handleImageModalClick([
-                  selectedEmployeeDetails?.photoOfPerson || "",
-                ])
-              }
-            >
-              {selectedEmployeeDetails?.photoOfPerson ? (
-                <Image
-                  className={` w-full h-full`}
-                  src={selectedEmployeeDetails?.photoOfPerson || "/avatar.png"}
-                  alt={selectedEmployeeDetails?.firstName}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 700px"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="h-full w-full bg-base-300 grid place-items-center text-2xl font-bold">
-                  ?
-                </div>
-              )}
-            </div> */}
           </div>
         </div>
 
@@ -336,9 +311,9 @@ const EmployeeDetails = () => {
         <div
           className={` ${
             loading && " hidden"
-          } pl-2 self-stretch min-w-[45%] max-w-[55%] xl:grow 
+          } pl-2 self-stretch min-w-[45%] max-w-[55%] xl:grow
           flex flex-wrap items-center justify-start select-all 
-          text-2xl xl:text-3xl 2xl:text-4xl font-semibold `}
+          text-2xl xl:text-3xl 2xl:text-4xl font-semibold md:gap-1.5`}
           onClick={() =>
             handleDetailsClick(
               selectedEmployeeDetails?.firstName +
@@ -347,8 +322,9 @@ const EmployeeDetails = () => {
             )
           }
         >
-          <h2>{selectedEmployeeDetails?.firstName + " "}</h2>
-          <h2>{selectedEmployeeDetails?.lastName}</h2>
+          {/* <h2 className=" ">{selectedEmployeeDetails?.firstName}</h2>
+          <h2 className=" ">{selectedEmployeeDetails?.lastName}</h2> */}
+          {selectedEmployeeDetails?.firstName}{" "}{selectedEmployeeDetails?.lastName}
         </div>
 
         {/* address */}

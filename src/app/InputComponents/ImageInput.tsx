@@ -34,7 +34,7 @@ const ImageInput: FC<ImageInputProps> = ({
   required,
   multiple,
 }) => {
-  const { handleImageModalClick, setImageModalId } = useAppContext();
+  const { handleImageModalClick, setImageModalId, imageListForModal, imageModalId } = useAppContext();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const captureInputRef = React.useRef<HTMLInputElement>(null);
@@ -46,6 +46,17 @@ const ImageInput: FC<ImageInputProps> = ({
       setHideTakePhoto(true);
     }
   }, []);
+
+  React.useEffect(() => {
+    if(id == imageModalId ) {
+      if(setFunction) {
+        setFunction((prev: Employee) => ({
+          ...prev,
+          [id]: id === "photoOfPerson" || id === "employeeSignature" ? imageListForModal[0] : imageListForModal,
+        }));
+      }
+    }
+  }, [imageListForModal]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;

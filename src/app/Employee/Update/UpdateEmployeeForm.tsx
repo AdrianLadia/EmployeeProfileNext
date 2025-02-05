@@ -32,6 +32,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     loading,
     setLoading,
     pathname,
+    imageListForModal,
+    imageModalId
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -279,18 +281,18 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     { label: "Starpack", value: "SP" },
   ] as { label: string; value: string }[]);
 
-  // useEffect(() => {
-  //   if (imageListForModal.length) {
-  //     setFormData({
-  //       ...formData,
-  //       [imageModalId]: imageListForModal.length ? imageListForModal : null,
-  //     });
-  //     setDataToUpdate({
-  //       ...dataToUpdate,
-  //       [imageModalId]: imageListForModal.length ? imageListForModal : null,
-  //     });
-  //   }
-  // }, [imageListForModal, imageModalId]);
+  useEffect(() => {
+    if (imageListForModal) {
+      setFormData({
+        ...formData,
+        [imageModalId]: imageListForModal.length ? imageListForModal : null,
+      });
+      setDataToUpdate({
+        ...dataToUpdate,
+        [imageModalId]: imageListForModal.length ? imageListForModal : null,
+      });
+    }
+  }, [imageListForModal, imageModalId]);
 
   useEffect(() => {
     if (selectedEmployee?._id) {

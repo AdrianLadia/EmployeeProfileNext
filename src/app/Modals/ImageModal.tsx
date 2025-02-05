@@ -18,7 +18,7 @@ const ImageModal = () => {
 
   const handleDelete = (index: number) => { 
     const filtered = imageListForModal.filter((_, i) => i !== index);
-    setImageListForModal(filtered); 
+    setImageListForModal(filtered);
   };
 
   React.useEffect(() => {

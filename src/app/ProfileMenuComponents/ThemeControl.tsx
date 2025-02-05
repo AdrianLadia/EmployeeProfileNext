@@ -5,7 +5,7 @@ import React from "react";
 const ThemeControl = () => {
 
   const themes = [
-    "light", "dark", "cupcake", "winter", "wireframe", " lofi",
+    "light", "dark", "cupcake", "winter", "wireframe", "lofi",
     "synthwave", "luxury", "dim",  
     "retro", "cyberpunk", "aqua", "valentine"
   ];

@@ -14,9 +14,11 @@ load_dotenv()
 
 isTest = os.getenv("NEXT_PUBLIC_CYPRESS_IS_TEST_ENV")
 
+
 class EmployeeIDCard(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
-    name: str
+    firstName: str
+    lastName: str
     address: str
     phoneNumber: str
     photoOfPerson: str
@@ -29,7 +31,8 @@ class EmployeeIDCard(BaseModel):
     def to_dict(self):
         return {
             "_id": self.id,
-            "name": self.name,
+            "firstName": self.firstName,
+            "lastName": self.lastName,
             "address": self.address,
             "phoneNumber": self.phoneNumber,
             "photoOfPerson": self.photoOfPerson,
@@ -42,7 +45,9 @@ class EmployeeIDCard(BaseModel):
 
     def generate_id_card(self):
         ref_id = self.id
-        name = self.name
+        # firstName = self.firstName
+        # lastName = self.lastName
+        name = self.firstName + ' ' + self.lastName
         address = self.address
         phoneNumber = self.phoneNumber
         photo_path = self.photoOfPerson
@@ -72,7 +77,8 @@ class EmployeeIDCard(BaseModel):
             background_path += "ppcIDfront.png"
 
         try:
-            background = Image.open(background_path).resize((card_width, card_height))
+            background = Image.open(background_path).resize(
+                (card_width, card_height))
         except Exception as e:
             print(f"Error loading background image: {e}")
 
@@ -86,7 +92,8 @@ class EmployeeIDCard(BaseModel):
         border_color = (0, 0, 0)
         border_width = 10
         draw.rectangle(
-            [(border_width, border_width), (card_width - border_width, card_height - border_width)],
+            [(border_width, border_width),
+             (card_width - border_width, card_height - border_width)],
             outline=border_color,
             width=border_width,
         )
@@ -96,7 +103,8 @@ class EmployeeIDCard(BaseModel):
                 if photo_path.startswith("http"):
                     response = requests.get(photo_path)
                     response.raise_for_status()
-                    photo = Image.open(BytesIO(response.content)).resize((205, 200))
+                    photo = Image.open(BytesIO(response.content)).resize(
+                        (205, 200))
                 else:
                     photo = Image.open(photo_path).resize((205, 200))
                 background.paste(photo, (195, 260))
@@ -116,7 +124,6 @@ class EmployeeIDCard(BaseModel):
             draw.text((x_text, y_text), line, fill="black", font=name_font)
             y_text += name_font.size + 5
 
-
         if len(type_of_employee) > 3:
             x_text = 210
         else:
@@ -130,7 +137,10 @@ class EmployeeIDCard(BaseModel):
         # draw.text((255, 620), f"{type_of_employee}", fill="black", font=role_font)
 
         ref_id_font = ImageFont.truetype(font_path, size=25)
-        draw.text((40, 850), f"ID no.: {ref_id}", fill="black", font=ref_id_font)
+        draw.text((40, 850),
+                  f"ID no.: {ref_id}",
+                  fill="black",
+                  font=ref_id_font)
         # draw.text((180, 140), address, fill="black", font=ref_id_font)
         # address_lines = textwrap.wrap(address, width=30)
         # y_text = 170
@@ -144,25 +154,32 @@ class EmployeeIDCard(BaseModel):
         qr = qrcode.QRCode(box_size=4, border=2)
         qr.add_data(qr_data)
         qr.make(fit=True)
-        qr_code_img = qr.make_image(fill="black", back_color="white").resize((170, 170))
+        qr_code_img = qr.make_image(fill="black", back_color="white").resize(
+            (170, 170))
         background.paste(qr_code_img, (215, 680))
 
         directory = 'Server/EmployeeIDs/'
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        output_path = os.path.join(directory, f"{self.name.replace(' ', '_')}_id_card.png")
+        output_path = os.path.join(
+            directory, f"{self.firstName+self.lastName}_id_card.png")
 
         background.save(output_path)
         print(f"ID card saved to {output_path}")
 
-
         if not _apps:
-            cred = credentials.Certificate("Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json")
-            initialize_app(cred, {"storageBucket": "pustananemployeeprofile.firebasestorage.app"})
+            cred = credentials.Certificate(
+                "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
+            )
+            initialize_app(cred, {
+                "storageBucket":
+                "pustananemployeeprofile.firebasestorage.app"
+            })
 
         bucket = storage.bucket()
-        blob = bucket.blob(f"EmployeeIDs/{self.name.replace(' ', '_')}_id_card.png")
+        blob = bucket.blob(
+            f"EmployeeIDs/{self.firstName+self.lastName}_id_card.png")
         blob.upload_from_filename(output_path)
         blob.make_public()
 
@@ -171,7 +188,7 @@ class EmployeeIDCard(BaseModel):
 
         to_return = {
             "_id": self.id,
-            "name": self.name,
+            "name": self.firstName + " " + self.lastName,
             "companyRole": self.companyRole,
             "IDCardURL": download_url,
         }
@@ -179,7 +196,6 @@ class EmployeeIDCard(BaseModel):
         print(to_return)
 
         return to_return
-
 
         # back side of ID card
 
@@ -210,7 +226,6 @@ class EmployeeIDCard(BaseModel):
         # print(f"Back side of ID card saved to {back_output_path}")
 
 
-
 employee = {
     "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
     "name": "Michael Flores",
@@ -230,4 +245,3 @@ employee = {
 }
 
 # EmployeeIDCard(**employee).generate_id_card()
-

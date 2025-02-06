@@ -48,7 +48,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
   const renderEmployeeDetails = () => {
     const importantDetails = {
       name: [
-        formData?.name,
+        formData?.firstName?(formData?.firstName + " " + formData?.lastName)||"":"",
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -228,7 +228,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
           options={employeeList}
           className="w-[90%]"
           placeholder="Select Employee"
-          getOptionLabel={(option) => option.name}
+          getOptionLabel={(option) => option.firstName + " " + option.lastName}
           value={formData?._id ? formData : null}
           isClearable
           onChange={(selectedOption) => {
@@ -256,7 +256,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
             hasEmptyFields && formData?._id ? " w-[43%] " : " hidden "
           } btn-outline btn h-12 `}
         >
-          Update<i className="font-bold text-[1rem]">{formData?.name}</i>
+          Update<i className="font-bold text-[1rem]">{formData?.firstName} {formData?.lastName}</i>
         </button>
 
         <button

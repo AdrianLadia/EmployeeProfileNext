@@ -546,6 +546,38 @@ class ServerRequests extends Server {
     }
   }
 
+  async getAllEmployeeID(): Promise<any> {
+    try {
+      const res = await fetch(`${this.url}/readAllDataInCollection`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ collection: "EmployeeID" }),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    } 
+  }
+
+  async generateEmployeeID(userData: User,  employee: Employee): Promise<any> {
+    const data = {
+      userData: userData,
+      employee: employee, 
+    }
+    try {
+      const res = await fetch(`${this.url}/generateEmployeeID`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
 }
 
 export default ServerRequests;

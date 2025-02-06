@@ -28,7 +28,6 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
     e.preventDefault();
 
     try {
-      setIdURL("");
       setLoading(true);
 
       const res = await serverRequests.generateEmployeeID(userData, formData);
@@ -37,6 +36,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
       if (res?.error) {
         console.error(res.error);
+        // setIdURL()
       }
 
       if (res?.data) {

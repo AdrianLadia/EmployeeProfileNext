@@ -140,6 +140,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         const form = e.target as HTMLFormElement;
 
+        console.log()
+
         const res = await serverRequests.updateEmployee(
           selectedEmployee,
           dataToUpdate,
@@ -284,7 +286,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
   // onclick delete button from image modal, handler
   useEffect(() => {
     const nonArrayKeys = ["photoOfPerson", "employeeSignature"];
-    if (imageListForModal) {
+    if (imageListForModal && imageModalId) {
       setFormData({
         ...formData,
         [imageModalId]: nonArrayKeys.includes(imageModalId) ? imageListForModal[0] : imageListForModal,

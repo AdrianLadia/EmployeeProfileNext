@@ -226,22 +226,22 @@ class EmployeeIDCard(BaseModel):
         # print(f"Back side of ID card saved to {back_output_path}")
 
 
-employee = {
-    "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
-    "name": "Michael Flores",
-    "address": "123 Main Street, Cebu City, Philippines",
-    "phoneNumber": "+63 912 345 6789",
-    "photoOfPerson": "server/test_assets/minor.png",
-    "resumePhotosList": ["resume_page1.jpg", "resume_page2.jpg"],
-    "biodataPhotosList": ["biodata_page1.jpg"],
-    "email": "michael.flores@example.com",
-    "dateJoined": datetime(2024, 1, 15).date(),
-    "company": "PPC",
-    "isRegular": False,
-    "companyRole": "IT",
-    "isOJT": True,
-    "dailyWage": 800.50,
-    "_version": 1,
-}
+# employee = {
+#     "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
+#     "name": "Michael Flores",
+#     "address": "123 Main Street, Cebu City, Philippines",
+#     "phoneNumber": "+63 912 345 6789",
+#     "photoOfPerson": "server/test_assets/minor.png",
+#     "resumePhotosList": ["resume_page1.jpg", "resume_page2.jpg"],
+#     "biodataPhotosList": ["biodata_page1.jpg"],
+#     "email": "michael.flores@example.com",
+#     "dateJoined": datetime(2024, 1, 15).date(),
+#     "company": "PPC",
+#     "isRegular": False,
+#     "companyRole": "IT",
+#     "isOJT": True,
+#     "dailyWage": 800.50,
+#     "_version": 1,
+# }
 
 # EmployeeIDCard(**employee).generate_id_card()

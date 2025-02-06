@@ -228,7 +228,8 @@ class EmployeeIDCard(BaseModel):
 
 employee = {
     "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
-    "name": "Michael Flores",
+    "firstName": "Michael Flores",
+    "lastName": "Cruz",
     "address": "123 Main Street, Cebu City, Philippines",
     "phoneNumber": "+63 912 345 6789",
     "photoOfPerson": "server/test_assets/minor.png",

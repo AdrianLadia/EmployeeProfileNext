@@ -176,7 +176,7 @@ const ImageInput: FC<ImageInputProps> = ({
           <span
             className={`${
               !mediaList?.length && "hidden"
-            } absolute top-5 right-1/2 left-1/2 translate-x-[-50%] z-50 bg-base-300/70 group-hover:bg-base-300 items-center flex justify-center size-5 rounded-full cursor-pointer`}
+            } absolute top-5 right-1/2 left-1/2 translate-x-[-50%] z-10 bg-base-300/70 group-hover:bg-base-300 items-center flex justify-center size-5 rounded-full cursor-pointer`}
           >
             {mediaList?.length}
           </span>

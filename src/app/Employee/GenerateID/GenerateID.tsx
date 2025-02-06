@@ -52,7 +52,8 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
   React.useEffect(() => {
     if (
       !(
-        formData?.name &&
+        formData?.firstName &&
+        formData?.lastName &&
         formData?.address &&
         formData?.phoneNumber &&
         formData?.dateJoined &&

@@ -3,9 +3,12 @@
 import React, { useEffect, useState } from "react";
 import GenerateIDForm from "./GenerateID";
 import { Employee } from "@/app/schemas/EmployeeSchema.ts";
-import ServerRequests from "@/app/api/ServerRequests";
+
+import { useAppContext } from "@/app/GlobalContext";
 
 const Page = () => {
+  const { serverRequests, userData } = useAppContext();
+
   const [employeeList, setEmployeeList] = useState<Employee[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -13,9 +16,9 @@ const Page = () => {
     const fetchEmployeeList = async () => {
       setIsLoading(true);
       try {
-        const serverRequests = new ServerRequests();
-        const res = await serverRequests.fetchEmployeeList();
-        setEmployeeList(res.data);
+        const res = await serverRequests.fetchEmployeeList(userData, 1, 9999, null);
+        console.log("Employee list:", res.data.data);
+        setEmployeeList(res.data.data);
       } catch (error) {
         console.error("Error fetching employee list:", error);
       } finally {

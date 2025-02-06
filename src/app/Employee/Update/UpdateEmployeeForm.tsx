@@ -281,15 +281,17 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     { label: "Starpack", value: "SP" },
   ] as { label: string; value: string }[]);
 
+  // onclick delete button from image modal, handler
   useEffect(() => {
+    const nonArrayKeys = ["photoOfPerson", "employeeSignature"];
     if (imageListForModal) {
       setFormData({
         ...formData,
-        [imageModalId]: imageListForModal.length ? imageListForModal : null,
+        [imageModalId]: nonArrayKeys.includes(imageModalId) ? imageListForModal[0] : imageListForModal,
       });
       setDataToUpdate({
         ...dataToUpdate,
-        [imageModalId]: imageListForModal.length ? imageListForModal : null,
+        [imageModalId]: nonArrayKeys.includes(imageModalId) ? imageListForModal[0] : imageListForModal,
       });
     }
   }, [imageListForModal, imageModalId]);

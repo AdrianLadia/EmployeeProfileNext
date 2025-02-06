@@ -29,6 +29,8 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     loading,
     setLoading,
     handleImageModalClick,
+    imageListForModal,
+    imageModalId,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -189,12 +191,12 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     }),
   };
 
-  // useEffect(() => {
-  //   setFormData({
-  //     ...formData,
-  //     [imageModalId]: imageListForModal.length ? imageListForModal : null,
-  //   });
-  // }, [imageListForModal]);
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      [imageModalId]: imageListForModal.length ? imageListForModal : null,
+    });
+  }, [imageListForModal]);
 
   return (
     <form

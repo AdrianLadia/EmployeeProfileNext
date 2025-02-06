@@ -175,7 +175,7 @@ const CreateEmployeeForm = () => {
         {!updateSignature ? (
           <div className="flex flex-col w-full items-center ">
             <span className="w-full">Employee Signature</span>
-            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip "
+            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip h-10 "
               // onClick={() => !formData?.employeeSignature&&setUpdateSignature(true)}
             >
               <div className="h-[300px] flex items-center justify-center relative w-full">

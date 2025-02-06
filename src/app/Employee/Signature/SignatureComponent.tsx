@@ -17,7 +17,7 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [isClear, setIsClear] = useState<boolean>(true);
+  // const [isClear, setIsClear] = useState<boolean>(true);
 
   const save = () => {
     setLoading(true);
@@ -36,22 +36,24 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
   const clear = () => {
     setLoading(true);
     if (sigCanvas.current) { 
-      setIsClear(true);
+      // setIsClear(true);
+      setSignatureImageUrl("");
       sigCanvas.current.clear();
     }
     setLoading(false);
   };
 
-  const back = () => {
-    setLoading(true);
-    setSignatureImageUrl("");
-    setLoading(false);
-  }
+  // const back = () => {
+  //   setLoading(true);
+  //   setSignatureImageUrl("");
+  //   setLoading(false);
+  // }
 
-  const handleEnd = ( ) => {
-    const canvas = sigCanvas.current?.isEmpty();
-    setIsClear(Boolean(canvas));
-  }
+  // const handleEnd = ( ) => {
+    // const canvas = sigCanvas.current?.isEmpty();
+    // console.log("Canvas:", canvas);
+    // setIsClear(Boolean(canvas));
+  // }
 
   const [canvasWidth, setCanvasWidth] = useState<number>(0);
 
@@ -72,7 +74,7 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
       <div className="bg-white mt-2 border-2 border-black rounded-box w-max relative overflow-clip ">
         <SignatureCanvas
           ref={sigCanvas}
-          onEnd={() => handleEnd()}
+          // onEnd={() => handleEnd()}
           penColor="black"
           canvasProps={{
             width: canvasWidth,
@@ -91,17 +93,17 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
           <input
             onClick={() => clear()}
             type="button"
-            hidden={isClear}
+            // hidden={isClear}
             className=" w-[50%] hover:text-error-content hover:bg-error bg-white"
             value={"Clear"}
           />
-          <input
+          {/* <input
             onClick={() => back()}
             type="button"
             hidden={!isClear}
             className=" w-[50%] hover:text-error-content hover:bg-error bg-white"
             value={"Back"}
-          />
+          /> */}
         </div>
       </div>
     </div>

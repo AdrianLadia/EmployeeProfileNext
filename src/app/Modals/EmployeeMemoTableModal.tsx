@@ -66,7 +66,7 @@ const EmployeeMemoTableModal = () => {
             <span className="text-base">
               {isForSingleEmployee
                 ? `Memos ( ${memoForTableModal?.[0]?.Employee?.firstName} ${memoForTableModal?.[0]?.Employee?.lastName} )`
-                : `Recent Memos ( ${memoForTableModal.length} )`}
+                : `Recent Memos `}
             </span>{" "}
           </h3>
           <div className="w-full h-full overflow-auto rounded-box ">

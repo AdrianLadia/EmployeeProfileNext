@@ -31,6 +31,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     loading,
     setLoading,
     handleMemoPrintModalClick,
+    imageListForModal,
+    imageModalId
   } = useAppContext();
 
   const [remedialAction, setRemedialAction] = useState<string>("");
@@ -231,12 +233,13 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     }),
   };
 
-  // React.useEffect(() => {
-  //   setFormData({
-  //     ...formData,
-  //     [imageModalId]: imageListForModal.length ? imageListForModal : null,
-  //   });
-  // }, [imageListForModal, imageModalId]);
+  // onclick delete button from image modal, handler
+  React.useEffect(() => {
+    setFormData({
+      ...formData,
+      [imageModalId]: imageListForModal.length ? imageListForModal : null,
+    });
+  }, [imageListForModal, imageModalId]);
 
   React.useEffect(() => {
     const res = employeeList?.find(

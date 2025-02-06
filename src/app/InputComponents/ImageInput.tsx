@@ -34,7 +34,12 @@ const ImageInput: FC<ImageInputProps> = ({
   required,
   multiple,
 }) => {
-  const { handleImageModalClick, setImageModalId, imageListForModal, imageModalId } = useAppContext();
+  const {
+    handleImageModalClick,
+    setImageModalId,
+    imageListForModal,
+    imageModalId,
+  } = useAppContext();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const captureInputRef = React.useRef<HTMLInputElement>(null);
@@ -48,11 +53,14 @@ const ImageInput: FC<ImageInputProps> = ({
   }, []);
 
   React.useEffect(() => {
-    if(id == imageModalId ) {
-      if(setFunction) {
+    if (id == imageModalId) {
+      if (setFunction) {
         setFunction((prev: Employee) => ({
           ...prev,
-          [id]: id === "photoOfPerson" || id === "employeeSignature" ? imageListForModal[0] : imageListForModal,
+          [id]:
+            id === "photoOfPerson" || id === "employeeSignature"
+              ? imageListForModal[0]
+              : imageListForModal,
         }));
       }
     }
@@ -144,25 +152,34 @@ const ImageInput: FC<ImageInputProps> = ({
       >
         <label htmlFor={id}>{title}</label>
         <div
-          className={` h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px] `}
+          className={` h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px] relative group`}
           data-tip={`${mediaList?.length}`}
+          onClick={() => {
+            if (mediaList?.length) {
+              handleImageModalClick(mediaList || []);
+              setImageModalId(id);
+            }
+          }}
         >
           <Image
             className={`
               ${mediaList?.length && "cursor-pointer border "} 
-              h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px]
+              h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px] rounded-box
             `}
             height={imgDimensions?.height}
             width={imgDimensions?.width}
             alt={"   "}
             src={mediaList?.[0] || ""}
-            onClick={() => {
-              if (mediaList?.length) {
-                handleImageModalClick(mediaList || []);
-                setImageModalId(id);
-              }
-            }}
+            
           />
+
+          <span
+            className={`${
+              !mediaList?.length && "hidden"
+            } absolute top-5 right-1/2 left-1/2 translate-x-[-50%] z-50 bg-base-300/70 group-hover:bg-base-300 items-center flex justify-center size-5 rounded-full cursor-pointer`}
+          >
+            {mediaList?.length}
+          </span>
         </div>
       </div>
 
@@ -176,9 +193,9 @@ const ImageInput: FC<ImageInputProps> = ({
                 : "bg-neutral-200 cursor-not-allowed"
             } h-full min-w-28 max-w-max font-semibold flex items-center justify-center px-3 select-none `}
           >
-            {multiple && mediaList?.length
+            {mediaList?.length
               ? ` ${mediaList?.length || 0} File(s)`
-              : "Upload Media"}
+              : "Choose File"}
           </div>
           <ul
             tabIndex={0}

@@ -126,13 +126,14 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
       <select
         className={`${inputClassname} ${disabled? " bg-transparent " : " bg-base-100 "} h-[90%] outline-none indent-2`}
         hidden={!toggle}
-        // defaultValue={defaultValue}
+        // defaultValue={selectedOption?.toString()}
+        defaultValue={""}
         value={selectedOption?.toString()} 
         onChange={(e) => handleChange(e)}
         id="company"
         disabled={disabled}
       >
-        <option selected disabled value={""}>
+        <option  disabled value={""}>
           Select Option
         </option>
         {!!finalOptions.length &&

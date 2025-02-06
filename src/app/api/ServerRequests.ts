@@ -311,18 +311,26 @@ class ServerRequests extends Server {
     // }
   } 
 
-  async fetchEmployeeList(): Promise<any> { 
-    try {
-      const res = await fetch(`${this.url}/readAllDataInCollection`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ collection: "Employee" }),
-        cache: 'no-store',
-      });
+  async fetchEmployeeList(userData: User, page:number, limit:number, sort: {'keyToSort': string, 'sortOrder': unknown} | null): Promise<any> { 
+
+    const data = {
+      userData: userData,
+      page: page,
+      limit: limit,
+      sort: sort
+    };
+
+    try{ 
+      const res = await fetch(`${this.url}/fetchEmployeeList`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+          cache: 'no-store',
+        });
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
-    }
+    } 
   }  
 
   async fetchOffenseList(): Promise<any> {
@@ -339,12 +347,17 @@ class ServerRequests extends Server {
     } 
   }
 
-  async getEmployeeForDashboardAction(userObject: User): Promise<any> {
+  async getEmployeeForDashboardAction(userObject: User, page:number, sort: {'keyToSort': string, 'sortOrder': unknown} | null): Promise<any> {
+    const data = {
+      userData: userObject,
+      page: page,
+      sort: sort
+    }
     try {
       const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userData: userObject }),
+        body: JSON.stringify(data),
         cache: 'no-store',
       });
       return await res.json();
@@ -352,6 +365,25 @@ class ServerRequests extends Server {
       return (error as Error).message;
     }
   }
+
+  // async getEmployeeForDashboardAction(userObject: User): Promise<any> {
+  //   try {
+  //     const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ userData: userObject }),
+  //       cache: 'no-store',
+  //     });
+  //     // return await res.json();
+  //     const data = await res.json();
+  //     if(data?.data){
+  //       data.data = data.data.filter((employee: any) => employee.isDeleted === false);
+  //       return data;
+  //     }
+  //   } catch (error:unknown) {
+  //     return (error as Error).message;
+  //   }
+  // }
 
   async getEmployeeDetailsAction(userObject: User, employeeId: string): Promise<any> {
     try {
@@ -460,12 +492,12 @@ class ServerRequests extends Server {
     } 
   }
 
-  async generateEmployeeID(Employee: Employee, UserData: User): Promise<any> {
+  async getAllRecentMemo(userData: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/generateEmployeeID`, {
+      const res = await fetch(`${this.url}/getAllRecentMemo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ employee: Employee, userData: UserData }),
+        body: JSON.stringify({ userData }),
         cache: 'no-store',
       });
       return await res.json();
@@ -474,18 +506,44 @@ class ServerRequests extends Server {
     }
   }
 
-  async getAllEmployeeID(): Promise<any> {
+  async updateEmployeeProfilePicture(employeeId: string, photoURL: string, userObject: User): Promise<any> {
+    const data = {
+      userData: userObject,
+      employeeID: employeeId,
+      picture: photoURL
+    }
+
     try {
-      const res = await fetch(`${this.url}/readAllDataInCollection`, {
+      const res = await fetch(`${this.url}/updateEmployeeProfilePicture`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ collection: "EmployeeID" }),
+        body: JSON.stringify(data),
         cache: 'no-store',
       });
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
-    } 
+    }
+  }
+
+  async updateUrlPhotoOfSignature(userData: User,  employeeId: string, signatureUrl: string): Promise<any> {
+    const data = {
+      userData: userData,
+      employeeID: employeeId,
+      signatureUrl: signatureUrl
+    }
+
+    try {
+      const res = await fetch(`${this.url}/updateUrlPhotoOfSignature`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
   }
 
 }

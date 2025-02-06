@@ -2,17 +2,20 @@
 
 import React from "react";
 
-const OffenseDownloadButton = () => {
-  const handleClick = () => {
-    const modal = document.getElementById("OffenseDownloadModal");
-    if (modal) {
-      (modal as HTMLDialogElement).showModal();
-    }
+import { useAppContext } from "../GlobalContext";
+
+import { Offense } from "../schemas/OffenseSchema";
+
+const OffenseDownloadButton: React.FC<{ offenseList: Offense[] }> = ({ offenseList }) => {
+  const { handleOffenseListClick } = useAppContext();
+
+  const handleClick = () => { 
+    handleOffenseListClick(offenseList);
   };
 
   return (
     <button
-      className="btn btn-info btn-sm tooltip tooltip-left text-white md:tooltip-top tooltip-info"
+      className="btn btn-accent btn-sm tooltip tooltip-left text-white md:tooltip-top tooltip-accent"
       onClick={handleClick}
       data-tip="Download"
     >

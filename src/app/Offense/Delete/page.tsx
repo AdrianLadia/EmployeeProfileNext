@@ -17,6 +17,10 @@ const page = async () => {
   
   const res = await serverRequests.fetchOffenseList();
 
+  if(!res?.data){
+    return <div> No Data Found </div>
+  }
+
   const offenseList: Offense[] = res.data;  
 
   const remedialActions = [

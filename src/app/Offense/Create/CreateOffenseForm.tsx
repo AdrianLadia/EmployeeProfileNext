@@ -126,7 +126,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
 
   return (
     <form className="form-style" onSubmit={handleSubmit} ref={formRef}>
-      <h2 className="font-semibold">Offense Creation</h2>
+      <h2 className="font-semibold text-blue-500">Offense Creation</h2>
 
       <div className="flex flex-col text-sm gap-2 mt-2">
         Offense

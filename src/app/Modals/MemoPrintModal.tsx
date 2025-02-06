@@ -25,7 +25,7 @@ const PrintMemorandumModal = () => {
   const memoImgRef = useRef(null);
   const mediaListRef = useRef(null);
 
-  const { memoForPrintModal, setMemoForPrintModal, getOrdinal } =
+  const { memoForPrintModal, setMemoForPrintModal, getOrdinal, loading, setLoading } =
     useAppContext();
 
   const [resolution, setResolution] = React.useState(1);
@@ -34,6 +34,8 @@ const PrintMemorandumModal = () => {
   const [includeMediaList, setIncludeMediaList] = React.useState(true);
 
   const convertToPdf = async () => {
+    setLoading(true);
+
     const desktopWidth = 1200;
     const desktopHeight = 800;
 
@@ -132,7 +134,7 @@ const PrintMemorandumModal = () => {
         );
       }
 
-      pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
+      pdf.save(`${memoForPrintModal?.Employee?.firstName}-Memorandum.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     } finally {
@@ -140,6 +142,8 @@ const PrintMemorandumModal = () => {
       window.innerHeight = originalHeight;
 
       window.dispatchEvent(new Event("resize"));
+
+      setLoading(false)
     }
   };
 
@@ -229,7 +233,7 @@ const PrintMemorandumModal = () => {
             <div className="my-5 border-l pl-4 grid grid-cols-1 lg:grid-cols-5 items-center lg:gap-4">
               <div className="col-span-1 font-semibold">To:</div>
               <div className={headerTextStyle}>
-                {memoForPrintModal?.Employee?.name}
+                {memoForPrintModal?.Employee?.firstName} {memoForPrintModal?.Employee?.lastName}
               </div>
 
               <div className="col-span-1 font-semibold">From:</div>
@@ -258,7 +262,7 @@ const PrintMemorandumModal = () => {
             <div className="px-2 ">
               <h3>
                 Dear Mr./Ms.{" "}
-                <strong>{memoForPrintModal?.Employee?.name}</strong> ,
+                <strong>{memoForPrintModal?.Employee?.firstName} {memoForPrintModal?.Employee?.lastName}</strong> ,
               </h3>
               <br />
               {/* <p className="indent-4 whitespace-pre-line underline underline-offset-8 hyphens-auto text-justify leading-9"> */}
@@ -274,7 +278,6 @@ const PrintMemorandumModal = () => {
             </div>
 
             {/* employee explanation */}
-            {/* {console.log(memoForPrintModal)} */}
             {!memoForPrintModal?.submitted && !memoForPrintModal.reason ? (
               <>
                 <div className="my-8 w-full border-b-2" />
@@ -402,7 +405,7 @@ const PrintMemorandumModal = () => {
         <div className="w-full absolute bottom-5 flex justify-center">
           <button
             className=" w-max btn btn-info text-white opacity-70 hover:opacity-100 z-40" 
-            onClick={() => convertToPdf()}
+            onClick={() => !loading && convertToPdf()} 
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -410,7 +413,7 @@ const PrintMemorandumModal = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className={`${loading&&"loading "} size-6`}
             >
               <path
                 strokeLinecap="round"
@@ -418,7 +421,7 @@ const PrintMemorandumModal = () => {
                 d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
               />
             </svg>
-            <span className=" ">Download</span>
+            <span >Download</span>
           </button>
         </div>
       </div>

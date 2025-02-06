@@ -14,17 +14,14 @@ import {
 import { Employee } from "../schemas/EmployeeSchema";
 import { User, Roles } from "../schemas/UserSchema";
 import { Memo } from "../schemas/MemoSchema";
+import { Offense } from "../schemas/OffenseSchema";
 
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 
 import ServerRequests from "../api/ServerRequests";
 
-// import firebaseConfig from '../api/firebase';
-// import { initializeApp } from "firebase/app";
-
 import { getStorage } from "firebase/storage";
-// import { getAuth } from "firebase/auth";
 
 import { storage } from "../api/firebase";
 
@@ -57,6 +54,7 @@ interface AppContextProps {
   memoForPrintModal: Memo;
   setMemoForPrintModal: (data: Memo) => void;
   handleMemoPrintModalClick: (data: Memo) => void;
+  handleOffenseListClick: (data: Offense[]) => void;
   loading: boolean;
   setLoading: (data: boolean) => void;
   storage: ReturnType<typeof getStorage>;
@@ -65,6 +63,8 @@ interface AppContextProps {
   getOrdinal: (n: number) => string;
   imageModalId: string;
   setImageModalId: (data: string) => void;
+  offenseListForModal: Offense[];
+  setOffenseListForModal: (data: Offense[]) => void;
 }
 
 // Create the default context with proper types and default values
@@ -99,6 +99,7 @@ const AppContext = createContext<AppContextProps>({
   memoForPrintModal: {} as Memo,
   setMemoForPrintModal: () => {},
   handleMemoPrintModalClick: () => {},
+  handleOffenseListClick: () => {},
   loading: false,
   setLoading: () => {},
   storage: {} as ReturnType<typeof getStorage>,
@@ -107,6 +108,8 @@ const AppContext = createContext<AppContextProps>({
   getOrdinal: () => "",
   imageModalId: "",
   setImageModalId: () => {},
+  offenseListForModal: [] as Offense[],
+  setOffenseListForModal: () => {},
 });
 
 export default function ContextProvider({
@@ -211,29 +214,6 @@ export default function ContextProvider({
         ),
         roles: ["canDeleteEmployee"],
       },
-      {
-        path: "/Employee/GenerateID",
-        id: "generate-id",
-        title: "Generate ID",
-        description: "Generate Employee ID",
-        icon: (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z"
-            />
-          </svg>
-        ),
-        roles: ["canGenerateEmployeeID"],
-      },
     ],
     Offense: [
       {
@@ -308,7 +288,7 @@ export default function ContextProvider({
     ],
     Memo: [
       {
-        path: "/Memorandum/Create",
+        path: "/Memo/Create",
         id: "create-memorandum",
         title: "Create Memorandum",
         description: "Create a Memorandum",
@@ -331,7 +311,7 @@ export default function ContextProvider({
         roles: ["canCreateMemo"],
       },
       {
-        path: "/Memorandum/Submit",
+        path: "/Memo/Submit",
         id: "submit-memorandum",
         title: "Submit Memorandum",
         description: "Submit a Memorandum",
@@ -354,7 +334,7 @@ export default function ContextProvider({
         roles: ["canSubmitMemo"],
       },
       {
-        path: "/Memorandum/Delete",
+        path: "/Memo/Delete",
         id: "delete-memorandum",
         title: "Delete Memorandum",
         description: "Delete a Memorandum",
@@ -385,6 +365,7 @@ export default function ContextProvider({
     type: "",
     timer: 0,
   });
+
   const [confirmationOptions, setConfirmationOptions] = useState({
     open: false,
     question: "",
@@ -403,6 +384,10 @@ export default function ContextProvider({
   const [memoForTableModal, setMemoForTableModal] = useState<Memo[]>([]);
 
   const [memoForPrintModal, setMemoForPrintModal] = useState<Memo>({} as Memo);
+
+  const [offenseListForModal, setOffenseListForModal] = useState<Offense[]>(
+    [] as Offense[]
+  );
 
   const [imageModalId, setImageModalId] = useState<string>("");
 
@@ -464,37 +449,33 @@ export default function ContextProvider({
       // serverRequests.deleteAllDataInCollection('User')
       serverRequests.getUserForTesting().then((res) => {
         setUserData(res.data);
-        console.log(res.data);
       });
     }
   }, [session, status, router, isTestEnv]);
 
   // filter cards
   useEffect(() => {
-    if(userData?._id){
+    if (userData?._id) {
       const userRoles = userData.roles;
 
-      let filteredCards: { [key: string]: any } = {}
+      const filteredCards: { [key: string]: unknown[] } = {};
 
       Object.entries(userRoles).map(([key, value]) => {
         if (Array.isArray(value) && value.length) {
-          // console.log(cards[key])
-          cards[key]&&cards[key].map((item)=>{
-            // console.log(key)
-            const isAuthorized = value.includes(item.roles[0]) 
-            if(isAuthorized){
-              filteredCards[key] = [
-                ...filteredCards?.[key] || [],
-                item
-              ]
-            }
-          })
+          if (cards[key]) {
+            cards[key].map((item) => {
+              const isAuthorized = value.includes(item.roles[0]);
+              if (isAuthorized) {
+                filteredCards[key] = [...(filteredCards?.[key] || []), item];
+              }
+            });
+          }
         }
-      })
+      });
 
-      setCards(filteredCards)
-    } 
-  },[userData])
+      setCards(filteredCards as CardsSchema);
+    }
+  }, [userData]);
 
   const handleConfirmation = (
     question: string,
@@ -551,6 +532,14 @@ export default function ContextProvider({
       (modal as HTMLDialogElement).showModal();
     }
     setMemoForPrintModal(selectedMemo);
+  };
+
+  const handleOffenseListClick = (offenseList: Offense[]) => {
+    const modal = document.getElementById("OffenseDownloadModal");
+    if (modal) {
+      (modal as HTMLDialogElement).showModal();
+    }
+    setOffenseListForModal(offenseList);
   };
 
   const highlightText = (text: string): JSX.Element[] => {
@@ -621,6 +610,9 @@ export default function ContextProvider({
     getOrdinal,
     imageModalId,
     setImageModalId,
+    handleOffenseListClick,
+    offenseListForModal,
+    setOffenseListForModal,
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

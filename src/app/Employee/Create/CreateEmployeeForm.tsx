@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 
 import { useAppContext } from "@/app/GlobalContext";
 
@@ -10,10 +10,12 @@ import { Employee } from "@/app/schemas/EmployeeSchema";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 
-import SelectPlus from "@/app/InputComponents/SelectPlus"; 
+import SelectPlus from "@/app/InputComponents/SelectPlus";
+
+import SignatureComponent from "../Signature/SignatureComponent";
 
 const CreateEmployeeForm = () => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const upload = new FirebaseUpload();
 
@@ -25,14 +27,13 @@ const CreateEmployeeForm = () => {
     router,
     loading,
     setLoading,
-    imageListForModal,
-    imageModalId,
   } = useAppContext();
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const defaultFormData = {
-    name: "",
+    firstName: "",
+    lastName: "",
     address: null,
     phoneNumber: null,
     photoOfPerson: null,
@@ -44,7 +45,8 @@ const CreateEmployeeForm = () => {
     isRegular: null,
     companyRole: null,
     dailyWage: null,
-    isOJT: null
+    isOJT: null,
+    employeeSignature: null,
   };
 
   const [formData, setFormData] = useState<Employee>(
@@ -56,16 +58,17 @@ const CreateEmployeeForm = () => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `${formData?.name} will be Created as an Employee`,
+      `${formData?.firstName} ${formData?.lastName} will be Created as an Employee`,
       "success"
     );
 
     setLoading(true);
+    // setConfirmSave(true);
 
     if (confirmed) {
       try {
         const finalFormData = {
-          ...formData, 
+          ...formData,
           _id: "",
           _version: 0,
         };
@@ -73,15 +76,23 @@ const CreateEmployeeForm = () => {
         if (formData.photoOfPerson) {
           const photoOfPerson = await upload.Images(
             [formData.photoOfPerson],
-            `employees/${formData.name}`,
+            `employees/${formData.firstName}${formData.lastName}`,
             "photoOfPerson"
           );
           finalFormData.photoOfPerson = photoOfPerson[0];
         }
+        if (formData.employeeSignature) {
+          const employeeSignature = await upload.Images(
+            [formData.employeeSignature],
+            `employees/${formData.firstName}${formData.lastName}`,
+            "employeeSignature"
+          );
+          finalFormData.employeeSignature = employeeSignature[0];
+        }
         if (formData.resumePhotosList && formData.resumePhotosList[0]) {
           const resumePhotosList = await upload.Images(
             formData.resumePhotosList,
-            `employees/${formData.name}`,
+            `employees/${formData.firstName}${formData.firstName}`,
             "resumePhotosList"
           );
           finalFormData.resumePhotosList = resumePhotosList;
@@ -89,7 +100,7 @@ const CreateEmployeeForm = () => {
         if (formData?.biodataPhotosList && formData?.biodataPhotosList[0]) {
           const biodataPhotosList = await upload.Images(
             formData.biodataPhotosList,
-            `employees/${formData.name}`,
+            `employees/${formData.firstName}${formData.firstName}`,
             "biodataPhotosList"
           );
           finalFormData.biodataPhotosList = biodataPhotosList;
@@ -130,9 +141,11 @@ const CreateEmployeeForm = () => {
           timer: 15,
         });
       } finally {
+        // setConfirmSave(false);
         setLoading(false);
       }
     } else {
+      // setConfirmSave(false);
       setLoading(false);
     }
   };
@@ -145,21 +158,55 @@ const CreateEmployeeForm = () => {
           ? e.target.value
           : parseFloat(e.target.value),
     });
-  };  
+  };
 
   const [companyOptions] = useState([
     { label: "Paper Boy", value: "PPB" },
     { label: "Pustanan", value: "PPC" },
     { label: "Best Bags", value: "BB" },
     { label: "Starpack", value: "SP" },
-  ] as { label: string; value: string }[]);  
+  ] as { label: string; value: string }[]);
+
+  const [updateSignature, setUpdateSignature] = useState<boolean>(true);
   
-  useEffect(() => {  
-    setFormData({
-      ...formData,
-      [imageModalId]: imageListForModal.length ? imageListForModal : null, 
-    });
-  }, [imageListForModal, imageModalId]); 
+  const employeeSignatureComponent = () => {
+    return (
+      <>
+        {!updateSignature ? (
+          <div className="flex flex-col w-full items-center ">
+            <span className="w-full">Employee Signature</span>
+            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip h-10 "
+              // onClick={() => !formData?.employeeSignature&&setUpdateSignature(true)}
+            >
+              <div className="h-[300px] flex items-center justify-center relative w-full">
+                <img
+                  src={formData?.employeeSignature as string}
+                  alt="Employee Signature"
+                  className=" m-1 h-full w-max"
+                />
+              </div>
+              <input
+                className="p-2 hover:text-secondary-content hover:bg-secondary bg-base-100 w-full border-t-2 border-black"
+                onClick={() => setUpdateSignature(true)}
+                type="button"
+                value="Update Signature"
+              />
+            </div>
+          </div>
+        ) : (
+          <SignatureComponent
+            title="Employee Signature"
+            setSignatureImageUrl={(url) => {
+              if (url) {
+                setFormData({ ...formData, employeeSignature: url });
+              }
+              setUpdateSignature(false);
+            }}
+          />
+        )}
+      </>
+    );
+  };
 
   return (
     <form
@@ -169,29 +216,28 @@ const CreateEmployeeForm = () => {
       ref={formRef}
       onSubmit={(e) => handleSubmit(e)}
     >
-      <h2 className="font-semibold w-max" >Employee Registry</h2>
+      <h2 className="font-semibold w-max text-blue-500">Employee Registry</h2>
 
       {/* name */}
-      <div className="flex flex-col text-sm gap-2 ">
-        Name
-        <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-4 text-gray-500"
-          >
-            <path
-              fillRule="evenodd"
-              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-              clipRule="evenodd"
-            />
-          </svg>
+      <div className="flex flex-wrap text-sm gap-2 justify-between">
+        <span className="w-full md:w-[48%] order-1">First Name</span>
+        <span className="w-full md:w-[48%] order-3 md:order-2">Last Name</span>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-2 md:order-3">
           <input
             type="text"
             className="grow"
-            placeholder="Name"
-            id="name"
+            placeholder="First Name"
+            id="firstName"
+            required
+            onChange={handleInputChange}
+          />
+        </label>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-4 ">
+          <input
+            type="text"
+            className="grow"
+            placeholder="Last Name"
+            id="lastName"
             required
             onChange={handleInputChange}
           />
@@ -209,6 +255,7 @@ const CreateEmployeeForm = () => {
             type="checkbox"
             name="show"
             id="show"
+            checked={show}
             onChange={(e) => setShow(e.target.checked)}
           />
           More Details
@@ -268,9 +315,9 @@ const CreateEmployeeForm = () => {
             width="w-full"
             inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
-            mediaList={ formData?.photoOfPerson ? [formData?.photoOfPerson ] : []} 
+            mediaList={formData?.photoOfPerson ? [formData?.photoOfPerson] : []}
             setFunction={setFormData}
-          /> 
+          />
 
           {/* resumePhotosList */}
           <ImageInput
@@ -283,7 +330,7 @@ const CreateEmployeeForm = () => {
             // onChangeHandler={handleFileChange}
             setFunction={setFormData}
             multiple={true}
-          /> 
+          />
 
           {/* biodataPhotosList */}
           <ImageInput
@@ -292,10 +339,20 @@ const CreateEmployeeForm = () => {
             width="w-full md:w-[48%]"
             inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
-            mediaList={formData?.biodataPhotosList || []} 
+            mediaList={formData?.biodataPhotosList || []}
             setFunction={setFormData}
             multiple={true}
-          /> 
+          />
+
+          {/* <ImageInput
+            id="employeeSignature"
+            title="Employee Signature"
+            width="w-full"
+            inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
+            imgDimensions={{ height: 60, width: 60 }}
+            mediaList={formData?.employeeSignature ? [formData?.employeeSignature] : []}
+            setFunction={setFormData}
+          /> */}
         </div>
 
         {/* E-mail */}
@@ -341,13 +398,32 @@ const CreateEmployeeForm = () => {
             Company
             <SelectPlus
               options={companyOptions}
-              onChange={(e, newValue) => { 
-                const valueToPass = typeof newValue == 'object' && newValue !== null ? (newValue as { value: string }).value?.toString() : newValue ? newValue?.toString() : null
+              onChange={(e, newValue) => {
+                const valueToPass =
+                  typeof newValue == "object" && newValue !== null
+                    ? (newValue as { value: string }).value?.toString()
+                    : newValue
+                    ? newValue?.toString()
+                    : null;
                 setFormData({ ...formData, company: valueToPass });
               }}
             />
           </div>
-        </div> 
+        </div>
+
+        {/* company role */}
+        <div className="flex flex-col text-sm gap-2 ">
+          Company Role
+          <label className="input input-bordered flex items-center gap-2">
+            <input
+              type="companyRole"
+              className="grow"
+              placeholder="Company Role"
+              id="companyRole"
+              onChange={handleInputChange}
+            />
+          </label>
+        </div>
 
         {/* company role */}
         <div className="flex flex-col text-sm gap-2 ">
@@ -437,6 +513,17 @@ const CreateEmployeeForm = () => {
             />
           </label>
         </div>
+
+          {/* Employee Signature */}
+        {/* <div className="flex flex-col w-full text-sm gap-2 mt-2">
+          <SignatureComponent
+            title="Employee Signature"
+            setSignatureImageUrl={(url) => {
+              setFormData({ ...formData, employeeSignature: url });
+            }}
+          />
+        </div> */}
+        {employeeSignatureComponent()}
       </div>
 
       {/* submit */}

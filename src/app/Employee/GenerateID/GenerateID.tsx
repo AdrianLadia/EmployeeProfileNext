@@ -73,7 +73,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
       const res = await serverRequests.getAllEmployeeID() 
 
-      const chosenID = res.data.find((ID: any) => ID._id == formData._id) 
+      const chosenID = res.data.find((ID: {_id:string, name:string, companyRole:string, IDCardURL:string}) => ID._id == formData._id) 
 
       if(chosenID){
         setIdURL(chosenID.IDCardURL)

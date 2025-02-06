@@ -73,7 +73,7 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
       >
         {/*  */}
         <div className="w-[75%] md:w-[480px] h-[83%]  shadow-md carousel border my-4">
-          {!idURL ? (
+          {loading || !idURL ? (
             renderPlaceholder()
           ) : (
             <Image

@@ -92,9 +92,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
   return (
     <>
       <div
-        className={`${
-          phase == 2 ? " border-transparent " : " shadow-xl "
-        } overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
+        className={` shadow-xl overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
       >
         {/* select employee*/}
         <EmployeeSelection

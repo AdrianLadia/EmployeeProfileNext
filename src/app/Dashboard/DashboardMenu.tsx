@@ -5,23 +5,23 @@ import React from "react";
 import { useAppContext } from "../GlobalContext";
 
 const DashboardMenu = () => {
-  const { serverRequests, loading, setLoading, userData, handleMemoTableModalClick } = useAppContext();
+  const { serverRequests, loading, setLoading, userData, handleMemoTableModalClick, handleOffenseListClick } = useAppContext();
 
-  // const fetchOffenseList = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await serverRequests.fetchOffenseList();
-  //     if(res?.data){
-  //       handleOffenseListClick(res.data);
-  //     }else{
-  //       console.error(res?.message);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const fetchOffenseList = async () => {
+    setLoading(true);
+    try {
+      const res = await serverRequests.fetchOffenseList();
+      if(res?.data){
+        handleOffenseListClick(res.data);
+      }else{
+        console.error(res?.message);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchRecentMemo = async () => {
     setLoading(true);
@@ -85,7 +85,7 @@ const DashboardMenu = () => {
             </svg>
             Recent Memos
           </a>
-          {/* <a onClick={fetchOffenseList} title="Offense List">
+          <a onClick={fetchOffenseList} title="Offense List">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -101,7 +101,7 @@ const DashboardMenu = () => {
               />
             </svg>
             Offense List
-          </a> */}
+          </a>
         </li>
       </ul>
     </div>

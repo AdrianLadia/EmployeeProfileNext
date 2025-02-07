@@ -10,18 +10,18 @@ const style: React.CSSProperties = {
   boxShadow: "24px",
   outline: 0,
   overflow: "clip",
-}; 
+};
 
-import OffenseTable from "./OffenseTable"; 
+import OffenseTable from "./OffenseTable";
 
 import { useAppContext } from "../GlobalContext";
 
-const OffenseTableModal= () => {
+const OffenseTableModal = () => {
   const { offenseListForModal, pathname } = useAppContext();
 
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const [loading, setLoading] = React.useState(false); 
+  const [loading, setLoading] = React.useState(false);
 
   const [hidden, setHidden] = React.useState(false);
 
@@ -62,7 +62,7 @@ const OffenseTableModal= () => {
         </style>
       </head>
       <body>`;
-      const postHtml = "</body></html>";
+    const postHtml = "</body></html>";
 
     if (!element) {
       console.error("Element not found");
@@ -85,17 +85,31 @@ const OffenseTableModal= () => {
 
     document.body.removeChild(downloadLink);
     setLoading(false);
-  } 
+  }
 
   React.useEffect(() => {
     if (pathname === "/") {
       setHidden(true);
-    }else{
+    } else {
       setHidden(false);
     }
-  },[pathname])
+  }, [pathname]);
 
   const [year] = React.useState(new Date().getFullYear());
+
+  // useEffect(() => {
+  //   if (!offenseListForModal.length) {
+  //     const timeout = setTimeout(() => {
+  //       const modal = document.getElementById("OffenseDownloadModal");
+  //       if (modal) {
+  //         (modal as HTMLDialogElement)?.showModal();
+  //       }
+  //     }, 1000);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [offenseListForModal]);
+
+  if(!offenseListForModal.length) return null;
 
   return (
     <dialog className=" modal " id="OffenseDownloadModal">
@@ -134,27 +148,50 @@ const OffenseTableModal= () => {
             </div>
 
             {/* THE MANAGEMENT */}
-            <div className={`${hidden&&"hidden"} flex justify-end gap-2 px-10 pt-16`} >
-              <div className="text-xl w-[30%] font-bold tracking-wider" id="textEnd">
+            <div
+              className={`${
+                hidden && "hidden"
+              } flex justify-end gap-2 px-10 pt-16`}
+            >
+              <div
+                className="text-xl w-[30%] font-bold tracking-wider"
+                id="textEnd"
+              >
                 THE MANAGEMENT
               </div>
             </div>
 
             {/*  Printed Name< */}
-            <div className={`${hidden&&"hidden"} flex items-center flex-col gap-2 px-10 pt-16 w-[80%] md:w-[40%]`} >
-              <div className=" border-b w-full border-black h-0" >                  </div>
+            <div
+              className={`${
+                hidden && "hidden"
+              } flex items-center flex-col gap-2 px-10 pt-16 w-[80%] md:w-[40%]`}
+            >
+              <div className=" border-b w-full border-black h-0">
+                                  
+              </div>
               <div id="textStart">Signature Over Printed Name:</div>
             </div>
 
             {/* Date */}
-            <div className={`${hidden&&"hidden"} flex items-center flex-col gap-2 px-10 pt-20 pb-10 w-[80%] md:w-[40%] `} >
-              <div className=" border-b border-black w-full h-0"  >                  </div>
+            <div
+              className={`${
+                hidden && "hidden"
+              } flex items-center flex-col gap-2 px-10 pt-20 pb-10 w-[80%] md:w-[40%] `}
+            >
+              <div className=" border-b border-black w-full h-0">
+                                  
+              </div>
               <div id="textStart">Date:</div>
             </div>
           </div>
           {/* content ref /> */}
 
-          <div className={`${hidden&&"hidden"} absolute bottom-5 w-full justify-center flex`}>
+          <div
+            className={`${
+              hidden && "hidden"
+            } absolute bottom-5 w-full justify-center flex`}
+          >
             <button
               onClick={convertToPdf}
               className="btn btn-info"

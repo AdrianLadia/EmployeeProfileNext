@@ -2,16 +2,6 @@
 
 import React from "react";
 
-const style: React.CSSProperties = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  boxShadow: "24px",
-  outline: 0,
-  overflow: "clip",
-};
-
 import OffenseTable from "./OffenseTable";
 
 import { useAppContext } from "../GlobalContext";
@@ -97,24 +87,11 @@ const OffenseTableModal = () => {
 
   const [year] = React.useState(new Date().getFullYear());
 
-  // useEffect(() => {
-  //   if (!offenseListForModal.length) {
-  //     const timeout = setTimeout(() => {
-  //       const modal = document.getElementById("OffenseDownloadModal");
-  //       if (modal) {
-  //         (modal as HTMLDialogElement)?.showModal();
-  //       }
-  //     }, 1000);
-  //     return () => clearTimeout(timeout);
-  //   }
-  // }, [offenseListForModal]);
-
   if(!offenseListForModal.length) return null;
 
   return (
     <dialog className=" modal " id="OffenseDownloadModal">
       <div
-        style={style}
         className={` relative h-[90vh] w-[98vw] md:w-[80vw] 2xl:w-[70vw] border bg-white text-black rounded-box`}
       >
         <div className="w-full h-full overflow-auto py-[8vh]">

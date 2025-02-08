@@ -9,6 +9,8 @@ from pydantic import BaseModel, Field, field_validator
 import requests
 from io import BytesIO
 from dotenv import load_dotenv
+from barcode import Code128
+from barcode.writer import ImageWriter
 
 load_dotenv()
 
@@ -65,7 +67,7 @@ class EmployeeIDCard(BaseModel):
         background_path = "server/IDassets/"
 
         if company == "PPC":
-            background_path += "ppcIDfront.png"
+            background_path += "ppcIDFront.png"
         if company == "BB":
             background_path += "bbIDfront.png"
         if company == "PPB":
@@ -89,14 +91,14 @@ class EmployeeIDCard(BaseModel):
         role_font = ImageFont.truetype(font_path, size=40)
         ref_id_font = ImageFont.truetype(font_path, size=30)
 
-        border_color = (0, 0, 0)
-        border_width = 10
-        draw.rectangle(
-            [(border_width, border_width),
-             (card_width - border_width, card_height - border_width)],
-            outline=border_color,
-            width=border_width,
-        )
+        # border_color = (0, 0, 0)
+        # border_width = 10
+        # draw.rectangle(
+        #     [(border_width, border_width),
+        #      (card_width - border_width, card_height - border_width)],
+        #     outline=border_color,
+        #     width=border_width,
+        # )
 
         if photo_path:
             try:
@@ -106,8 +108,17 @@ class EmployeeIDCard(BaseModel):
                     photo = Image.open(BytesIO(response.content)).resize(
                         (205, 200))
                 else:
-                    photo = Image.open(photo_path).resize((205, 200))
-                background.paste(photo, (195, 260))
+                    photo = Image.open(photo_path).resize((270, 269))
+
+                photo = photo.convert("RGBA")
+                circle_mask = Image.new("L", (photo.width, photo.height), 0)
+                draw_circle = ImageDraw.Draw(circle_mask)
+                draw_circle.ellipse((0, 0, photo.width, photo.height), fill=255)
+                photo = Image.composite(photo, Image.new("RGB", photo.size, "white"), circle_mask)
+
+                background.paste(photo, (160, 214), circle_mask)
+
+                # background.paste(photo, (195, 260))
             except Exception as e:
                 print(f"Error loading photo: {e}")
 
@@ -136,11 +147,12 @@ class EmployeeIDCard(BaseModel):
             y_text += role_font.size + 5
         # draw.text((255, 620), f"{type_of_employee}", fill="black", font=role_font)
 
-        ref_id_font = ImageFont.truetype(font_path, size=25)
-        draw.text((40, 850),
-                  f"ID no.: {ref_id}",
-                  fill="black",
-                  font=ref_id_font)
+        # ref_id_font = ImageFont.truetype(font_path, size=25)
+        # draw.text((40, 850),
+        #           f"ID no.: {ref_id}",
+        #           fill="black",
+        #           font=ref_id_font)
+
         # draw.text((180, 140), address, fill="black", font=ref_id_font)
         # address_lines = textwrap.wrap(address, width=30)
         # y_text = 170
@@ -151,12 +163,27 @@ class EmployeeIDCard(BaseModel):
         # draw.text((300, 130), f"Date Joined: {dateJoined}", fill="black", font=ref_id_font)
         # draw.text((50, 300), f"{company}", fill="black", font=ref_id_font)
 
-        qr = qrcode.QRCode(box_size=4, border=2)
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-        qr_code_img = qr.make_image(fill="black", back_color="white").resize(
-            (170, 170))
-        background.paste(qr_code_img, (215, 680))
+        # qr = qrcode.QRCode(box_size=4, border=2)
+        # qr.add_data(qr_data)
+        # qr.make(fit=True)
+        # qr_code_img = qr.make_image(fill="black", back_color="white").resize(
+        #     (170, 170))
+        # background.paste(qr_code_img, (215, 680))
+
+        barcode = Code128(ref_id, writer=ImageWriter())
+        options = {
+            'module_width': 0.5,
+            'module_height': 5.0,
+            'quiet_zone': 1.0,
+            'font_size': 0,
+            'text_distance': 0.0,
+            'background': 'white',
+            'foreground': 'black',
+            'write_text': False
+        }
+        barcode.save("Server/IDBarcodes/"+f"{name}", options=options)
+        barcode_img = Image.open(f"Server/IDBarcodes/{name}.png").resize((400, 130))
+        background.paste(barcode_img, (95, 777))
 
         directory = 'Server/EmployeeIDs/'
         if not os.path.exists(directory):
@@ -168,34 +195,34 @@ class EmployeeIDCard(BaseModel):
         background.save(output_path)
         print(f"ID card saved to {output_path}")
 
-        if not _apps:
-            cred = credentials.Certificate(
-                "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
-            )
-            initialize_app(cred, {
-                "storageBucket":
-                "pustananemployeeprofile.firebasestorage.app"
-            })
+        # if not _apps:
+        #     cred = credentials.Certificate(
+        #         "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
+        #     )
+        #     initialize_app(cred, {
+        #         "storageBucket":
+        #         "pustananemployeeprofile.firebasestorage.app"
+        #     })
 
-        bucket = storage.bucket()
-        blob = bucket.blob(
-            f"EmployeeIDs/{self.firstName+self.lastName}_id_card.png")
-        blob.upload_from_filename(output_path)
-        blob.make_public()
+        # bucket = storage.bucket()
+        # blob = bucket.blob(
+        #     f"EmployeeIDs/{self.firstName+self.lastName}_id_card.png")
+        # blob.upload_from_filename(output_path)
+        # blob.make_public()
 
-        download_url = blob.public_url
-        print(f"ID card uploaded to Firebase Storage" + download_url)
+        # download_url = blob.public_url
+        # print(f"ID card uploaded to Firebase Storage" + download_url)
 
-        to_return = {
-            "_id": self.id,
-            "name": self.firstName + " " + self.lastName,
-            "companyRole": self.companyRole,
-            "IDCardURL": download_url,
-        }
+        # to_return = {
+        #     "_id": self.id,
+        #     "name": self.firstName + " " + self.lastName,
+        #     "companyRole": self.companyRole,
+        #     "IDCardURL": download_url,
+        # }
 
-        print(to_return)
+        # print(to_return)
 
-        return to_return
+        # return to_return
 
         # back side of ID card
 
@@ -226,22 +253,23 @@ class EmployeeIDCard(BaseModel):
         # print(f"Back side of ID card saved to {back_output_path}")
 
 
-# employee = {
-#     "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
-#     "name": "Michael Flores",
-#     "address": "123 Main Street, Cebu City, Philippines",
-#     "phoneNumber": "+63 912 345 6789",
-#     "photoOfPerson": "server/test_assets/minor.png",
-#     "resumePhotosList": ["resume_page1.jpg", "resume_page2.jpg"],
-#     "biodataPhotosList": ["biodata_page1.jpg"],
-#     "email": "michael.flores@example.com",
-#     "dateJoined": datetime(2024, 1, 15).date(),
-#     "company": "PPC",
-#     "isRegular": False,
-#     "companyRole": "IT",
-#     "isOJT": True,
-#     "dailyWage": 800.50,
-#     "_version": 1,
-# }
+employee = {
+    "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
+    "firstName": "Michael Flores",
+    "lastName": "Cruz",
+    "address": "123 Main Street, Cebu City, Philippines",
+    "phoneNumber": "+63 912 345 6789",
+    "photoOfPerson": "server/test_assets/minor.png",
+    "resumePhotosList": ["resume_page1.jpg", "resume_page2.jpg"],
+    "biodataPhotosList": ["biodata_page1.jpg"],
+    "email": "michael.flores@example.com",
+    "dateJoined": datetime(2024, 1, 15).date(),
+    "company": "PPC",
+    "isRegular": False,
+    "companyRole": "IT",
+    "isOJT": True,
+    "dailyWage": 800.50,
+    "_version": 1,
+}
 
-# EmployeeIDCard(**employee).generate_id_card()
+EmployeeIDCard(**employee).generate_id_card()

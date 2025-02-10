@@ -7,6 +7,7 @@ import { Offense } from "../schemas/OffenseSchema";
 import { useAppContext } from "../GlobalContext";
 
 import { useSearchParams } from "next/navigation";
+import { off } from "process";
 
 interface OffenseTableProps {
   offenseList: Offense[];
@@ -17,7 +18,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
   offenseList,
   forPrint = false,
 }) => {
-  const { setLoading, setSearch, getOrdinal } = useAppContext();
+  const { setLoading, setSearch, getOrdinal, highlightText } = useAppContext();
 
   const [filteredOffenseList, setFilteredOffenseList] = React.useState<
     Offense[]
@@ -44,18 +45,22 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
       );
       setFilteredOffenseList(filteredList as Offense[]);
       setLoading(false);
+    }else{
+      setSearch("");
     }
-  }, [search]);
+  }, [search, offenseList]);
 
-  const wrapText = (text: string) => {
-    const lines = text.split("\n").filter((line) => line.trim() !== "");
+  // const wrapText = (text: string) => {
+  //   const lines = text.split("\n").filter((line) => line.trim() !== "");
 
-    const wrappedLines = lines.map((line) => `<span>${line.trim()}</span>`);
+  //   const wrappedLines = lines.map((line) => `<span className="text-error">${line.trim()}</span>`);
 
-    const result = wrappedLines.join("\n");
+  //   const result = wrappedLines.join("\n");
 
-    return <div dangerouslySetInnerHTML={{ __html: result }} />;
-  };
+  //   return <div dangerouslySetInnerHTML={{ __html: result }} />;
+  // };
+
+  console.log(offenseList)
 
   return (
     <table className={`w-full table ${!forPrint && "table-pin-rows "} h-full`}>
@@ -68,15 +73,15 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
         </tr>
       </thead>
       <tbody>
-        {offenseList?.map((offense) => (
+        {filteredOffenseList?.map((offense : Offense) => (
           <tr key={offense._id}>
             <td className="border text-center" id="violation">
-              <div className="flex w-full justify-center h-full ">
-                {offense?.title}
+              <div className=" ">
+                {highlightText(`${offense?.title}`)}
               </div>
             </td>
             <td className="border px-4 ">
-              <div className="flex flex-col justify-evenly h-max ">
+              <div className="flex flex-col justify-start h-max ">
                 {offense?.remedialActions?.map((action, index) => (
                   <>
                     <div
@@ -84,7 +89,8 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
                       className=" "
                       data-tip={`${getOrdinal(index + 1)} Offense`}
                     >
-                      {wrapText(`${getOrdinal(index + 1)}: ${action}`)}
+                      {/* {wrapText(`${getOrdinal(index + 1)}: ${action}`)} */}
+                      {highlightText(`${getOrdinal(index + 1)}: ${action}`)}
                     </div>
                     {index !== offense.remedialActions.length - 1 && <br />}
                   </>
@@ -94,7 +100,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
           </tr>
         ))}
 
-        {!filteredOffenseList.length && !offenseList.length && (
+        {!filteredOffenseList.length && (
           <tr>
             <td colSpan={4} className="text-center p-4">
               No results found
@@ -102,7 +108,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
           </tr>
         )}
       </tbody>
-      {!forPrint && (
+      {!forPrint && filteredOffenseList.length > 4 && (
         <tfoot>
           <tr className=" bg-base-200 divide-x ">
             <th className=" text-center p-2">Offense</th>

@@ -7,7 +7,6 @@ import { Offense } from "../schemas/OffenseSchema";
 import { useAppContext } from "../GlobalContext";
 
 import { useSearchParams } from "next/navigation";
-import { off } from "process";
 
 interface OffenseTableProps {
   offenseList: Offense[];
@@ -59,8 +58,6 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
 
   //   return <div dangerouslySetInnerHTML={{ __html: result }} />;
   // };
-
-  console.log(offenseList)
 
   return (
     <table className={`w-full table ${!forPrint && "table-pin-rows "} h-full`}>

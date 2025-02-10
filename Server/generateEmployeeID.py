@@ -106,15 +106,18 @@ class EmployeeIDCard(BaseModel):
                     response = requests.get(photo_path)
                     response.raise_for_status()
                     photo = Image.open(BytesIO(response.content)).resize(
-                        (205, 200))
+                        (270, 269))
                 else:
                     photo = Image.open(photo_path).resize((270, 269))
 
                 photo = photo.convert("RGBA")
                 circle_mask = Image.new("L", (photo.width, photo.height), 0)
                 draw_circle = ImageDraw.Draw(circle_mask)
-                draw_circle.ellipse((0, 0, photo.width, photo.height), fill=255)
-                photo = Image.composite(photo, Image.new("RGB", photo.size, "white"), circle_mask)
+                draw_circle.ellipse((0, 0, photo.width, photo.height),
+                                    fill=255)
+                photo = Image.composite(photo,
+                                        Image.new("RGB", photo.size, "white"),
+                                        circle_mask)
 
                 background.paste(photo, (160, 214), circle_mask)
 
@@ -196,6 +199,13 @@ class EmployeeIDCard(BaseModel):
 
         background.save(output_path)
         print(f"ID card saved to {output_path}")
+
+        # return {
+        #     "_id": self.id,
+        #     "name": self.firstName + " " + self.lastName,
+        #     "companyRole": self.companyRole,
+        #     "IDCardURL": output_path,
+        # }
 
         if not _apps:
             cred = credentials.Certificate(

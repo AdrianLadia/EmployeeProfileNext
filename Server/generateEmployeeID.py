@@ -122,30 +122,29 @@ class EmployeeIDCard(BaseModel):
             except Exception as e:
                 print(f"Error loading photo: {e}")
 
-        if len(name) > 10:
-            name_font = ImageFont.truetype(font_path, size=30)
-            # name = textwrap.fill(name, width=30)
-            x_text = 80
-        else:
-            x_text = 50
-            name_font = ImageFont.truetype(font_path, size=40)
+        draw.text((50, 630), f"Name:", fill="black", font=ImageFont.truetype(font_path, size=30))
+
+        name_font = ImageFont.truetype(font_path, size=35)
+        # name = textwrap.fill(name, width=30)
+        x_text = 140
 
         name_lines = textwrap.wrap(name, width=35)
         y_text = 630
+
         for line in name_lines:
-            draw.text((x_text, y_text), f"Name: {line}", fill="black", font=name_font)
+            draw.text((x_text, y_text), f" {line}", fill="black", font=name_font)
             y_text += name_font.size + 5
 
-        if len(type_of_employee) > 3:
-            x_text = 210
-        else:
-            x_text = 255
+
+        draw.text((50, 720), f"Role:", fill="black", font=ImageFont.truetype(font_path, size=30))
+
+        role_font = ImageFont.truetype(font_path, size=30)
+        x_text = 140
 
         type_of_employee_lines = textwrap.wrap(type_of_employee, width=35)
         y_text = 720
         for line in type_of_employee_lines:
             draw.text((x_text, y_text), line, fill="black", font=role_font)
-            y_text += role_font.size + 5
         # draw.text((255, 620), f"{type_of_employee}", fill="black", font=role_font)
 
         # ref_id_font = ImageFont.truetype(font_path, size=25)
@@ -171,6 +170,8 @@ class EmployeeIDCard(BaseModel):
         #     (170, 170))
         # background.paste(qr_code_img, (215, 680))
 
+        draw.text((130, 955), f"Property of Pustanan Printers. ©", fill="white", font=ImageFont.truetype(font_path, size=25))
+
         barcode = Code128(ref_id, writer=ImageWriter())
         options = {
             'module_width': 0.5,
@@ -182,9 +183,9 @@ class EmployeeIDCard(BaseModel):
             'foreground': 'black',
             'write_text': False
         }
-        barcode.save("Server/IDBarcodes/"+f"{name}", options=options)
+        barcode.save("Server/IDBarcodes/"+f"{name}")
         barcode_img = Image.open(f"Server/IDBarcodes/{name}.png").resize((400, 130))
-        background.paste(barcode_img, (95, 777))
+        background.paste(barcode_img, (95, 800))
 
         directory = 'Server/EmployeeIDs/'
         if not os.path.exists(directory):
@@ -196,34 +197,34 @@ class EmployeeIDCard(BaseModel):
         background.save(output_path)
         print(f"ID card saved to {output_path}")
 
-        # if not _apps:
-        #     cred = credentials.Certificate(
-        #         "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
-        #     )
-        #     initialize_app(cred, {
-        #         "storageBucket":
-        #         "pustananemployeeprofile.firebasestorage.app"
-        #     })
+        if not _apps:
+            cred = credentials.Certificate(
+                "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
+            )
+            initialize_app(cred, {
+                "storageBucket":
+                "pustananemployeeprofile.firebasestorage.app"
+            })
 
-        # bucket = storage.bucket()
-        # blob = bucket.blob(
-        #     f"EmployeeIDs/{self.firstName+self.lastName}_id_card.png")
-        # blob.upload_from_filename(output_path)
-        # blob.make_public()
+        bucket = storage.bucket()
+        blob = bucket.blob(
+            f"EmployeeIDs/{self.firstName+self.lastName}_id_card.png")
+        blob.upload_from_filename(output_path)
+        blob.make_public()
 
-        # download_url = blob.public_url
-        # print(f"ID card uploaded to Firebase Storage" + download_url)
+        download_url = blob.public_url
+        print(f"ID card uploaded to Firebase Storage" + download_url)
 
-        # to_return = {
-        #     "_id": self.id,
-        #     "name": self.firstName + " " + self.lastName,
-        #     "companyRole": self.companyRole,
-        #     "IDCardURL": download_url,
-        # }
+        to_return = {
+            "_id": self.id,
+            "name": self.firstName + " " + self.lastName,
+            "companyRole": self.companyRole,
+            "IDCardURL": download_url,
+        }
 
-        # print(to_return)
+        print(to_return)
 
-        # return to_return
+        return to_return
 
         # back side of ID card
 
@@ -256,8 +257,8 @@ class EmployeeIDCard(BaseModel):
 
 employee = {
     "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
-    "firstName": "Joseph Meljune",
-    "lastName": "Arnoco",
+    "firstName": "Val",
+    "lastName": "Letigio",
     "address": "123 Main Street, Cebu City, Philippines",
     "phoneNumber": "+63 912 345 6789",
     "photoOfPerson": "server/test_assets/minor.png",
@@ -267,7 +268,7 @@ employee = {
     "dateJoined": datetime(2024, 1, 15).date(),
     "company": "PPC",
     "isRegular": False,
-    "companyRole": "IT",
+    "companyRole": "IT HEAD",
     "isOJT": True,
     "dailyWage": 800.50,
     "_version": 1,

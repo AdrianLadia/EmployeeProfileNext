@@ -177,28 +177,48 @@ class EmployeeIDCard(BaseModel):
         #     (170, 170))
         # background.paste(qr_code_img, (215, 680))
 
+        print(employeeSignature, 'employeeSignature')
+
+        if employeeSignature:
+            try:
+                if employeeSignature.startswith("http"):
+                    response = requests.get(employeeSignature)
+                    response.raise_for_status()
+                    signature = Image.open(BytesIO(response.content))
+
+                    if signature.mode in ('RGBA', 'LA'):
+                        background_layer = Image.new('RGB', signature.size, (255, 255, 255))
+                        background_layer.paste(signature, mask=signature.split()[3])
+                        signature = background_layer
+
+                    signature = signature.resize((200, 100))
+                else:
+                    signature = Image.open(employeeSignature).resize((200, 100))
+
+                background.paste(signature, (80, 800))
+            except Exception as e:
+                print(f"Error loading signature: {e}")
+
         draw.text((130, 955), f"Property of Pustanan Printers. ©", fill="white", font=ImageFont.truetype(font_path, size=25))
 
-        barcode = Code128(ref_id, writer=ImageWriter())
-        options = {
-            'module_width': 0.5,
-            'module_height': 5.0,
-            'quiet_zone': 1.0,
-            'font_size': 0,
-            'text_distance': 0.0,
-            'background': 'white',
-            'foreground': 'black',
-            'write_text': False
-        }
-        barcode.save("Server/IDBarcodes/"+f"{name}")
-        barcode_img = Image.open(f"Server/IDBarcodes/{name}.png").resize((400, 130))
-        background.paste(barcode_img, (95, 800))
+        # barcode = Code128(ref_id, writer=ImageWriter())
+        # options = {
+        #     'module_width': 0.5,
+        #     'module_height': 5.0,
+        #     'quiet_zone': 1.0,
+        #     'font_size': 0,
+        #     'text_distance': 0.0,
+        #     'background': 'white',
+        #     'foreground': 'black',
+        #     'write_text': False
+        # }
+        # barcode.save("Server/IDBarcodes/"+f"{name}")
+        # barcode_img = Image.open(f"Server/IDBarcodes/{name}.png").resize((400, 130))
+        # background.paste(barcode_img, (95, 800))
 
         directory = 'Server/EmployeeIDs/'
         if not os.path.exists(directory):
             os.makedirs(directory)
-
-        
 
         output_path = os.path.join(
             directory, f"{self.firstName+self.lastName}_id_card.png")
@@ -286,6 +306,7 @@ employee = {
     "isRegular": False,
     "companyRole": "IT HEAD",
     "isOJT": True,
+    "employeeSignature": "https://firebasestorage.googleapis.com/v0/b/pustananemployeeprofile.firebasestorage.app/o/employees%2FValLetigio%2FemployeeSignature-53957-0?alt=media&token=0c9315d3-872b-4656-b563-915777ab4b05",
     "dailyWage": 800.50,
     "_version": 1,
 }

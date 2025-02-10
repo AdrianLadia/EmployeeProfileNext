@@ -451,6 +451,10 @@ class UserActions(User):
         if 'canGenerateEmployeeID' not in user['roles']['Employee']:
             raise ValueError('User does not have permission to generate Employee ID')
 
+        employeeID = db.read({'_id': employee['_id']}, 'EmployeeID')
+        if len(employeeID) > 0:
+            return employeeID[0]['IDCardURL']
+
         idGenerated = EmployeeIDCard(**employee).generate_id_card()
         print(idGenerated)
         db.create(idGenerated, 'EmployeeID')

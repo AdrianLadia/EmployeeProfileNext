@@ -28,7 +28,9 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
 
   const [formData, setFormData] = useState<Offense>({} as Offense);
 
-  const remedialActions = [
+  const [newAction, setNewAction] = useState<string>("");
+
+  const [remedialActions, setRemedialActions] = useState<string[]>([
     "Written-Reprimand",
     "Verbal Reprimand",
     "Verbal And Written Reprimand",
@@ -45,7 +47,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
     "3 Days Suspension + 7 Days Gadget Confiscation",
     "7 Days Suspension + 15 Days Gadget Confiscation",
     "15 Days Suspension + 30 Days Gadget Confiscation",
-  ];
+  ]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -106,13 +108,13 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
         setLoading(false);
         router.refresh();
       }
-    }else{
-      setLoading(false)
+    } else {
+      setLoading(false);
     }
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value; 
+    const value = event.target.value;
     setFormData((prevData) => {
       const remedialActions = prevData.remedialActions || [];
       return {
@@ -131,7 +133,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
       <div className="flex flex-col text-sm gap-2 mt-2">
         Offense
         <div className="w-full flex flex-col md:flex-row justify-start gap-2">
-          <input
+          {/* <input
             className="input input-bordered w-28 text-center "
             type="number"
             placeholder="Code"
@@ -141,7 +143,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFormData({ ...formData, number: parseInt(e.target.value) });
             }}
-          ></input>
+          ></input> */}
           <input
             className="input input-bordered w-full "
             type="text"
@@ -154,7 +156,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
           ></input>
         </div>
         {/* description */}
-        <textarea
+        {/* <textarea
           className="textarea textarea-bordered mt-1 min-h-[30vh]"
           placeholder="Offense Description"
           id="description"
@@ -173,7 +175,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
               textarea.value = value + "\n\n• ";
             }
           }}
-        ></textarea>
+        ></textarea> */}
       </div>
 
       {/* Remedial Actions */}
@@ -207,7 +209,9 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
             return (
               <div
                 key={index}
-                className={` indicator ${position && "md:tooltip tooltip-accent"}`}
+                className={` indicator ${
+                  position && "md:tooltip tooltip-accent"
+                }`}
                 data-tip={`Action on ${getOrdinal(position)} Offense`}
               >
                 <input
@@ -231,6 +235,25 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
               </div>
             );
           })}
+        </div>
+        <div className="flex flex-wrap gap-2 mt-3 px-3">
+          <h3 className="w-full">Add Other Remedial Action</h3>
+          <input
+            className="input input-bordered grow"
+            onChange={(e) => setNewAction(e.target.value)}
+            value={newAction}
+            type="text"
+            placeholder="New Action"
+          />
+          <input
+            className="btn btn-neutral"
+            type="button"
+            value="Add"
+            onClick={() => {
+              setRemedialActions((prev) => [...prev, newAction]);
+              setNewAction("");
+            }}
+          />
         </div>
       </div>
 

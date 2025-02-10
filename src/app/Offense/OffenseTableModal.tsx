@@ -87,7 +87,7 @@ const OffenseTableModal = () => {
 
   const [year] = React.useState(new Date().getFullYear());
 
-  if(!offenseListForModal.length) return null;
+  if (!offenseListForModal.length) return null;
 
   return (
     <dialog className=" modal " id="OffenseDownloadModal">
@@ -105,13 +105,156 @@ const OffenseTableModal = () => {
           </form>
 
           {/* </ content ref */}
-          <div ref={contentRef}>
+          <div
+            ref={contentRef}
+            className="flex flex-col items-center justify-center"
+          >
             {/* COMPANY HOUSE  */}
             <div className="w-full flex justify-center pt-10 text-center md:text-start">
               <h1 className="text-xl md:text-2xl xl:text-3xl tracking-wider font-bold">
                 COMPANY HOUSE RULES - {year}
               </h1>
+              <br />
+              <br />
+              <br />
             </div>
+
+            {/* intro */}
+            <div
+              id="textStart"
+              className="w-[90%] flex flex-col justify-center text-start "
+            >
+              The management is committed to uphold the basic rights of the
+              employees specially enshrined with the Labor Code of the
+              Philippines.
+              <br />
+              <br />
+              With regard to disciplinary action(s), substantial or disciplinary
+              action(s) must be pursuant to either a just or an authorized cause
+              under Articles (282) 297, (283) 298 or (284) 299 of the Labor
+              Code, this also includes the Company Rules and Regulations.
+              <br />
+              <br />
+              <br />
+              ART. 297. (282) Termination by Employer. An employer may terminate
+              an employment for any of the following causes:
+              <br />
+              <br />
+              <div className="px-4 text-start">
+                a. Serious misconduct or willful disobedience by the employee of
+                the lawful orders of his employer or representative in
+                connection with his work;
+                <br />
+                <br />
+                b. Gross and habitual neglect by the employee of his duties;
+                <br />
+                <br />
+                c. Fraud or willful breach by the employee of the trust reposed
+                in him by his employer or duly authorized representative;
+                <br />
+                <br />
+                d. Commission of a crime or offense by the employee against the
+                person of his employer or any immediate member of his family or
+                his duly authorized representatives; and
+                <br />
+                <br />
+                e. Other causes analogous to the foregoing
+              </div>
+            </div>
+
+            <div id="textStart" className="w-[90%] indent-4 ">
+              <br />
+              <br />
+              ART .298 (283) Closure of Establishment and Reduction of
+              Personnel. The employer may also terminate the employment of any
+              employee due to the installation of labor-saving devices,
+              redundancy , retrenchment to prevent losses or the closing or
+              cessation of operation of the establishment or undertaking unless
+              the closing is for the purpose of circumventing the provisions of
+              this Title , by serving a written notice on the workers and the
+              Ministry of Labor and Employment at least one (1) month before the
+              intended date thereof. In case of termination due to the
+              installation of labor-saving devices or redundancy, the worker
+              affected thereby shall be entitled to a separation pay equivalent
+              to the least one(1) month pay or to at least one (1) month pay for
+              every year of service, whichever is higher. In case of
+              retrenchment to prevent losses and in case of closures or
+              cessation of operations of the establishment or undertaking not
+              due to serious business losses or financial reverses, the
+              separation pay shall be equivalent to one (1) month pay or at
+              least one-half (½) month pay for every year of service, whichever
+              is higher. A fraction of at least six (6) months shall be
+              considered one (1) whole year.
+              <br />
+              <br />
+            </div>
+
+            <div id="textStart" className="w-[90%] indent-4 ">
+              <br />
+              ART.299. (284) Disease as Ground for Termination. An employer may
+              terminate the services of an employee who has been found suffering
+              from any disease and whose continued employment is prohibited by
+              law or is prejudicial to his health as well as to the health of
+              his co-employees: Provided , That he is paid separation pay
+              equivalent to at least one (1) month salary or to one-half(½)
+              month salary for every year of service whichever is greater, a
+              fraction of at least six (6) months being considered as one (1)
+              whole year.
+              <br />
+              <br />
+            </div>
+
+            <div id="textStart" className="w-[90%] flex flex-col ">
+              <br />
+              <span className="indent-4">
+                On the other hand , procedural due process in dismissal cases
+                consists of the twin requirements of notice and hearing.
+              </span>
+              <br />
+              <br />
+
+              <span className="indent-4">
+                All infractions committed by an employee must be penalized
+                according to the intensity or gravity and impact to the company
+                and its co-employees.
+              </span>
+              <br />
+              <br />
+
+              <span className="indent-4">
+                In disciplinary action cases, any report for infraction shall be
+                written form through incident report . The incident report shall
+                specify persons involved, the details of the incident such as
+                time, place, the kind of infraction committed and must be signed
+                by the reporter.
+              </span>
+              <br />
+              <br />
+              <br />
+            </div>
+
+            <div id="textStart" className="w-[90%] indent-4 pb-10">
+              After the receipt of the incident report, the Human Resource
+              Office shall issue a NOTICE TO EXPLAIN addressed to the persons
+              involved attached to it is the photocopy of the incident report
+              and evidence at hand. In the NTE, the infraction shall be
+              specified and the details shall be stated clearly. It should state
+              that the persons involved are ordered to submit his written
+              explanation within five (5) days from receipt thereof. Failure on
+              his part to submit a written explanation shall be considered a
+              waiver on his part to be heard.
+              <br />
+              <br />
+            </div>
+
+            <div className="w-[90%] pb-10">
+              <h3 className="text-center font-bold text-xl">Condonation</h3>
+              <p className="text-center">
+                The infractions committed by an employee shall be considered
+                condoned after five years from its commission or discovery.
+              </p>
+            </div>
+
             {/* REMEDIAL ACTION */}
             <div className="w-full flex justify-center pb-10 text-center md:text-start">
               <h2 className="text-xl md:text-2xl xl:text-3xl tracking-wider font-bold">
@@ -124,42 +267,18 @@ const OffenseTableModal = () => {
               <OffenseTable offenseList={offenseListForModal} forPrint={true} />
             </div>
 
-            {/* THE MANAGEMENT */}
-            <div
-              className={`${
-                hidden && "hidden"
-              } flex justify-end gap-2 px-10 pt-16`}
-            >
-              <div
-                className="text-xl w-[30%] font-bold tracking-wider"
-                id="textEnd"
-              >
-                THE MANAGEMENT
-              </div>
-            </div>
-
             {/*  Printed Name< */}
             <div
               className={`${
                 hidden && "hidden"
-              } flex items-center flex-col gap-2 px-10 pt-16 w-[80%] md:w-[40%]`}
+              } flex items-start flex-col gap-2 pt-20 w-[90%] `}
             >
-              <div className=" border-b w-full border-black h-0">
-                                  
+              <div className="w-[300px] ">
+                <div className=" border-b w-full border-black h-0" />
+                <div id="textStart" className="text-center">
+                  Signature Over Printed Name:
+                </div>
               </div>
-              <div id="textStart">Signature Over Printed Name:</div>
-            </div>
-
-            {/* Date */}
-            <div
-              className={`${
-                hidden && "hidden"
-              } flex items-center flex-col gap-2 px-10 pt-20 pb-10 w-[80%] md:w-[40%] `}
-            >
-              <div className=" border-b border-black w-full h-0">
-                                  
-              </div>
-              <div id="textStart">Date:</div>
             </div>
           </div>
           {/* content ref /> */}

@@ -113,8 +113,11 @@ class EmployeeIDCard(BaseModel):
                 photo = photo.convert("RGBA")
                 circle_mask = Image.new("L", (photo.width, photo.height), 0)
                 draw_circle = ImageDraw.Draw(circle_mask)
-                draw_circle.ellipse((0, 0, photo.width, photo.height), fill=255)
-                photo = Image.composite(photo, Image.new("RGB", photo.size, "white"), circle_mask)
+                draw_circle.ellipse((0, 0, photo.width, photo.height),
+                                    fill=255)
+                photo = Image.composite(photo,
+                                        Image.new("RGB", photo.size, "white"),
+                                        circle_mask)
 
                 background.paste(photo, (160, 214), circle_mask)
 
@@ -182,8 +185,9 @@ class EmployeeIDCard(BaseModel):
             'foreground': 'black',
             'write_text': False
         }
-        barcode.save("Server/IDBarcodes/"+f"{name}", options=options)
-        barcode_img = Image.open(f"Server/IDBarcodes/{name}.png").resize((400, 130))
+        barcode.save("Server/IDBarcodes/" + f"{name}", options=options)
+        barcode_img = Image.open(f"Server/IDBarcodes/{name}.png").resize(
+            (400, 130))
         background.paste(barcode_img, (95, 777))
 
         directory = 'Server/EmployeeIDs/'
@@ -195,6 +199,13 @@ class EmployeeIDCard(BaseModel):
 
         background.save(output_path)
         print(f"ID card saved to {output_path}")
+
+        return {
+            "_id": self.id,
+            "name": self.firstName + " " + self.lastName,
+            "companyRole": self.companyRole,
+            "IDCardURL": output_path,
+        }
 
         # if not _apps:
         #     cred = credentials.Certificate(
@@ -273,4 +284,4 @@ employee = {
     "_version": 1,
 }
 
-EmployeeIDCard(**employee).generate_id_card()
+# EmployeeIDCard(**employee).generate_id_card()

@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import qrcode
 import os
 from datetime import datetime
+import time
 from typing import Optional
 import textwrap
 from firebase_admin import credentials, storage, initialize_app, get_app, _apps
@@ -28,6 +29,7 @@ class EmployeeIDCard(BaseModel):
     company: str
     isRegular: Optional[bool] = False
     companyRole: str
+    employeeSignature: str
     isOJT: Optional[bool] = False
 
     def to_dict(self):
@@ -42,6 +44,7 @@ class EmployeeIDCard(BaseModel):
             "company": self.company,
             "isRegular": self.isRegular,
             "companyRole": self.companyRole,
+            "employeeSignature": self.employeeSignature,
             "isOJT": self.isOJT,
         }
 
@@ -55,10 +58,11 @@ class EmployeeIDCard(BaseModel):
         photo_path = self.photoOfPerson
         dateJoined = self.dateJoined
         company = self.company
-        isRegular = self.isRegular
-        isOJT = self.isOJT
+        # isRegular = self.isRegular
+        # isOJT = self.isOJT
         type_of_employee = self.companyRole
-        qr_data = ref_id
+        # qr_data = ref_id
+        employeeSignature = self.employeeSignature
 
         card_width, card_height = 591, 1004
 
@@ -194,6 +198,8 @@ class EmployeeIDCard(BaseModel):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
+        
+
         output_path = os.path.join(
             directory, f"{self.firstName+self.lastName}_id_card.png")
 
@@ -222,7 +228,7 @@ class EmployeeIDCard(BaseModel):
         blob.upload_from_filename(output_path)
         blob.make_public()
 
-        download_url = blob.public_url
+        download_url = f"{blob.public_url}?updated={int(time.time())}"
         print(f"ID card uploaded to Firebase Storage" + download_url)
 
         to_return = {

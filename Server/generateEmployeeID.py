@@ -9,14 +9,18 @@ from pydantic import BaseModel, Field, field_validator
 import requests
 from io import BytesIO
 from dotenv import load_dotenv
+from barcode import Code128
+from barcode.writer import ImageWriter
 
 load_dotenv()
 
 isTest = os.getenv("NEXT_PUBLIC_CYPRESS_IS_TEST_ENV")
 
+
 class EmployeeIDCard(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
-    name: str
+    firstName: str
+    lastName: str
     address: str
     phoneNumber: str
     photoOfPerson: str
@@ -29,7 +33,8 @@ class EmployeeIDCard(BaseModel):
     def to_dict(self):
         return {
             "_id": self.id,
-            "name": self.name,
+            "firstName": self.firstName,
+            "lastName": self.lastName,
             "address": self.address,
             "phoneNumber": self.phoneNumber,
             "photoOfPerson": self.photoOfPerson,
@@ -42,7 +47,9 @@ class EmployeeIDCard(BaseModel):
 
     def generate_id_card(self):
         ref_id = self.id
-        name = self.name
+        # firstName = self.firstName
+        # lastName = self.lastName
+        name = self.firstName + ' ' + self.lastName
         address = self.address
         phoneNumber = self.phoneNumber
         photo_path = self.photoOfPerson
@@ -60,7 +67,7 @@ class EmployeeIDCard(BaseModel):
         background_path = "server/IDassets/"
 
         if company == "PPC":
-            background_path += "ppcIDfront.png"
+            background_path += "ppcIDFront.png"
         if company == "BB":
             background_path += "bbIDfront.png"
         if company == "PPB":
@@ -72,7 +79,8 @@ class EmployeeIDCard(BaseModel):
             background_path += "ppcIDfront.png"
 
         try:
-            background = Image.open(background_path).resize((card_width, card_height))
+            background = Image.open(background_path).resize(
+                (card_width, card_height))
         except Exception as e:
             print(f"Error loading background image: {e}")
 
@@ -83,39 +91,50 @@ class EmployeeIDCard(BaseModel):
         role_font = ImageFont.truetype(font_path, size=40)
         ref_id_font = ImageFont.truetype(font_path, size=30)
 
-        border_color = (0, 0, 0)
-        border_width = 10
-        draw.rectangle(
-            [(border_width, border_width), (card_width - border_width, card_height - border_width)],
-            outline=border_color,
-            width=border_width,
-        )
+        # border_color = (0, 0, 0)
+        # border_width = 10
+        # draw.rectangle(
+        #     [(border_width, border_width),
+        #      (card_width - border_width, card_height - border_width)],
+        #     outline=border_color,
+        #     width=border_width,
+        # )
 
         if photo_path:
             try:
                 if photo_path.startswith("http"):
                     response = requests.get(photo_path)
                     response.raise_for_status()
-                    photo = Image.open(BytesIO(response.content)).resize((205, 200))
+                    photo = Image.open(BytesIO(response.content)).resize(
+                        (205, 200))
                 else:
-                    photo = Image.open(photo_path).resize((205, 200))
-                background.paste(photo, (195, 260))
+                    photo = Image.open(photo_path).resize((270, 269))
+
+                photo = photo.convert("RGBA")
+                circle_mask = Image.new("L", (photo.width, photo.height), 0)
+                draw_circle = ImageDraw.Draw(circle_mask)
+                draw_circle.ellipse((0, 0, photo.width, photo.height), fill=255)
+                photo = Image.composite(photo, Image.new("RGB", photo.size, "white"), circle_mask)
+
+                background.paste(photo, (160, 214), circle_mask)
+
+                # background.paste(photo, (195, 260))
             except Exception as e:
                 print(f"Error loading photo: {e}")
 
-        if len(name) > 30:
+        if len(name) > 10:
             name_font = ImageFont.truetype(font_path, size=30)
             # name = textwrap.fill(name, width=30)
             x_text = 80
         else:
-            x_text = 130
+            x_text = 50
+            name_font = ImageFont.truetype(font_path, size=40)
 
         name_lines = textwrap.wrap(name, width=35)
-        y_text = 530
+        y_text = 630
         for line in name_lines:
-            draw.text((x_text, y_text), line, fill="black", font=name_font)
+            draw.text((x_text, y_text), f"Name: {line}", fill="black", font=name_font)
             y_text += name_font.size + 5
-
 
         if len(type_of_employee) > 3:
             x_text = 210
@@ -123,14 +142,18 @@ class EmployeeIDCard(BaseModel):
             x_text = 255
 
         type_of_employee_lines = textwrap.wrap(type_of_employee, width=35)
-        y_text = 620
+        y_text = 720
         for line in type_of_employee_lines:
             draw.text((x_text, y_text), line, fill="black", font=role_font)
             y_text += role_font.size + 5
         # draw.text((255, 620), f"{type_of_employee}", fill="black", font=role_font)
 
-        ref_id_font = ImageFont.truetype(font_path, size=25)
-        draw.text((40, 850), f"ID no.: {ref_id}", fill="black", font=ref_id_font)
+        # ref_id_font = ImageFont.truetype(font_path, size=25)
+        # draw.text((40, 850),
+        #           f"ID no.: {ref_id}",
+        #           fill="black",
+        #           font=ref_id_font)
+
         # draw.text((180, 140), address, fill="black", font=ref_id_font)
         # address_lines = textwrap.wrap(address, width=30)
         # y_text = 170
@@ -141,45 +164,66 @@ class EmployeeIDCard(BaseModel):
         # draw.text((300, 130), f"Date Joined: {dateJoined}", fill="black", font=ref_id_font)
         # draw.text((50, 300), f"{company}", fill="black", font=ref_id_font)
 
-        qr = qrcode.QRCode(box_size=4, border=2)
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-        qr_code_img = qr.make_image(fill="black", back_color="white").resize((170, 170))
-        background.paste(qr_code_img, (215, 680))
+        # qr = qrcode.QRCode(box_size=4, border=2)
+        # qr.add_data(qr_data)
+        # qr.make(fit=True)
+        # qr_code_img = qr.make_image(fill="black", back_color="white").resize(
+        #     (170, 170))
+        # background.paste(qr_code_img, (215, 680))
+
+        barcode = Code128(ref_id, writer=ImageWriter())
+        options = {
+            'module_width': 0.5,
+            'module_height': 5.0,
+            'quiet_zone': 1.0,
+            'font_size': 0,
+            'text_distance': 0.0,
+            'background': 'white',
+            'foreground': 'black',
+            'write_text': False
+        }
+        barcode.save("Server/IDBarcodes/"+f"{name}", options=options)
+        barcode_img = Image.open(f"Server/IDBarcodes/{name}.png").resize((400, 130))
+        background.paste(barcode_img, (95, 777))
 
         directory = 'Server/EmployeeIDs/'
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        output_path = os.path.join(directory, f"{self.name.replace(' ', '_')}_id_card.png")
+        output_path = os.path.join(
+            directory, f"{self.firstName+self.lastName}_id_card.png")
 
         background.save(output_path)
         print(f"ID card saved to {output_path}")
 
+        # if not _apps:
+        #     cred = credentials.Certificate(
+        #         "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
+        #     )
+        #     initialize_app(cred, {
+        #         "storageBucket":
+        #         "pustananemployeeprofile.firebasestorage.app"
+        #     })
 
-        if not _apps:
-            cred = credentials.Certificate("Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json")
-            initialize_app(cred, {"storageBucket": "pustananemployeeprofile.firebasestorage.app"})
+        # bucket = storage.bucket()
+        # blob = bucket.blob(
+        #     f"EmployeeIDs/{self.firstName+self.lastName}_id_card.png")
+        # blob.upload_from_filename(output_path)
+        # blob.make_public()
 
-        bucket = storage.bucket()
-        blob = bucket.blob(f"EmployeeIDs/{self.name.replace(' ', '_')}_id_card.png")
-        blob.upload_from_filename(output_path)
-        blob.make_public()
+        # download_url = blob.public_url
+        # print(f"ID card uploaded to Firebase Storage" + download_url)
 
-        download_url = blob.public_url
-        print(f"ID card uploaded to Firebase Storage" + download_url)
+        # to_return = {
+        #     "_id": self.id,
+        #     "name": self.firstName + " " + self.lastName,
+        #     "companyRole": self.companyRole,
+        #     "IDCardURL": download_url,
+        # }
 
-        to_return = {
-            "_id": self.id,
-            "name": self.name,
-            "companyRole": self.companyRole,
-            "IDCardURL": download_url,
-        }
+        # print(to_return)
 
-        print(to_return)
-
-        return to_return
-
+        # return to_return
 
         # back side of ID card
 
@@ -210,10 +254,10 @@ class EmployeeIDCard(BaseModel):
         # print(f"Back side of ID card saved to {back_output_path}")
 
 
-
 employee = {
     "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
-    "name": "Michael Flores",
+    "firstName": "Joseph Meljune",
+    "lastName": "Arnoco",
     "address": "123 Main Street, Cebu City, Philippines",
     "phoneNumber": "+63 912 345 6789",
     "photoOfPerson": "server/test_assets/minor.png",
@@ -229,5 +273,4 @@ employee = {
     "_version": 1,
 }
 
-# EmployeeIDCard(**employee).generate_id_card()
-
+EmployeeIDCard(**employee).generate_id_card()

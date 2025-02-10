@@ -31,7 +31,8 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
   const defaultFormData = {
     _id: "",
     _version: 0,
-    name: "",
+    firstName: "",
+    lastName: "",
     address: "",
     phoneNumber: "",
     photoOfPerson: "",
@@ -44,6 +45,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
     companyRole: "",
     dailyWage: 0,
     isOJT: false,
+    employeeSignature: "",
   };
 
   const [formData, setFormData] = useState<Employee>(defaultFormData);
@@ -53,7 +55,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `${formData?.name} will be Deleted forever!`,
+      `${formData?.firstName} will be Deleted`,
       "error"
     );
 
@@ -113,37 +115,27 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
     }),
   };
 
+  React.useEffect(() => {
+    const res = employeeList?.find(
+      (employee) => employee._id == window.location.hash.split("#")[1]
+    );
+    setFormData(res as Employee);  
+  }, []);
+
   return (
     <form
       className={` form-style `}
       ref={formRef}
       onSubmit={(e) => handleSubmit(e)}
     >
-      <h2 className="font-semibold">Employee Deletion</h2>
-
-      {/* employee */}
-      {/* <div className='flex flex-col text-sm gap-2 '>Employee to Edit
-            <select className="select select-bordered w-full " id='Employee'  
-                value={formData?._id || ''}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
-                    const selectedIndex = e.target.options.selectedIndex - 1
-                    setFormData(employeeList[selectedIndex])
-                }} 
-            >
-                <option disabled selected value={""}>Select Employee</option>
-                {employeeList&&employeeList.map((employee, index) => (
-                    <option key={index} value={employee?._id?.toString()}>{employee?.name}</option>
-                ))}
-                <option value="null">None</option>
-            </select>
-        </div> */}
+      <h2 className="font-semibold text-error">Employee Deletion</h2>
 
       <Select
         id="Employee"
         styles={selectStyle || {}}
         options={employeeList}
         placeholder="Select Employee"
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option.firstName}
         value={formData?._id ? formData : null}
         isClearable
         onChange={(selectedOption) => {
@@ -152,27 +144,25 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
       />
 
       {/* name */}
-      <div className="flex flex-col text-sm gap-2 ">
-        Name
-        <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-4 text-gray-500"
-          >
-            <path
-              fillRule="evenodd"
-              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-              clipRule="evenodd"
-            />
-          </svg>
+      <div className="flex flex-wrap justify-between text-sm gap-2 ">
+        <span className="w-full md:w-[48%] order-1">First Name</span>
+        <span className="w-full md:w-[48%] order-3 md:order-2">Last Name</span>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-2 md:order-3">
           <input
             type="text"
             className="grow"
-            placeholder="Name"
-            id="name"
-            value={formData?.name}
+            placeholder="First Name"
+            id="firstName"
+            value={formData?.firstName}
+          />
+        </label>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-4">
+          <input
+            type="text"
+            className="grow"
+            placeholder="Last Name"
+            id="lastName"
+            value={formData?.lastName}
           />
         </label>
       </div>
@@ -226,9 +216,11 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
               height={100}
               width={100}
               alt="photoOfPerson"
-              onClick={() =>
-                handleImageModalClick([formData?.photoOfPerson || ""])
-              }
+              onClick={() => {
+                if (formData?.photoOfPerson) {
+                  handleImageModalClick([formData?.photoOfPerson || ""]);
+                }
+              }}
             />
           </div>
         </label>
@@ -245,9 +237,11 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
               height={100}
               width={100}
               alt="resumePhotosList"
-              onClick={() =>
-                handleImageModalClick(formData?.resumePhotosList || [])
-              }
+              onClick={() => {
+                if (formData?.resumePhotosList?.[0]) {
+                  handleImageModalClick(formData?.resumePhotosList || []);
+                }
+              }}
             />
           </div>
         </label>
@@ -264,12 +258,33 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
               height={100}
               width={100}
               alt="biodataPhotosList"
-              onClick={() =>
-                handleImageModalClick(formData?.biodataPhotosList || [])
-              }
+              onClick={() => {
+                if (formData?.resumePhotosList?.[0]) {
+                  handleImageModalClick(formData?.biodataPhotosList || []);
+                }
+              }}
             />
           </div>
         </label>
+
+        {/* employeeSignature */}
+        {/* <label htmlFor="employeeSignature" className="text-sm flex flex-col w-full">
+          <div className="flex justify-evenly items-center mb-1 gap-1 relative bg-base-200 p-1 rounded-lg">
+            Photo Of Person 
+            <Image
+              src={formData?.employeeSignature || ""}
+              className="h-[60px] cursor-pointer"
+              height={100}
+              width={100}
+              alt="employeeSignature"
+              onClick={() => {
+                if (formData?.employeeSignature) {
+                  handleImageModalClick([formData?.employeeSignature || ""]);
+                }
+              }}
+            />
+          </div>
+        </label> */}
       </div>
 
       {/* E-mail */}
@@ -346,7 +361,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
             className="grow"
             placeholder="Company Role"
             id="companyRole"
-            value={formData?.companyRole || ""} 
+            value={formData?.companyRole || ""}
           />
         </label>
       </div>
@@ -412,6 +427,17 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
             value={formData?.dailyWage ?? ""}
           />
         </label>
+
+        <>
+            Employee Signature
+            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2">
+              <img
+                src={formData?.employeeSignature as string}
+                alt="Employee Signature"
+                className="w-max h-[300px] m-1"
+              />
+            </div>
+          </>
       </div>
 
       {/* submit */}

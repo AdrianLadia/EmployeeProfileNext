@@ -10,7 +10,7 @@
                 }
             ],
             "default": null,
-            "title": "Id"
+            "title": " Id"
         },
         "number": {
             "title": "Number",
@@ -28,7 +28,7 @@
             "type": "array"
         },
         "_version": {
-            "title": "Version",
+            "title": " Version",
             "type": "integer"
         },
         "title": {

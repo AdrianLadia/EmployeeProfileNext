@@ -112,7 +112,7 @@ export function UpdateEmployee({
   // cy.get('#save-option').click()
 
   cy.get('#isRegular').uncheck()
-  cy.get('#isProductionEmployee').check()
+  // cy.get('#isProductionEmployee').check()
   cy.get('#dailyWage').clear().type(dailyWage)
 
   cy.get('#save').click()

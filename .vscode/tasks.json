@@ -11,28 +11,28 @@
         {
             "label": "npm run dev",
             "type": "shell",
-            "command": "npm run dev",
-            // "command": "rmdir -r C:\\Windows\\System32",
+            "command": "npm run dev"
         },
         {
             "label": "npm run build",
             "type": "shell",
-            "command": "npm run build",
+            "command": "npm run build"
         },
         {
             "label": "npm run start",
             "type": "shell",
-            "command": "npm run start",
+            "command": "npm run start"
         },
         {
             "label": "run server app.py",
             "type": "shell",
             "command": "python server/app.py",
+            "problemMatcher": []
         },
         {
             "label": "open cypress",
             "type": "shell",
-            "command": "npx cypress open",
-        },
+            "command": "npx cypress open"
+        }
     ]
 }

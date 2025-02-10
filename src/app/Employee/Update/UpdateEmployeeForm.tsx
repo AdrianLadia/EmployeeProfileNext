@@ -16,6 +16,7 @@ import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
 
 import SelectPlus from "@/app/InputComponents/SelectPlus";
+import SignatureComponent from "../Signature/SignatureComponent";
 
 interface UpdateEmployeeForm {
   employeeList: Employee[];
@@ -30,9 +31,9 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     router,
     loading,
     setLoading,
-    imageListForModal,
-    imageModalId,
     pathname,
+    imageListForModal,
+    imageModalId
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -42,11 +43,14 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
   const [disable, setDisable] = useState(true);
   const [disableSaveButton, setDisableSaveButton] = useState(true);
 
+  const [updateSignature, setUpdateSignature] = useState(false);
+
   const [dataToUpdate, setDataToUpdate] = useState<DataToUpdate>({});
 
   const defaultFormData = {
     _id: "",
-    name: "",
+    lastName: "",
+    firstName: "",
     address: null,
     phoneNumber: null,
     photoOfPerson: null,
@@ -59,6 +63,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     companyRole: null,
     dailyWage: null,
     isOJT: null,
+    employeeSignature: null,
   };
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(
@@ -73,7 +78,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `Update changes you've made for ${formData?.name}`,
+      `Update changes you've made for ${formData?.firstName}`,
       ""
     );
 
@@ -81,17 +86,27 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
     if (confirmed) {
       try {
-        if (
-          dataToUpdate?.photoOfPerson &&
-          typeof dataToUpdate.photoOfPerson != "string"
-        ) {
+        if (dataToUpdate?.photoOfPerson) {
           try {
             const res = await upload.Images(
               [formData.photoOfPerson || ""],
-              `employees/${formData.name}`,
+              `employees/${formData.firstName} ${formData.lastName}`,
               "photoOfPerson"
             );
             dataToUpdate.photoOfPerson = res[0] || "";
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        if (dataToUpdate?.employeeSignature) {
+          try {
+            const res = await upload.Images(
+              [formData.employeeSignature || ""],
+              `employees/${formData.firstName} ${formData.lastName}`,
+              "employeeSignature"
+            );
+            dataToUpdate.employeeSignature = res[0] || "";
           } catch (e) {
             console.error(e);
           }
@@ -101,7 +116,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           try {
             const res = await upload.Images(
               formData.biodataPhotosList || [],
-              `employees/${formData.name}`,
+              `employees/${formData.firstName} ${formData.lastName}`,
               "biodataPhotosList"
             );
             dataToUpdate.biodataPhotosList = res || [];
@@ -114,7 +129,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           try {
             const res = await upload.Images(
               formData.resumePhotosList || [],
-              `employees/${formData.name}`,
+              `employees/${formData.firstName} ${formData.lastName}`,
               "resumePhotosList"
             );
             dataToUpdate.resumePhotosList = res || [];
@@ -124,6 +139,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         }
 
         const form = e.target as HTMLFormElement;
+
+        console.log()
 
         const res = await serverRequests.updateEmployee(
           selectedEmployee,
@@ -144,7 +161,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           });
           formRef.current?.scrollIntoView({ behavior: "smooth" });
           router.refresh();
-          console.log(res)
         } else {
           setToastOptions({
             open: true,
@@ -203,7 +219,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           // Check if all files have been processed
           if (fileDataUrls.length === files.length) {
             const finalResult =
-              e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+              e.target.id === "photoOfPerson" ||
+              e.target.id === "employeeSignature"
+                ? fileDataUrls[0]
+                : fileDataUrls;
 
             setFormData({
               ...formData,
@@ -221,7 +240,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
   };
 
   useEffect(() => {
-    if (selectedEmployee?.name) {
+    if (selectedEmployee?.firstName) {
       setDisable(false);
     } else {
       setDisable(true);
@@ -235,6 +254,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       setDataToUpdate({});
     } else {
       setDisableSaveButton(false);
+    }
+
+    if (formData?.employeeSignature == "") {
+      setUpdateSignature(false);
     }
   }, [selectedEmployee, formData]);
 
@@ -260,20 +283,24 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     { label: "Starpack", value: "SP" },
   ] as { label: string; value: string }[]);
 
+  // onclick delete button from image modal, handler
   useEffect(() => {
-    setFormData({
-      ...formData,
-      [imageModalId]: imageListForModal.length ? imageListForModal : null,
-    });
-    setDataToUpdate({
-      ...dataToUpdate,
-      [imageModalId]: imageListForModal.length ? imageListForModal : null,
-    });
+    const nonArrayKeys = ["photoOfPerson", "employeeSignature"];
+    if (imageListForModal && imageModalId) {
+      setFormData({
+        ...formData,
+        [imageModalId]: nonArrayKeys.includes(imageModalId) ? imageListForModal[0] : imageListForModal,
+      });
+      setDataToUpdate({
+        ...dataToUpdate,
+        [imageModalId]: nonArrayKeys.includes(imageModalId) ? imageListForModal[0] : imageListForModal,
+      });
+    }
   }, [imageListForModal, imageModalId]);
 
   useEffect(() => {
     if (selectedEmployee?._id) {
-      const res = companyOptions.find(
+      const res = companyOptions?.find(
         (company) => company.value == selectedEmployee.company
       );
       if ((res == undefined || !res) && selectedEmployee?.company) {
@@ -289,7 +316,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
   }, [selectedEmployee]);
 
   useEffect(() => {
-    const res = employeeList.find(
+    const res = employeeList?.find(
       (employee) => employee._id == window.location.hash.split("#")[1]
     );
     setSelectedEmployee(res as Employee);
@@ -298,19 +325,59 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     setDisableSaveButton(false);
   }, []);
 
+  const employeeSignatureComponent = () => {
+    return (
+      <>
+        {formData?.employeeSignature && !updateSignature ? (
+          <div className="flex flex-col w-full items-center">
+            <span className="w-full">Employee Signature</span>
+            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip">
+              <div className="h-[300px] flex items-center justify-center relative w-full">
+                <img
+                  src={formData?.employeeSignature as string}
+                  alt="Employee Signature"
+                  className=" m-1 h-full w-max"
+                />
+              </div>
+              <input
+                className="p-2 hover:text-secondary-content hover:bg-secondary bg-base-100 w-full border-t-2 border-black"
+                onClick={() => setUpdateSignature(true)}
+                type="button"
+                value="Update Signature"
+              />
+            </div>
+          </div>
+        ) : (
+          <SignatureComponent
+            title="Employee Signature"
+            setSignatureImageUrl={(url) => {
+              if (url) {
+                setFormData({ ...formData, employeeSignature: url });
+                setDataToUpdate({ ...dataToUpdate, employeeSignature: url });
+              } else {
+                setDataToUpdate({ ...dataToUpdate, employeeSignature: null });
+              }
+              setUpdateSignature(false);
+            }}
+          />
+        )}
+      </>
+    );
+  };
+
   return (
     <form
       className={` ${loading && "cursor-wait"} form-style `}
       ref={formRef}
       onSubmit={(e) => handleSubmit(e)}
     >
-      <h2 className="font-semibold">Update Employee</h2>
+      <h2 className="font-semibold text-violet-500">Update Employee</h2>
 
       <Select
         styles={selectStyle}
         options={employeeList}
         placeholder="Select Employee"
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option.firstName + " " + option.lastName}
         isClearable
         value={selectedEmployee?._id ? selectedEmployee : null}
         onChange={(selectedOption) => {
@@ -335,28 +402,30 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       />
 
       {/* name */}
-      <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
-        Name
-        <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-4 text-gray-500"
-          >
-            <path
-              fillRule="evenodd"
-              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-              clipRule="evenodd"
-            />
-          </svg>
+      <div
+        className={`flex flex-wrap justify-between text-sm gap-2 ${labelStyle}`}
+      >
+        <span className="w-full md:w-[48%] order-1">First Name</span>
+        <span className="w-full md:w-[48%] order-3 md:order-2">Last Name</span>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-2 md:order-3">
           <input
             type="text"
             className="grow"
-            placeholder="Name"
-            id="name"
+            placeholder="First Name"
+            id="firstName"
             disabled={disable}
-            value={formData?.name || ""}
+            value={formData?.firstName || ""}
+            onChange={handleInputChange}
+          />
+        </label>
+        <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-4">
+          <input
+            type="text"
+            className="grow"
+            placeholder="Last Name"
+            id="lastName"
+            disabled={disable}
+            value={formData?.lastName || ""}
             onChange={handleInputChange}
           />
         </label>
@@ -616,6 +685,9 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             onChange={handleInputChange}
           />
         </label>
+        <div className="flex flex-col w-full text-sm gap-2 mt-2">
+          {employeeSignatureComponent()}
+        </div>
       </div>
 
       {/* submit */}

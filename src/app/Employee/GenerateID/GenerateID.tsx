@@ -28,15 +28,15 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
     e.preventDefault();
 
     try {
-      setIdURL("");
       setLoading(true);
 
-      const res = await serverRequests.generateEmployeeID(formData, userData);
+      const res = await serverRequests.generateEmployeeID(userData, formData);
 
       console.log(res)
 
       if (res?.error) {
         console.error(res.error);
+        // setIdURL()
       }
 
       if (res?.data) {
@@ -52,7 +52,8 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
   React.useEffect(() => {
     if (
       !(
-        formData?.name &&
+        formData?.firstName &&
+        formData?.lastName &&
         formData?.address &&
         formData?.phoneNumber &&
         formData?.dateJoined &&
@@ -60,16 +61,38 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
       )
     ) {
       setHasEmptyFields(true);
+    }else{
+      fetchEmployeeID()
     }
     setIdURL("");
   }, [formData, hasEmptyFields]);
 
+  const fetchEmployeeID = async () => {
+    try {
+      setLoading(true);
+
+      const res = await serverRequests.getAllEmployeeID() 
+
+      const chosenID = res.data.find((ID: {_id:string, name:string, companyRole:string, IDCardURL:string}) => ID._id == formData._id) 
+
+      if(chosenID){
+        setIdURL(chosenID.IDCardURL)
+      }
+      
+      if (res?.error) {
+        console.error(res.error);
+      } 
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }  
+
   return (
     <>
       <div
-        className={`${
-          phase == 2 ? " border-transparent " : " shadow-xl "
-        } overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
+        className={` shadow-xl overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
       >
         {/* select employee*/}
         <EmployeeSelection

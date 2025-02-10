@@ -5,7 +5,7 @@ import React from "react";
 const ThemeControl = () => {
 
   const themes = [
-    "light", "dark", "cupcake", "winter", "wireframe","lofi","pastel",
+    "light", "dark", "cupcake", "winter", "wireframe", "lofi",
     "synthwave", "luxury", "dim",  
     "retro", "cyberpunk", "aqua", "valentine"
   ];
@@ -22,7 +22,7 @@ const ThemeControl = () => {
       <div className="collapse-content overflow-y-auto">
         <div className="form-control h-[25vh] duration-300  " > 
           {themes.map((theme, index) => (
-            <label className="label cursor-pointer gap-4 hover:bg-base-100 rounded-lg"
+            <label className="label cursor-pointer gap-4 hover:bg-base-100 "
               key={index}
             >
               <span className="label-text">{theme}</span>

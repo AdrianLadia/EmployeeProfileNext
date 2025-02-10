@@ -8,7 +8,9 @@ import DeleteButton from "./DeleteButton";
 import OffenseDownloadButton from "./OffenseDownloadButton";
 import RefreshButton from "./RefreshButton";
 
-const OffenseMenu = () => {
+import { Offense } from "../schemas/OffenseSchema";
+
+const OffenseMenu: React.FC<{ offenseList: Offense[] }> = ({ offenseList }) => {
   const [showMenu, setShowMenu] = React.useState(true);
 
   return (
@@ -26,13 +28,13 @@ const OffenseMenu = () => {
 
       <div
         className={`${
-          !showMenu && " hidden " 
+          !showMenu && " hidden "
         } flex gap-2 items-center justify-start pl-2 `}
       >
         <CreateButton />
         <UpdateButton />
         <DeleteButton />
-        <OffenseDownloadButton />
+        <OffenseDownloadButton offenseList={offenseList}/>
         <RefreshButton />
       </div>
     </div>

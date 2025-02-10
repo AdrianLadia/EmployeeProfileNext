@@ -29,42 +29,39 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
   cards,
   pathname,
 }) => {
+
   const handleSignOut = async () => {
     signOut();
-  };
+  }; 
 
   return (
-    <div
-      // transition-all duration-300 ease-in
+    <div onClick={(e) => e.stopPropagation()}
       className={` 
-        ${showMenu ? " top-[71px] md:top-[80px] " : " hidden "} right-0
-        absolute shadow-lg border backdrop-blur-lg bg-base-100/70 duration-300 transition-all
-        w-[96vw] md:w-[330px] h-[83vh] md:max-h-[73vh] rounded-2xl z-50 
-        flex flex-col justify-between pb-1 border-info 
+        ${showMenu ? " top-[71px] md:top-[75px] " : " hidden "} right-0 md:right-2
+        absolute shadow-lg border backdrop-blur-lg bg-base-300 duration-300 transition-all
+        w-[96vw] md:w-[330px] h-[83vh] md:max-h-[75vh] rounded-2xl z-50 
+        flex flex-col justify-between border-info overflow-auto
       `}
     >
       <BackButton />
-      <UserListButton userData={userData} pathname={pathname || ""} />
-
-      {/* arrow */}
-      <div className="-z-10 right-[.70rem] md:right-[.89rem] -top-3 absolute w-0 h-0 border-l-[16px] border-r-[16px] border-b-[20.5px] border-transparent border-b-info border-opacity-60" />
-
-      <div className="flex flex-col items-center justify-center pt-8 md:pt-12 pb-2 md:pb-6 rounded-t-2xl bg-base-300 border-b border-info">
+      <UserListButton userData={userData} pathname={pathname||""}/>
+      
+      <div className="flex flex-wrap items-center justify-center rounded-t-2xl gap-2 ">
+        <div className="w-full h-[2.3rem]"/>
         <Image
+          className="rounded-box"
           src={userData?.image}
-          width={60}
-          height={60}
-          className="w-[60px] h-[60px] md:w-[100px] md:h-[100px] rounded-lg"
+          width={72}
+          height={72} 
           alt="userImage"
         />
-        <h1 className="text-xl font-semibold mt-2 md:mt-5">
-          {userData?.displayName}
-        </h1>
-        <p className="text-sm md:mt-2 select-all italic">{userData?.email}</p>
-      </div>
+        <h1 className="text-2xl font-semibold capitalize text-center max-w-full px-2">{userData?.displayName}</h1> 
+        <p className="text-md select-all italic w-full text-center">{userData?.email}</p>
+        <div className="w-full h-4"/> 
+      </div> 
 
-      <div className="flex flex-col justify-between overflow-y-auto px-6 md:h-[40vh] my-2 h-[50vh]">
-        <div className="w-full ">
+      <div className="flex flex-col justify-between px-6 bg-base-100 grow">
+        <div className="mt-2 w-full ">
           {Object.keys(cards).map((key, index) => {
             return (
               <div key={index} className="mt-3 w-full ">
@@ -112,9 +109,9 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
         {/* logout */}
       </div>
 
-      <div className="flex px-6 ">
+      <div className="flex px-6 bg-base-100 pt-3 pb-6">
         <button
-          className=" btn shrink-0 bg-base-300 w-full flex items-center justify-center gap-3 border hover:bg-error hover:text-white"
+          className=" btn shrink-0 bg-base-300 w-full h-[60px] flex items-center justify-center gap-3 border hover:bg-error hover:text-white"
           onClick={() => {
             handleSignOut();
           }}

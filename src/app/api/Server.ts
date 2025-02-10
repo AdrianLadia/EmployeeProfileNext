@@ -8,7 +8,7 @@ class Server {
       const urls = {
         local: 'http://127.0.0.1:5000',
         // server: 'https://flask-app-614461425863.asia-east1.run.app'
-        server: 'https://employee-profile-418261267315.asia-east1.run.app'
+        server: 'https://employeeprofilepustanan-418261267315.asia-east1.run.app'
       };  
 
       this.url = next_env === 'production' ? urls.server : urls.local;

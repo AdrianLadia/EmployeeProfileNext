@@ -101,7 +101,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
 
   return (
     <form className="form-style" onSubmit={handleSubmit} ref={formRef}>
-      <h2 className="font-semibold">Offense Deletion</h2>
+      <h2 className="font-semibold text-error">Offense Deletion</h2>
 
       {/* Offense to Update */}
       {/* <div className='flex flex-col text-sm gap-2 '>Offense to Delete 

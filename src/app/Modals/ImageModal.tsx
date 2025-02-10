@@ -18,7 +18,7 @@ const ImageModal = () => {
 
   const handleDelete = (index: number) => { 
     const filtered = imageListForModal.filter((_, i) => i !== index);
-    setImageListForModal(filtered); 
+    setImageListForModal(filtered);
   };
 
   React.useEffect(() => {
@@ -52,7 +52,7 @@ const ImageModal = () => {
               {/* delete image */}
               <div
                 key={`item${index}`}
-                className={`${!imageModalId?" hidden ":" "} absolute top-2 left-2 btn btn-outline btn-error btn-sm btn-circle z-40 duration-0 `}
+                className={`${!imageModalId?" hidden ":" "} absolute top-2 left-2 btn btn-outline btn-accent btn-sm btn-circle z-40 duration-0 `}
                 onClick={() => handleDelete(index)} 
               >
                 <svg

@@ -25,12 +25,8 @@ userObject = createUserObject(None, 'superAdmin@gmail.com')
 userObject2 = createUserObject(None, 'user@gmail.com')
 
 offenseObject = {
-    '_id':
-    None,
-    'number':
-    0,
-    'description':
-    'description',
+    '_id': None,
+    'title': 'title',
     'remedialActions':
     ['Verbal Warning', 'Written Warning', 'Suspension', 'Termination'],
     '_version':
@@ -163,7 +159,7 @@ def test_create_offense_employee_memo():
 
         offenses = user.readCollection('Offense')
 
-        assert offense['number'] == offenses[0]['number']
+        assert offense['title'] == offenses[0]['title']
 
         getOffense = db.read({'_id': offenses[0]['_id']},
                              'Offense',
@@ -245,16 +241,16 @@ def test_update_offense():
 
         getOffense = db.read({'_id': offense['_id']}, 'Offense', findOne=True)
 
-        assert getOffense['number'] == offense['number']
+        assert getOffense['title'] == offense['title']
 
         updateOffense = user.updateOffenseAction(userCreated, offense,
-                                                 {'number': 'number2'})
+                                                 {'title': 'title2'})
 
         getOffense = db.read({'_id': updateOffense[0]['_id']},
                              'Offense',
                              findOne=True)
 
-        assert getOffense['number'] == 'number2'
+        assert getOffense['title'] == 'title2'
     finally:
         db.delete({}, 'User')
         db.delete({}, 'Offense')
@@ -270,7 +266,7 @@ def test_delete_offense():
 
         getOffense = db.read({'_id': offense['_id']}, 'Offense', findOne=True)
 
-        assert getOffense['number'] == offense['number']
+        assert getOffense['title'] == offense['title']
 
         deleteOffense = user.deleteOffenseAction(userCreated, getOffense)
 
@@ -414,12 +410,8 @@ def test_delete_non_existent_offense():
         userCreated = user.createFirstUserAction('id1')
 
         offenseObject = {
-            '_id':
-            None,
-            'number':
-            0,
-            'description':
-            'description',
+            '_id': None,
+            'title': 'title',
             'remedialActions':
             ['Verbal Warning', 'Written Warning', 'Suspension', 'Termination'],
             '_version':
@@ -508,14 +500,14 @@ def test_create_employee_with_name_only():
         pass
 
 
-def test_create_offenses_with_same_number():
+def test_create_offenses_with_same_title():
     try:
         user = UserActions(userObject)
         userCreated = user.createFirstUserAction('id1')
 
         offense = user.createOffenseAction(userCreated, offenseObject)
 
-        with pytest.raises(ValueError, match='Offense number already exists'):
+        with pytest.raises(ValueError, match='Offense title already exists'):
             offense2 = user.createOffenseAction(userCreated, offenseObject)
 
         offenses = user.readCollection('Offense')
@@ -679,6 +671,6 @@ if __name__ == '__main__':
     # test_delete_non_existent_offense()
     # # test_getRemedialActionForEmployeeMemoAction()
     test_create_employee_with_name_only()
-    test_create_offenses_with_same_number()
+    test_create_offenses_with_same_title()
     test_create_employee_without_photoOfPerson_then_update()
     pass

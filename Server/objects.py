@@ -266,10 +266,10 @@ class UserActions(User):
         return db.update({'_id': res['_id']}, res, 'Employee')
 
     def createOffenseAction(self, user, data):
-        if 'number' in data:
-            offense = db.read({'number': data['number']}, 'Offense')
+        if 'title' in data:
+            offense = db.read({'title': data['title']}, 'Offense')
             if len(offense) > 0:
-                raise ValueError('Offense number already exists')
+                raise ValueError('Offense title already exists')
 
         offense = Offense(**data)
         res = offense.createOffense(user)
@@ -709,17 +709,13 @@ class Employee(BaseModel):
 
 class Offense(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
-    number: int
-    description: str
     remedialActions: List[str]
     version: int = Field(..., alias='_version')
-    title: Optional[str] = Field(None, alias='title')
+    title: str
 
     def to_dict(self):
         return {
             '_id': self.id,
-            'number': self.number,
-            'description': self.description,
             'remedialActions': self.remedialActions,
             '_version': self.version,
             'title': self.title

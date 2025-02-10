@@ -122,17 +122,18 @@ class EmployeeIDCard(BaseModel):
             except Exception as e:
                 print(f"Error loading photo: {e}")
 
-        if len(name) > 30:
+        if len(name) > 10:
             name_font = ImageFont.truetype(font_path, size=30)
             # name = textwrap.fill(name, width=30)
             x_text = 80
         else:
-            x_text = 130
+            x_text = 50
+            name_font = ImageFont.truetype(font_path, size=40)
 
         name_lines = textwrap.wrap(name, width=35)
-        y_text = 530
+        y_text = 630
         for line in name_lines:
-            draw.text((x_text, y_text), line, fill="black", font=name_font)
+            draw.text((x_text, y_text), f"Name: {line}", fill="black", font=name_font)
             y_text += name_font.size + 5
 
         if len(type_of_employee) > 3:
@@ -141,7 +142,7 @@ class EmployeeIDCard(BaseModel):
             x_text = 255
 
         type_of_employee_lines = textwrap.wrap(type_of_employee, width=35)
-        y_text = 620
+        y_text = 720
         for line in type_of_employee_lines:
             draw.text((x_text, y_text), line, fill="black", font=role_font)
             y_text += role_font.size + 5
@@ -255,8 +256,8 @@ class EmployeeIDCard(BaseModel):
 
 employee = {
     "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
-    "firstName": "Michael Flores",
-    "lastName": "Cruz",
+    "firstName": "Joseph Meljune",
+    "lastName": "Arnoco",
     "address": "123 Main Street, Cebu City, Philippines",
     "phoneNumber": "+63 912 345 6789",
     "photoOfPerson": "server/test_assets/minor.png",

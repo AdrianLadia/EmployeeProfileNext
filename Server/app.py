@@ -216,8 +216,6 @@ def create_offense():
             res = UserActions(userData).createOffenseAction(
                 userData, {
                     '_id': None,
-                    'number': offense['number'],
-                    'description': offense['description'],
                     'remedialActions': offense['remedialActions'],
                     'title': offense['title'],
                     '_version': 0

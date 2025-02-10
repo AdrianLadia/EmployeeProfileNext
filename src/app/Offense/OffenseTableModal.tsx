@@ -284,7 +284,7 @@ const OffenseTableModal = () => {
             >
               <div className="w-[300px] ">
                 <div className=" border-b w-full border-black h-0" />
-                <div id="textStart" className="text-center">
+                <div id="textStart" className="text-center ">
                   Signature Over Printed Name:
                 </div>
               </div>

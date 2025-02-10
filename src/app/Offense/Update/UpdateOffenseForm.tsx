@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useAppContext } from "@/app/GlobalContext";
 
@@ -12,13 +12,11 @@ import Select from "react-select";
 
 interface UpdateOffenseFormProps {
   offenseList: Offense[];
-  remedialActions: string[];
   confirmation?: boolean;
 }
 
 const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
   offenseList,
-  remedialActions,
   confirmation = true,
 }) => {
   const {
@@ -27,8 +25,9 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
     userData,
     handleConfirmation,
     router,
-    getOrdinal, 
-    loading, setLoading
+    getOrdinal,
+    loading,
+    setLoading,
   } = useAppContext();
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -38,6 +37,27 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
   const [dataToUpdate, setDataToUpdate] = useState<DataToUpdate>(
     {} as DataToUpdate
   );
+
+  const [newAction, setNewAction] = useState<string>("");
+
+  const [remedialActions, setRemedialActions] = useState<string[]>([
+    "Written-Reprimand",
+    "Verbal Reprimand",
+    "Verbal And Written Reprimand",
+    "1 Day Suspension",
+    "3 Days Suspension",
+    "5 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "30 Days Suspension",
+    "15 Days Suspension Or Management Discretion",
+    "Dismissal",
+    "Dismissal based on Offense Severity",
+    "Written Reprimand / Suspension / Dismissal",
+    "3 Days Suspension + 7 Days Gadget Confiscation",
+    "7 Days Suspension + 15 Days Gadget Confiscation",
+    "15 Days Suspension + 30 Days Gadget Confiscation",
+  ]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,8 +121,8 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
       } finally {
         setLoading(false);
       }
-    }else{
-      setLoading(false)
+    } else {
+      setLoading(false);
     }
   };
 
@@ -133,44 +153,43 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
   };
 
   const selectStyle = {
-    control: (base : unknown) => ({
-      ...base || {},
-      height: '3rem',
-      backgroundColor: 'transparent',
-      borderRadius: '10px',
+    control: (base: unknown) => ({
+      ...(base || {}),
+      height: "3rem",
+      backgroundColor: "transparent",
+      borderRadius: "10px",
     }),
-    singleValue: (base : unknown) => ({
-      ...base || {},
-      color: 'inherit', 
+    singleValue: (base: unknown) => ({
+      ...(base || {}),
+      color: "inherit",
     }),
-};
+  };
+
+  useEffect(() => {
+    if (formData?.title) {
+      const selectedRemedialActions = formData?.remedialActions || [];
+
+      const mergedRemActs = new Set([
+        ...remedialActions,
+        ...selectedRemedialActions,
+      ]);
+
+      setRemedialActions(Array.from(mergedRemActs));
+    }
+  }, [formData?._id]);
 
   return (
     <form className="form-style" onSubmit={handleSubmit} ref={formRef}>
       <h2 className="font-semibold text-violet-500">Update Offense</h2>
 
-      {/* Ofense to Update */}
-      {/* <div className='flex flex-col text-sm gap-2 '>Offense to Update 
-        <select className="select select-bordered w-full " id='select-offense' required
-          value={formData?.title || ''}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
-              const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData(e.target.value=="null"?{} as Offense:offenseList[selectedIndex])
-          }}  
-        >
-          <option disabled selected value={""}>Select Offense </option>
-          {offenseList&&offenseList.map((employee, index) => (
-            <option key={index} value={employee?.title || ""}>{employee?.title}</option>
-          ))}
-          <option value="null">None</option>
-        </select>
-      </div> */}
-
-      <Select styles={selectStyle}
+      <Select
+        styles={selectStyle}
         options={offenseList}
         placeholder="Select Offense"
         value={formData?.title ? formData : null}
-        getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
+        getOptionLabel={(option) =>
+          `${option.title}` || ""
+        }
         isClearable
         onChange={(selectedOption) => {
           setFormData(selectedOption as Offense);
@@ -178,8 +197,26 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
         id="select-offense"
       />
 
-      {/* description */}
+      <div className="w-full border-b border-dashed"></div>
+
       <div className="flex flex-col text-sm gap-2 mt-2">
+        Offense
+        <input
+          className="input input-bordered w-full "
+          type="text"
+          placeholder="Offense Title"
+          id="title"
+          required
+          value={formData?.title || ""}
+          disabled={!formData?.title}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleInputChange(e);
+          }}
+        ></input>
+      </div>
+
+      {/* description */}
+      {/* <div className="flex flex-col text-sm gap-2 mt-2">
         Offense
         <div className="w-full flex flex-col md:flex-row justify-start gap-2">
           <input
@@ -194,18 +231,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
               handleInputChange(e);
             }}
           ></input>
-          <input
-            className="input input-bordered w-full "
-            type="text"
-            placeholder="Offense Title"
-            id="title"
-            required
-            value={formData?.title || ""}
-            disabled={!formData?.description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              handleInputChange(e);
-            }}
-          ></input>
+          
         </div>
         <textarea
           className="textarea textarea-bordered mt-1 min-h-[30vh] "
@@ -233,7 +259,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
             }
           }}
         ></textarea>
-      </div>
+      </div> */}
 
       {/* Remedial Actions */}
       <div className="flex flex-col text-sm gap-2 mt-4">
@@ -263,7 +289,9 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
             return (
               <div
                 key={index}
-                className={` indicator ${position && "md:tooltip tooltip-accent"}`}
+                className={` indicator ${
+                  position && "md:tooltip tooltip-accent"
+                }`}
                 data-tip={`Action on ${getOrdinal(position)} Offense`}
               >
                 <input
@@ -288,22 +316,36 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
               </div>
             );
           })}
-          {/* {remedialActions.map((action, index) => (
-            <input 
-                className={` ${formData?.remedialActions?.includes(action) ? ' ' : ' hover:brightness-150'}
-                 join-item btn btn-sm font-normal tracking-tight btn-neutral disabled:bg-gray-300 `} 
-              onChange={handleCheckboxChange} checked={formData?.remedialActions?.includes(action)}
-              disabled={!formData.remedialActions}
-              type="checkbox" name="options" value={action} aria-label={action} key={index} id={action}/>
-          ))}  */}
         </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mt-3 px-3">
+        <h3 className="w-full">Add Other Remedial Action</h3>
+        <input
+          className="input input-bordered grow"
+          onChange={(e) => setNewAction(e.target.value)}
+          value={newAction}
+          type="text"
+          disabled={!formData?.remedialActions}
+          placeholder="New Action"
+        />
+        <input
+          className="btn btn-neutral"
+          type="button"
+          value="Add"
+          disabled={!formData?.remedialActions}
+          onClick={() => {
+            setRemedialActions((prev) => [...prev, newAction]);
+            setNewAction("");
+          }}
+        />
       </div>
 
       {/* submit */}
       <button
         className="btn bg-violet-500 text-white w-full place-self-start my-6"
         type="submit"
-        disabled={formData?.description ? false : true}
+        disabled={formData?.title ? false : true}
         id="update-offense-button"
       >
         {!loading ? "Update" : <span className="animate-spin text-xl">C</span>}

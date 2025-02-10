@@ -9,13 +9,11 @@ import Select from "react-select";
 
 interface DeleteOffenseFormProps {
   offenseList: Offense[];
-  remedialActions: string[];
   confirmation?: boolean;
 }
 
 const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
   offenseList,
-  remedialActions,
   confirmation = true,
 }) => {
   const {
@@ -23,13 +21,34 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
     serverRequests,
     userData,
     handleConfirmation,
-    getOrdinal, 
-    setLoading, loading, router
+    getOrdinal,
+    setLoading,
+    loading,
+    router,
   } = useAppContext();
 
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const [formData, setFormData] = useState<Offense>({} as Offense);
+
+  const [remedialActions, setRemedialActions] = useState<string[]>([
+    "Written-Reprimand",
+    "Verbal Reprimand",
+    "Verbal And Written Reprimand",
+    "1 Day Suspension",
+    "3 Days Suspension",
+    "5 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "30 Days Suspension",
+    "15 Days Suspension Or Management Discretion",
+    "Dismissal",
+    "Dismissal based on Offense Severity",
+    "Written Reprimand / Suspension / Dismissal",
+    "3 Days Suspension + 7 Days Gadget Confiscation",
+    "7 Days Suspension + 15 Days Gadget Confiscation",
+    "15 Days Suspension + 30 Days Gadget Confiscation",
+  ]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,49 +100,48 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
         setLoading(false);
         router.refresh();
       }
-    }else{
-      setLoading(false)
+    } else {
+      setLoading(false);
     }
   };
 
   const selectStyle = {
-    control: (base : unknown) => ({
-      ...base || {},
-      height: '3rem',
-      backgroundColor: 'transparent',
-      borderRadius: '10px',
+    control: (base: unknown) => ({
+      ...(base || {}),
+      height: "3rem",
+      backgroundColor: "transparent",
+      borderRadius: "10px",
     }),
-    singleValue: (base : unknown) => ({
-      ...base || {},
-      color: 'inherit', 
+    singleValue: (base: unknown) => ({
+      ...(base || {}),
+      color: "inherit",
     }),
-};
+  };
+
+  React.useEffect(() => {
+    if (formData?.title) {
+      const selectedRemedialActions = formData?.remedialActions || [];
+
+      const mergedRemActs = new Set([
+        ...remedialActions,
+        ...selectedRemedialActions,
+      ]);
+
+      setRemedialActions(Array.from(mergedRemActs));
+    }
+  }, [formData?._id]);
 
   return (
     <form className="form-style" onSubmit={handleSubmit} ref={formRef}>
       <h2 className="font-semibold text-error">Offense Deletion</h2>
 
-      {/* Offense to Update */}
-      {/* <div className='flex flex-col text-sm gap-2 '>Offense to Delete 
-        <select className="select select-bordered w-full " id='select-offense' required
-          value={formData?.title || ''}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
-              const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData(e.target.value=="null"?{} as Offense:offenseList[selectedIndex])
-          }}  
-        >
-          <option disabled selected value={""}>Select Offense </option>
-          {offenseList&&offenseList.map((Offense, index) => (
-            <option key={index} value={Offense?.title || ""}>{Offense?.title}</option>
-          ))}
-          <option value="null">None</option>
-        </select>
-      </div> */}
-
-      <Select styles={selectStyle}
+      <Select
+        styles={selectStyle}
         options={offenseList}
-        placeholder="Select Offense" 
-        getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
+        placeholder="Select Offense"
+        getOptionLabel={(option) =>
+          `${option.title}` || ""
+        }
         value={formData?.title ? formData : null}
         isClearable
         onChange={(selectedOption) => {
@@ -132,8 +150,24 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
         id="select-memo"
       />
 
-      {/* description */}
+      <div className="w-full border-b border-dashed"></div>
+
+      {/* offense */}
       <div className="flex flex-col text-sm gap-2 mt-2">
+        Offense
+        <input
+          className="input input-bordered w-full "
+          type="text"
+          placeholder="Offense Title"
+          id="title"
+          disabled={!Boolean(formData?.title)}
+          value={formData?.title || ""}
+          onClick={(e) => e.currentTarget.blur()}
+        ></input>
+      </div>
+
+      {/* description */}
+      {/* <div className="flex flex-col text-sm gap-2 mt-2">
         Offense
         <div className="w-full flex flex-col md:flex-row justify-start gap-2">
           <input
@@ -144,14 +178,6 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
             value={formData?.number || ""}
             onClick={(e) => e.currentTarget.blur()}
           ></input>
-          <input
-            className="input input-bordered w-full "
-            type="text"
-            placeholder="Offense Title"
-            id="title"
-            value={formData?.title || ""}
-            onClick={(e) => e.currentTarget.blur()}
-          ></input>
         </div>
         <textarea
           className="textarea textarea-bordered mt-1 min-h-[23vh]"
@@ -160,7 +186,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
           value={formData?.description}
           onClick={(e) => e.currentTarget.blur()}
         ></textarea>
-      </div>
+      </div> */}
 
       {/* Remedial Actions */}
       <div className="flex flex-col text-sm gap-2 mt-4">
@@ -171,7 +197,9 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
             return (
               <div
                 key={index}
-                className={` indicator ${position && "md:tooltip tooltip-accent"}`}
+                className={` indicator ${
+                  position && "md:tooltip tooltip-accent"
+                }`}
                 data-tip={`Action on ${getOrdinal(position)} Offense`}
               >
                 <input
@@ -195,13 +223,6 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
               </div>
             );
           })}
-          {/* {remedialActions.map((action, index) => (
-            <input 
-                className={` ${formData?.remedialActions?.includes(action) ? ' ' : ' hover:brightness-150'}
-                 join-item btn btn-sm font-normal tracking-tight btn-neutral `} checked={formData?.remedialActions?.includes(action)}
-              disabled
-              type="checkbox" name="options" value={action} aria-label={action} key={index}/>
-          ))}  */}
         </div>
       </div>
 
@@ -209,7 +230,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
       <button
         className="btn bg-red-500 text-white w-full place-self-start my-6"
         type="submit"
-        disabled={formData?.description ? false : true}
+        disabled={formData?.title ? false : true}
         id="delete-offense-btn"
       >
         {!loading ? "Delete" : <span className="animate-spin text-xl">C</span>}

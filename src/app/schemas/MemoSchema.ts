@@ -30,11 +30,9 @@ export type Memophotoslist = string[] | null;
 export type Subject = string;
 export type Description = string;
 export type Id2 = string | null;
-export type Number = number;
-export type Description1 = string;
 export type Remedialactions = string[];
 export type Version1 = number;
-export type Title = string | null;
+export type Title = string;
 export type Code = string | null;
 export type Submitted = boolean;
 export type Reason = string | null;
@@ -79,10 +77,8 @@ export interface Employee {
 }
 export interface Offense {
   _id?: Id2;
-  number: Number;
-  description: Description1;
   remedialActions: Remedialactions;
   _version: Version1;
-  title?: Title;
+  title: Title;
   [k: string]: unknown;
 }

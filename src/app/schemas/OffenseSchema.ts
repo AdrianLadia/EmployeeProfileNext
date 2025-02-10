@@ -6,17 +6,13 @@
  */
 
 export type Id = string | null;
-export type Number = number;
-export type Description = string;
 export type Remedialactions = string[];
 export type Version = number;
-export type Title = string | null;
+export type Title = string;
 
 export interface Offense {
   _id?: Id;
-  number: Number;
-  description: Description;
   remedialActions: Remedialactions;
   _version: Version;
-  title?: Title;
+  title: Title;
 }

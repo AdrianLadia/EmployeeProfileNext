@@ -106,7 +106,7 @@ class EmployeeIDCard(BaseModel):
                     response = requests.get(photo_path)
                     response.raise_for_status()
                     photo = Image.open(BytesIO(response.content)).resize(
-                        (205, 200))
+                        (270, 269))
                 else:
                     photo = Image.open(photo_path).resize((270, 269))
 
@@ -200,48 +200,41 @@ class EmployeeIDCard(BaseModel):
         background.save(output_path)
         print(f"ID card saved to {output_path}")
 
-        return {
-            "_id": self.id,
-            "name": self.firstName + " " + self.lastName,
-            "companyRole": self.companyRole,
-            "IDCardURL": output_path,
-        }
-
-        return {
-            "_id": self.id,
-            "name": self.firstName + " " + self.lastName,
-            "companyRole": self.companyRole,
-            "IDCardURL": output_path,
-        }
-
-        # if not _apps:
-        #     cred = credentials.Certificate(
-        #         "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
-        #     )
-        #     initialize_app(cred, {
-        #         "storageBucket":
-        #         "pustananemployeeprofile.firebasestorage.app"
-        #     })
-
-        # bucket = storage.bucket()
-        # blob = bucket.blob(
-        #     f"EmployeeIDs/{self.firstName+self.lastName}_id_card.png")
-        # blob.upload_from_filename(output_path)
-        # blob.make_public()
-
-        # download_url = blob.public_url
-        # print(f"ID card uploaded to Firebase Storage" + download_url)
-
-        # to_return = {
+        # return {
         #     "_id": self.id,
         #     "name": self.firstName + " " + self.lastName,
         #     "companyRole": self.companyRole,
-        #     "IDCardURL": download_url,
+        #     "IDCardURL": output_path,
         # }
 
-        # print(to_return)
+        if not _apps:
+            cred = credentials.Certificate(
+                "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
+            )
+            initialize_app(cred, {
+                "storageBucket":
+                "pustananemployeeprofile.firebasestorage.app"
+            })
 
-        # return to_return
+        bucket = storage.bucket()
+        blob = bucket.blob(
+            f"EmployeeIDs/{self.firstName+self.lastName}_id_card.png")
+        blob.upload_from_filename(output_path)
+        blob.make_public()
+
+        download_url = blob.public_url
+        print(f"ID card uploaded to Firebase Storage" + download_url)
+
+        to_return = {
+            "_id": self.id,
+            "name": self.firstName + " " + self.lastName,
+            "companyRole": self.companyRole,
+            "IDCardURL": download_url,
+        }
+
+        print(to_return)
+
+        return to_return
 
         # back side of ID card
 

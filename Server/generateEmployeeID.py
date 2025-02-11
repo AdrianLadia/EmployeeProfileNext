@@ -195,9 +195,13 @@ class EmployeeIDCard(BaseModel):
                 else:
                     signature = Image.open(employeeSignature).resize((200, 100))
 
-                background.paste(signature, (80, 800))
+                background.paste(signature, (60, 800))
             except Exception as e:
                 print(f"Error loading signature: {e}")
+
+        draw.text((80, 880), f"Signature", fill="black", font=ImageFont.truetype(font_path, size=25))
+
+        draw.text((410, 880), f"H.R.", fill="black", font=ImageFont.truetype(font_path, size=25))
 
         draw.text((130, 955), f"Property of Pustanan Printers. ©", fill="white", font=ImageFont.truetype(font_path, size=25))
 

@@ -216,6 +216,27 @@ class EmployeeIDCard(BaseModel):
             draw_back.text((65, y_text), line, fill="black", font=terms_font)
             y_text += terms_font.size + 5
 
+        draw_back.text((65, 300), f"Address:", fill="black", font=ImageFont.truetype(font_path, size=35))
+
+        address_font = ImageFont.truetype(font_path, size=30)
+        x_text = 100
+
+        address_lines = textwrap.wrap(address, width=35)
+        y_text = 350
+        for line in address_lines:
+            draw_back.text((x_text, y_text), line, fill="black", font=address_font)
+            y_text += address_font.size + 5
+
+        draw_back.text((65, 480), f"Phone:", fill="black", font=ImageFont.truetype(font_path, size=35))
+
+        phone_font = ImageFont.truetype(font_path, size=30)
+        draw_back.text((100, 530), phoneNumber, fill="black", font=phone_font)
+
+        draw_back.text((65, 620), f"Date Joined:", fill="black", font=ImageFont.truetype(font_path, size=35))
+
+        date_font = ImageFont.truetype(font_path, size=30)
+        draw_back.text((100, 680), dateJoined.strftime("%B %d, %Y"), fill="black", font=date_font)
+
         barcode = Code128(ref_id, writer=ImageWriter())
         options = {
             'module_width': 0.5,
@@ -250,20 +271,21 @@ class EmployeeIDCard(BaseModel):
             })
 
         bucket = storage.bucket()
-
+        download_urls = []
         for photo in list_of_photos:
             blob = bucket.blob(f"{folder_name}/{photo}")
             blob.upload_from_filename(photo)
             blob.make_public()
 
             download_url = f"{blob.public_url}?updated={int(time.time())}"
+            download_urls.append(download_url)
             print(f"{photo} uploaded to Firebase Storage" + download_url)
 
         to_return = {
             "_id": self.id,
             "name": self.firstName + " " + self.lastName,
             "companyRole": self.companyRole,
-            "IDCardURL": download_url,
+            "IDCardURL": {"front":download_urls[0], "back":download_urls[1]},
         }
 
         print(to_return)
@@ -291,4 +313,4 @@ employee = {
     "_version": 1,
 }
 
-EmployeeIDCard(**employee).generate_id_card()
+# EmployeeIDCard(**employee).generate_id_card()

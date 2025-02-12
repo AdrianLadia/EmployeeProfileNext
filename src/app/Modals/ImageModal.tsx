@@ -42,7 +42,7 @@ const ImageModal = () => {
           <button onClick={handleClose} className="close-button"></button>
         </form>
 
-        <div className="carousel h-[90%] w-full ">
+        <div className="carousel h-[90%] w-full bg-base-100/40 ">
           {imageListForModal.map((item, index) => (
             <div
               key={`item${index}`}

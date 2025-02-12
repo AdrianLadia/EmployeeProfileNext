@@ -24,7 +24,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
   hasEmptyFields = false,
   setPhase,
 }) => {
-  const { router, pathname } = useAppContext(); 
+  const { router, pathname } = useAppContext();
 
   const handleSelectChange = (selectedOption: Employee): void => {
     if (selectedOption?._id != formData?._id) {
@@ -48,7 +48,9 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
   const renderEmployeeDetails = () => {
     const importantDetails = {
       name: [
-        formData?.firstName?(formData?.firstName + " " + formData?.lastName)||"":"",
+        formData?.firstName
+          ? formData?.firstName + " " + formData?.lastName || ""
+          : "",
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -149,7 +151,8 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
 
     return (
       <>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap justify-between gap-4">
+          {/*  */}
           {formData?.photoOfPerson ? (
             <Image
               src={formData?.photoOfPerson || ""}
@@ -181,6 +184,42 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
 
               <span className="absolute bottom-1.5 text-xs text-center w-full">
                 PhotoOfPerson
+              </span>
+            </div>
+          )}
+          {/*  */}
+          {formData?.employeeSignature ? (
+            <Image
+              src={formData?.employeeSignature || ""}
+              className="border border-info rounded-box w-[110px] h-[83.59px] p-2"
+              alt="signature"
+              loading="eager"
+              height={100}
+              width={100}
+            ></Image>
+          ) : (
+            <div
+              className={`${
+                formData?._id && !formData?.employeeSignature
+                  ? " border-error text-error "
+                  : " border-gray-400 "
+              } w-[110px] h-[83.59px] grid place-content-center border relative rounded-box pb-1.5`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-6"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+
+              <span className="absolute bottom-1.5 text-xs text-center w-full">
+              signature
               </span>
             </div>
           )}
@@ -247,7 +286,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
       {/* actions */}
       <div className="flex gap-2 justify-center absolute bottom-5 left-0 w-full ">
         <button
-          onClick={() => { 
+          onClick={() => {
             router.push("/Employee/Update#" + formData?._id);
           }}
           hidden={hasEmptyFields ? false : true}
@@ -256,7 +295,10 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
             hasEmptyFields && formData?._id ? " w-[43%] " : " hidden "
           } btn-outline btn h-12 `}
         >
-          Update<i className="font-bold text-[1rem]">{formData?.firstName} {formData?.lastName}</i>
+          Update
+          <i className="font-bold text-[1rem]">
+            {formData?.firstName} {formData?.lastName}
+          </i>
         </button>
 
         <button

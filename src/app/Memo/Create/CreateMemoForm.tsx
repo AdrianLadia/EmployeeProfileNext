@@ -209,7 +209,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
   };
 
   React.useEffect(() => {
-    if (formData?.Employee?._id && formData?.MemoCode?.number) {
+    if (formData?.Employee?._id && formData?.MemoCode?._id) {
       getRemedialAction(
         formData?.Employee?._id,
         formData?.MemoCode?._id || "",
@@ -295,7 +295,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           placeholder="Select Offense"
           value={formData?.MemoCode ? formData.MemoCode : null}
           getOptionLabel={(option) =>
-            `(${option.number}) - ${option.title}` || ""
+            `${option.title}` || ""
           }
           isClearable
           onChange={(selectedOption) => {

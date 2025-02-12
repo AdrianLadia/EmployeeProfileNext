@@ -28,7 +28,7 @@ const PrintMemorandumModal = () => {
   const { memoForPrintModal, setMemoForPrintModal, getOrdinal, loading, setLoading } =
     useAppContext();
 
-  const [resolution, setResolution] = React.useState(1);
+  const [resolution, setResolution] = React.useState(3);
 
   const [includeMemoPhotos, setIncludeMemoPhotos] = React.useState(true);
   const [includeMediaList, setIncludeMediaList] = React.useState(true);
@@ -251,7 +251,6 @@ const PrintMemorandumModal = () => {
 
               <div className="col-span-1 font-semibold">Code:</div>
               <div className={headerTextStyle}>
-                {/* {`( ${memoForPrintModal?.MemoCode?.number} ) - `} */}
                 {memoForPrintModal?.Code}
               </div>
             </div>

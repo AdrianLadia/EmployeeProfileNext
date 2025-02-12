@@ -22,7 +22,9 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
   const { setLoading, loading, serverRequests, userData } = useAppContext();
 
-  const [idURL, setIdURL] = React.useState<string>("");
+  const [idURL, setIdURL] = React.useState<{ front: string; back: string }>(
+    {} as { front: string; back: string }
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,11 +34,10 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
       const res = await serverRequests.generateEmployeeID(userData, formData);
 
-      console.log(res)
+      console.log(res);
 
       if (res?.error) {
         console.error(res.error);
-        // setIdURL()
       }
 
       if (res?.data) {
@@ -57,42 +58,55 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
         formData?.address &&
         formData?.phoneNumber &&
         formData?.dateJoined &&
-        formData?.photoOfPerson
+        formData?.photoOfPerson &&
+        formData?.companyRole &&
+        formData?.employeeSignature
       )
     ) {
       setHasEmptyFields(true);
-    }else{
-      fetchEmployeeID()
+    } else {
+      fetchEmployeeID();
     }
-    setIdURL("");
+    setIdURL({} as { front: string; back: string });
   }, [formData, hasEmptyFields]);
 
   const fetchEmployeeID = async () => {
     try {
       setLoading(true);
 
-      const res = await serverRequests.getAllEmployeeID() 
+      const res = await serverRequests.getAllEmployeeID();
 
-      const chosenID = res.data.find((ID: {_id:string, name:string, companyRole:string, IDCardURL:string}) => ID._id == formData._id) 
+      const chosenID = res.data.find(
+        (ID: {
+          _id: string;
+          name: string;
+          companyRole: string;
+          IDCardURL: { front: string; back: string };
+        }) => ID._id == formData._id
+      );
 
-      if(chosenID){
-        setIdURL(chosenID.IDCardURL)
+      if (chosenID) {
+        setIdURL(chosenID.IDCardURL);
+      }else{
+        setIdURL({ front: "", back: "" });
       }
+
       
+
       if (res?.error) {
         console.error(res.error);
-      } 
+      }
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
     }
-  }  
+  };
 
   return (
     <>
       <div
-        className={` shadow-xl overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel border `}
+        className={` ${phase==1?" shadow-xl border":""} overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel `}
       >
         {/* select employee*/}
         <EmployeeSelection

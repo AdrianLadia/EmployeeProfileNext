@@ -175,7 +175,7 @@ const CreateEmployeeForm = () => {
         {!updateSignature ? (
           <div className="flex flex-col w-full items-center ">
             <span className="w-full">Employee Signature</span>
-            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip h-10 "
+            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip h-max "
               // onClick={() => !formData?.employeeSignature&&setUpdateSignature(true)}
             >
               <div className="h-[300px] flex items-center justify-center relative w-full">
@@ -415,20 +415,6 @@ const CreateEmployeeForm = () => {
         <div className="flex flex-col text-sm gap-2 ">
           Company Role
           <label className="input input-bordered flex items-center gap-2">
-            <input
-              type="companyRole"
-              className="grow"
-              placeholder="Company Role"
-              id="companyRole"
-              onChange={handleInputChange}
-            />
-          </label>
-        </div>
-
-        {/* company role */}
-        <div className="flex flex-col text-sm gap-2 ">
-          Company Role
-          <label className="input input-bordered flex items-center gap-2"> 
             <input
               type="companyRole"
               className="grow"

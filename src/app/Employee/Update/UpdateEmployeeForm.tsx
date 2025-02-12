@@ -140,8 +140,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         const form = e.target as HTMLFormElement;
 
-        console.log()
-
         const res = await serverRequests.updateEmployee(
           selectedEmployee,
           dataToUpdate,

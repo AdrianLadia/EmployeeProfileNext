@@ -655,6 +655,56 @@ def test_create_employee_offense_memo_then_get_all_recent_memos():
         db.delete({}, 'Memo')
         pass
 
+def test_create_employee_create_employee_id_and_update_employee_id():
+    try:
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+
+        employeeObject = {
+            '_id': None,
+            'firstName': 'firstName',
+            'lastName': 'lastName',
+            'email': None,
+            'address': 'cebu',
+            'phoneNumber': '34223423423',
+            'photoOfPerson': 'server/test_assets/minor.png',
+            'resumePhotosList': None,
+            'biodataPhotosList': None,
+            'dateJoined': datetime.datetime.now(),
+            'company': 'PPC',
+            'isRegular': None,
+            'companyRole': 'Software Engineer',
+            'isOJT': None,
+            'employeeSignature': 'server/test_assets/minor.png',
+            'dailyWage': None,
+            '_version': 0
+        }
+
+        employee = user.createEmployeeAction(userCreated, employeeObject)
+
+        employeeList = user.readCollection('Employee')
+
+        assert len(employeeList) == 1
+
+        createEmployeeID = user.createEmployeeIDAction(userCreated, employee)
+
+        employeeList = user.readCollection('EmployeeID')
+
+        assert len(employeeList) == 1
+
+        assert employeeList[0]['_id'] == employee['_id']
+
+        employeeID = employeeList[0]['_id']
+
+        updatedEmployee = user.updateEmployeeIDAction(userCreated, employeeID)
+
+        assert updatedEmployee['front'] != createEmployeeID['front']
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Employee')
+        db.delete({}, 'EmployeeID')
+        pass
+
 
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():
@@ -673,4 +723,5 @@ if __name__ == '__main__':
     test_create_employee_with_name_only()
     test_create_offenses_with_same_title()
     test_create_employee_without_photoOfPerson_then_update()
+    test_create_employee_create_employee_id_and_update_employee_id()
     pass

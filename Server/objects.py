@@ -460,6 +460,21 @@ class UserActions(User):
         db.create(idGenerated, 'EmployeeID')
         return idGenerated['IDCardURL']
 
+    def updateEmployeeIDAction(self, user, employeeId):
+        if 'canGenerateEmployeeID' not in user['roles']['Employee']:
+            raise ValueError('User does not have permission to generate Employee ID')
+
+        employeeID = db.read({'_id': employeeId}, 'EmployeeID')
+        if len(employeeID) == 0:
+            raise ValueError('Employee ID does not exist')
+
+        employee = db.read({'_id': employeeId}, 'Employee')
+
+        idGenerated = EmployeeIDCard(**employee[0]).generate_id_card()
+        db.update({'_id': employeeId}, idGenerated, 'EmployeeID')
+
+        return idGenerated['IDCardURL']
+
     def updateEmployeeProfilePictureAction(self, user, employeeId, photo):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
             raise ValueError(

@@ -1,5 +1,4 @@
 from PIL import Image, ImageDraw, ImageFont
-import qrcode
 import os
 from datetime import datetime
 import time
@@ -17,7 +16,6 @@ load_dotenv()
 
 isTest = os.getenv("NEXT_PUBLIC_CYPRESS_IS_TEST_ENV")
 
-
 class EmployeeIDCard(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
     firstName: str
@@ -31,6 +29,7 @@ class EmployeeIDCard(BaseModel):
     companyRole: str
     employeeSignature: str
     isOJT: Optional[bool] = False
+    version: int = Field(..., alias='_version')
 
     def to_dict(self):
         return {
@@ -46,6 +45,7 @@ class EmployeeIDCard(BaseModel):
             "companyRole": self.companyRole,
             "employeeSignature": self.employeeSignature,
             "isOJT": self.isOJT,
+            "_version": self.version,
         }
 
     def generate_id_card(self):
@@ -61,7 +61,6 @@ class EmployeeIDCard(BaseModel):
         # isRegular = self.isRegular
         # isOJT = self.isOJT
         type_of_employee = self.companyRole
-        # qr_data = ref_id
         employeeSignature = self.employeeSignature
 
         card_width, card_height = 591, 1004
@@ -69,21 +68,26 @@ class EmployeeIDCard(BaseModel):
         print(photo_path, 'photo_path')
 
         background_path = "server/IDassets/"
-
+        companyName = ""
         if company == "PPC":
+            companyName = "Pustanan Printers Cebu"
             background_path += "ppcIDFront.png"
             background_path_back = "server/IDassets/ppcIDBack.png"
         if company == "BB":
+            companyName = "Best Bags"
             background_path += "bbIDfront.png"
             background_path_back = "server/IDassets/bbIDBack.png"
         if company == "PPB":
+            companyName = "Paper Boy"
             background_path += "ppbIDfront.png"
             background_path_back = "server/IDassets/ppbIDBack.png"
         if company == "SP":
+            companyName = "Star Pack"
             background_path += "spIDfront.png"
             background_path_back = "server/IDassets/spIDBack.png"
 
         if company not in ["PPC", "BB", "PPB", "SP"]:
+            companyName = company
             background_path += "ppcIDfront.png"
             background_path_back = "server/IDassets/ppcIDBack.png"
 
@@ -125,30 +129,32 @@ class EmployeeIDCard(BaseModel):
             except Exception as e:
                 print(f"Error loading photo: {e}")
 
-        draw.text((50, 630), f"Name:", fill="black", font=ImageFont.truetype(font_path, size=30))
 
         name_font = ImageFont.truetype(font_path, size=35)
-        # name = textwrap.fill(name, width=30)
-        x_text = 140
+        name_width = draw.textbbox((0, 0), name.upper(), font=name_font)[2]
 
-        name_lines = textwrap.wrap(name, width=35)
-        y_text = 630
+        image_width = background.width
+        x_name_position = (image_width - name_width) // 2
 
-        for line in name_lines:
-            draw.text((x_text, y_text), f" {line}", fill="black", font=name_font)
-            y_text += name_font.size + 5
+        draw.text((x_name_position, 610), name.upper(), fill="black", font=name_font)
 
-
-        draw.text((50, 720), f"Role:", fill="black", font=ImageFont.truetype(font_path, size=30))
+        name_tag_font = ImageFont.truetype(font_path, size=25)
+        name_tag_width = draw.textbbox((0, 0), f"NAME", font=name_tag_font)[2]
+        x_name_tag_position = (image_width - name_tag_width) // 2
+        draw.text((x_name_tag_position, 670), f"NAME", fill="black", font=name_tag_font)
 
         role_font = ImageFont.truetype(font_path, size=30)
-        x_text = 140
 
-        type_of_employee_lines = textwrap.wrap(type_of_employee, width=35)
-        y_text = 720
-        for line in type_of_employee_lines:
-            draw.text((x_text, y_text), line, fill="black", font=role_font)
-            y_text += role_font.size + 5
+        role_width = draw.textbbox((0, 0), type_of_employee.upper(), font=role_font)[2]
+        x_role_position = (image_width - role_width) // 2
+
+        draw.text((x_role_position, 720), type_of_employee.upper(), fill="black", font=role_font)
+
+        role_tag_font = ImageFont.truetype(font_path, size=25)
+        role_tag_width = draw.textbbox((0, 0), f"ROLE", font=role_tag_font)[2]
+        x_role_tag_position = (image_width - role_tag_width) // 2
+
+        draw.text((x_role_tag_position, 770), f"ROLE", fill="black", font=role_tag_font)
 
         print(employeeSignature, 'employeeSignature')
 
@@ -176,7 +182,15 @@ class EmployeeIDCard(BaseModel):
 
         draw.text((410, 880), f"H.R.", fill="black", font=ImageFont.truetype(font_path, size=25))
 
-        draw.text((130, 955), f"Property of Pustanan Printers. ©", fill="white", font=ImageFont.truetype(font_path, size=25))
+        text = f"Property of {companyName}. ©"
+        font = ImageFont.truetype(font_path, size=25)
+
+        text_width = draw.textbbox((0, 0), text, font=font)[2]
+
+        image_width = background.width
+        x_position = (image_width - text_width) // 2
+
+        draw.text((x_position, 955), text, fill="white", font=font)
 
         directory = 'Server/EmployeeIDs/'
         if not os.path.exists(directory):
@@ -187,15 +201,6 @@ class EmployeeIDCard(BaseModel):
 
         background.save(output_path)
         print(f"ID card saved to {output_path}")
-
-        # return {
-        #     "_id": self.id,
-        #     "name": self.firstName + " " + self.lastName,
-        #     "companyRole": self.companyRole,
-        #     "IDCardURL": output_path,
-        # }
-
-        # back side of ID card
 
         try:
             back = Image.open(background_path_back).resize((card_width, card_height))
@@ -286,16 +291,23 @@ class EmployeeIDCard(BaseModel):
             "name": self.firstName + " " + self.lastName,
             "companyRole": self.companyRole,
             "IDCardURL": {"front":download_urls[0], "back":download_urls[1]},
+            '_version': self.version
         }
 
         print(to_return)
 
         return to_return
-
+    
+    def draw_centered_text(self, draw, image_width, y_position, text, font, fill="white"):
+        draw = ImageDraw.Draw(draw)
+        text_width = draw.textbbox((0, 0), text, font=font)[2]
+        x_position = (image_width - text_width)
+        # draw.text((x_position, y_position), text, fill=fill, font=font)
+        return {'x': x_position, 'y': y_position}
 
 employee = {
     "_id": 'BPi81fLbqzianOUXm2KDZTvrxhioRr5r',
-    "firstName": "Val",
+    "firstName": "Michael Tristan",
     "lastName": "Letigio",
     "address": "123 Main Street, Cebu City, Philippines",
     "phoneNumber": "+63 912 345 6789",

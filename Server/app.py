@@ -654,6 +654,22 @@ def generate_employee_id():
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
+@app.route('/updateEmployeeID', methods=['POST'])
+def update_employee_id():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employeeID = data['employeeID']
+        try:
+            res = UserActions(userData).updateEmployeeIDAction(
+                userData, employeeID)
+            return jsonify({
+                'message': 'Employee ID updated successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error updating Employee ID: %s", e)
+            return jsonify({'error': e.args[0]}), 400
 
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):

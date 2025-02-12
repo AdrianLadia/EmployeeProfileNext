@@ -8,7 +8,7 @@ interface EmployeeIDViewProps {
   phase: 1 | 2;
   hasEmptyFields: boolean;
   loading: boolean;
-  idURL: string;
+  idURL: { front: string; back: string } | null;
 }
 
 const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
@@ -18,6 +18,7 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
   loading,
   idURL,
 }) => {
+
   const renderPlaceholder = () => {
     const divStyle = loading ? " skeleton " : " bg-base-300 ";
 
@@ -73,18 +74,27 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
       >
         {/*  */}
         <div className="w-[75%] md:w-[480px] h-[83%]  shadow-md carousel border my-4">
-          {loading || !idURL ? (
+          {loading || !idURL?.front ? (
             renderPlaceholder()
           ) : (
-            <Image
-              className="min-w-full h-full"
-              src={idURL || ""}
-              height={300}
-              width={300}
-              alt="ID"
-            />
+            <>
+              <Image
+                className="min-w-full h-full"
+                src={idURL?.front || ""}
+                height={300}
+                width={300}
+                alt="ID"
+              />
+              <Image
+                className="min-w-full h-full"
+                src={idURL?.back || ""}
+                height={300}
+                width={300}
+                alt="ID"
+              />
+            </>
           )}
-          <div className="flex flex-col min-w-full h-full bg-base-200 "></div>
+
         </div>
 
         {/* actions */}
@@ -99,13 +109,13 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
           </a>
           <button
             type="submit"
-            disabled={hasEmptyFields }
+            disabled={hasEmptyFields}
             tabIndex={-1}
             className={` btn-primary btn w-[43%] h-12 `}
           >
             {loading ? (
               <p className={`${loading && "animate-spin"} `}>C</p>
-            ) : idURL? (
+            ) : idURL?.front ? (
               "Update"
             ) : (
               "Generate"

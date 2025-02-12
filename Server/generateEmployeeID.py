@@ -72,15 +72,20 @@ class EmployeeIDCard(BaseModel):
 
         if company == "PPC":
             background_path += "ppcIDFront.png"
+            background_path_back = "server/IDassets/ppcIDBack.png"
         if company == "BB":
             background_path += "bbIDfront.png"
+            background_path_back = "server/IDassets/bbIDBack.png"
         if company == "PPB":
             background_path += "ppbIDfront.png"
+            background_path_back = "server/IDassets/ppbIDBack.png"
         if company == "SP":
             background_path += "spIDfront.png"
+            background_path_back = "server/IDassets/spIDBack.png"
 
         if company not in ["PPC", "BB", "PPB", "SP"]:
             background_path += "ppcIDfront.png"
+            background_path_back = "server/IDassets/ppcIDBack.png"
 
         try:
             background = Image.open(background_path).resize(
@@ -94,15 +99,6 @@ class EmployeeIDCard(BaseModel):
         name_font = ImageFont.truetype(font_path, size=50)
         role_font = ImageFont.truetype(font_path, size=40)
         ref_id_font = ImageFont.truetype(font_path, size=30)
-
-        # border_color = (0, 0, 0)
-        # border_width = 10
-        # draw.rectangle(
-        #     [(border_width, border_width),
-        #      (card_width - border_width, card_height - border_width)],
-        #     outline=border_color,
-        #     width=border_width,
-        # )
 
         if photo_path:
             try:
@@ -152,53 +148,39 @@ class EmployeeIDCard(BaseModel):
         y_text = 720
         for line in type_of_employee_lines:
             draw.text((x_text, y_text), line, fill="black", font=role_font)
-        # draw.text((255, 620), f"{type_of_employee}", fill="black", font=role_font)
+            y_text += role_font.size + 5
 
-        # ref_id_font = ImageFont.truetype(font_path, size=25)
-        # draw.text((40, 850),
-        #           f"ID no.: {ref_id}",
-        #           fill="black",
-        #           font=ref_id_font)
+        print(employeeSignature, 'employeeSignature')
 
-        # draw.text((180, 140), address, fill="black", font=ref_id_font)
-        # address_lines = textwrap.wrap(address, width=30)
-        # y_text = 170
-        # for line in address_lines:
-        #     draw.text((300, y_text), f"{line}", fill="black", font=ref_id_font)
-        #     y_text += ref_id_font.size + 5
-        # draw.text((300, 90), f"Phone: {phoneNumber}", fill="black", font=ref_id_font)
-        # draw.text((300, 130), f"Date Joined: {dateJoined}", fill="black", font=ref_id_font)
-        # draw.text((50, 300), f"{company}", fill="black", font=ref_id_font)
+        if employeeSignature:
+            try:
+                if employeeSignature.startswith("http"):
+                    response = requests.get(employeeSignature)
+                    response.raise_for_status()
+                    signature = Image.open(BytesIO(response.content))
 
-        # qr = qrcode.QRCode(box_size=4, border=2)
-        # qr.add_data(qr_data)
-        # qr.make(fit=True)
-        # qr_code_img = qr.make_image(fill="black", back_color="white").resize(
-        #     (170, 170))
-        # background.paste(qr_code_img, (215, 680))
+                    if signature.mode in ('RGBA', 'LA'):
+                        background_layer = Image.new('RGB', signature.size, (255, 255, 255))
+                        background_layer.paste(signature, mask=signature.split()[3])
+                        signature = background_layer
+
+                    signature = signature.resize((200, 100))
+                else:
+                    signature = Image.open(employeeSignature).resize((200, 100))
+
+                background.paste(signature, (60, 800))
+            except Exception as e:
+                print(f"Error loading signature: {e}")
+
+        draw.text((80, 880), f"Signature", fill="black", font=ImageFont.truetype(font_path, size=25))
+
+        draw.text((410, 880), f"H.R.", fill="black", font=ImageFont.truetype(font_path, size=25))
 
         draw.text((130, 955), f"Property of Pustanan Printers. ©", fill="white", font=ImageFont.truetype(font_path, size=25))
-
-        barcode = Code128(ref_id, writer=ImageWriter())
-        options = {
-            'module_width': 0.5,
-            'module_height': 5.0,
-            'quiet_zone': 1.0,
-            'font_size': 0,
-            'text_distance': 0.0,
-            'background': 'white',
-            'foreground': 'black',
-            'write_text': False
-        }
-        barcode.save("Server/IDBarcodes/"+f"{name}")
-        barcode_img = Image.open(f"Server/IDBarcodes/{name}.png").resize((400, 130))
-        background.paste(barcode_img, (95, 800))
 
         directory = 'Server/EmployeeIDs/'
         if not os.path.exists(directory):
             os.makedirs(directory)
-
-        
 
         output_path = os.path.join(
             directory, f"{self.firstName+self.lastName}_id_card.png")
@@ -213,6 +195,72 @@ class EmployeeIDCard(BaseModel):
         #     "IDCardURL": output_path,
         # }
 
+        # back side of ID card
+
+        try:
+            back = Image.open(background_path_back).resize((card_width, card_height))
+        except Exception as e:
+            print(f"Error loading background image: {e}")
+            return
+
+        draw_back = ImageDraw.Draw(back)
+        terms_font = ImageFont.truetype(font_path, size=25)
+
+        draw_back.text((230, 120), f"TERMS", fill="black", font=ImageFont.truetype(font_path, size=30))
+
+        terms = "This card is the property of the company and must be returned upon request. " \
+
+        terms_lines = textwrap.wrap(terms, width=40)
+        y_text = 170
+        for line in terms_lines:
+            draw_back.text((65, y_text), line, fill="black", font=terms_font)
+            y_text += terms_font.size + 5
+
+        draw_back.text((65, 300), f"Address:", fill="black", font=ImageFont.truetype(font_path, size=35))
+
+        address_font = ImageFont.truetype(font_path, size=30)
+        x_text = 100
+
+        address_lines = textwrap.wrap(address, width=35)
+        y_text = 350
+        for line in address_lines:
+            draw_back.text((x_text, y_text), line, fill="black", font=address_font)
+            y_text += address_font.size + 5
+
+        draw_back.text((65, 480), f"Phone:", fill="black", font=ImageFont.truetype(font_path, size=35))
+
+        phone_font = ImageFont.truetype(font_path, size=30)
+        draw_back.text((100, 530), phoneNumber, fill="black", font=phone_font)
+
+        draw_back.text((65, 620), f"Date Joined:", fill="black", font=ImageFont.truetype(font_path, size=35))
+
+        date_font = ImageFont.truetype(font_path, size=30)
+        draw_back.text((100, 680), dateJoined.strftime("%B %d, %Y"), fill="black", font=date_font)
+
+        barcode = Code128(ref_id, writer=ImageWriter())
+        options = {
+            'module_width': 0.5,
+            'module_height': 5.0,
+            'quiet_zone': 1.0,
+            'font_size': 0,
+            'text_distance': 0.0,
+            'background': 'white',
+            'foreground': 'black',
+            'write_text': False
+        }
+        barcode.save("Server/IDBarcodes/"+f"{name}")
+        barcode_img = Image.open(f"Server/IDBarcodes/{name}.png").resize((500, 130))
+        back.paste(barcode_img, (45, 800))
+
+        # back_output_path = os.path.join(output_path, f"{name.replace(' ', '_')}_id_card_back.png")
+        back_output_path = os.path.join(directory, f"{self.firstName+self.lastName.replace(' ', '_')}_id_card_back.png")
+        back.save(back_output_path)
+        print(f"Back side of ID card saved to {back_output_path}")
+
+        upload_url = self.uploadListToFirebaseStorage([output_path, back_output_path], "EmployeeIDs")
+        return upload_url
+
+    def uploadListToFirebaseStorage(self, list_of_photos, folder_name):
         if not _apps:
             cred = credentials.Certificate(
                 "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
@@ -223,52 +271,26 @@ class EmployeeIDCard(BaseModel):
             })
 
         bucket = storage.bucket()
-        blob = bucket.blob(
-            f"EmployeeIDs/{self.firstName+self.lastName}_id_card.png")
-        blob.upload_from_filename(output_path)
-        blob.make_public()
+        download_urls = []
+        for photo in list_of_photos:
+            blob = bucket.blob(f"{folder_name}/{photo}")
+            blob.upload_from_filename(photo)
+            blob.make_public()
 
-        download_url = f"{blob.public_url}?updated={int(time.time())}"
-        print(f"ID card uploaded to Firebase Storage" + download_url)
+            download_url = f"{blob.public_url}?updated={int(time.time())}"
+            download_urls.append(download_url)
+            print(f"{photo} uploaded to Firebase Storage" + download_url)
 
         to_return = {
             "_id": self.id,
             "name": self.firstName + " " + self.lastName,
             "companyRole": self.companyRole,
-            "IDCardURL": download_url,
+            "IDCardURL": {"front":download_urls[0], "back":download_urls[1]},
         }
 
         print(to_return)
 
         return to_return
-
-        # back side of ID card
-
-        # back = Image.new("RGB", (card_width, card_height), background_color)
-
-        # try:
-        #     back = Image.open(background_path).resize((card_width, card_height))
-        # except Exception as e:
-        #     print(f"Error loading background image: {e}")
-        #     return
-
-        # draw_back = ImageDraw.Draw(back)
-        # terms_font = ImageFont.truetype(font_path, size=18)
-
-        # terms = "This card is the property of the company and must be returned upon request. " \
-
-        # terms_lines = textwrap.wrap(terms, width=60)
-        # y_text = 50
-        # for line in terms_lines:
-        #     draw_back.text((50, y_text), line, fill="black", font=terms_font)
-        #     y_text += terms_font.size + 5
-
-        # draw_back.text((50, 300), f"Property of {company}", fill="black", font=ref_id_font)
-
-        # # back_output_path = os.path.join(output_path, f"{name.replace(' ', '_')}_id_card_back.png")
-        # back_output_path = os.path.join(directory, f"{employee['name'].replace(' ', '_')}_id_card_back.png")
-        # back.save(back_output_path)
-        # print(f"Back side of ID card saved to {back_output_path}")
 
 
 employee = {
@@ -286,6 +308,7 @@ employee = {
     "isRegular": False,
     "companyRole": "IT HEAD",
     "isOJT": True,
+    "employeeSignature": "https://firebasestorage.googleapis.com/v0/b/pustananemployeeprofile.firebasestorage.app/o/employees%2FValLetigio%2FemployeeSignature-53957-0?alt=media&token=0c9315d3-872b-4656-b563-915777ab4b05",
     "dailyWage": 800.50,
     "_version": 1,
 }

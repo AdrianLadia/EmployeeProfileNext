@@ -96,6 +96,7 @@ class EmployeeIDCard(BaseModel):
                 (card_width, card_height))
         except Exception as e:
             print(f"Error loading background image: {e}")
+            return None
 
         draw = ImageDraw.Draw(background)
 

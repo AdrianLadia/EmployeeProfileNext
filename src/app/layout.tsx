@@ -13,6 +13,7 @@ import Toast from "./toast";
 import Confirmation from "./confirmation";
 
 import ImageModal from "./Modals/ImageModal";
+import VideoModal from "./Modals/VideoModal";
 import EmployeeMemoTableModal from "./Modals/EmployeeMemoTableModal";
 import MemoPrintModal from "./Modals/MemoPrintModal";
 
@@ -47,6 +48,7 @@ export default function RootLayout({
             {children}
             {/* <NavBar/> */}
             <ImageModal />
+            <VideoModal/>
             <EmployeeMemoTableModal />
             <MemoPrintModal />
             <OffenseTableModal />

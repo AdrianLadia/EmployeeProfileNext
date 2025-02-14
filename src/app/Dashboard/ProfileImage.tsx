@@ -10,6 +10,9 @@ import FirebaseUpload from "../api/FirebaseUpload";
 
 import Image from "next/image";
 
+import { openEditor } from "react-profile";
+import "react-profile/themes/default";
+
 interface ProfileImageProps {
   employee: Employee;
 }
@@ -21,7 +24,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
     serverRequests,
     userData,
     setToastOptions,
-    router
+    router,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -36,19 +39,21 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
   const [hideTakePhoto, setHideTakePhoto] = React.useState(false);
 
   useEffect(() => {
-    if(window.innerWidth > 1023){
-      setHideTakePhoto(true)
+    if (window.innerWidth > 1023) {
+      setHideTakePhoto(true);
     }
   }, []);
 
   if (!employee?._id) {
     return null;
-  } 
+  }
 
   const containerStyle = `w-full h-full flex items-center justify-center bg-base-300 `;
 
   const handleViewImage = () => {
-    handleImageModalClick([employee.photoOfPerson || ""]);
+    handleImageModalClick([
+      uploadedPhoto ? uploadedPhoto : employee?.photoOfPerson || "",
+    ]);
   };
 
   const handleTakePhotoClick = () => {
@@ -63,27 +68,28 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files || [];
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = e.target.files || [];
 
-    setLoading(true);
+  //   setLoading(true);
 
-    const reader = new FileReader();
+  //   const reader = new FileReader();
 
-    reader.readAsDataURL(files[0]);
+  //   reader.readAsDataURL(files[0]);
 
-    reader.onloadend = () => {
-      setUploadedPhoto(reader.result as string);
-    };
+  //   reader.onloadend = () => {
+  //     setUploadedPhoto(reader.result as string);
+  //   };
 
-    setLoading(false);
+  //   setLoading(false);
 
-    const timeout = setTimeout(() => {
-      handleSave(reader.result as string);
-    }, 500);
+  //   const timeout = setTimeout(() => {
+  //     open(e);
+  //     // handleSave(reader.result as string);
+  //   }, 500);
 
-    return () => clearTimeout(timeout);
-  };
+  //   return () => clearTimeout(timeout);
+  // };
 
   const handleSave = async (image: string) => {
     const confirmed = await handleConfirmation(
@@ -94,7 +100,6 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
 
     if (confirmed) {
       try {
-
         let photoURL;
 
         if (image) {
@@ -104,21 +109,19 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
             "photoOfPerson"
           );
 
-          console.log(uploadRes)
+          console.log(uploadRes);
 
           photoURL = uploadRes[0];
         }
 
-        // const res = await serverRequests.updateEmployee(
-        //   employee,
-        //   { photoOfPerson: photoURL },
-        //   userData
-        // );
-
-        const res = await serverRequests.updateEmployeeProfilePicture(employee?._id || "", photoURL || "", userData);
+        const res = await serverRequests.updateEmployeeProfilePicture(
+          employee?._id || "",
+          photoURL || "",
+          userData
+        );
 
         if (res?.data) {
-          console.log(res.data)
+          console.log(res.data);
           console.log("Image Successfully Saved");
 
           setToastOptions({
@@ -126,9 +129,9 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
             message: "Photo Saved",
             type: "success",
             timer: 3,
-          })
+          });
 
-          router.refresh()
+          router.refresh();
         }
 
         if (res?.error) {
@@ -157,6 +160,19 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
       setLoading(false);
     }
   };
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const result = await openEditor({
+      src: e.target.files?.[0] || "",
+      initCrop: { x: 0, y: 0, unit: "px", width: 200, height: 200 },
+    });
+
+    const image = result.editedImage?.getDataURL();
+
+    setUploadedPhoto(image || "");
+
+    handleSave(image || "");
+  }
 
   return (
     <div
@@ -191,19 +207,19 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
           >
             <span className="loading text-info"></span>
           </div>
-        ) : employee?.photoOfPerson ? (
+        ) : uploadedPhoto ? (
           <Image
             className={` w-full h-full rounded-full ring-2 ring-neutral`}
-            src={employee.photoOfPerson || "/avatar.png"}
+            src={uploadedPhoto}
             alt={employee?.firstName}
             fill
             sizes="(max-width: 768px) 100vw, 700px"
             loading="lazy"
           />
-        ) : uploadedPhoto ? (
+        ) : employee?.photoOfPerson ? (
           <Image
             className={` w-full h-full rounded-full ring-2 ring-neutral`}
-            src={uploadedPhoto}
+            src={employee.photoOfPerson || "/avatar.png"}
             alt={employee?.firstName}
             fill
             sizes="(max-width: 768px) 100vw, 700px"
@@ -222,7 +238,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
         tabIndex={0}
         className="dropdown-content menu bg-base-100 rounded-lg z-[1] w-max shadow border p-0 border-neutral font-semibold py-1 "
       >
-        <li hidden={employee?.photoOfPerson ? false : true}>
+        <li hidden={uploadedPhoto || employee?.photoOfPerson ? false : true}>
           <a onClick={handleViewImage}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

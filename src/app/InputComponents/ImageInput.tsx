@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 
 import Image from "next/image";
 
@@ -19,6 +19,7 @@ interface ImageInputProps {
   disable?: boolean;
   required?: boolean;
   multiple?: boolean;
+  allowVideo?: boolean;
 }
 
 const ImageInput: FC<ImageInputProps> = ({
@@ -33,12 +34,14 @@ const ImageInput: FC<ImageInputProps> = ({
   disable,
   required,
   multiple,
+  allowVideo = false,
 }) => {
   const {
     handleImageModalClick,
     setImageModalId,
     imageListForModal,
     imageModalId,
+    handleVideoModalClick,
   } = useAppContext();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -46,6 +49,8 @@ const ImageInput: FC<ImageInputProps> = ({
   const videoInputRef = React.useRef<HTMLInputElement>(null);
 
   const [hideTakePhoto, setHideTakePhoto] = React.useState(false);
+
+  const [isVideo, setIsVideo] = React.useState(false);
 
   React.useEffect(() => {
     if (window.innerWidth > 1023) {
@@ -117,13 +122,27 @@ const ImageInput: FC<ImageInputProps> = ({
     if (fileInputRef?.current) {
       fileInputRef.current.click();
     }
+    setIsVideo(false);
   };
 
   const handleUploadVideoClick = () => {
     if (videoInputRef?.current) {
       videoInputRef.current.click();
     }
+    setIsVideo(true);
   };
+
+  useEffect(() => {
+    if (isVideo) {
+      if (!mediaList?.length) {
+        setIsVideo(true);
+      }
+    } else {
+      if (!mediaList?.length) {
+        setIsVideo(false);
+      }
+    }
+  }, [mediaList, isVideo]);
 
   return (
     <div className={`flex flex-col ${width}`}>
@@ -152,17 +171,18 @@ const ImageInput: FC<ImageInputProps> = ({
         onChange={(setFunction && handleFileChange) || onChangeHandler}
       />
 
-      <input
-        ref={videoInputRef}
-        type="file"
-        className={`hidden`}
-        id={id}
-        accept="video/mp4, video/mov"
-        required={required}
-        disabled={disable}
-        multiple={multiple}
-        onChange={(setFunction && handleFileChange) || onChangeHandler}
-      />
+      {allowVideo && (
+        <input
+          ref={videoInputRef}
+          type="file"
+          className={`hidden`}
+          id={id}
+          accept="video/mp4, video/mov"
+          required={required}
+          disabled={disable}
+          onChange={(setFunction && handleFileChange) || onChangeHandler}
+        />
+      )}
 
       {/*  */}
       <div
@@ -173,27 +193,44 @@ const ImageInput: FC<ImageInputProps> = ({
         <div
           className={` h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px] relative group`}
           data-tip={`${mediaList?.length}`}
-          onClick={() => {
-            if (mediaList?.length) {
-              handleImageModalClick(mediaList || []);
-              setImageModalId(id);
-            }
-          }}
         >
-          <Image
-            className={`
+          {!isVideo && (
+            <Image
+              className={`
               ${mediaList?.length && "cursor-pointer border "} 
-              h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px] rounded-box
+              h-[${imgDimensions?.height}px] w-[${
+                imgDimensions?.width
+              }px] rounded-box
             `}
-            height={imgDimensions?.height}
-            width={imgDimensions?.width}
-            alt={"   "}
-            src={mediaList?.[0] || ""}
-          />
-          
+              height={imgDimensions?.height}
+              width={imgDimensions?.width}
+              alt={"   "}
+              src={mediaList?.[0] || ""}
+              onClick={() => {
+                if (mediaList?.length) {
+                  handleImageModalClick(mediaList || []);
+                  setImageModalId(id);
+                }
+              }}
+            />
+          )}
+
+          {isVideo && mediaList?.length && (
+            <div
+              className="h-14 w-14 border flex items-center justify-center cursor-pointer btn btn-outline indent-0.5"
+              onClick={() => {
+                if (mediaList?.length) {
+                  handleVideoModalClick(mediaList?.[0] || "");
+                }
+              }}
+            >
+              ▶
+            </div>
+          )}
+
           <span
-            className={`${
-              !mediaList?.length && "hidden"
+            className={`${!mediaList?.length && " hidden "} ${
+              isVideo && " hidden "
             } absolute top-5 right-1/2 left-1/2 translate-x-[-50%] z-10 bg-base-300/70 group-hover:bg-base-300 items-center flex justify-center size-5 rounded-full cursor-pointer`}
           >
             {mediaList?.length}
@@ -251,38 +288,45 @@ const ImageInput: FC<ImageInputProps> = ({
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth={2}
+                  strokeWidth={1.5}
                   stroke="currentColor"
                   className="size-5"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776"
+                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
                   />
                 </svg>
-                Upload
+                Photo
               </a>
             </li>
-            <li>
-              <a onClick={handleUploadVideoClick}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776"
-                  />
-                </svg>
-                Video
-              </a>
-            </li>
+            {allowVideo && (
+              <li>
+                <a onClick={handleUploadVideoClick}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z"
+                    />
+                  </svg>
+                  Video
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>

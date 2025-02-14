@@ -172,7 +172,7 @@ const EmployeeMemoTableModal = () => {
                         alt="mediaList"
                         onClick={() =>
                           memo?.mediaList?.[0] &&
-                          handleImageModalClick(memo?.mediaList)
+                          handleImageModalClick(memo?.mediaList) 
                         }
                       ></Image>{" "}
                     </td>

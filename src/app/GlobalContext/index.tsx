@@ -65,6 +65,9 @@ interface AppContextProps {
   setImageModalId: (data: string) => void;
   offenseListForModal: Offense[];
   setOffenseListForModal: (data: Offense[]) => void;
+  handleVideoModalClick: (video: string) => void;
+  videoForModal: string;
+  setVideoForModal: (data: string) => void;
 }
 
 // Create the default context with proper types and default values
@@ -110,6 +113,9 @@ const AppContext = createContext<AppContextProps>({
   setImageModalId: () => {},
   offenseListForModal: [] as Offense[],
   setOffenseListForModal: () => {},
+  handleVideoModalClick: () => {},
+  videoForModal: "",
+  setVideoForModal: () => {},
 });
 
 export default function ContextProvider({
@@ -414,6 +420,8 @@ export default function ContextProvider({
 
   const [imageModalId, setImageModalId] = useState<string>("");
 
+  const [videoForModal, setVideoForModal] = useState<string>("");
+
   useEffect(() => {
     serverRequests
       .getEnvironment()
@@ -565,6 +573,14 @@ export default function ContextProvider({
     setOffenseListForModal(offenseList);
   };
 
+  const handleVideoModalClick = (video: string) => {
+    const modal = document.getElementById("videoModal");
+    if (modal) {
+      (modal as HTMLDialogElement).showModal();
+    }
+    setVideoForModal(video);
+  }
+
   const highlightText = (text: string): JSX.Element[] => {
     if (!search) return [<span key="0">{text}</span>];
     const parts = text.split(new RegExp(`(${search})`, "gi"));
@@ -636,6 +652,9 @@ export default function ContextProvider({
     handleOffenseListClick,
     offenseListForModal,
     setOffenseListForModal,
+    handleVideoModalClick,
+    videoForModal,
+    setVideoForModal
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

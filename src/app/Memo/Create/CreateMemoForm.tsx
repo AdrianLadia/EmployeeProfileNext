@@ -375,7 +375,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       {/* medialist */}
       <ImageInput
         id="mediaList"
-        title="Photo"
+        title="Media Proof"
         width="w-full"
         inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
         imgDimensions={{ height: 60, width: 60 }}
@@ -383,6 +383,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         onChangeHandler={handleFileChange}
         multiple={true}
         required={false}
+        allowVideo={true}
       />
 
       {/* memoPhotosList */}

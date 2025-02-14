@@ -12,11 +12,14 @@ const EmployeeMemoTableModal = () => {
     setMemoForTableModal,
     handleImageModalClick,
     handleMemoPrintModalClick,
+    handleVideoModalClick,
   } = useAppContext();
 
   const memoTableModalRef = React.useRef<HTMLDialogElement>(null);
 
   const [isForSingleEmployee, setIsForSingleEmployee] = React.useState(false);
+
+  // const [isVideo, setIsVideo] = React.useState(false);
 
   useEffect(() => {
     if (memoForTableModal.length > 0) {
@@ -161,20 +164,32 @@ const EmployeeMemoTableModal = () => {
                     </td>
                     {/* Photos */}
                     <td>
-                      {" "}
-                      <Image
-                        className={` w-[150px] h-[150px] ${
-                          memo?.mediaList?.[0] && "hover:border"
-                        } cursor-pointer `}
-                        src={memo?.mediaList?.[0] || ""}
-                        width={100}
-                        height={100}
-                        alt="mediaList"
-                        onClick={() =>
-                          memo?.mediaList?.[0] &&
-                          handleImageModalClick(memo?.mediaList) 
-                        }
-                      ></Image>{" "}
+                      <div className="w-[150px] h-[150px] border cursor-pointer border-neutral text-neutral group">
+                        {memo?.mediaList?.[0]
+                          ?.toLocaleLowerCase()
+                          .includes("video") ? (
+                          <div
+                            className={` indent-0.5 text-4xl group-hover:text-3xl w-full h-full  flex justify-center items-center `}
+                            onClick={() =>
+                              handleVideoModalClick(memo?.mediaList?.[0] || "")
+                            }
+                          >
+                            ▶
+                          </div>
+                        ) : (
+                          <Image
+                            className={` w-full h-full hover:p-2 `}
+                            src={memo?.mediaList?.[0] || ""}
+                            width={100}
+                            height={100}
+                            alt="mediaList"
+                            onClick={() =>
+                              memo?.mediaList?.[0] &&
+                              handleImageModalClick(memo?.mediaList)
+                            }
+                          />
+                        )}
+                      </div>
                     </td>
                     {/* Memo Photos */}
                     <td>

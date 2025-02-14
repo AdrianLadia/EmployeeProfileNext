@@ -53,6 +53,14 @@ const ImageInput: FC<ImageInputProps> = ({
   const [isVideo, setIsVideo] = React.useState(false);
 
   React.useEffect(() => {
+    if (mediaList?.[0]?.toLowerCase()?.includes("video")) {
+      setIsVideo(true);
+    }else{
+      setIsVideo(false);
+    }
+  }, [mediaList]);
+
+  React.useEffect(() => {
     if (window.innerWidth > 1023) {
       setHideTakePhoto(true);
     }
@@ -121,28 +129,14 @@ const ImageInput: FC<ImageInputProps> = ({
   const handleUploadClick = () => {
     if (fileInputRef?.current) {
       fileInputRef.current.click();
-    }
-    setIsVideo(false);
+    } 
   };
 
   const handleUploadVideoClick = () => {
     if (videoInputRef?.current) {
       videoInputRef.current.click();
-    }
-    setIsVideo(true);
-  };
-
-  useEffect(() => {
-    if (isVideo) {
-      if (!mediaList?.length) {
-        setIsVideo(true);
-      }
-    } else {
-      if (!mediaList?.length) {
-        setIsVideo(false);
-      }
-    }
-  }, [mediaList, isVideo]);
+    } 
+  }; 
 
   return (
     <div className={`flex flex-col ${width}`}>

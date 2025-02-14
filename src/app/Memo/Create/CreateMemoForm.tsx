@@ -32,7 +32,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     setLoading,
     handleMemoPrintModalClick,
     imageListForModal,
-    imageModalId
+    imageModalId,
   } = useAppContext();
 
   const [remedialAction, setRemedialAction] = useState<string>("");
@@ -91,9 +91,12 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         };
 
         if (formData?.mediaList) {
+          const isVideo = formData?.mediaList?.[0]?.includes("video")
+            ? "/video"
+            : "";
           const res = await upload.Images(
             formData?.mediaList,
-            `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
+            `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}${isVideo}`,
             "mediaList"
           );
           finalFormData.mediaList = res || [];
@@ -180,7 +183,10 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           // Check if all files have been processed
           if (fileDataUrls?.length === files?.length) {
             const finalResult =
-              e.target.id === "photoOfPerson" || e.target.id == "employeeSignature" ? fileDataUrls[0] : fileDataUrls;
+              e.target.id === "photoOfPerson" ||
+              e.target.id == "employeeSignature"
+                ? fileDataUrls[0]
+                : fileDataUrls;
 
             setFormData({
               ...formData,
@@ -294,9 +300,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           options={offenseList}
           placeholder="Select Offense"
           value={formData?.MemoCode ? formData.MemoCode : null}
-          getOptionLabel={(option) =>
-            `${option.title}` || ""
-          }
+          getOptionLabel={(option) => `${option.title}` || ""}
           isClearable
           onChange={(selectedOption) => {
             setFormData({

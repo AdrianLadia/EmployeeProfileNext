@@ -196,7 +196,7 @@ const EmployeeMemoTableModal = () => {
                     </td>
                     {/* Memo Photos */}
                     <td>
-                      <div className="w-[150px] h-[150px] border border-neutral group rounded-box">
+                      <div className="w-[150px] h-[150px] border border-neutral group rounded-box overflow-clip">
                         <Image
                           className={` group-hover:p-1 cursor-pointer w-full h-full `}
                           src={memo?.memoPhotosList?.[0] || ""}

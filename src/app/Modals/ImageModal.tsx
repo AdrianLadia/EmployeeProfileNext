@@ -22,6 +22,12 @@ const ImageModal = () => {
     setImageListForModal(filtered);
   };
 
+  React.useEffect(()=>{
+    if(imageListForModal.length === 0){
+      setHash("#item0");
+    }
+  },[imageListForModal])
+
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -38,7 +44,7 @@ const ImageModal = () => {
 
   return (
     <dialog id="imageModal" className="modal w-full " ref={imageModalRef}>
-      <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative ">
+      <div className=" shadow-none gap-2 flex flex-col w-[98%] md:w-[50%] h-full justify-center items-center relative ">
         <div className="carousel h-max w-full bg-base-100/10 ">
           {imageListForModal.map((item, index) => (
             <div
@@ -90,7 +96,7 @@ const ImageModal = () => {
           {/* <span className='absolute top-2 left-3 font-bold bg-white rounded-full w-8 h-8 grid place-content-center'>{index + 1}</span> */}
         </div>
 
-        <div className="flex absolute bottom-0 z-50 gap-2">
+        <div className="flex absolute bottom-2 md:bottom-8 z-50 gap-2">
           {imageListForModal.map((item, index) => (
             <a
               key={`item${index}`}

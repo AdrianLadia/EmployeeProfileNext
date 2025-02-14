@@ -278,7 +278,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
                 d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
               />
             </svg>
-            Take Photo
+            Camera
           </a>
         </li>
         <li>

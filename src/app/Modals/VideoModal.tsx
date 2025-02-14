@@ -38,10 +38,12 @@ const VideoModal = () => {
           <button onClick={handleClose} className="close-button"></button>
         </form>
 
-        {videoForModal ? (<video className=" w-full " width="240" height="240" controls>
-          <source src={videoForModal || ""} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>) : (
+        {videoForModal ? (
+          <video className=" w-full " width="240" height="240" controls>
+            <source src={videoForModal || ""} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        ) : (
           <div className="text-white">No video available</div>
         )}
       </div>

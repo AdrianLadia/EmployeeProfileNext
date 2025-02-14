@@ -186,7 +186,9 @@ const PrintMemorandumModal = () => {
             className="opacity-50 hover:opacity-100 flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 tooltip tooltip-bottom"
             data-tip="Include"
           >
-            {memoForPrintModal?.mediaList?.[0] && (
+            {memoForPrintModal?.mediaList?.[0] && 
+              !memoForPrintModal?.mediaList?.[0]?.includes("video") &&
+            (
               <>
                 <label htmlFor="mediaList"> Media List</label>
                 <input
@@ -364,7 +366,9 @@ const PrintMemorandumModal = () => {
           {/* medialist */}
           <div
             hidden={
-              memoForPrintModal?.mediaList?.[0] && includeMediaList
+              memoForPrintModal?.mediaList?.[0] && 
+              !memoForPrintModal?.mediaList?.[0]?.includes("video") &&
+              includeMediaList
                 ? false
                 : true
             }

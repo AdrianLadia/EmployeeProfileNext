@@ -84,8 +84,8 @@ const EmployeeMemoTableModal = () => {
                   )}
                   <th className="min-w-[200px]">Memo</th>
                   <th className="min-w-[20vw]">Offense</th>
-                  <th className="min-w-[150px]">Photos</th>
-                  <th className="min-w-[150px]">Memo Photos</th>
+                  <th className="min-w-[150px]">Media</th>
+                  <th className="min-w-[150px]">Memo Photo</th>
                   <th className="min-w-[200px]">Reason</th>
                   <th>isSubmitted</th>
                 </tr>
@@ -164,21 +164,22 @@ const EmployeeMemoTableModal = () => {
                     </td>
                     {/* Photos */}
                     <td>
-                      <div className="w-[150px] h-[150px] border cursor-pointer border-neutral text-neutral group">
+                      <div className="overflow-clip w-[150px] h-[150px] border cursor-pointer border-neutral text-neutral-content group flex justify-center items-center rounded-box">
                         {memo?.mediaList?.[0]
                           ?.toLocaleLowerCase()
                           .includes("video") ? (
                           <div
-                            className={` indent-0.5 text-4xl group-hover:text-3xl w-full h-full  flex justify-center items-center `}
+                            className={` indent-0.5 text-4xl group-hover:text-3xl w-full h-full flex justify-center items-center bg-neutral group-hover:bg-neutral/50  `}
                             onClick={() =>
                               handleVideoModalClick(memo?.mediaList?.[0] || "")
                             }
+                            title="Play Video"
                           >
                             ▶
                           </div>
-                        ) : (
+                        ) : memo?.mediaList?.[0] ? (
                           <Image
-                            className={` w-full h-full hover:p-2 `}
+                            className={` w-full h-full hover:p-1 `}
                             src={memo?.mediaList?.[0] || ""}
                             width={100}
                             height={100}
@@ -188,25 +189,26 @@ const EmployeeMemoTableModal = () => {
                               handleImageModalClick(memo?.mediaList)
                             }
                           />
+                        ) : (
+                          <span className="text-neutral">?</span>
                         )}
                       </div>
                     </td>
                     {/* Memo Photos */}
                     <td>
-                      {" "}
-                      <Image
-                        className={` w-[150px] h-[150px] ${
-                          memo?.memoPhotosList?.[0] && "hover:border"
-                        } cursor-pointer `}
-                        src={memo?.memoPhotosList?.[0] || ""}
-                        width={100}
-                        height={100}
-                        alt="memoPhotosList"
-                        onClick={() =>
-                          memo?.memoPhotosList?.[0] &&
-                          handleImageModalClick(memo?.memoPhotosList)
-                        }
-                      ></Image>{" "}
+                      <div className="w-[150px] h-[150px] border border-neutral group rounded-box">
+                        <Image
+                          className={` group-hover:p-1 cursor-pointer w-full h-full `}
+                          src={memo?.memoPhotosList?.[0] || ""}
+                          width={100}
+                          height={100}
+                          alt="memoPhotosList"
+                          onClick={() =>
+                            memo?.memoPhotosList?.[0] &&
+                            handleImageModalClick(memo?.memoPhotosList)
+                          }
+                        />
+                      </div>
                     </td>
                     {/* Reason */}
                     <td>

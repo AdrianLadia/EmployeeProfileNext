@@ -31,6 +31,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     handleImageModalClick,
     imageListForModal,
     imageModalId,
+    handleVideoModalClick,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -50,7 +51,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `Submit ${formData?.subject} for ${formData?.Employee?.firstName} ${formData?.Employee?.lastName} ?` ,
+      `Submit ${formData?.subject} for ${formData?.Employee?.firstName} ${formData?.Employee?.lastName} ?`,
       ""
     );
 
@@ -82,7 +83,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
               `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
               "memoPhotosList"
             );
-            finalFormData.memoPhotosList = res || []; 
+            finalFormData.memoPhotosList = res || [];
           } catch (e) {
             console.error(e);
           }
@@ -95,7 +96,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
           finalFormData.reason || "",
           userData
         );
-        
+
         if (res && res.data) {
           setToastOptions({
             open: true,
@@ -153,7 +154,10 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
           // Check if all files have been processed
           if (fileDataUrls.length === files.length) {
             const finalResult =
-              e.target.id === "photoOfPerson" || e.target.id === "employeeSignature" ? fileDataUrls[0] : fileDataUrls;
+              e.target.id === "photoOfPerson" ||
+              e.target.id === "employeeSignature"
+                ? fileDataUrls[0]
+                : fileDataUrls;
 
             setFormData({
               ...formData,
@@ -176,7 +180,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
   useEffect(() => {
     filterMemos(memoList);
-  }, [memoList, submittedMemos]); 
+  }, [memoList, submittedMemos]);
 
   const selectStyle = {
     control: (base: unknown) => ({
@@ -206,7 +210,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     >
       <h2 className="font-semibold text-violet-500">Memorandum Submition</h2>
 
-      {/* Memorandum to Submit */} 
+      {/* Memorandum to Submit */}
       <Select
         styles={selectStyle}
         options={filteredMemos}
@@ -261,7 +265,13 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
             className="grow"
             placeholder="Name"
             id="name"
-            value={formData?.Employee?.firstName ? formData?.Employee?.firstName + " " + formData?.Employee?.lastName : ""}
+            value={
+              formData?.Employee?.firstName
+                ? formData?.Employee?.firstName +
+                  " " +
+                  formData?.Employee?.lastName
+                : ""
+            }
           />
         </label>
       </div>
@@ -328,33 +338,44 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
       </div>
 
       {/* medialist */}
-      {formData?.mediaList?.[0] && (
-        <div
-          className={` flex items-center justify-between p-3 gap-3 bg-base-200 rounded-box text-sm `}
-        >
-          <p className="w-[25%] text-end ">Media List: </p>
-          <div className="flex justify-evenly gap-3 w-[75%] ">
+      <div
+        className={`${!formData?.mediaList?.[0]&&"hidden"} flex items-center justify-between p-3 gap-5 border rounded-box text-sm `}
+      >
+        <p className=" w-[50%] text-end ">Media Proof: </p>
+        {formData?.mediaList?.[0]?.includes("video") ? (
+          <div className="w-[50%] flex justify-start cursor-pointer ">
             <div
-              className="relative w-32 h-32 group"
-              onClick={() => handleImageModalClick(formData?.mediaList || [])}
+              className={` indent-0.5 text-4xl group-hover:text-3xl w-32 h-32 flex justify-center items-center px-5 py-3 hover:bg-neutral/50 bg-neutral rounded-box text-neutral-content `}
+              onClick={() =>
+                handleVideoModalClick(formData?.mediaList?.[0] || "")
+              } title="Play Video"
             >
-              <span
-                className="font-semibold absolute grid place-content-center left-1/2 
-              right-1/2 top-1/2 bottom-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs opacity-75 group-hover:opacity-100 bg-base-100 p-4 rounded-full cursor-pointer"
-              >
-                {formData?.mediaList?.length}
-              </span>
-              <Image
-                src={formData?.mediaList?.[0]}
-                alt="media"
-                width={100}
-                height={100}
-                className="rounded-box cursor-pointer w-full h-full"
-              />
+              ▶
             </div>
           </div>
-        </div>
-      )}
+        ) : (
+            <div className="flex justify-start gap-3 w-[50%] ">
+              <div
+                className="relative w-32 h-32 group border"
+                onClick={() => handleImageModalClick(formData?.mediaList || [])}
+              >
+                <span
+                  className="font-semibold absolute grid place-content-center left-1/2 
+              right-1/2 top-1/2 bottom-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs opacity-75 group-hover:opacity-100 bg-base-100 p-4 rounded-full cursor-pointer"
+                >
+                  {formData?.mediaList?.length}
+                </span>
+                <Image
+                  src={formData?.mediaList?.[0] || ""}
+                  alt="media"
+                  width={100}
+                  height={100}
+                  className="rounded-box cursor-pointer w-full h-full"
+                />
+              </div>
+            </div>
+        )}
+      </div>
 
       {/* medialist */}
       {/* <ImageInput

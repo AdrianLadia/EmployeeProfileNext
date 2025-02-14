@@ -39,7 +39,7 @@ const ImageModal = () => {
   return (
     <dialog id="imageModal" className="modal w-full " ref={imageModalRef}>
       <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative ">
-        <div className="carousel h-max w-full bg-base-100 ">
+        <div className="carousel h-max w-full bg-base-100/10 ">
           {imageListForModal.map((item, index) => (
             <div
               key={`item${index}`}

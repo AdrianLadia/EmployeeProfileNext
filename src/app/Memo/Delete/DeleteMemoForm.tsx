@@ -21,7 +21,9 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
     userData,
     handleConfirmation,
     handleImageModalClick,
-    loading, setLoading
+    loading,
+    setLoading,
+    handleVideoModalClick,
   } = useAppContext();
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -41,7 +43,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
       "error"
     );
 
-    setLoading(true); 
+    setLoading(true);
 
     if (confirmed) {
       try {
@@ -80,8 +82,8 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
       } finally {
         setLoading(false);
       }
-    }else{
-      setLoading(false)
+    } else {
+      setLoading(false);
     }
   };
 
@@ -222,39 +224,47 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
         ></textarea>
       </div>
 
-      <div className="text-sm flex flex-col md:flex-row justify-evenly ">
-        {/* medialist */}
-        <div
-          className={`${
-            !formData?.mediaList?.[0] && "hidden"
-          } cursor-pointer flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-base-200 pt-4 p-1 rounded-lg `}
-          onClick={() => handleImageModalClick(formData?.mediaList || [])}
-        >
-          <Image
-            src={formData?.mediaList?.[0] || ""}
-            className={`${!formData?.mediaList?.[0] && "hidden"} h-[60px]`}
-            height={100}
-            width={100}
-            alt="mediaList"
-          />
-          Photo 
-        </div>
-        {/* memoPhotosList */}
-        <div
-          className={`${
-            !formData?.memoPhotosList?.[0] && "hidden"
-          } cursor-pointer flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-base-200 pt-4 p-1 rounded-lg `}
-          onClick={() => handleImageModalClick(formData?.memoPhotosList || [])}
-        >
-          <Image
-            src={formData?.memoPhotosList?.[0] || ""}
-            className={`${!formData?.memoPhotosList?.[0] && "hidden"} h-[60px]`}
-            height={100}
-            width={100}
-            alt="memoPhotosList"
-          />
-          Memo Photo 
-        </div>
+      {/* Media Proof */}
+      <div
+        className={`${
+          !formData?.mediaList?.[0] && "hidden"
+        } flex items-center justify-between p-3 gap-5 border rounded-box text-sm `}
+      >
+        <p className=" w-[50%] text-end ">Media Proof: </p>
+        {formData?.mediaList?.[0]?.includes("video") ? (
+          <div className="w-[50%] flex justify-start cursor-pointer ">
+            <div
+              className={` indent-0.5 text-4xl group-hover:text-3xl w-32 h-32 flex justify-center items-center px-5 py-3 hover:bg-neutral/50 bg-neutral text-neutral-content rounded-box `}
+              onClick={() =>
+                handleVideoModalClick(formData?.mediaList?.[0] || "")
+              }
+              title="Play Video"
+            >
+              ▶
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-start gap-3 w-[50%] ">
+            <div
+              className="relative w-32 h-32 group border"
+              onClick={() => handleImageModalClick(formData?.mediaList || [])}
+            >
+              <span
+                className="font-semibold absolute grid place-content-center left-1/2 
+                    right-1/2 top-1/2 bottom-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs opacity-75 group-hover:opacity-100 bg-base-100 p-4 rounded-full cursor-pointer"
+              >
+                {formData?.mediaList?.length}
+              </span>
+              <Image
+                src={formData?.mediaList?.[0] || ""}
+                alt="media"
+                width={100}
+                height={100}
+                className="rounded-box cursor-pointer w-full h-full"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* submit */}

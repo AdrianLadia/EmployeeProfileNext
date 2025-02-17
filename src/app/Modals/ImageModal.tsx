@@ -43,7 +43,7 @@ const ImageModal = () => {
   return (
     <dialog id="imageModal" className="modal w-full " ref={imageModalRef}>
       <div className="modal-box !p-0 shadow-none gap-2 flex flex-col !max-w-[60%] h-full justify-center items-center relative bg-base-100/10 ">
-        <form className="absolute top-2 right-2 z-10" method="dialog">
+        <form className="absolute top-2 right-2 z-30 " method="dialog">
           <button onClick={handleClose} className="close-button"></button>
         </form>
         <div className="carousel h-max w-full ">
@@ -51,7 +51,7 @@ const ImageModal = () => {
             <div
               key={`item${index}`}
               id={`item${index}`}
-              className="carousel-item w-full h-[100%] !flex relative  "
+              className="carousel-item w-full min-h-full !flex relative  "
             >
               {/* delete image button */}
               <div
@@ -81,7 +81,7 @@ const ImageModal = () => {
               <Image
                 src={item}
                 loading="eager"
-                className="h-full w-full"
+                className=" h-max w-full "
                 width={1000}
                 height={1000}
                 // fill
@@ -93,7 +93,7 @@ const ImageModal = () => {
                 <>
                   {/*  */}
                   <a
-                    className={`${imageListForModal.length == index + 1 && " hidden"} top-[45%] right-2 absolute text-xl z-10 btn btn-sm btn-circle btn-accent`}
+                    className={`${imageListForModal.length == index + 1 && " hidden"} top-[45%] right-2 absolute text-xl z-10 btn btn-sm btn-circle `}
                     key={`item${index + 1}`}
                     href={`#item${index + 1}`}
                   >
@@ -101,16 +101,16 @@ const ImageModal = () => {
                   </a>
                   {/*  */}
                   <a
-                    className={`${index == 0 && " hidden"} top-[45%] left-2 absolute text-xl z-10 btn btn-sm btn-circle btn-accent`}
+                    className={`${index == 0 && " hidden"} top-[45%] left-2 absolute text-xl z-10 btn btn-sm btn-circle `}
                     key={`item${index - 1}`}
                     href={`#item${index - 1}`}
                   >
                     {`<`}
                   </a>
 
-                  <div className="absolute bottom-2 w-full flex justify-center z-10 ">
-                    <span className="btn btn-circle btn-sm btn-accent">{index + 1}</span>
-                  </div>
+                  {/* <div className="absolute top-2 w-full flex justify-center z-10 "> */}
+                    <span className="absolute top-12 left-2 btn btn-circle border btn-sm ">{index + 1}</span>
+                  {/* </div> */}
                 </>
               )}
             </div>

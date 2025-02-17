@@ -38,7 +38,7 @@ const Page = async () => {
         <p className="loading text-info text-xl"></p>
       ) : ( */}
       <GenerateIDForm employeeList={employeeList} />
-      {/* )} */}
+      {/* )} */} 
     </div>
   );
 };

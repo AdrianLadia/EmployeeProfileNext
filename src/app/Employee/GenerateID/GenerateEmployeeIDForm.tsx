@@ -18,7 +18,6 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
   loading,
   idURL,
 }) => {
-
   const renderPlaceholder = () => {
     const divStyle = loading ? " skeleton " : " bg-base-300 ";
 
@@ -73,28 +72,43 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
         tabIndex={-1}
       >
         {/*  */}
-        <div className="w-[75%] md:w-[480px] h-[83%]  shadow-md carousel border my-4">
+        <div className="w-[80%] md:w-[480px] h-[83%] shadow-md carousel border my-4 relative">
           {loading || !idURL?.front ? (
             renderPlaceholder()
           ) : (
             <>
-              <Image
-                className="min-w-full h-full"
-                src={idURL?.front || ""}
-                height={300}
-                width={300}
-                alt="ID"
-              />
-              <Image
-                className="min-w-full h-full"
-                src={idURL?.back || ""}
-                height={300}
-                width={300}
-                alt="ID"
-              />
+              <div className="min-w-full h-full relative" id="frontID">
+                <Image
+                  className="w-full h-full"
+                  src={idURL?.front || ""}
+                  height={300}
+                  width={300}
+                  alt="ID"
+                />
+                <a
+                  href="#backID"
+                  className="absolute top-[45%] right-2 btn btn-sm btn-circle btn-neutral btn-outline text-xl"
+                >
+                  {`>`}
+                </a>
+              </div>
+              <div className="min-w-full h-full relative" id="backID">
+                <Image
+                  className="w-full h-full"
+                  src={idURL?.back || ""}
+                  height={300}
+                  width={300}
+                  alt="ID"
+                />
+                <a
+                  href="#frontID"
+                  className="absolute top-[45%] left-2 btn btn-sm btn-circle btn-neutral btn-outline text-xl"
+                >
+                  {`<`}
+                </a>
+              </div>
             </>
           )}
-
         </div>
 
         {/* actions */}

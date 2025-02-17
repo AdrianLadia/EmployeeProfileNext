@@ -31,15 +31,14 @@ const VideoModal = () => {
       className="modal !w-[100vw] backdrop-blur-sm"
       ref={videoModalRef}
     >
-      <div className="bg-transparent shadow-none flex flex-col !w-[50%] h-max justify-center items-center relative py-14 px-10">
-        {/* <video className="h-full w-full" src={videoForModal}></video> */}
+      <div className="bg-transparent shadow-none flex flex-col justify-center items-center relative ">
 
-        <form className="absolute top-2 right-10" method="dialog">
+        <form className="absolute top-2 right-2 z-10" method="dialog">
           <button onClick={handleClose} className="close-button"></button>
         </form>
 
         {videoForModal ? (
-          <video className=" w-full " width="240" height="240" controls>
+          <video className=" max-h-[90vh] min-w-[80vw] md:min-w-[50vw] " controls>
             <source src={videoForModal || ""} type="video/mp4" />
             Your browser does not support the video tag.
           </video>

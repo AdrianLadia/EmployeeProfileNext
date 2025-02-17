@@ -10,7 +10,7 @@ import { useAppContext } from "@/app/GlobalContext";
 
 // import Image from 'next/image'
 
-import ImageInput from "@/app/InputComponents/ImageInput";
+import MediaInput from "@/app/InputComponents/MediaInput";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
@@ -283,15 +283,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
   // onclick delete button from image modal, handler
   useEffect(() => {
-    const nonArrayKeys = ["photoOfPerson", "employeeSignature"];
+    const nonArrayKeys = ["photoOfPerson", "employeeSignature"]; 
+    const toPush = imageListForModal?.[0] ? imageListForModal[0] : null;
     if (imageListForModal && imageModalId) {
       setFormData({
         ...formData,
-        [imageModalId]: nonArrayKeys.includes(imageModalId) ? imageListForModal[0] : imageListForModal,
+        [imageModalId]: nonArrayKeys.includes(imageModalId) ? toPush : imageListForModal,
       });
       setDataToUpdate({
         ...dataToUpdate,
-        [imageModalId]: nonArrayKeys.includes(imageModalId) ? imageListForModal[0] : imageListForModal,
+        [imageModalId]: nonArrayKeys.includes(imageModalId) ? toPush : imageListForModal,
       });
     }
   }, [imageListForModal, imageModalId]);
@@ -480,7 +481,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         }
       >
         {/* photoOfPerson */}
-        <ImageInput
+        <MediaInput
           id="photoOfPerson"
           title="Photo Of Person"
           width="w-full"
@@ -492,7 +493,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         />
 
         {/* resumePhotosList */}
-        <ImageInput
+        <MediaInput
           id="resumePhotosList"
           title="Resume"
           width="w-full md:w-[48%]"
@@ -505,7 +506,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         />
 
         {/* biodataPhotosList */}
-        <ImageInput
+        <MediaInput
           id="biodataPhotosList"
           title="Bio Data"
           width="w-full md:w-[48%]"

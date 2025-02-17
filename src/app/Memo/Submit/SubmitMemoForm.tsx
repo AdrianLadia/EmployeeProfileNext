@@ -8,7 +8,7 @@ import { Memo } from "@/app/schemas/MemoSchema.ts";
 
 // import Image from 'next/image';
 
-import ImageInput from "@/app/InputComponents/ImageInput";
+import MediaInput from "@/app/InputComponents/MediaInput";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 
@@ -378,7 +378,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
       </div>
 
       {/* medialist */}
-      {/* <ImageInput
+      {/* <MediaInput
         id="mediaList"
         title="Photo"
         width="w-full"
@@ -391,7 +391,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
       />  */}
 
       {/* memoPhotosList */}
-      <ImageInput
+      <MediaInput
         id="memoPhotosList"
         title="Memo Photo"
         width="w-full"

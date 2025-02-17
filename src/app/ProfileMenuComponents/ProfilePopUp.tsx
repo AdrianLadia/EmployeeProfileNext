@@ -37,10 +37,10 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
   return (
     <div onClick={(e) => e.stopPropagation()}
       className={` 
-        ${showMenu ? " top-[71px] md:top-[75px] " : " hidden "} right-0 md:right-2
+        ${showMenu ? " top-[55px] md:top-[75px] " : " hidden "} right-0 md:right-2
         absolute shadow-lg border backdrop-blur-lg bg-base-300 duration-300 transition-all
         w-[96vw] md:w-[330px] h-[83vh] md:max-h-[75vh] rounded-2xl z-50 
-        flex flex-col justify-between border-info overflow-auto
+        flex flex-col justify-between border-info overflow-auto 
       `}
     >
       <BackButton />
@@ -109,7 +109,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
         {/* logout */}
       </div>
 
-      <div className="flex px-6 bg-base-100 pt-3 pb-6">
+      <div className="flex flex-col px-6 bg-base-100 pt-3 pb-6">
         <button
           className=" btn shrink-0 bg-base-300 w-full h-[60px] flex items-center justify-center gap-3 border hover:bg-error hover:text-white"
           onClick={() => {
@@ -133,6 +133,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
 
           <p className=" font-semibold">Sign out</p>
         </button>
+        <div className="h-24 w-full md:hidden"/>
       </div>
     </div>
   );

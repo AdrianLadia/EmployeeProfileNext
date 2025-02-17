@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 
 import { useAppContext } from "@/app/GlobalContext";
 
-import ImageInput from "@/app/InputComponents/ImageInput";
+import MediaInput from "@/app/InputComponents/MediaInput";
 
 import { Employee } from "@/app/schemas/EmployeeSchema";
 
@@ -309,7 +309,7 @@ const CreateEmployeeForm = () => {
         {/* photoOfPerson, resume, bioData */}
         <div className="flex flex-wrap gap-3 md:gap-2 justify-between w-full ">
           {/* photoOfPerson */}
-          <ImageInput
+          <MediaInput
             id="photoOfPerson"
             title="Photo Of Person"
             width="w-full"
@@ -320,7 +320,7 @@ const CreateEmployeeForm = () => {
           />
 
           {/* resumePhotosList */}
-          <ImageInput
+          <MediaInput
             id="resumePhotosList"
             title="Resume"
             width="w-full md:w-[48%]"
@@ -333,7 +333,7 @@ const CreateEmployeeForm = () => {
           />
 
           {/* biodataPhotosList */}
-          <ImageInput
+          <MediaInput
             id="biodataPhotosList"
             title="Bio Data"
             width="w-full md:w-[48%]"
@@ -344,7 +344,7 @@ const CreateEmployeeForm = () => {
             multiple={true}
           />
 
-          {/* <ImageInput
+          {/* <MediaInput
             id="employeeSignature"
             title="Employee Signature"
             width="w-full"

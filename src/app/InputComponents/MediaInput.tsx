@@ -6,7 +6,7 @@ import { useAppContext } from "../GlobalContext";
 
 import { Employee } from "../schemas/EmployeeSchema";
 
-interface ImageInputProps {
+interface MediaInputProps {
   id: string;
   title?: string;
   inputStyle?: string;
@@ -22,7 +22,7 @@ interface ImageInputProps {
   allowVideo?: boolean;
 }
 
-const ImageInput: FC<ImageInputProps> = ({
+const MediaInput: FC<MediaInputProps> = ({
   id,
   title,
   width,
@@ -226,6 +226,12 @@ const ImageInput: FC<ImageInputProps> = ({
             className={`${!mediaList?.length && " hidden "} ${
               isVideo && " hidden "
             } absolute top-5 right-1/2 left-1/2 translate-x-[-50%] z-10 bg-base-300/70 group-hover:bg-base-300 items-center flex justify-center size-5 rounded-full cursor-pointer`}
+            onClick={() => {
+              if (mediaList?.length) {
+                handleImageModalClick(mediaList || []);
+                setImageModalId(id);
+              }
+            }}
           >
             {mediaList?.length}
           </span>
@@ -345,4 +351,4 @@ const ImageInput: FC<ImageInputProps> = ({
   );
 };
 
-export default ImageInput;
+export default MediaInput;

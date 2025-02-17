@@ -157,6 +157,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
       }
     } else {
       console.log("Cancelled");
+      setUploadedPhoto("")
       setLoading(false);
     }
   };

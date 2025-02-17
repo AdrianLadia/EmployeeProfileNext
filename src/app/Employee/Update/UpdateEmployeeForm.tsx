@@ -283,15 +283,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
   // onclick delete button from image modal, handler
   useEffect(() => {
-    const nonArrayKeys = ["photoOfPerson", "employeeSignature"];
+    const nonArrayKeys = ["photoOfPerson", "employeeSignature"]; 
+    const toPush = imageListForModal?.[0] ? imageListForModal[0] : null;
     if (imageListForModal && imageModalId) {
       setFormData({
         ...formData,
-        [imageModalId]: nonArrayKeys.includes(imageModalId) ? imageListForModal[0] : imageListForModal,
+        [imageModalId]: nonArrayKeys.includes(imageModalId) ? toPush : imageListForModal,
       });
       setDataToUpdate({
         ...dataToUpdate,
-        [imageModalId]: nonArrayKeys.includes(imageModalId) ? imageListForModal[0] : imageListForModal,
+        [imageModalId]: nonArrayKeys.includes(imageModalId) ? toPush : imageListForModal,
       });
     }
   }, [imageListForModal, imageModalId]);

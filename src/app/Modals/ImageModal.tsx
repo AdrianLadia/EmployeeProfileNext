@@ -10,7 +10,6 @@ const ImageModal = () => {
 
   const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
-  const [hash, setHash] = React.useState("#item0");
 
   const handleClose = () => {
     router.replace(window.location.pathname, undefined);
@@ -23,7 +22,6 @@ const ImageModal = () => {
 
   React.useEffect(() => {
     if (imageListForModal.length) {
-      setHash("#item0");
       router.push("#item0");
     }
   }, [imageListForModal]);

@@ -5,7 +5,7 @@ from utils import *
 import re
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Union, List
-from generateEmployeeID import EmployeeIDCard
+# from generateEmployeeID import EmployeeIDCard
 
 # db = mongoDb("EmployeeManagementBackup")
 db = mongoDb()
@@ -446,23 +446,24 @@ class UserActions(User):
             'remedialAction': remedialActions[offenseCount],
             'offenseCount': offenseCount + 1
         }
-    
-    def createEmployeeIDAction(self, user, employee):
-        if 'canGenerateEmployeeID' not in user['roles']['Employee']:
-            raise ValueError('User does not have permission to generate Employee ID')
 
-        employeeID = db.read({'_id': employee['_id']}, 'EmployeeID')
-        if len(employeeID) > 0:
-            return employeeID[0]['IDCardURL']
+    # def createEmployeeIDAction(self, user, employee):
+    #     if 'canGenerateEmployeeID' not in user['roles']['Employee']:
+    #         raise ValueError('User does not have permission to generate Employee ID')
 
-        idGenerated = EmployeeIDCard(**employee).generate_id_card()
-        print(idGenerated)
-        db.create(idGenerated, 'EmployeeID')
-        return idGenerated['IDCardURL']
+    #     employeeID = db.read({'_id': employee['_id']}, 'EmployeeID')
+    #     if len(employeeID) > 0:
+    #         return employeeID[0]['IDCardURL']
+
+    #     idGenerated = EmployeeIDCard(**employee).generate_id_card()
+    #     print(idGenerated)
+    #     db.create(idGenerated, 'EmployeeID')
+    #     return idGenerated['IDCardURL']
 
     def updateEmployeeIDAction(self, user, employeeId):
         if 'canGenerateEmployeeID' not in user['roles']['Employee']:
-            raise ValueError('User does not have permission to generate Employee ID')
+            raise ValueError(
+                'User does not have permission to generate Employee ID')
 
         employeeID = db.read({'_id': employeeId}, 'EmployeeID')
         if len(employeeID) == 0:

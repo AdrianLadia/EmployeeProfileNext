@@ -7,7 +7,7 @@ from AppConfig import AppConfig
 import logging
 from firebaseAuthenticator import firebaseAuthenticator
 from datetime import datetime, timezone
-import generateEmployeeID
+# import generateEmployeeID
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})

@@ -26,8 +26,12 @@
         {
             "label": "run server app.py",
             "type": "shell",
-            "command": "python server/app.py",
-            "problemMatcher": []
+            "command": "${command:python.interpreterPath} server/app.py",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+            }
         },
         {
             "label": "open cypress",

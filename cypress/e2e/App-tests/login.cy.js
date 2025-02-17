@@ -49,7 +49,7 @@ describe('Employee spec', () => {
       // Offense
       CreateOffense(
         "Employee was late to work",
-        ['Dismissal'],
+        // ['Dismissal'],
       )
 
       UpdateOffense({

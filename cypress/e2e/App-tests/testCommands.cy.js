@@ -36,7 +36,8 @@ export function formattedDateWithDash(){
 }
 
 export function CreateEmployee(
-  name = "John Doe",
+  firstName = "John",
+  lastName = "Doe",
   // address = "1234 Elm Street, Springfield",
   // phoneNumber = "+1234567890",
   // photoOfPerson = 'minor.png',
@@ -54,7 +55,8 @@ export function CreateEmployee(
 
   cy.get('#profile-button').should('be.visible').click()
 
-  cy.get('#name').type(name)
+  cy.get('#firstName').type(firstName)
+  cy.get('#lastName').type(lastName)
   // cy.get('#address').type(address)
   // cy.get('#phoneNumber').type(phoneNumber)
   // cy.get('input[type=file]#photoOfPerson').attachFile(photoOfPerson)
@@ -75,7 +77,8 @@ export function CreateEmployee(
 
 export function UpdateEmployee({
   employee = "John Doe",
-  name = "John Doe Jr",
+  firstName = "John",
+  lastName = "Doe Sr.",
   address = "1234 Elm Street, Springfield",
   phoneNumber = "+1234567890",
   photoOfPerson = 'minor.png',
@@ -83,7 +86,7 @@ export function UpdateEmployee({
   biodataPhotosList = 'mhm.png',
   email = "johndoe@example.com",
   dateJoined = "2024-11-01",
-  company = "PPB",
+  // company = "PPB",
   dailyWage = "500"
 }={}){
   cy.get('#profile-button').should('be.visible').click()
@@ -97,7 +100,8 @@ export function UpdateEmployee({
   .contains(employee)
   .click();
 
-  cy.get('#name').clear().type(name)
+  cy.get('#firstName').clear().type(firstName)
+  cy.get('#lastName').clear().type(lastName)
   cy.get('#address').clear().type(address)
   cy.get('#phoneNumber').clear().type(phoneNumber)
   cy.get('input[type=file]#photoOfPerson').attachFile(photoOfPerson)
@@ -136,20 +140,26 @@ export function DeleteEmployee(name){
 }
 
 export function CreateOffense(
-  description = "Employee was late to work",
-  offenseType = ["Verbal Warning", "Written-Warning"],
+  // description = "Employee was late to work",
+  offenseType = ["Written-Reprimand", "Dismissal"],
 ){
   cy.get('#profile-button').should('be.visible').click()
   cy.contains('Create Offense').click()
   cy.get('#profile-button').should('be.visible').click()
   cy.location('pathname').should('include', '/Offense/Create')
-  cy.get('#number').type('1')
   cy.get('#title').type('Employee was late to work')
-  cy.get('#description').type(description)
+  // cy.get('#description').type(description)
+  cy.wait(1000)
 
-  offenseType.forEach((type) => {
-    cy.get('#'+type).click()
-  })
+  if (Array.isArray(offenseType)) {
+    offenseType.forEach((type) => {
+      console.log(type)
+      cy.get('#'+type).click()
+    });
+  } else {
+    cy.get('#Written-Reprimand').click()
+    console.error('offenseType is not an array');
+  }
 
   cy.get('#create-offense-button').click()
   cy.wait(1000)
@@ -159,10 +169,10 @@ export function CreateOffense(
 
 export function UpdateOffense({
   offense = "Employee was late to work",
-  number = "1",
+  // number = "1",
   title = "Employee was late to work",
-  description = "Employee was late to work and was rude to customers",
-  offenseType = ["Suspension"]
+  // description = "Employee was late to work and was rude to customers",
+  offenseType = ["Dismissal"]
 }={}){
   cy.get('#profile-button').should('be.visible').click()
   cy.wait(1000)
@@ -174,9 +184,9 @@ export function UpdateOffense({
   cy.get('.css-1nmdiq5-menu')
   .contains(offense)
   .click();
-  cy.get('#number').type(number)
+  // cy.get('#number').type(number)
   cy.get('#title').type(title)
-  cy.get('#description').type(description)
+  // cy.get('#description').type(description)
   cy.wait(1000)
   // cy.get('#description')
 

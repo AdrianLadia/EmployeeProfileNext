@@ -263,41 +263,43 @@ class EmployeeIDCard(BaseModel):
         back.save(back_output_path)
         print(f"Back side of ID card saved to {back_output_path}")
 
-        upload_url = self.uploadListToFirebaseStorage([output_path, back_output_path], "EmployeeIDs")
-        return upload_url
+        return [output_path, back_output_path]
 
-    def uploadListToFirebaseStorage(self, list_of_photos, folder_name):
-        if not _apps:
-            cred = credentials.Certificate(
-                "Server/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
-            )
-            initialize_app(cred, {
-                "storageBucket":
-                "pustananemployeeprofile.firebasestorage.app"
-            })
+        # upload_url = self.uploadListToFirebaseStorage([output_path, back_output_path], "EmployeeIDs")
+        # return upload_url
 
-        bucket = storage.bucket()
-        download_urls = []
-        for photo in list_of_photos:
-            blob = bucket.blob(f"{folder_name}/{photo}")
-            blob.upload_from_filename(photo)
-            blob.make_public()
+    # def uploadListToFirebaseStorage(self, list_of_photos, folder_name):
+    #     if not _apps:
+    #         cred = credentials.Certificate(
+    #             "Server/keys/pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json"
+    #         )
+    #         initialize_app(cred, {
+    #             "storageBucket":
+    #             "pustananemployeeprofile.firebasestorage.app"
+    #         })
 
-            download_url = f"{blob.public_url}?updated={int(time.time())}"
-            download_urls.append(download_url)
-            print(f"{photo} uploaded to Firebase Storage" + download_url)
+    #     bucket = storage.bucket()
+    #     download_urls = []
+    #     for photo in list_of_photos:
+    #         blob = bucket.blob(f"{folder_name}/{photo}")
+    #         blob.upload_from_filename(photo)
+    #         blob.make_public()
 
-        to_return = {
-            "_id": self.id,
-            "name": self.firstName + " " + self.lastName,
-            "companyRole": self.companyRole,
-            "IDCardURL": {"front":download_urls[0], "back":download_urls[1]},
-            '_version': self.version
-        }
+    #         download_url = f"{blob.public_url}?updated={int(time.time())}"
+    #         download_urls.append(download_url)
+    #         print(f"{photo} uploaded to Firebase Storage" + download_url)
 
-        print(to_return)
+    #     to_return = {
+    #         "_id": self.id,
+    #         "name": self.firstName + " " + self.lastName,
+    #         "companyRole": self.companyRole,
+    #         "IDCardURL": {"front":download_urls[0], "back":download_urls[1]},
+    #         '_version': self.version
+    #     }
 
-        return to_return
+    #     print(to_return)
+
+    #     return to_return
     
     def draw_centered_text(self, draw, image_width, y_position, text, font, fill="white"):
         draw = ImageDraw.Draw(draw)

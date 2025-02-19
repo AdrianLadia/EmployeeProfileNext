@@ -453,27 +453,28 @@ class UserActions(User):
 
         employeeID = db.read({'_id': employee['_id']}, 'EmployeeID')
         if len(employeeID) > 0:
-            return employeeID[0]['IDCardURL']
+            generatedID = db.update({'_id': employee['_id']}, idGenerated, 'EmployeeID')
+            return generatedID[0]['IDCardURL']
 
-        # idGenerated = EmployeeIDCard(**employee).generate_id_card()
         print(idGenerated)
-        db.create(idGenerated, 'EmployeeID')
-        return idGenerated['IDCardURL']
+        generatedID = db.create(idGenerated, 'EmployeeID')
+        print(generatedID, 'generatedID')
+        return generatedID['IDCardURL']
 
-    def updateEmployeeIDAction(self, user, employeeId):
-        if 'canGenerateEmployeeID' not in user['roles']['Employee']:
-            raise ValueError('User does not have permission to generate Employee ID')
+    # def updateEmployeeIDAction(self, user, employeeId):
+    #     if 'canGenerateEmployeeID' not in user['roles']['Employee']:
+    #         raise ValueError('User does not have permission to generate Employee ID')
 
-        employeeID = db.read({'_id': employeeId}, 'EmployeeID')
-        if len(employeeID) == 0:
-            raise ValueError('Employee ID does not exist')
+    #     employeeID = db.read({'_id': employeeId}, 'EmployeeID')
+    #     if len(employeeID) == 0:
+    #         raise ValueError('Employee ID does not exist')
 
-        employee = db.read({'_id': employeeId}, 'Employee')
+    #     employee = db.read({'_id': employeeId}, 'Employee')
 
-        idGenerated = EmployeeIDCard(**employee[0]).generate_id_card()
-        db.update({'_id': employeeId}, idGenerated, 'EmployeeID')
+    #     idGenerated = EmployeeIDCard(**employee[0]).generate_id_card()
+    #     db.update({'_id': employeeId}, idGenerated, 'EmployeeID')
 
-        return idGenerated['IDCardURL']
+    #     return idGenerated['IDCardURL']
 
     def updateEmployeeProfilePictureAction(self, user, employeeId, photo):
         if 'canUpdateEmployee' not in user['roles']['Employee']:

@@ -13,7 +13,7 @@ class ServerRequests extends Server {
 
   async getIsDevEnvironment(): Promise<boolean | string> {
     try {
-      const res: AxiosResponse<{ isDevEnvironment: boolean }> = await axios.get(`${this.url}/getIsDevEnvironment`);
+      const res: AxiosResponse<{ isDevEnvironment: boolean }> = await axios.get(`${this.apiUrl}/getIsDevEnvironment`);
       return res.data.isDevEnvironment;
     } catch (error: any) {
       return error.response?.data || error.message;
@@ -22,7 +22,7 @@ class ServerRequests extends Server {
 
   async getEnvironment(): Promise<any> {
     try { 
-      const res: AxiosResponse = await axios.get(`${this.url}/getEnvironment`);
+      const res: AxiosResponse = await axios.get(`${this.apiUrl}/getEnvironment`);
       return res.data;
     } catch (error: any) {
       return error.response?.data || error.message;
@@ -31,7 +31,7 @@ class ServerRequests extends Server {
 
   async deleteAllDataInCollection(collection: string): Promise<any> {
     try {
-      const res: AxiosResponse = await axios.post(`${this.url}/deleteAllDataInCollection`, {
+      const res: AxiosResponse = await axios.post(`${this.apiUrl}/deleteAllDataInCollection`, {
         collection,
       });
       return res.data;
@@ -46,7 +46,7 @@ class ServerRequests extends Server {
         userObject,
       };
       const jsonData = JSON.stringify(data);
-      const res: AxiosResponse = await axios.post(`${this.url}/firebaseLogin`, jsonData, {
+      const res: AxiosResponse = await axios.post(`${this.apiUrl}/firebaseLogin`, jsonData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -64,7 +64,7 @@ class ServerRequests extends Server {
 
   async createEmployee(employee: Employee, userObject: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/createEmployee`, {
+      const res = await fetch(`${this.apiUrl}/createEmployee`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ employee: employee, userData: userObject }),
@@ -79,7 +79,7 @@ class ServerRequests extends Server {
 
   async updateEmployee(employee: Employee, dataToUpdate: DataToUpdate, userObject: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/updateEmployee`, {
+      const res = await fetch(`${this.apiUrl}/updateEmployee`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ employeeData: employee, dataToUpdate, userData: userObject }),
@@ -93,7 +93,7 @@ class ServerRequests extends Server {
 
   async deleteEmployee(employee: Employee, userObject: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/deleteEmployee`, {
+      const res = await fetch(`${this.apiUrl}/deleteEmployee`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ employeeData: employee, userData: userObject }),
@@ -109,7 +109,7 @@ class ServerRequests extends Server {
     //     userData: userObject,
     //   };
     //   const jsonData = JSON.stringify(data);
-    //   const res: AxiosResponse = await axios.post(`${this.url}/deleteEmployee`, jsonData, {
+    //   const res: AxiosResponse = await axios.post(`${this.apiUrl}/deleteEmployee`, jsonData, {
     //     headers: {
     //       "Content-Type": "application/json",
     //     },
@@ -127,7 +127,7 @@ class ServerRequests extends Server {
 
   async getUserForTesting(): Promise<any> {
     try {
-      const res: AxiosResponse = await axios.get(`${this.url}/getUserForTesting`, {
+      const res: AxiosResponse = await axios.get(`${this.apiUrl}/getUserForTesting`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -140,7 +140,7 @@ class ServerRequests extends Server {
 
   async createOffense (offense: Offense, userObject: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/createOffense`, {
+      const res = await fetch(`${this.apiUrl}/createOffense`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ offense: offense, userData: userObject }),
@@ -154,7 +154,7 @@ class ServerRequests extends Server {
 
   async updateOffense (offense: Offense, dataToUpdate: DataToUpdate, userObject: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/updateOffense`, {
+      const res = await fetch(`${this.apiUrl}/updateOffense`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ offenseData: offense, dataToUpdate, userData: userObject }),
@@ -168,7 +168,7 @@ class ServerRequests extends Server {
 
   async deleteOffense (offense: Offense, userObject: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/deleteOffense`, {
+      const res = await fetch(`${this.apiUrl}/deleteOffense`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ offenseData: offense, userData: userObject }),
@@ -182,7 +182,7 @@ class ServerRequests extends Server {
 
   async createMemo (memo: Memo, userObject: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/createMemo`, {
+      const res = await fetch(`${this.apiUrl}/createMemo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ memo: memo, userData: userObject }),
@@ -196,7 +196,7 @@ class ServerRequests extends Server {
 
   async submitMemo (memo: Memo, reason: string, userObject: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/submitMemo`, {
+      const res = await fetch(`${this.apiUrl}/submitMemo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ memoData: memo, reason, userData: userObject }),
@@ -213,7 +213,7 @@ class ServerRequests extends Server {
     //     userData: userObject,
     //   };
     //   const jsonData = JSON.stringify(data);
-    //   const res: AxiosResponse = await axios.post(`${this.url}/submitMemo`, jsonData, {
+    //   const res: AxiosResponse = await axios.post(`${this.apiUrl}/submitMemo`, jsonData, {
     //     headers: {
     //       "Content-Type": "application/json",
     //     },
@@ -231,7 +231,7 @@ class ServerRequests extends Server {
 
   async deleteMemo (memo: Memo, userObject: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/deleteMemo`, {
+      const res = await fetch(`${this.apiUrl}/deleteMemo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ memoData: memo, userData: userObject }),
@@ -245,7 +245,7 @@ class ServerRequests extends Server {
 
   async getMemoList(userObject: User, employeeId: string): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/getMemoList`, {
+      const res = await fetch(`${this.apiUrl}/getMemoList`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userData: userObject, employeeId }),
@@ -262,7 +262,7 @@ class ServerRequests extends Server {
   //       userData: userData,
   //     };
   //     const jsonData = JSON.stringify(data);
-  //     const res: AxiosResponse = await axios.post(`${this.url}/getAllMemoThatsNotSubmitted`, jsonData, {
+  //     const res: AxiosResponse = await axios.post(`${this.apiUrl}/getAllMemoThatsNotSubmitted`, jsonData, {
   //       headers: {
   //         "Content-Type": "application/json",
   //       },
@@ -280,7 +280,7 @@ class ServerRequests extends Server {
 
   async getAllMemoThatsNotSubmitted(): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/readAllDataInCollection`, {
+      const res = await fetch(`${this.apiUrl}/readAllDataInCollection`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ collection: "Memo" }),
@@ -296,7 +296,7 @@ class ServerRequests extends Server {
     //   };
     //   const jsonData = JSON.stringify(data);
     //   const res = await axios.post(
-    //     `${this.url}/readAllDataInCollection`,
+    //     `${this.apiUrl}/readAllDataInCollection`,
     //     jsonData,
     //     {
     //       headers: {
@@ -321,7 +321,7 @@ class ServerRequests extends Server {
     };
 
     try{ 
-      const res = await fetch(`${this.url}/fetchEmployeeList`, {
+      const res = await fetch(`${this.apiUrl}/fetchEmployeeList`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
@@ -335,7 +335,7 @@ class ServerRequests extends Server {
 
   async fetchOffenseList(): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/readAllDataInCollection`, {
+      const res = await fetch(`${this.apiUrl}/readAllDataInCollection`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ collection: "Offense" }),
@@ -354,7 +354,7 @@ class ServerRequests extends Server {
       sort: sort
     }
     try {
-      const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
+      const res = await fetch(`${this.apiUrl}/getEmployeeForDashboardAction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -368,7 +368,7 @@ class ServerRequests extends Server {
 
   // async getEmployeeForDashboardAction(userObject: User): Promise<any> {
   //   try {
-  //     const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
+  //     const res = await fetch(`${this.apiUrl}/getEmployeeForDashboardAction`, {
   //       method: 'POST',
   //       headers: { 'Content-Type': 'application/json' },
   //       body: JSON.stringify({ userData: userObject }),
@@ -387,7 +387,7 @@ class ServerRequests extends Server {
 
   async getEmployeeDetailsAction(userObject: User, employeeId: string): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/getEmployeeDetailsAction`, {
+      const res = await fetch(`${this.apiUrl}/getEmployeeDetailsAction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userData: userObject, employeeId }),
@@ -409,7 +409,7 @@ class ServerRequests extends Server {
     };
 
     try {
-      const res = await fetch(`${this.url}/getRemedialActionForEmployeeMemoAction`, {
+      const res = await fetch(`${this.apiUrl}/getRemedialActionForEmployeeMemoAction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -423,7 +423,7 @@ class ServerRequests extends Server {
 
   async getAllRoles () {
     try {
-      const res = await fetch(`${this.url}/getAllRoles`, {
+      const res = await fetch(`${this.apiUrl}/getAllRoles`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         cache: 'no-store',
@@ -444,7 +444,7 @@ class ServerRequests extends Server {
     }; 
 
     try {
-      const res = await fetch(`${this.url}/addRoleToUser`, {
+      const res = await fetch(`${this.apiUrl}/addRoleToUser`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -466,7 +466,7 @@ class ServerRequests extends Server {
     }; 
 
     try {
-      const res = await fetch(`${this.url}/removeRolefromUser`, {
+      const res = await fetch(`${this.apiUrl}/removeRolefromUser`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -480,7 +480,7 @@ class ServerRequests extends Server {
 
   async getAllUsers(): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/readAllDataInCollection`, {
+      const res = await fetch(`${this.apiUrl}/readAllDataInCollection`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ collection: "User" }),
@@ -494,7 +494,7 @@ class ServerRequests extends Server {
 
   async getAllRecentMemo(userData: User): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/getAllRecentMemo`, {
+      const res = await fetch(`${this.apiUrl}/getAllRecentMemo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userData }),
@@ -506,15 +506,15 @@ class ServerRequests extends Server {
     }
   }
 
-  async updateEmployeeProfilePicture(employeeId: string, photoURL: string, userObject: User): Promise<any> {
+  async updateEmployeeProfilePicture(employeeId: string, photoapiUrl: string, userObject: User): Promise<any> {
     const data = {
       userData: userObject,
       employeeID: employeeId,
-      picture: photoURL
+      picture: photoapiUrl
     }
 
     try {
-      const res = await fetch(`${this.url}/updateEmployeeProfilePicture`, {
+      const res = await fetch(`${this.apiUrl}/updateEmployeeProfilePicture`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -526,15 +526,15 @@ class ServerRequests extends Server {
     }
   }
 
-  async updateUrlPhotoOfSignature(userData: User,  employeeId: string, signatureUrl: string): Promise<any> {
+  async updateapiUrlPhotoOfSignature(userData: User,  employeeId: string, signatureapiUrl: string): Promise<any> {
     const data = {
       userData: userData,
       employeeID: employeeId,
-      signatureUrl: signatureUrl
+      signatureapiUrl: signatureapiUrl
     }
 
     try {
-      const res = await fetch(`${this.url}/updateUrlPhotoOfSignature`, {
+      const res = await fetch(`${this.apiUrl}/updateapiUrlPhotoOfSignature`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -548,7 +548,7 @@ class ServerRequests extends Server {
 
   async getAllEmployeeID(): Promise<any> {
     try {
-      const res = await fetch(`${this.url}/readAllDataInCollection`, {
+      const res = await fetch(`${this.apiUrl}/readAllDataInCollection`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ collection: "EmployeeID" }),
@@ -566,7 +566,7 @@ class ServerRequests extends Server {
       employee: employee, 
     }
     try {
-      const res = await fetch(`${this.url}/generateEmployeeID`, {
+      const res = await fetch(`${this.downloadUrl}/downloadID`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -584,7 +584,7 @@ class ServerRequests extends Server {
       employeeID: employeeID, 
     }
     try {
-      const res = await fetch(`${this.url}/updateEmployeeID`, {
+      const res = await fetch(`${this.downloadUrl}/updateEmployeeID`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

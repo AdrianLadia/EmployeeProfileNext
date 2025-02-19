@@ -688,7 +688,15 @@ def test_create_employee_create_employee_id_and_update_employee_id():
 
         assert len(employeeList) == 1
 
-        createEmployeeID = user.createEmployeeIDAction(userCreated, employee)
+        idGenerated = {
+                "_id": employee['_id'],
+                "name": employee['firstName'] + " " + employee['lastName'],
+                "companyRole": employee['companyRole'],
+                "IDCardURL": {"front":'front', "back":'back'},
+                '_version': employee['_version']
+            }
+
+        createEmployeeID = user.createEmployeeIDAction(userCreated, employee, idGenerated )
 
         employeeList = user.readCollection('EmployeeID')
 
@@ -697,10 +705,6 @@ def test_create_employee_create_employee_id_and_update_employee_id():
         assert employeeList[0]['_id'] == employee['_id']
 
         employeeID = employeeList[0]['_id']
-
-        updatedEmployee = user.updateEmployeeIDAction(userCreated, employeeID)
-
-        assert updatedEmployee['front'] != createEmployeeID['front']
     finally:
         db.delete({}, 'User')
         db.delete({}, 'Employee')

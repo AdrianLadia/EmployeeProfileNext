@@ -8,6 +8,8 @@ import logging
 import string
 from AppConfig import AppConfig
 import time
+from datetime import datetime, timezone
+
 
 cd = os.path.dirname(os.path.abspath(__file__))
 keyPath = cd + '\\' + r'\keys\pustananemployeeprofile-firebase-adminsdk-47jwz-bc5daaacc7.json'
@@ -20,7 +22,7 @@ bucket = storage.bucket()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 def uploadListToFirebaseStorage( list_of_photos, folder_name):
     if not _apps:
@@ -57,7 +59,7 @@ def downloadID():
                 employee['dateJoined'], "%a, %d %b %Y %H:%M:%S %Z")
 
         try:
-            generateID = EmployeeIDCard(employee).generate_id_card()
+            generateID = EmployeeIDCard(**employee).generate_id_card()
 
             employeeID = uploadListToFirebaseStorage(generateID, 'EmployeeIDs')
 

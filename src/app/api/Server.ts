@@ -1,21 +1,20 @@
 class Server {
-    public url: string;
-  
-    constructor( ) { 
+  public apiUrl: string;
+  public downloadUrl: string;
 
-      const next_env = process.env.NODE_ENV; 
+  constructor() {
+    const next_env = process.env.NODE_ENV || 'development';
 
-      const urls = {
-        local: 'http://127.0.0.1:5000',
-        // server: 'https://flask-app-614461425863.asia-east1.run.app'
-        server: 'https://employeeprofilepustanan-418261267315.asia-east1.run.app'
-      };  
+    const urls = {
+      localApi: 'http://127.0.0.1:5000',
+      productionApi: 'https://employeeprofilepustanan-418261267315.asia-east1.run.app',
+      localDownload: 'http://127.0.0.1:80',
+      productionDownload: 'http://127.0.0.1:80'
+    };
 
-      this.url = next_env === 'production' ? urls.server : urls.local;
-      // this.url = next_env === 'production' ? urls.server : urls.server;
-      // this.url = next_env === 'production' ? urls.local : urls.local; 
-    }
+    this.apiUrl = next_env === 'production' ? urls.productionApi : urls.localApi;
+    this.downloadUrl = next_env === 'production' ? urls.productionDownload : urls.localDownload;
   }
-  
-  export default Server;
-  
+}
+
+export default Server;

@@ -447,33 +447,19 @@ class UserActions(User):
             'offenseCount': offenseCount + 1
         }
     
-    def createEmployeeIDAction(self, user, employee):
+    def createEmployeeIDAction(self, user, employee, idGenerated):
         if 'canGenerateEmployeeID' not in user['roles']['Employee']:
             raise ValueError('User does not have permission to generate Employee ID')
 
         employeeID = db.read({'_id': employee['_id']}, 'EmployeeID')
         if len(employeeID) > 0:
-            return employeeID[0]['IDCardURL']
+            generatedID = db.update({'_id': employee['_id']}, idGenerated, 'EmployeeID')
+            return generatedID[0]['IDCardURL']
 
-        idGenerated = EmployeeIDCard(**employee).generate_id_card()
         print(idGenerated)
-        db.create(idGenerated, 'EmployeeID')
-        return idGenerated['IDCardURL']
-
-    def updateEmployeeIDAction(self, user, employeeId):
-        if 'canGenerateEmployeeID' not in user['roles']['Employee']:
-            raise ValueError('User does not have permission to generate Employee ID')
-
-        employeeID = db.read({'_id': employeeId}, 'EmployeeID')
-        if len(employeeID) == 0:
-            raise ValueError('Employee ID does not exist')
-
-        employee = db.read({'_id': employeeId}, 'Employee')
-
-        idGenerated = EmployeeIDCard(**employee[0]).generate_id_card()
-        db.update({'_id': employeeId}, idGenerated, 'EmployeeID')
-
-        return idGenerated['IDCardURL']
+        generatedID = db.create(idGenerated, 'EmployeeID')
+        print(generatedID, 'generatedID')
+        return generatedID['IDCardURL']
 
     def updateEmployeeProfilePictureAction(self, user, employeeId, photo):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
@@ -777,6 +763,6 @@ if __name__ == "__main__":
                 roles=['test'],
                 _version=1,
                 image='test')
-    userDict = user.dict()
+    userDict = user.model_dump()
     x = user.json()
     schema = user.schema()

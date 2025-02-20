@@ -630,46 +630,6 @@ def update_url_photo_of_signature():
             logging.exception("Error updating Photo of Signature: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
-@app.route('/generateEmployeeID', methods=['POST'])
-def generate_employee_id():
-    if request.is_json:
-        data = request.get_json()
-        userData = data['userData']
-        employee_data = data['employee']
-
-        if employee_data['dateJoined']:
-            employee_data['dateJoined'] = datetime.strptime(
-                employee_data['dateJoined'], "%a, %d %b %Y %H:%M:%S %Z")
-
-        try:
-            res = UserActions(userData).createEmployeeIDAction(
-                userData, employee_data)
-            return jsonify({
-                'message': 'Employee ID generated successfully!',
-                'data': res
-            }), 200
-        except Exception as e:
-            logging.exception("Error generating Employee ID: %s", e)
-            return jsonify({'error': e.args[0]}), 400
-    else:
-        return jsonify({"error": "Request must be JSON"}), 400
-
-@app.route('/updateEmployeeID', methods=['POST'])
-def update_employee_id():
-    if request.is_json:
-        data = request.get_json()
-        userData = data['userData']
-        employeeID = data['employeeID']
-        try:
-            res = UserActions(userData).updateEmployeeIDAction(
-                userData, employeeID)
-            return jsonify({
-                'message': 'Employee ID updated successfully!',
-                'data': res
-            }), 200
-        except Exception as e:
-            logging.exception("Error updating Employee ID: %s", e)
-            return jsonify({'error': e.args[0]}), 400
 
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):

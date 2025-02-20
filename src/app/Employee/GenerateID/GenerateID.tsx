@@ -47,8 +47,8 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
         console.error(res.error);
       }
 
-      if (res?.data) {
-        setIdURL(res.data);
+      if (res?.employeeID) {
+        setIdURL(res.employeeID);
       }
     } catch (e) {
       console.error(e);

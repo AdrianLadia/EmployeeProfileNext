@@ -10,7 +10,6 @@ const ImageModal = () => {
 
   const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
-
   const handleClose = () => {
     router.replace(window.location.pathname, undefined);
   };
@@ -46,14 +45,18 @@ const ImageModal = () => {
         <form className="absolute top-2 right-2 z-30 " method="dialog">
           <button onClick={handleClose} className="close-button"></button>
         </form>
-        <div className="carousel h-max w-full ">
+        <div className="carousel w-full ">
           {imageListForModal.map((item, index) => (
             <div
               key={`item${index}`}
               id={`item${index}`}
-              className="carousel-item w-full min-h-full !flex relative  "
+              className="carousel-item w-full !flex items-start relative "
             >
               {/* delete image button */}
+              
+
+              {/* Image */}
+              <div className="min-h-full w-full flex items-center relative ">
               <div
                 key={`item${index}`}
                 className={`${
@@ -76,24 +79,25 @@ const ImageModal = () => {
                   />
                 </svg>
               </div>
-
-              {/* Image */}
-              <Image
-                src={item}
-                loading="eager"
-                className=" h-max w-full "
-                width={1000}
-                height={1000}
-                // fill
-                // sizes="(max-width: 768px) 100vw, 700px"
-                alt={`#item${index}`}
-              />
+                <Image
+                  src={item}
+                  loading="lazy"
+                  className=" h-max w-full "
+                  width={500}
+                  height={500}
+                  // fill
+                  // sizes="(max-width: 768px) 100vw, 700px"
+                  alt={`#item${index}`}
+                />
+              </div>
 
               {imageListForModal.length > 1 && (
                 <>
                   {/*  */}
                   <a
-                    className={`${imageListForModal.length == index + 1 && " hidden"} top-[45%] right-2 absolute text-xl z-10 btn btn-sm btn-circle `}
+                    className={`${
+                      imageListForModal.length == index + 1 && " hidden"
+                    } top-[45%] right-2 absolute text-xl z-10 btn btn-sm btn-circle `}
                     key={`item${index + 1}`}
                     href={`#item${index + 1}`}
                   >
@@ -101,7 +105,9 @@ const ImageModal = () => {
                   </a>
                   {/*  */}
                   <a
-                    className={`${index == 0 && " hidden"} top-[45%] left-2 absolute text-xl z-10 btn btn-sm btn-circle `}
+                    className={`${
+                      index == 0 && " hidden"
+                    } top-[45%] left-2 absolute text-xl z-10 btn btn-sm btn-circle `}
                     key={`item${index - 1}`}
                     href={`#item${index - 1}`}
                   >
@@ -109,7 +115,9 @@ const ImageModal = () => {
                   </a>
 
                   {/* <div className="absolute top-2 w-full flex justify-center z-10 "> */}
-                    <span className="absolute top-12 left-2 btn btn-circle border btn-sm ">{index + 1}</span>
+                  <span className="absolute top-12 left-2 btn btn-circle border btn-sm ">
+                    {index + 1}
+                  </span>
                   {/* </div> */}
                 </>
               )}

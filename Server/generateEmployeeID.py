@@ -193,7 +193,9 @@ class EmployeeIDCard(BaseModel):
 
         draw.text((x_position, 955), text, fill="white", font=font)
 
-        directory = 'Server/EmployeeIDs/'
+        # get current directory and create a new directory for the ID card
+        cwd = os.getcwd()
+        directory = os.path.join(cwd, "EmployeeIDCards")
         if not os.path.exists(directory):
             os.makedirs(directory)
 
@@ -328,4 +330,4 @@ employee = {
     "_version": 1,
 }
 
-# EmployeeIDCard(**employee).generate_id_card()
+EmployeeIDCard(**employee).generate_id_card()

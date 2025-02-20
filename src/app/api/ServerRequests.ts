@@ -560,13 +560,13 @@ class ServerRequests extends Server {
     } 
   }
 
-  async generateEmployeeID(userData: User,  employee: Employee): Promise<any> {
+  async generateEmployeeID(userData: User,  employeeID: string): Promise<any> {
     const data = {
       userData: userData,
-      employee: employee, 
+      employeeID: employeeID, 
     }
     try {
-      const res = await fetch(`${this.downloadUrl}/downloadID`, {
+      const res = await fetch(`${this.apiUrl}/downloadIDServer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

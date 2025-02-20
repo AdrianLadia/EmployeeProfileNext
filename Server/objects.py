@@ -5,7 +5,6 @@ from utils import *
 import re
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Union, List
-from generateEmployeeID import EmployeeIDCard
 
 # db = mongoDb("EmployeeManagementBackup")
 db = mongoDb()
@@ -460,6 +459,12 @@ class UserActions(User):
         generatedID = db.create(idGenerated, 'EmployeeID')
         print(generatedID, 'generatedID')
         return generatedID['IDCardURL']
+    
+    def getEmployeeBy_ID(self, employeeId):
+        employee = db.read({'_id': employeeId}, 'Employee')
+        if len(employee) == 0:
+            raise ValueError('Employee does not exist')
+        return employee[0]
 
     def updateEmployeeProfilePictureAction(self, user, employeeId, photo):
         if 'canUpdateEmployee' not in user['roles']['Employee']:

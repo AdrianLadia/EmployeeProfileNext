@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from objects import *
+from generateEmployeeID import EmployeeIDCard
 from firebase_admin import credentials, storage, initialize_app, get_app, _apps
 import random
 import os
@@ -52,34 +52,19 @@ def downloadID():
     if request.is_json:
         data = request.get_json()
         employee = data['employee']
-        userData = data['userData']
 
         if employee['dateJoined']:
-            employee['dateJoined'] = datetime.strptime(
-                employee['dateJoined'], "%a, %d %b %Y %H:%M:%S %Z")
+            employee['dateJoined'] = datetime.fromisoformat(employee['dateJoined'])
 
         try:
             generateID = EmployeeIDCard(**employee).generate_id_card()
 
             employeeID = uploadListToFirebaseStorage(generateID, 'EmployeeIDs')
 
-            to_return = {
-                "_id": employee['_id'],
-                "name": employee['firstName'] + " " + employee['lastName'],
-                "companyRole": employee['companyRole'],
-                "IDCardURL": {"front":employeeID[0], "back":employeeID[1]},
-                '_version': employee['_version']
-            }
-
-            idGenerated = UserActions(userData).createEmployeeIDAction(userData, employee, to_return)
+            return employeeID
 
         except Exception as e:
             return jsonify({"error": str(e)}), 400
-
-        return jsonify({
-            "employeeID": idGenerated,
-            "message": "Employee ID Card generated successfully"
-            }), 200
 
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):

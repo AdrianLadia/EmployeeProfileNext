@@ -45,20 +45,11 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
       setFilteredOffenseList(filteredList as Offense[]);
       setLoading(false);
     }else{
+      setFilteredOffenseList(offenseList as Offense[]);
       setSearch("");
     }
   }, [search, offenseList]);
-
-  // const wrapText = (text: string) => {
-  //   const lines = text.split("\n").filter((line) => line.trim() !== "");
-
-  //   const wrappedLines = lines.map((line) => `<span className="text-error">${line.trim()}</span>`);
-
-  //   const result = wrappedLines.join("\n");
-
-  //   return <div dangerouslySetInnerHTML={{ __html: result }} />;
-  // };
-
+  
   return (
     <table className={`w-full table ${!forPrint && "table-pin-rows "} h-full`}>
       <thead>

@@ -249,6 +249,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
             className="btn btn-neutral"
             type="button"
             value="Add"
+            disabled={!newAction}
             onClick={() => {
               setRemedialActions((prev) => [...prev, newAction]);
               setNewAction("");

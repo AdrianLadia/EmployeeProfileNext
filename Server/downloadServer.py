@@ -45,6 +45,8 @@ def uploadListToFirebaseStorage( list_of_photos, folder_name):
         download_urls.append(download_url)
         print(f"{photo} uploaded to Firebase Storage" + download_url)
 
+        os.remove(photo)
+
     return download_urls
 
 @app.route('/downloadID', methods=['POST'])

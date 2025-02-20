@@ -8,12 +8,13 @@ import logging
 from firebaseAuthenticator import firebaseAuthenticator
 from datetime import datetime, timezone
 import requests
+from downloadServer import DownloadServer
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 # db = mongoDb("EmployeeManagementBackup")
 db = mongoDb()
-
+downloadServer = DownloadServer()
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
@@ -642,20 +643,7 @@ def downloadIDServer():
             if not employee:
                 return jsonify({"error": "Employee not found"}), 404
 
-            if (AppConfig().getisLocalEnvironment()):
-                url = 'http://localhost:80/downloadID'
-            else:
-                url = 'http://localhost:80/downloadID'
-
-            if "dateJoined" in employee and isinstance(employee["dateJoined"], datetime):
-                employee["dateJoined"] = employee["dateJoined"].isoformat()
-
-            print('run here before req')
-
-            res = requests.post(url, json={'employee': employee})
-            if res.status_code != 200:
-                return jsonify({"error": f"Failed to generate ID, received {res.status_code}: {res.text}"}), 400
-            urls = res.json()
+            urls = downloadServer.downloadEmployeeID(employee)
 
             resID ={
                 "_id": employee['_id'],

@@ -283,6 +283,13 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     { label: "Starpack", value: "SP" },
   ] as { label: string; value: string }[]);
 
+    const [agencyOptions, setAgencyOptions] = useState([
+      { label: "FirstMulti Manpower Services", value: "FirstMulti Manpower Services" },
+      { label: "EFM Staffing General Services", value: "EFM Staffing General Services" },
+      { label: "Cite Technical Institute, Inc.", value: "Cite Technical Institute, Inc." },
+      { label: "Brigadier Security Agency", value: "Brigadier Security Agency" },
+    ] as { label: string; value: string }[]);
+
   // onclick delete button from image modal, handler
   useEffect(() => {
     const nonArrayKeys = ["photoOfPerson", "employeeSignature"];
@@ -308,12 +315,26 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       const res = companyOptions?.find(
         (company) => company.value == selectedEmployee.company
       );
+      const res2 = companyOptions?.find(
+        (company) => company.value == selectedEmployee.agency
+      );
+
       if ((res == undefined || !res) && selectedEmployee?.company) {
         setCompanyOptions([
           ...companyOptions,
           {
             label: selectedEmployee?.company || "",
             value: selectedEmployee?.company || "",
+          },
+        ]);
+      }
+
+      if ((res == undefined || !res) && selectedEmployee?.agency) {
+        setAgencyOptions([
+          ...agencyOptions,
+          {
+            label: selectedEmployee?.agency || "",
+            value: selectedEmployee?.agency || "",
           },
         ]);
       }
@@ -580,6 +601,25 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           disabled={disable}
         />
       </label>
+
+      {/* agency */}
+      <div className="flex flex-wrap justify-between text-sm gap-2 ">
+        <div className="flex flex-col text-sm gap-2 w-full">
+          Agency
+          <SelectPlus
+            options={agencyOptions}
+            onChange={(e, newValue) => {
+              const valueToPass =
+                typeof newValue == "object" && newValue !== null
+                  ? (newValue as { value: string }).value?.toString()
+                  : newValue
+                  ? newValue?.toString()
+                  : null;
+              setFormData({ ...formData, agency: valueToPass });
+            }}
+          />
+        </div>
+      </div>
 
       {/* company */}
       <div className="flex flex-wrap justify-between text-sm gap-2 ">

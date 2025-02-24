@@ -35,10 +35,10 @@ export type Version1 = number;
 export type Title = string;
 export type Code = string | null;
 export type Submitted = boolean;
+export type Iswithoffense = boolean | null;
 export type Reason = string | null;
 export type Remedialaction = string | null;
 export type Version2 = number;
-export type withOffense = boolean | null;
 
 export interface Memo {
   _id?: Id;
@@ -51,9 +51,9 @@ export interface Memo {
   MemoCode: Offense;
   Code: Code;
   submitted: Submitted;
+  isWithOffense?: Iswithoffense;
   reason?: Reason;
   remedialAction?: Remedialaction;
-  withOffense: withOffense
   _version: Version2;
 }
 export interface Employee {

@@ -285,6 +285,12 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         </div>
       )}
 
+      <div className="flex flex-col text-sm gap-2 ">
+        <span>With Offense</span>
+        <input checked={formData?.isWithOffense || false} type="checkbox" name="isWithOffense" id="isWithOffense" className="checkbox" />
+        <input checked={formData?.isWithOffense == false ? true : false} type="checkbox" name="isWithOffense" id="isWithOffense" className="checkbox" />
+      </div>
+
       {/* memo */}
       <div className="flex flex-col gap-2 text-sm">
         Memo

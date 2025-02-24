@@ -45,7 +45,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     reason: null,
     mediaList: null,
     memoPhotosList: null,
-    withOffense: true,
+    isWithOffense: true,
   } as Memo);
 
   const [memoForPrint, setMemoForPrint] = useState<Memo | null>(null);
@@ -307,11 +307,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         <div className="flex gap-4">
           <label className="flex gap-2" htmlFor="withOffenseTrue">
             <input
-              checked={formData.withOffense ? true : false}
+              checked={formData.isWithOffense ? true : false}
               onChange={handleCheckboxChange}
               type="checkbox"
               id="withOffenseTrue"
-              name="withOffense"
+              name="isWithOffense"
               value={"true"}
               className="checkbox checkbox- "
             />
@@ -320,11 +320,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
 
           <label className="flex gap-2" htmlFor="withOffenseFalse">
             <input
-              checked={formData.withOffense == false ? true : false}
+              checked={formData.isWithOffense == false ? true : false}
               onChange={handleCheckboxChange}
               type="checkbox"
               id="withOffenseFalse"
-              name="withOffense"
+              name="isWithOffense"
               value={"false"}
               className="checkbox checkbox- "
             />
@@ -333,7 +333,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         </div>
       </div>
 
-      <div className={`${!formData?.withOffense && "hidden"} flex flex-col gap-2 `}>
+      <div className={`${!formData?.isWithOffense && "hidden"} flex flex-col gap-2 `}>
         <span className="text-sm">Offense</span>
         <Select
           styles={selectStyle}

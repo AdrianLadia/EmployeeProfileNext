@@ -48,6 +48,7 @@ const CreateEmployeeForm = () => {
     dailyWage: null,
     isOJT: null,
     employeeSignature: null,
+    employeeHouseRulesSignatureList: null
   };
 
   const [formData, setFormData] = useState<Employee>(
@@ -341,6 +342,18 @@ const CreateEmployeeForm = () => {
             inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
             mediaList={formData?.biodataPhotosList || []}
+            setFunction={setFormData}
+            multiple={true}
+          />
+
+          {/* employeeHouseRulesSignatureList */}
+          <MediaInput
+            id="employeeHouseRulesSignatureList"
+            title="House Rules Agreement"
+            width="w-full"
+            inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
+            imgDimensions={{ height: 60, width: 60 }}
+            mediaList={formData?.employeeHouseRulesSignatureList || []}
             setFunction={setFormData}
             multiple={true}
           />

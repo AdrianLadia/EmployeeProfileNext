@@ -73,7 +73,7 @@ const Toast = () => {
 
   return (
     <div
-      className={` flex items-center justify-center cursor-cell z-[100000]
+      className={` flex items-center justify-center cursor-cell z-[1000]
                 ${
                   toastOptions?.open
                     ? "toast-top toast-center lg:toast-start lg:toast-bottom"
@@ -84,7 +84,7 @@ const Toast = () => {
       ref={toastRef}
     >
       <div
-        className={`min-w-[50vw] md:min-w-max md:max-w-[20vw] alert text-white text-wrap px-5 rounded ${
+        className={`min-w-[98vw] md:min-w-max md:max-w-[20vw] alert text-white text-wrap px-5 rounded ${
           getToastType()[0]
         }`}
         onClick={() => {

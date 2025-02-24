@@ -133,12 +133,12 @@ const EmployeeDetails = () => {
   };
 
   const handleDetailsClick = (textToCopy: string) => {
-    // setToastOptions({
-    //   open: true,
-    //   message: "Copied to clipboard",
-    //   type: "info",
-    //   timer: 2,
-    // });
+    setToastOptions({
+      open: true,
+      message: "Copied to clipboard",
+      type: "info",
+      timer: 1,
+    });
     navigator.clipboard.writeText(textToCopy);
   };
 
@@ -155,7 +155,7 @@ const EmployeeDetails = () => {
       "firstName",
       "lastName",
       "isDeleted",
-      "employeeSignature"
+      "employeeSignature",
     ];
 
     return (
@@ -287,7 +287,7 @@ const EmployeeDetails = () => {
               cursor-pointer tooltip-top tooltip tooltip-right indicator-start indicator-item badge text-white absolute`}
               data-tip={`${
                 fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
-              } Memos`} 
+              } Memos`}
               onClick={() =>
                 selectedEmployeeMemos?.length &&
                 handleMemoTableModalClick(selectedEmployeeMemos)
@@ -303,7 +303,6 @@ const EmployeeDetails = () => {
             >
               <ProfileImage employee={selectedEmployeeDetails} />
             </div>
-
           </div>
         </div>
 
@@ -324,22 +323,39 @@ const EmployeeDetails = () => {
         >
           {/* <h2 className=" ">{selectedEmployeeDetails?.firstName}</h2>
           <h2 className=" ">{selectedEmployeeDetails?.lastName}</h2> */}
-          {selectedEmployeeDetails?.firstName}{" "}{selectedEmployeeDetails?.lastName}
+          {selectedEmployeeDetails?.firstName}{" "}
+          {selectedEmployeeDetails?.lastName}
         </div>
 
         {/* address */}
         <div
           className={` ${loading && " hidden"} ${
             !selectedEmployeeDetails?.address && "hidden"
-          } text-center capitalize w-full`}
+          } text-center capitalize w-full flex items-center px-3`}
         >
-          <h3
-            className="select-all"
-            onClick={() =>
-              handleDetailsClick(selectedEmployeeDetails?.address || "")
-            }
-          >
+          <h3 className="  ">
             {selectedEmployeeDetails?.address || ""}
+            <span
+              className="inline-block "
+              onClick={() =>
+                handleDetailsClick(selectedEmployeeDetails?.address || "")
+              } title="Copy"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-5 hover:text-info cursor-pointer"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                />
+              </svg>
+            </span>
           </h3>
         </div>
       </div>
@@ -385,9 +401,9 @@ const EmployeeDetails = () => {
           }
           onClick={() =>
             selectedEmployeeDetails?.employeeSignature &&
-            handleImageModalClick(
-              [selectedEmployeeDetails?.employeeSignature || ""]
-            )
+            handleImageModalClick([
+              selectedEmployeeDetails?.employeeSignature || "",
+            ])
           }
         >
           Signature

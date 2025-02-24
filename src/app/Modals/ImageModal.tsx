@@ -12,6 +12,7 @@ const ImageModal = () => {
 
   const handleClose = () => {
     // router.replace(window.location.pathname, undefined);
+    // setImageListForModal([])
   };
 
   const handleDelete = (index: number) => {
@@ -25,19 +26,19 @@ const ImageModal = () => {
     }
   }, [imageListForModal]);
 
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClose();
-      }
-    };
+  // React.useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent) => {
+  //     if (e.key === "Escape") {
+  //       handleClose();
+  //     }
+  //   };
 
-    imageModalRef.current?.addEventListener("keydown", handleKeyDown);
+  //   imageModalRef.current?.addEventListener("keydown", handleKeyDown);
 
-    return () => {
-      imageModalRef.current?.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  //   return () => {
+  //     imageModalRef.current?.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, []);
 
   return (
     <dialog id="imageModal" className="modal w-full " ref={imageModalRef}>

@@ -34,7 +34,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     setLoading,
     pathname,
     imageListForModal,
-    imageModalId
+    imageModalId,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -65,6 +65,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     dailyWage: null,
     isOJT: null,
     employeeSignature: null,
+    employeeHouseRulesSignatureList: null,
   };
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(
@@ -284,16 +285,20 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
   // onclick delete button from image modal, handler
   useEffect(() => {
-    const nonArrayKeys = ["photoOfPerson", "employeeSignature"]; 
+    const nonArrayKeys = ["photoOfPerson", "employeeSignature"];
     const toPush = imageListForModal?.[0] ? imageListForModal[0] : null;
     if (imageListForModal && imageModalId) {
       setFormData({
         ...formData,
-        [imageModalId]: nonArrayKeys.includes(imageModalId) ? toPush : imageListForModal,
+        [imageModalId]: nonArrayKeys.includes(imageModalId)
+          ? toPush
+          : imageListForModal,
       });
       setDataToUpdate({
         ...dataToUpdate,
-        [imageModalId]: nonArrayKeys.includes(imageModalId) ? toPush : imageListForModal,
+        [imageModalId]: nonArrayKeys.includes(imageModalId)
+          ? toPush
+          : imageListForModal,
       });
     }
   }, [imageListForModal, imageModalId]);
@@ -514,6 +519,19 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
           imgDimensions={{ height: 60, width: 60 }}
           mediaList={formData?.biodataPhotosList || []}
+          onChangeHandler={handleFileChange}
+          disable={disable}
+          multiple={true}
+        />
+
+        {/* employeeHouseRulesSignatureList */}
+        <MediaInput
+          id="employeeHouseRulesSignatureList"
+          title="House Rules Agreement"
+          width="w-full "
+          inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
+          imgDimensions={{ height: 60, width: 60 }}
+          mediaList={formData?.employeeHouseRulesSignatureList || []}
           onChangeHandler={handleFileChange}
           disable={disable}
           multiple={true}

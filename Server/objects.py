@@ -709,9 +709,6 @@ class Employee(BaseModel):
         if self.id != None:
             raise ValueError('Cannot create Employee with an existing _id')
 
-        if not self.agency and not self.isRegular:
-            raise ValueError('Employee must be either regular or agency')
-
         self.id = generateRandomString()
         return self.to_dict()
 

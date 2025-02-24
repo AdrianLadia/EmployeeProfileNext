@@ -578,23 +578,23 @@ class ServerRequests extends Server {
     }
   }
 
-  async updateEmployeeID(userData: User,  employeeID: string): Promise<any> {
-    const data = {
-      userData: userData,
-      employeeID: employeeID, 
-    }
-    try {
-      const res = await fetch(`${this.downloadUrl}/updateEmployeeID`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-        cache: 'no-store',
-      });
-      return await res.json();
-    } catch (error:unknown) {
-      return (error as Error).message;
-    }
-  }
+  // async updateEmployeeID(userData: User,  employeeID: string): Promise<any> {
+  //   const data = {
+  //     userData: userData,
+  //     employeeID: employeeID, 
+  //   }
+  //   try {
+  //     const res = await fetch(`${this.downloadUrl}/downloadID`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify(data),
+  //       cache: 'no-store',
+  //     });
+  //     return await res.json();
+  //   } catch (error:unknown) {
+  //     return (error as Error).message;
+  //   }
+  // }
 
 }
 

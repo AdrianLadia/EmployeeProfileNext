@@ -55,7 +55,7 @@ const MediaInput: FC<MediaInputProps> = ({
   React.useEffect(() => {
     if (mediaList?.[0]?.toLowerCase()?.includes("video")) {
       setIsVideo(true);
-    }else{
+    } else {
       setIsVideo(false);
     }
   }, [mediaList]);
@@ -129,14 +129,14 @@ const MediaInput: FC<MediaInputProps> = ({
   const handleUploadClick = () => {
     if (fileInputRef?.current) {
       fileInputRef.current.click();
-    } 
+    }
   };
 
   const handleUploadVideoClick = () => {
     if (videoInputRef?.current) {
       videoInputRef.current.click();
-    } 
-  }; 
+    }
+  };
 
   return (
     <div className={`flex flex-col ${width}`}>
@@ -186,7 +186,7 @@ const MediaInput: FC<MediaInputProps> = ({
         <label htmlFor={id}>{title}</label>
         <div
           className={` h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px] relative group`}
-          data-tip={`${mediaList?.length}`}
+          title={`${mediaList?.length || 0} File(s)`}
         >
           {!isVideo && (
             <Image
@@ -206,6 +206,7 @@ const MediaInput: FC<MediaInputProps> = ({
                   setImageModalId(id);
                 }
               }}
+              
             />
           )}
 

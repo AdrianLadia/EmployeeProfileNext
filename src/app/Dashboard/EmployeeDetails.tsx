@@ -111,13 +111,13 @@ const EmployeeDetails = () => {
         getSelectedEmployeeDetails();
       }
 
-      if (userData?._id && selectedEmployee?._id && window.innerWidth < 768) {
-        // dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-        window.scrollTo({
-          top: 10000,
-          behavior: "smooth", // Enables smooth scrolling
-        });
-      }
+      // if (userData?._id && selectedEmployee?._id && window.innerWidth < 768) {
+      //   // dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      //   window.scrollTo({
+      //     top: 10000,
+      //     behavior: "smooth", // Enables smooth scrolling
+      //   });
+      // }
 
       if (!selectedEmployee._id) {
         setSelectedEmployeeDetails({} as Employee);

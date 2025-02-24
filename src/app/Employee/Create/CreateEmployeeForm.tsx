@@ -48,7 +48,8 @@ const CreateEmployeeForm = () => {
     dailyWage: null,
     isOJT: null,
     employeeSignature: null,
-    employeeHouseRulesSignatureList: null
+    employeeHouseRulesSignatureList: null,
+    agency: null
   };
 
   const [formData, setFormData] = useState<Employee>(
@@ -167,6 +168,13 @@ const CreateEmployeeForm = () => {
     { label: "Pustanan", value: "PPC" },
     { label: "Best Bags", value: "BB" },
     { label: "Starpack", value: "SP" },
+  ] as { label: string; value: string }[]);
+
+  const [agencyOptions] = useState([
+    { label: "FirstMulti Manpower Services", value: "FirstMulti Manpower Services" },
+    { label: "EFM Staffing General Services", value: "EFM Staffing General Services" },
+    { label: "Cite Technical Institute, Inc.", value: "Cite Technical Institute, Inc." },
+    { label: "Brigadier Security Agency", value: "Brigadier Security Agency" },
   ] as { label: string; value: string }[]);
 
   const [updateSignature, setUpdateSignature] = useState<boolean>(true);
@@ -405,6 +413,25 @@ const CreateEmployeeForm = () => {
             }}
           />
         </label>
+
+        {/* agency */}
+        <div className="flex flex-wrap justify-between text-sm gap-2 ">
+          <div className="flex flex-col text-sm gap-2 w-full">
+            Agency
+            <SelectPlus
+              options={agencyOptions}
+              onChange={(e, newValue) => {
+                const valueToPass =
+                  typeof newValue == "object" && newValue !== null
+                    ? (newValue as { value: string }).value?.toString()
+                    : newValue
+                    ? newValue?.toString()
+                    : null;
+                setFormData({ ...formData, agency: valueToPass });
+              }}
+            />
+          </div>
+        </div>
 
         {/* company */}
         <div className="flex flex-wrap justify-between text-sm gap-2 ">

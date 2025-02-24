@@ -442,13 +442,13 @@ def test_getRemedialActionForEmployeeMemoAction():
             memo['Employee']['_id'], memo['MemoCode']['_id'],
             memo['MemoCode']['_version'])
 
-        assert remedialAction['remedialAction'] == 'Written Warning'
+        assert remedialAction['remedialAction'] == 'Verbal Warning'
 
-        assert memo['remedialAction'] == 'Verbal Warning'
+        assert memo['remedialAction'] == None
 
         memo2 = user.createMemoAction(userCreated, memoObject)
 
-        assert memo2['remedialAction'] == 'Written Warning'
+        assert memo2['remedialAction'] == None
 
         memoList = user.getMemoListAction(userCreated, employee['_id'])
 

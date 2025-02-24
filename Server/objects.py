@@ -426,6 +426,7 @@ class UserActions(User):
             {
                 'Employee._id': employeeId,
                 'MemoCode._id': offenseId,
+                'isWithOffense': True,
                 'MemoCode._version': offenseVersion
             }, 'Memo')
 
@@ -453,6 +454,7 @@ class UserActions(User):
         employeeID = db.read({'_id': employee['_id']}, 'EmployeeID')
         if len(employeeID) > 0:
             generatedID = db.update({'_id': employee['_id']}, idGenerated, 'EmployeeID')
+            print(generatedID, 'generatedID')
             return generatedID[0]['IDCardURL']
 
         print(idGenerated)
@@ -541,6 +543,7 @@ class Memo(BaseModel):
     MemoCode: 'Offense'
     Code: Optional[str]
     submitted: bool
+    isWithOffense: Optional[bool] = False
     reason: Optional[str] = None
     remedialAction: Optional[str] = None
     version: int = Field(..., alias='_version')
@@ -573,6 +576,7 @@ class Memo(BaseModel):
             'MemoCode': self.MemoCode.to_dict(),
             'Code': self.Code,
             'submitted': self.submitted,
+            'isWithOffense': self.isWithOffense,
             'reason': self.reason,
             'remedialAction': self.remedialAction,
             '_version': self.version
@@ -585,19 +589,23 @@ class Memo(BaseModel):
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id
         offenseVersion = self.MemoCode.version
-
-        getRemedialAction = UserActions(
-            user).getRemedialActionForEmployeeMemoAction(
-                employeeId, offenseId, offenseVersion)
-
-        remedialActionToString = getRemedialAction['remedialAction']
-
-        self.remedialAction = remedialActionToString
-
         formattedDate = self.date.strftime('%y%m%d')
 
+        if self.isWithOffense == True:
+            getRemedialAction = UserActions(
+                user).getRemedialActionForEmployeeMemoAction(
+                    employeeId, offenseId, offenseVersion)
+
+            remedialActionToString = getRemedialAction['remedialAction']
+
+            self.remedialAction = remedialActionToString
+            self.Code = f'{self.Employee.company}-{formattedDate}-{getRemedialAction["offenseCount"]}'
+
+        else :
+            self.Code = f'{self.Employee.company}-{formattedDate}'
+
+
         self.id = generateRandomString()
-        self.Code = f'{self.Employee.company}-{formattedDate}-{getRemedialAction["offenseCount"]}'
         self.submitted = False
         return self.to_dict()
 

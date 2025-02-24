@@ -305,6 +305,7 @@ def create_memo():
                     'MemoCode': memo['MemoCode'],
                     'Code': None,
                     'submitted': False,
+                    'isWithOffense': memo['isWithOffense'],
                     'reason': memo['reason'] or None,
                     'remedialActions': None,
                     '_version': 0
@@ -643,7 +644,13 @@ def downloadIDServer():
             if not employee:
                 return jsonify({"error": "Employee not found"}), 404
 
-            urls = downloadServer.downloadEmployeeID(employee)
+            if 'dateJoined' in employee:
+                employee['dateJoined'] = employee['dateJoined'].isoformat()
+
+            payload = {'employee':employee}
+            urls = downloadServer.downloadEmployeeID(payload)
+
+            print(urls, 'urls')
 
             resID ={
                 "_id": employee['_id'],

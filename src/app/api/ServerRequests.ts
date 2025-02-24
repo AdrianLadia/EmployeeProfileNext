@@ -584,7 +584,7 @@ class ServerRequests extends Server {
       employeeID: employeeID, 
     }
     try {
-      const res = await fetch(`${this.downloadUrl}/updateEmployeeID`, {
+      const res = await fetch(`${this.apiUrl}/updateEmployeeID`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

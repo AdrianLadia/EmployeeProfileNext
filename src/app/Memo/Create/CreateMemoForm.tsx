@@ -45,6 +45,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     reason: null,
     mediaList: null,
     memoPhotosList: null,
+    withOffense: true,
   } as Memo);
 
   const [memoForPrint, setMemoForPrint] = useState<Memo | null>(null);
@@ -214,6 +215,13 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     }
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value === "true" ? true : false,
+    });
+  };
+
   React.useEffect(() => {
     if (formData?.Employee?._id && formData?.MemoCode?._id) {
       getRemedialAction(
@@ -293,7 +301,39 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         />
       </label>
 
+      {/* with Offense */}
       <div className="flex flex-col gap-2">
+        <span className="text-sm">Add Offense</span>
+        <div className="flex gap-4">
+          <label className="flex gap-2" htmlFor="withOffenseTrue">
+            <input
+              checked={formData.withOffense ? true : false}
+              onChange={handleCheckboxChange}
+              type="checkbox"
+              id="withOffenseTrue"
+              name="withOffense"
+              value={"true"}
+              className="checkbox checkbox- "
+            />
+            Yes
+          </label>
+
+          <label className="flex gap-2" htmlFor="withOffenseFalse">
+            <input
+              checked={formData.withOffense == false ? true : false}
+              onChange={handleCheckboxChange}
+              type="checkbox"
+              id="withOffenseFalse"
+              name="withOffense"
+              value={"false"}
+              className="checkbox checkbox- "
+            />
+            No
+          </label>
+        </div>
+      </div>
+
+      <div className={`${!formData?.withOffense && "hidden"} flex flex-col gap-2 `}>
         <span className="text-sm">Offense</span>
         <Select
           styles={selectStyle}
@@ -347,8 +387,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             placeholder="Subject"
             id="subject"
             required
-            value={formData?.MemoCode?.title || ""}
-            // onChange={handleInputChange}
+            value={formData?.MemoCode?.title? formData?.MemoCode?.title : formData?.subject || ""}
+            onChange={handleInputChange}
           />
         </label>
         {/* description */}
@@ -363,19 +403,6 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         ></textarea>
       </div>
 
-      {/* Reason */}
-      {/* <div className="flex flex-col gap-2 text-sm">
-        Reason 
-        <textarea
-          className="textarea textarea-bordered mt-1 min-h-[20vh]"
-          placeholder="Reason"
-          id="reason"
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setFormData({ ...formData, reason: e.target.value });
-          }}
-        ></textarea>
-      </div> */}
-
       {/* medialist */}
       <MediaInput
         id="mediaList"
@@ -389,20 +416,6 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         required={false}
         allowVideo={true}
       />
-
-      {/* memoPhotosList */}
-      {/* <MediaInput
-        id="memoPhotosList"
-        title="Memo Photo"
-        width="w-full"
-        inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-        imgDimensions={{ height: 60, width: 60 }}
-        mediaList={formData?.memoPhotosList || []}
-        // setFunction={setFormData}
-        onChangeHandler={handleFileChange}
-        multiple={true}
-        required={false}
-      />  */}
 
       {/* submit */}
       <button

@@ -590,6 +590,10 @@ class Memo(BaseModel):
         if len(employeeHouseRulesSignatureList) == 0:
             raise ValueError(
                 'Employee must have proof of signature in the house rules')
+        
+        if not self.Employee.agency and not self.Employee.isRegular:
+            raise ValueError(
+                'Employee must have an agency or be a regular employee')
 
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id
@@ -716,12 +720,6 @@ class Employee(BaseModel):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
             raise ValueError(
                 'User does not have permission to update an employee')
-
-        if not self.agency and not self.isRegular:
-            raise ValueError('Employee must be either regular or agency')
-
-        if self.employeeHouseRulesSignatureList == []:
-            raise ValueError('Employee must have proof of signature in the house rules')
 
         newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
         return newData

@@ -585,6 +585,11 @@ class Memo(BaseModel):
     def createMemo(self, user):
         if 'canCreateMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to create a memo')
+    
+        employeeHouseRulesSignatureList = self.Employee.employeeHouseRulesSignatureList
+        if len(employeeHouseRulesSignatureList) == 0:
+            raise ValueError(
+                'Employee must have proof of signature in the house rules')
 
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id
@@ -641,9 +646,11 @@ class Employee(BaseModel):
     photoOfPerson: Optional[str]
     resumePhotosList: Optional[List[str]]
     biodataPhotosList: Optional[List[str]]
+    employeeHouseRulesSignatureList: Optional[List[str]]
     email: Optional[str]
     dateJoined: Optional[datetime.datetime]
     company: Optional[str]
+    agency: Optional[str]
     isRegular: Optional[bool]
     companyRole: Optional[str]
     isOJT: Optional[bool]
@@ -681,9 +688,11 @@ class Employee(BaseModel):
             'photoOfPerson': self.photoOfPerson,
             'resumePhotosList': self.resumePhotosList,
             'biodataPhotosList': self.biodataPhotosList,
+            'employeeHouseRulesSignatureList': self.employeeHouseRulesSignatureList,
             'email': self.email,
             'dateJoined': self.dateJoined,
             'company': self.company,
+            'agency': self.agency,
             'isRegular': self.isRegular,
             'companyRole': self.companyRole,
             'isOJT': self.isOJT,
@@ -699,6 +708,10 @@ class Employee(BaseModel):
                 'User does not have permission to create an employee')
         if self.id != None:
             raise ValueError('Cannot create Employee with an existing _id')
+
+        if not self.agency and not self.isRegular:
+            raise ValueError('Employee must be either regular or agency')
+
         self.id = generateRandomString()
         return self.to_dict()
 
@@ -706,6 +719,12 @@ class Employee(BaseModel):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
             raise ValueError(
                 'User does not have permission to update an employee')
+
+        if not self.agency and not self.isRegular:
+            raise ValueError('Employee must be either regular or agency')
+
+        if self.employeeHouseRulesSignatureList == []:
+            raise ValueError('Employee must have proof of signature in the house rules')
 
         newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
         return newData

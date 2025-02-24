@@ -613,7 +613,6 @@ class Memo(BaseModel):
         else :
             self.Code = f'{self.Employee.company}-{formattedDate}'
 
-
         self.id = generateRandomString()
         self.submitted = False
         return self.to_dict()

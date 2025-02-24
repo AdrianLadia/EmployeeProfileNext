@@ -244,6 +244,8 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
         </div>
       </div>
 
+      <div className="w-full border-b my-5" />
+
       {/* photoOfPerson, resume, bioData */}
       <div className="flex flex-wrap gap-3 justify-between w-full ">
         {/* photoOfPerson */}
@@ -331,6 +333,8 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
           </div>
         </label>
       </div>
+
+      <div className="w-full border-b my-5" />
 
       {/* date */}
       <label className="flex flex-col items-start gap-2 text-sm">
@@ -475,6 +479,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
             value={formData?.dailyWage ?? ""}
           />
         </label>
+        <div className="w-full border-b my-5" />
         <>
           Employee Signature
           <div className="flex flex-col items-center gap-2 border-2 border-black mt-2">

@@ -352,8 +352,10 @@ const CreateEmployeeForm = () => {
           </div>
         </div>
 
+        <div className="w-full border-b my-5" />
+
         {/* photoOfPerson, resume, bioData */}
-        <div className="flex flex-wrap gap-3 md:gap-2 justify-between w-full ">
+        <div className="flex flex-wrap gap-3 md:gap-4 justify-between w-full ">
           {/* photoOfPerson */}
           <MediaInput
             id="photoOfPerson"
@@ -400,8 +402,10 @@ const CreateEmployeeForm = () => {
             mediaList={formData?.employeeHouseRulesSignatureList || []}
             setFunction={setFormData}
             multiple={true}
-          /> 
+          />
         </div>
+
+        <div className="w-full border-b my-5" />
 
         {/* date */}
         <label className="flex flex-col items-start gap-2 text-sm">
@@ -418,7 +422,11 @@ const CreateEmployeeForm = () => {
         </label>
 
         {/* agency */}
-        <div className={`${formData?.isRegular && " hidden "} flex flex-wrap justify-between text-sm gap-2 `}>
+        <div
+          className={`${
+            formData?.isRegular && " hidden "
+          } flex flex-wrap justify-between text-sm gap-2 `}
+        >
           <div className="flex flex-col text-sm gap-2 w-full">
             Agency
             <SelectPlus
@@ -471,7 +479,11 @@ const CreateEmployeeForm = () => {
 
         <div className="flex flex-wrap w-full justify-between">
           {/* isRegular */}
-          <label className={`${formData?.agency && " hidden "} label cursor-pointer flex justify-start gap-2 w-max `}>
+          <label
+            className={`${
+              formData?.agency && " hidden "
+            } label cursor-pointer flex justify-start gap-2 w-max `}
+          >
             <p className="label-text text-base">Is Regular?</p>
             <input
               type="checkbox"
@@ -528,6 +540,8 @@ const CreateEmployeeForm = () => {
             />
           </label>
         </div>
+
+        <div className="w-full border-b my-5" />
 
         {/* Employee Signature */}
         {/* <div className="flex flex-col w-full text-sm gap-2 mt-2">

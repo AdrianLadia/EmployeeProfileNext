@@ -542,10 +542,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         </div>
       </div>
 
+      <div className="w-full border-b my-5" />
+
       {/* photoOfPerson, resume, bioData */}
       <div
         className={
-          "flex flex-wrap gap-3 md:gap-2 justify-between w-full " + labelStyle
+          "flex flex-wrap gap-3 md:gap-4 justify-between w-full " + labelStyle
         }
       >
         {/* photoOfPerson */}
@@ -600,6 +602,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         />
       </div>
 
+      <div className="w-full border-b my-5" />
+
       {/* date Joined*/}
       <label className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
         Date Joined
@@ -619,7 +623,11 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       </label>
 
       {/* agency */}
-      <div className={`${formData?.isRegular && " hidden "} flex flex-wrap justify-between text-sm gap-2 `}>
+      <div
+        className={`${
+          formData?.isRegular && " hidden "
+        } flex flex-wrap justify-between text-sm gap-2 `}
+      >
         <div className="flex flex-col text-sm gap-2 w-full">
           Agency
           <SelectPlus
@@ -680,7 +688,11 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
       <div className="flex flex-wrap w-full justify-between">
         {/* isRegular */}
-        <label className={`${formData?.agency && " hidden "} label cursor-pointer flex justify-start gap-2 w-max`}>
+        <label
+          className={`${
+            formData?.agency && " hidden "
+          } label cursor-pointer flex justify-start gap-2 w-max`}
+        >
           <p className="label-text text-base">Is Regular?</p>
           <input
             type="checkbox"
@@ -742,6 +754,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             onChange={handleInputChange}
           />
         </label>
+        <div className="w-full border-b my-5" />
         <div className="flex flex-col w-full text-sm gap-2 mt-2">
           {employeeSignatureComponent()}
         </div>

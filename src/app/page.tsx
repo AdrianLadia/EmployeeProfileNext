@@ -11,7 +11,7 @@ import ServerRequests from "@/app/api/ServerRequests";
 import EmployeeTable from "./Dashboard/EmployeeTable";
 import DashMenu from "./Dashboard/DashboardMenu";
 import EmployeeDetails from "./Dashboard/EmployeeDetails";
-import SearchBar from "./Dashboard/SearchBar"; 
+import SearchBar from "./Dashboard/SearchBar";
 
 import { getUserData, getTestUserData } from "./api/UserData";
 
@@ -40,7 +40,7 @@ const Page = async () => {
 
   let employeeResponse;
 
-  if(res?.data){
+  if (res?.data) {
     employeeResponse = res.data;
   }
 
@@ -84,8 +84,10 @@ const Page = async () => {
 
       <div className=" md:h-[93vh] overflow-auto lg:overflow-clip w-[99vw] lg:w-[97vw] justify-between flex flex-wrap ">
         <div className=" h-12 w-[45%] lg:w-[85%] flex items-center pl-4 gap-4 ">
-          <DashMenu/>
-          <a href="/" className="text-2xl font-semibold tracking-wider">Dashboard</a>
+          <DashMenu />
+          <a href="/" className="text-2xl font-semibold tracking-wider">
+            Dashboard
+          </a>
         </div>
 
         {/* cards and table */}
@@ -121,8 +123,24 @@ const Page = async () => {
           <div className="w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-lg rounded-box flex flex-col items-start justify-between border ">
             <div className=" w-full overflow-auto h-full">
               <div className="flex flex-col md:flex-row p-1 justify-between items-center w-full">
-                <h2 className="text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full">
+                <h2 className="text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full flex gap-2 items-center">
                   Employees
+                  <a href="/Employee/Create" className="btn btn-xs btn-circle" title="Add Employee">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-6 -mt-0.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                  </a>
                 </h2>
                 <SearchBar controlled={true} />
               </div>

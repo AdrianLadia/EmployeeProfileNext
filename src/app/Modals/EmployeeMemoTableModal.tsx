@@ -196,7 +196,7 @@ const EmployeeMemoTableModal = () => {
                             }
                           />
                         ) : (
-                          <span className="text-neutral">?</span>
+                          <span className="text-neutral">X</span>
                         )}
                       </div>
                     </td>

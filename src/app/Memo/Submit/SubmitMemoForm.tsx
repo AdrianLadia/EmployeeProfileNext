@@ -435,9 +435,9 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
       {/* submit */}
       <button
-        className={` btn bg-violet-500 text-white w-full place-self-start my-6`}
+        className={` btn bg-violet-500 disabled:bg-gray-400 text-white w-full place-self-start my-6`}
         type="submit"
-        disabled={loading ? true : formData?.subject ? false : true}
+        disabled={loading ? true : formData?._id ? false : true}
         id="submit-memo-btn"
       >
         {!loading ? "Submit" : <span className="animate-spin text-xl">C</span>}

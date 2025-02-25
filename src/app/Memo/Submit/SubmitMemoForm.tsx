@@ -276,6 +276,32 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         </label>
       </div>
 
+      <div className="flex flex-col text-sm gap-2 my-2">
+        <span className="text-center">With Offense</span>
+        <div className="flex justify-evenly">
+          <label className="flex gap-2" htmlFor="isWithOffense">
+            <input
+              checked={formData?.isWithOffense || false}
+              type="checkbox"
+              name="isWithOffense"
+              id="isWithOffense"
+              className="checkbox"
+            />
+            Yes
+          </label>
+          <label className="flex gap-2" htmlFor="isWithOffense">
+            <input
+              checked={formData?.isWithOffense == false ? true : false}
+              type="checkbox"
+              name="isWithOffense"
+              id="isWithOffense"
+              className="checkbox"
+            />
+            No
+          </label>
+        </div>
+      </div>
+
       {formData?.remedialAction && (
         <div className="flex flex-col text-sm gap-2 ">
           Memo Remedial Action
@@ -339,7 +365,9 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
       {/* medialist */}
       <div
-        className={`${!formData?.mediaList?.[0]&&"hidden"} flex items-center justify-between p-3 gap-5 border rounded-box text-sm `}
+        className={`${
+          !formData?.mediaList?.[0] && "hidden"
+        } flex items-center justify-between p-3 gap-5 border rounded-box text-sm `}
       >
         <p className=" w-[50%] text-end ">Media Proof: </p>
         {formData?.mediaList?.[0]?.includes("video") ? (
@@ -348,32 +376,33 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
               className={` indent-0.5 text-4xl group-hover:text-3xl w-32 h-32 flex justify-center items-center px-5 py-3 hover:bg-neutral/50 bg-neutral rounded-box text-neutral-content `}
               onClick={() =>
                 handleVideoModalClick(formData?.mediaList?.[0] || "")
-              } title="Play Video"
+              }
+              title="Play Video"
             >
               ▶
             </div>
           </div>
         ) : (
-            <div className="flex justify-start gap-3 w-[50%] ">
-              <div
-                className="relative w-32 h-32 group border"
-                onClick={() => handleImageModalClick(formData?.mediaList || [])}
-              >
-                <span
-                  className="font-semibold absolute grid place-content-center left-1/2 
+          <div className="flex justify-start gap-3 w-[50%] ">
+            <div
+              className="relative w-32 h-32 group border"
+              onClick={() => handleImageModalClick(formData?.mediaList || [])}
+            >
+              <span
+                className="font-semibold absolute grid place-content-center left-1/2 
               right-1/2 top-1/2 bottom-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs opacity-75 group-hover:opacity-100 bg-base-100 p-4 rounded-full cursor-pointer"
-                >
-                  {formData?.mediaList?.length}
-                </span>
-                <Image
-                  src={formData?.mediaList?.[0] || ""}
-                  alt="media"
-                  width={100}
-                  height={100}
-                  className="rounded-box cursor-pointer w-full h-full"
-                />
-              </div>
+              >
+                {formData?.mediaList?.length}
+              </span>
+              <Image
+                src={formData?.mediaList?.[0] || ""}
+                alt="media"
+                width={100}
+                height={100}
+                className="rounded-box cursor-pointer w-full h-full"
+              />
             </div>
+          </div>
         )}
       </div>
 

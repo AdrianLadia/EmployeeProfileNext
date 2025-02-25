@@ -33,6 +33,8 @@ const PrintMemorandumModal = () => {
   const [includeMemoPhotos, setIncludeMemoPhotos] = React.useState(true);
   const [includeMediaList, setIncludeMediaList] = React.useState(true);
 
+
+
   const convertToPdf = async () => {
     setLoading(true);
 
@@ -80,9 +82,10 @@ const PrintMemorandumModal = () => {
       const xOffset = (A4_WIDTH - scaledWidth) / 2;
       const yOffset = (A4_HEIGHT - scaledHeight) / 2;
 
+      
       pdf.addImage(imgData, "PNG", xOffset, yOffset, scaledWidth, scaledHeight);
-
-      if (memoForPrintModal?.mediaList?.[0] && includeMediaList) {
+      
+      if (memoForPrintModal?.mediaList?.[0] && includeMediaList && !memoForPrintModal?.mediaList?.[0]?.includes("video")) {
         pdf.addPage();
 
         const imgElement = mediaListRef.current;
@@ -148,8 +151,9 @@ const PrintMemorandumModal = () => {
   };
 
   const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
+
   return (
-    <dialog className=" modal " id="MemoPrintModal">
+    <dialog className={` modal ${ loading && " cursor-wait " } `} id="MemoPrintModal">
       <div
         style={style}
         className={` relative h-[90vh] w-[95vw] sm:w-[500px] md:min-w-[50vw] border bg-white text-black`}
@@ -407,8 +411,8 @@ const PrintMemorandumModal = () => {
         {/* Print Memo Button */}
         <div className="w-full absolute bottom-5 flex justify-center">
           <button
-            className=" w-max btn btn-info text-white opacity-70 hover:opacity-100 z-40" 
-            onClick={() => !loading && convertToPdf()} 
+            className={`${!loading ? " btn-info " : " btn-disabled " } w-max btn  text-white opacity-70 hover:opacity-100 z-40 `}
+            onClick={() => !loading && convertToPdf()}  
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

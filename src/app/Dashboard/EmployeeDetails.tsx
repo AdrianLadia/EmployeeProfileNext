@@ -111,13 +111,13 @@ const EmployeeDetails = () => {
         getSelectedEmployeeDetails();
       }
 
-      if (userData?._id && selectedEmployee?._id && window.innerWidth < 768) {
-        // dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-        window.scrollTo({
-          top: 10000,
-          behavior: "smooth", // Enables smooth scrolling
-        });
-      }
+      // if (userData?._id && selectedEmployee?._id && window.innerWidth < 768) {
+      //   // dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      //   window.scrollTo({
+      //     top: 10000,
+      //     behavior: "smooth", // Enables smooth scrolling
+      //   });
+      // }
 
       if (!selectedEmployee._id) {
         setSelectedEmployeeDetails({} as Employee);
@@ -133,12 +133,12 @@ const EmployeeDetails = () => {
   };
 
   const handleDetailsClick = (textToCopy: string) => {
-    // setToastOptions({
-    //   open: true,
-    //   message: "Copied to clipboard",
-    //   type: "info",
-    //   timer: 2,
-    // });
+    setToastOptions({
+      open: true,
+      message: "Copied to clipboard",
+      type: "info",
+      timer: 1,
+    });
     navigator.clipboard.writeText(textToCopy);
   };
 
@@ -155,7 +155,8 @@ const EmployeeDetails = () => {
       "firstName",
       "lastName",
       "isDeleted",
-      "employeeSignature"
+      "employeeSignature",
+      "employeeHouseRulesSignatureList"
     ];
 
     return (
@@ -287,7 +288,7 @@ const EmployeeDetails = () => {
               cursor-pointer tooltip-top tooltip tooltip-right indicator-start indicator-item badge text-white absolute`}
               data-tip={`${
                 fetchingMemos ? "Fetching" : selectedEmployeeMemos?.length
-              } Memos`} 
+              } Memos`}
               onClick={() =>
                 selectedEmployeeMemos?.length &&
                 handleMemoTableModalClick(selectedEmployeeMemos)
@@ -303,7 +304,6 @@ const EmployeeDetails = () => {
             >
               <ProfileImage employee={selectedEmployeeDetails} />
             </div>
-
           </div>
         </div>
 
@@ -324,21 +324,17 @@ const EmployeeDetails = () => {
         >
           {/* <h2 className=" ">{selectedEmployeeDetails?.firstName}</h2>
           <h2 className=" ">{selectedEmployeeDetails?.lastName}</h2> */}
-          {selectedEmployeeDetails?.firstName}{" "}{selectedEmployeeDetails?.lastName}
+          {selectedEmployeeDetails?.firstName}{" "}
+          {selectedEmployeeDetails?.lastName}
         </div>
 
         {/* address */}
         <div
           className={` ${loading && " hidden"} ${
             !selectedEmployeeDetails?.address && "hidden"
-          } text-center capitalize w-full`}
+          } text-center capitalize w-full px-3`}
         >
-          <h3
-            className="select-all"
-            onClick={() =>
-              handleDetailsClick(selectedEmployeeDetails?.address || "")
-            }
-          >
+          <h3 className="  ">
             {selectedEmployeeDetails?.address || ""}
           </h3>
         </div>
@@ -385,9 +381,9 @@ const EmployeeDetails = () => {
           }
           onClick={() =>
             selectedEmployeeDetails?.employeeSignature &&
-            handleImageModalClick(
-              [selectedEmployeeDetails?.employeeSignature || ""]
-            )
+            handleImageModalClick([
+              selectedEmployeeDetails?.employeeSignature || "",
+            ])
           }
         >
           Signature
@@ -448,6 +444,31 @@ const EmployeeDetails = () => {
             loading="lazy"
           ></Image>
         </div>
+
+        {/* employeeHouseRulesSignatureList */}
+        <div
+          className={
+            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            ` ${!selectedEmployeeDetails._id && "hidden"}`
+          }
+          onClick={() =>
+            selectedEmployeeDetails?.employeeHouseRulesSignatureList &&
+            handleImageModalClick(
+              selectedEmployeeDetails?.employeeHouseRulesSignatureList || []
+            )
+          }
+        >
+          House Rules
+          <Image
+            className={`w-8 h-8`}
+            src={selectedEmployeeDetails?.employeeHouseRulesSignatureList?.[0] || ""}
+            alt={"House Rules"}
+            width={100}
+            height={100}
+            loading="lazy"
+          ></Image>
+        </div>
+        
       </div>
     </div>
   );

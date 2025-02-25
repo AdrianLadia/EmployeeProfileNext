@@ -48,7 +48,9 @@ const CreateEmployeeForm = () => {
     dailyWage: null,
     isOJT: null,
     employeeSignature: null,
-  };
+    employeeHouseRulesSignatureList: null,
+    agency: null,
+  } as Employee;
 
   const [formData, setFormData] = useState<Employee>(
     defaultFormData as Employee
@@ -105,6 +107,14 @@ const CreateEmployeeForm = () => {
             "biodataPhotosList"
           );
           finalFormData.biodataPhotosList = biodataPhotosList;
+        }
+        if (formData?.employeeHouseRulesSignatureList && formData?.employeeHouseRulesSignatureList[0]) {
+          const employeeHouseRulesSignatureList = await upload.Images(
+            formData.employeeHouseRulesSignatureList,
+            `employees/${formData.firstName}${formData.firstName}`,
+            "employeeHouseRulesSignatureList"
+          );
+          finalFormData.employeeHouseRulesSignatureList = employeeHouseRulesSignatureList;
         }
 
         const form = e.target as HTMLFormElement;
@@ -168,15 +178,32 @@ const CreateEmployeeForm = () => {
     { label: "Starpack", value: "SP" },
   ] as { label: string; value: string }[]);
 
+  const [agencyOptions] = useState([
+    {
+      label: "FirstMulti Manpower Services",
+      value: "FirstMulti Manpower Services",
+    },
+    {
+      label: "EFM Staffing General Services",
+      value: "EFM Staffing General Services",
+    },
+    {
+      label: "Cite Technical Institute, Inc.",
+      value: "Cite Technical Institute, Inc.",
+    },
+    { label: "Brigadier Security Agency", value: "Brigadier Security Agency" },
+  ] as { label: string; value: string }[]);
+
   const [updateSignature, setUpdateSignature] = useState<boolean>(true);
-  
+
   const employeeSignatureComponent = () => {
     return (
       <>
         {!updateSignature ? (
           <div className="flex flex-col w-full items-center ">
             <span className="w-full">Employee Signature</span>
-            <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip h-max "
+            <div
+              className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip h-max "
               // onClick={() => !formData?.employeeSignature&&setUpdateSignature(true)}
             >
               <div className="h-[300px] flex items-center justify-center relative w-full">
@@ -281,34 +308,62 @@ const CreateEmployeeForm = () => {
           ></textarea>
         </div>
 
-        {/* Phone Number */}
-        <div className="flex flex-col text-sm gap-2 ">
-          Phone Number
-          <label className="input input-bordered flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-4 text-gray-500"
-            >
-              <path
-                fillRule="evenodd"
-                d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z"
-                clipRule="evenodd"
+        {/* phone and email */}
+        <div className="flex flex-col md:flex-row gap-2 justify-between">
+          {/* Phone Number */}
+          <div className="flex flex-col text-sm gap-2 w-full md:w-[48%]">
+            Phone Number
+            <label className="input input-bordered flex items-center gap-2">
+              {/* <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-4 text-gray-500"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z"
+                  clipRule="evenodd"
+                />
+              </svg> */}
+              <input
+                type="text"
+                className="grow"
+                placeholder="Phone Number"
+                id="phoneNumber"
+                onChange={handleInputChange}
               />
-            </svg>
-            <input
-              type="text"
-              className="grow"
-              placeholder="Phone Number"
-              id="phoneNumber"
-              onChange={handleInputChange}
-            />
-          </label>
+            </label>
+          </div>
+
+          {/* E-mail */}
+          <div className="flex flex-col text-sm gap-2 w-full md:w-[48%]">
+            E-mail
+            <label className="input input-bordered flex items-center gap-2">
+              {/* <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-4 text-gray-500"
+              >
+                <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
+                <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
+              </svg> */}
+              <input
+                type="email"
+                className="grow"
+                placeholder="E-mail"
+                id="email"
+                onChange={handleInputChange}
+              />
+            </label>
+          </div>
         </div>
 
+        <div className="w-full border-b my-5" />
+
         {/* photoOfPerson, resume, bioData */}
-        <div className="flex flex-wrap gap-3 md:gap-2 justify-between w-full ">
+        <div className="flex flex-wrap gap-3 md:gap-4 justify-between w-full ">
           {/* photoOfPerson */}
           <MediaInput
             id="photoOfPerson"
@@ -345,39 +400,20 @@ const CreateEmployeeForm = () => {
             multiple={true}
           />
 
-          {/* <MediaInput
-            id="employeeSignature"
-            title="Employee Signature"
+          {/* employeeHouseRulesSignatureList */}
+          <MediaInput
+            id="employeeHouseRulesSignatureList"
+            title="House Rules Agreement"
             width="w-full"
             inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
             imgDimensions={{ height: 60, width: 60 }}
-            mediaList={formData?.employeeSignature ? [formData?.employeeSignature] : []}
+            mediaList={formData?.employeeHouseRulesSignatureList || []}
             setFunction={setFormData}
-          /> */}
+            multiple={true}
+          />
         </div>
 
-        {/* E-mail */}
-        <div className="flex flex-col text-sm gap-2 ">
-          E-mail
-          <label className="input input-bordered flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-4 text-gray-500"
-            >
-              <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
-              <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
-            </svg>
-            <input
-              type="email"
-              className="grow"
-              placeholder="E-mail"
-              id="email"
-              onChange={handleInputChange}
-            />
-          </label>
-        </div>
+        <div className="w-full border-b my-5" />
 
         {/* date */}
         <label className="flex flex-col items-start gap-2 text-sm">
@@ -392,6 +428,29 @@ const CreateEmployeeForm = () => {
             }}
           />
         </label>
+
+        {/* agency */}
+        <div
+          className={`${
+            formData?.isRegular && " hidden "
+          } flex flex-wrap justify-between text-sm gap-2 `}
+        >
+          <div className="flex flex-col text-sm gap-2 w-full">
+            Agency
+            <SelectPlus
+              options={agencyOptions}
+              onChange={(e, newValue) => {
+                const valueToPass =
+                  typeof newValue == "object" && newValue !== null
+                    ? (newValue as { value: string }).value?.toString()
+                    : newValue
+                    ? newValue?.toString()
+                    : null;
+                setFormData({ ...formData, agency: valueToPass });
+              }}
+            />
+          </div>
+        </div>
 
         {/* company */}
         <div className="flex flex-wrap justify-between text-sm gap-2 ">
@@ -428,7 +487,11 @@ const CreateEmployeeForm = () => {
 
         <div className="flex flex-wrap w-full justify-between">
           {/* isRegular */}
-          <label className="label cursor-pointer flex justify-start gap-2 w-max">
+          <label
+            className={`${
+              formData?.agency && " hidden "
+            } label cursor-pointer flex justify-start gap-2 w-max `}
+          >
             <p className="label-text text-base">Is Regular?</p>
             <input
               type="checkbox"
@@ -439,21 +502,6 @@ const CreateEmployeeForm = () => {
               }
             />
           </label>
-          {/* isProductionEmployee */}
-          {/* <label className="label cursor-pointer flex justify-start gap-2 w-max">
-            <p className="label-text text-base">Is Production Employee?</p>
-            <input
-              type="checkbox"
-              className="checkbox"
-              id="isProductionEmployee"
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  isProductionEmployee: e.target.checked,
-                })
-              }
-            />
-          </label> */}
           {/* isOJT */}
           <label className="label cursor-pointer flex justify-start gap-2 w-max">
             <p className="label-text text-base">Is OJT?</p>
@@ -501,7 +549,9 @@ const CreateEmployeeForm = () => {
           </label>
         </div>
 
-          {/* Employee Signature */}
+        <div className="w-full border-b my-5" />
+
+        {/* Employee Signature */}
         {/* <div className="flex flex-col w-full text-sm gap-2 mt-2">
           <SignatureComponent
             title="Employee Signature"

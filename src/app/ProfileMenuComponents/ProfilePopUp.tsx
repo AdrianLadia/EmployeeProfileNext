@@ -40,7 +40,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
         ${showMenu ? " top-[55px] md:top-[75px] " : " hidden "} right-0 md:right-2
         absolute shadow-lg border backdrop-blur-lg bg-base-300 duration-300 transition-all
         w-[96vw] md:w-[330px] h-[83vh] md:max-h-[75vh] rounded-2xl z-50 
-        flex flex-col justify-between border-info overflow-auto 
+        flex flex-col justify-between border-info overflow-auto overscroll-contain
       `}
     >
       <BackButton />

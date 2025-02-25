@@ -69,6 +69,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
           address,
           firstName,
           lastName,
+          firstName + " " + lastName,
           email,
           company,
           phoneNumber,

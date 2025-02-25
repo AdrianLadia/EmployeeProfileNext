@@ -19,7 +19,7 @@ const EmployeeMemoTableModal = () => {
 
   const [isForSingleEmployee, setIsForSingleEmployee] = React.useState(false);
 
-  // const [isVideo, setIsVideo] = React.useState(false);
+  const [sortedMemos, setSortedMemos] = React.useState<Memo[]>(memoForTableModal);
 
   useEffect(() => {
     if (memoForTableModal.length > 0) {
@@ -32,6 +32,12 @@ const EmployeeMemoTableModal = () => {
       } else {
         setIsForSingleEmployee(true);
       }
+
+      const sorted = memoForTableModal.sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
+
+      setSortedMemos(sorted)
     }
   }, [memoForTableModal]);
 
@@ -91,7 +97,7 @@ const EmployeeMemoTableModal = () => {
                 </tr>
               </thead>
               <tbody>
-                {memoForTableModal?.map((memo) => (
+                {sortedMemos?.map((memo) => (
                   <tr key={memo._id} className="hover:bg-base-100">
                     {/* print */}
                     <td className="w-max text-center ">
@@ -151,7 +157,7 @@ const EmployeeMemoTableModal = () => {
                               {memo?.MemoCode?.title}
                             </summary> */}
                           {/* <p className='btn btn-xs text-[.70rem] btn-neutral truncate' >{"remedialAction"}</p> */}
-                          <div className="collapse-content flex flex-wrap gap-1 ">
+                          <div className={`${!memo?.remedialAction && "hidden"} collapse-content flex flex-wrap gap-1 `}>
                             <p className="btn btn-xs text-[.70rem] btn-neutral truncate">
                               {memo?.remedialAction || " "}
                             </p>

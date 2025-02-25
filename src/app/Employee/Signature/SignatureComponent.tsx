@@ -17,8 +17,6 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  // const [isClear, setIsClear] = useState<boolean>(true);
-
   const save = () => {
     setLoading(true);
     if (!sigCanvas.current) return;

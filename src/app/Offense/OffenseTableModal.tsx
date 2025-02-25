@@ -87,7 +87,7 @@ const OffenseTableModal = () => {
 
   const [year] = React.useState(new Date().getFullYear());
 
-  if (!offenseListForModal.length) return null;
+  // if (!offenseListForModal.length) return null;
 
   return (
     <dialog className=" modal " id="OffenseDownloadModal">
@@ -272,9 +272,9 @@ const OffenseTableModal = () => {
             </div>
 
             {/* OffenseTable */}
-            <div className=" rounded-box rounded-t-none w-full ">
-              <OffenseTable offenseList={offenseListForModal} forPrint={true} />
-            </div>
+            {!!offenseListForModal?.length ? <div className=" rounded-box rounded-t-none w-full ">
+              <OffenseTable offenseList={offenseListForModal } forPrint={true} />
+            </div> : "No Offense Found"}
 
             {/*  Printed Name< */}
             <div

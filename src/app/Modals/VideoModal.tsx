@@ -38,7 +38,7 @@ const VideoModal = () => {
         </form>
 
         {videoForModal ? (
-          <video className=" max-h-[90vh] min-w-[80vw] md:min-w-[50vw] " controls>
+          <video className=" max-h-[90vh] max-w-[98vw] min-w-[80vw] md:min-w-[50vw] " controls>
             <source src={videoForModal || ""} type="video/mp4" />
             Your browser does not support the video tag.
           </video>

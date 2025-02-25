@@ -116,18 +116,6 @@ class User(BaseModel):
         raise ValueError(
             "createdAt must be a valid datetime, string, or timestamp")
 
-    def to_dict(self):
-        return {
-            '_id': self.id,
-            'createdAt': self.createdAt,
-            'isApproved': self.isApproved,
-            'displayName': self.displayName,
-            'image': self.image,
-            'email': self.email,
-            'roles': self.roles,
-            '_version': self._version
-        }
-
     def createFirstUser(self, firebaseUserUid):
         if self.id != None:
             raise ValueError('Cannot create User with an existing _id')
@@ -309,7 +297,7 @@ class UserActions(User):
 
         for index, memo in enumerate(employeeMemos):
             offenseCount = index + 1
-            formattedDate = memo['date'].strftime('%y%m%d')
+            formattedDate = memo['date']
             company = memo['Employee']['company']
             newCode = f'{company}-{formattedDate}-{offenseCount}'
             memo['Code'] = newCode
@@ -564,23 +552,8 @@ class Memo(BaseModel):
             return datetime.datetime.fromtimestamp(value)
         raise ValueError("date must be a valid datetime, string, or timestamp")
 
-    def to_dict(self):
-        return {
-            '_id': self.id,
-            'date': self.date,
-            'mediaList': self.mediaList,
-            'Employee': self.Employee.to_dict(),
-            'memoPhotosList': self.memoPhotosList,
-            'subject': self.subject,
-            'description': self.description,
-            'MemoCode': self.MemoCode.to_dict(),
-            'Code': self.Code,
-            'submitted': self.submitted,
-            'isWithOffense': self.isWithOffense,
-            'reason': self.reason,
-            'remedialAction': self.remedialAction,
-            '_version': self.version
-        }
+    def model_dump_dict(self):
+        return self.model_dump(by_alias=True, mode='json', exclude_none=True)
 
     def createMemo(self, user):
         if 'canCreateMemo' not in user['roles']['Memo']:
@@ -612,11 +585,11 @@ class Memo(BaseModel):
 
         else :
             self.Code = f'{self.Employee.company}-{formattedDate}'
-
+            self.remedialAction = None
 
         self.id = generateRandomString()
         self.submitted = False
-        return self.to_dict()
+        return self.model_dump_dict()
 
     def deleteMemo(self, user):
         if 'canDeleteMemo' not in user['roles']['Memo']:
@@ -624,7 +597,7 @@ class Memo(BaseModel):
         if self.submitted:
             raise ValueError('Memo has already been submitted')
 
-        return self.to_dict()
+        return self.model_dump_dict()
 
     def submitMemo(self, user, reason):
         if 'canSubmitMemo' not in user['roles']['Memo']:
@@ -638,7 +611,7 @@ class Memo(BaseModel):
 
         self.reason = reason
         self.submitted = True
-        return self.to_dict()
+        return self.model_dump_dict()
 
 
 class Employee(BaseModel):
@@ -682,30 +655,6 @@ class Employee(BaseModel):
         raise ValueError(
             "dateJoined must be a valid datetime, string, or timestamp")
 
-    def to_dict(self):
-        return {
-            '_id': self.id,
-            'firstName': self.firstName,
-            'lastName': self.lastName,
-            'address': self.address,
-            'phoneNumber': self.phoneNumber,
-            'photoOfPerson': self.photoOfPerson,
-            'resumePhotosList': self.resumePhotosList,
-            'biodataPhotosList': self.biodataPhotosList,
-            'employeeHouseRulesSignatureList': self.employeeHouseRulesSignatureList,
-            'email': self.email,
-            'dateJoined': self.dateJoined,
-            'company': self.company,
-            'agency': self.agency,
-            'isRegular': self.isRegular,
-            'companyRole': self.companyRole,
-            'isOJT': self.isOJT,
-            'dailyWage': self.dailyWage,
-            'isDeleted': self.isDeleted,
-            'employeeSignature': self.employeeSignature,
-            '_version': self.version
-        }
-
     def createEmployee(self, user):
         if 'canCreateEmployee' not in user['roles']['Employee']:
             raise ValueError(
@@ -714,14 +663,14 @@ class Employee(BaseModel):
             raise ValueError('Cannot create Employee with an existing _id')
 
         self.id = generateRandomString()
-        return self.to_dict()
+        return self.model_dump(by_alias=True)
 
     def updateEmployee(self, user, dataToUpdate):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
             raise ValueError(
                 'User does not have permission to update an employee')
 
-        newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True), dataToUpdate, ['_id'])
         return newData
 
     def deleteEmployee(self, user):
@@ -734,7 +683,7 @@ class Employee(BaseModel):
             raise ValueError('Employee does not exist')
         self.isDeleted = True
 
-        return self.to_dict()
+        return self.model_dump(by_alias=True)
 
     pass
 
@@ -745,27 +694,19 @@ class Offense(BaseModel):
     version: int = Field(..., alias='_version')
     title: str
 
-    def to_dict(self):
-        return {
-            '_id': self.id,
-            'remedialActions': self.remedialActions,
-            '_version': self.version,
-            'title': self.title
-        }
-
     def createOffense(self, user):
         if 'canCreateOffense' not in user['roles']['Offense']:
             raise ValueError(
                 'User does not have permission to create an offense')
         self.id = generateRandomString()
-        return self.to_dict()
+        return self.model_dump(by_alias=True)
 
     def updateOffense(self, user, dataToUpdate):
         if 'canUpdateOffense' not in user['roles']['Offense']:
             raise ValueError(
                 'User does not have permission to update an offense')
 
-        newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True), dataToUpdate, ['_id'])
 
         return newData
 
@@ -778,7 +719,7 @@ class Offense(BaseModel):
         if len(offense) == 0:
             raise ValueError('Offense does not exist')
 
-        return self.to_dict()
+        return self.model_dump(by_alias=True)
 
 
 if __name__ == "__main__":

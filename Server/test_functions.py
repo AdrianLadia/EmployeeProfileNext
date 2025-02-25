@@ -44,13 +44,13 @@ employeeObject = {
     'resumePhotosList': ['resumePhotosList'],
     'biodataPhotosList': ['biodataPhotosList'],
     'employeeHouseRulesSignatureList': ['employeeHouseRulesSignatureList'],
-    'dateJoined': datetime.datetime.now(),
+    'dateJoined': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
     'company': 'Pustanan',
     'agency': 'agency',
     'isRegular': True,
     'companyRole': "Software Engineer",
     'isOJT': False,
-    'dailyWage': None,
+    'dailyWage': 200,
     'isDeleted': False,
     'employeeSignature': 'employeeSignature',
     '_version': 0
@@ -66,7 +66,9 @@ memoObject = {
     'Code': None,
     'submitted': False,
     'description': 'description',
-    'date': datetime.datetime.now(),
+    'remedialAction': 'Verbal Warning',
+    'isWithOffense': True,
+    'date': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
     'reason': None,
     '_version': 0
 }
@@ -183,6 +185,8 @@ def test_create_offense_employee_memo():
 
         memoObject['Employee'] = getEmployee
         memoObject['MemoCode'] = getOffense
+
+        memoObject['Employee']['dateJoined'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 
         # create memo
         memo = user.createMemoAction(userCreated, memoObject)
@@ -340,6 +344,8 @@ def test_submit_and_delete_memo():
         memoObject['Employee'] = employee
         memoObject['MemoCode'] = offense
 
+        memoObject['Employee']['dateJoined'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+
         memo = user.createMemoAction(userCreated, memoObject)
 
         getMemo = db.read({'_id': memo['_id']}, 'Memo', findOne=True)
@@ -397,6 +403,8 @@ def test_submit_memo_without_reason():
         memoObject['Employee'] = employee
         memoObject['MemoCode'] = offense
 
+        memoObject['Employee']['dateJoined'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+
         memo = user.createMemoAction(userCreated, memoObject)
 
         with pytest.raises(ValueError, match='Reason must be provided'):
@@ -444,13 +452,13 @@ def test_getRemedialActionForEmployeeMemoAction():
             memo['Employee']['_id'], memo['MemoCode']['_id'],
             memo['MemoCode']['_version'])
 
-        assert remedialAction['remedialAction'] == 'Verbal Warning'
+        assert remedialAction['remedialAction'] == 'Written Warning'
 
-        assert memo['remedialAction'] == None
+        assert memo['remedialAction'] == 'Verbal Warning'
 
         memo2 = user.createMemoAction(userCreated, memoObject)
 
-        assert memo2['remedialAction'] == None
+        assert memo2['remedialAction'] == 'Written Warning'
 
         memoList = user.getMemoListAction(userCreated, employee['_id'])
 

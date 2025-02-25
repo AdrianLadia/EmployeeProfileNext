@@ -14,6 +14,7 @@ import EmployeeDetails from "./Dashboard/EmployeeDetails";
 import SearchBar from "./Dashboard/SearchBar";
 
 import { getUserData, getTestUserData } from "./api/UserData";
+import Link from "next/link";
 
 // import UploadOffenseButton from "./UploadOffenseButton";
 
@@ -125,7 +126,7 @@ const Page = async () => {
               <div className="flex flex-col md:flex-row p-1 justify-between items-center w-full">
                 <h2 className="text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full flex gap-2 items-center">
                   Employees
-                  <a href="/Employee/Create" className="btn btn-xs btn-circle" title="Add Employee">
+                  <Link href="/Employee/Create" className="btn btn-xs btn-circle" title="Add Employee">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -140,7 +141,7 @@ const Page = async () => {
                         d="M12 4.5v15m7.5-7.5h-15"
                       />
                     </svg>
-                  </a>
+                  </Link>
                 </h2>
                 <SearchBar controlled={true} />
               </div>

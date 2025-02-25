@@ -366,7 +366,7 @@ const PrintMemorandumModal = () => {
 
               <div className="col-span-1 font-semibold">Date:</div>
               <div className={headerTextStyle}>
-                {memoForPrintModal?.date?.substring(0, 16)}
+                {memoForPrintModal?.date?.substring(0, 10)}
               </div>
 
               <div className="col-span-1 font-semibold">Subject:</div>

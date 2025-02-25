@@ -28,7 +28,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [formData, setFormData] = useState<Memo>({} as Memo);
+  const [formData, setFormData] = useState<Memo>({ } as Memo);
 
   const [filteredMemos, setFilteredMemos] = useState<Memo[]>([]);
 
@@ -49,7 +49,13 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
       try {
         const form = e.target as HTMLFormElement;
 
-        const res = await serverRequests.deleteMemo(formData, userData);
+        const finalFormData = {...formData}
+
+        if(!formData?.reason){ 
+          finalFormData.reason = ""
+        }  
+
+        const res = await serverRequests.deleteMemo(finalFormData as Memo, userData);
 
         if (res && res.data) {
           setToastOptions({
@@ -126,10 +132,11 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
         getOptionLabel={(option) =>
           `${option.Employee?.firstName} ${option.Employee?.lastName}, ${
             option?.MemoCode?.title
-          } (${option?.date?.substring(5, 16)})` || ""
+          } (${option?.date?.substring(0, 10)})` || ""
         }
         isClearable
         onChange={(selectedOption) => {
+          // console.log(selectedOption)
           setFormData(selectedOption as Memo);
         }}
         id="select-offense"

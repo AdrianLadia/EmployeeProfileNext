@@ -114,6 +114,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
 
         const form = e.target as HTMLFormElement;
 
+        console.log(finalFormData)
+
         const res = await serverRequests.createMemo(finalFormData, userData);
 
         if (res && res.data) {
@@ -399,9 +401,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             id="subject"
             required
             value={
-              formData?.MemoCode?.title
-                ? formData?.MemoCode?.title
-                : formData?.subject || ""
+              formData?.subject || ""
             }
             onChange={handleInputChange}
           />

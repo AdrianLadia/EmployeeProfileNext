@@ -44,7 +44,7 @@ const ImageModal = () => {
     <dialog id="imageModal" className="modal w-full " ref={imageModalRef}>
       <div className="modal-box !p-0 shadow-none gap-2 flex flex-col !md:max-w-[60%] h-full justify-center items-center relative bg-base-100/10 ">
         <form
-          className="absolute bottom-2 md:top-2  md:left-[92.5%] right-1/2 left-1/2 z-30 "
+          className="absolute bottom-2 md:top-2 md:left-[92.5%] right-1/2 left-1/2 z-30 "
           method="dialog"
         >
           <button onClick={handleClose} className="close-button"></button>
@@ -62,7 +62,7 @@ const ImageModal = () => {
                   key={`item${index}`}
                   className={`${
                     !imageModalId ? " hidden " : " "
-                  } absolute top-2 left-2 btn btn-outline border-red-500 text-red-500 btn-sm btn-circle z-40 duration-0 `}
+                  } absolute top-2 left-2 btn btn-sm btn-error btn-circle z-40 duration-0 `}
                   onClick={() => handleDelete(index)}
                 >
                   <svg

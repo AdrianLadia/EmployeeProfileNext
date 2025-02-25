@@ -140,6 +140,19 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           }
         }
 
+        if (dataToUpdate?.employeeHouseRulesSignatureList) {
+          try {
+            const res = await upload.Images(
+              formData.employeeHouseRulesSignatureList || [],
+              `employees/${formData.firstName} ${formData.lastName}`,
+              "employeeHouseRulesSignatureList"
+            );
+            dataToUpdate.employeeHouseRulesSignatureList = res || [];
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
         const form = e.target as HTMLFormElement;
 
         const res = await serverRequests.updateEmployee(

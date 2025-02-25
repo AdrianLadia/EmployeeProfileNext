@@ -45,7 +45,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     reason: null,
     mediaList: null,
     memoPhotosList: null,
-    isWithOffense: true,
+    isWithOffense: null,
   } as Memo);
 
   const [memoForPrint, setMemoForPrint] = useState<Memo | null>(null);
@@ -212,6 +212,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     );
     if (res?.data?.remedialAction) {
       setRemedialAction(res.data.remedialAction);
+    } else {
+      setRemedialAction("");
     }
   };
 
@@ -223,7 +225,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
   };
 
   React.useEffect(() => {
-    if (formData?.Employee?._id && formData?.MemoCode?._id) {
+    if (formData?.Employee?._id && formData?.MemoCode?._id && formData.isWithOffense) {
       getRemedialAction(
         formData?.Employee?._id,
         formData?.MemoCode?._id || "",
@@ -231,6 +233,15 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       );
     } else {
       setRemedialAction("");
+    }
+
+    if(formData?.Employee && !formData?.Employee?.employeeHouseRulesSignatureList?.length){
+      setToastOptions({
+        open: true,
+        message: "Employee has not signed house rules",
+        type: "error",
+        timer: 8,
+      })
     }
   }, [userData, formData]);
 
@@ -302,9 +313,9 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       </label>
 
       {/* with Offense */}
-      <div className="flex flex-col gap-2">
-        <span className="text-sm">Add Offense</span>
-        <div className="flex gap-4">
+      <div className="flex flex-col gap-2 my-2">
+        <span className="text-sm w-full text-center">Add Offense</span>
+        <div className="flex gap-4 w-full justify-evenly">
           <label className="flex gap-2" htmlFor="withOffenseTrue">
             <input
               checked={formData.isWithOffense ? true : false}
@@ -333,7 +344,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         </div>
       </div>
 
-      <div className={`${!formData?.isWithOffense && "hidden"} flex flex-col gap-2 `}>
+      <div className={` flex flex-col gap-2 `}>
         <span className="text-sm">Offense</span>
         <Select
           styles={selectStyle}
@@ -387,7 +398,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             placeholder="Subject"
             id="subject"
             required
-            value={formData?.MemoCode?.title? formData?.MemoCode?.title : formData?.subject || ""}
+            value={
+              formData?.MemoCode?.title
+                ? formData?.MemoCode?.title
+                : formData?.subject || ""
+            }
             onChange={handleInputChange}
           />
         </label>
@@ -421,7 +436,10 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       <button
         className="btn bg-blue-500 text-white w-full place-self-start my-6"
         type="submit"
-        disabled={loading}
+        disabled={
+          loading ||
+          !Boolean(formData?.Employee?.employeeHouseRulesSignatureList?.length)
+        }
         id="create-memo-btn"
       >
         {!loading ? "Create" : <span className="animate-spin text-xl">C</span>}

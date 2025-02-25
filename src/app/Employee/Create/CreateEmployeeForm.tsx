@@ -109,12 +109,12 @@ const CreateEmployeeForm = () => {
           finalFormData.biodataPhotosList = biodataPhotosList;
         }
         if (formData?.employeeHouseRulesSignatureList && formData?.employeeHouseRulesSignatureList[0]) {
-          const biodataPhotosList = await upload.Images(
+          const employeeHouseRulesSignatureList = await upload.Images(
             formData.employeeHouseRulesSignatureList,
             `employees/${formData.firstName}${formData.firstName}`,
             "employeeHouseRulesSignatureList"
           );
-          finalFormData.biodataPhotosList = biodataPhotosList;
+          finalFormData.employeeHouseRulesSignatureList = employeeHouseRulesSignatureList;
         }
 
         const form = e.target as HTMLFormElement;

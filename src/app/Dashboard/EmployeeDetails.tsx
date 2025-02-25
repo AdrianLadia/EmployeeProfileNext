@@ -462,7 +462,7 @@ const EmployeeDetails = () => {
           <Image
             className={`w-8 h-8`}
             src={selectedEmployeeDetails?.employeeHouseRulesSignatureList?.[0] || ""}
-            alt={"Bio-data"}
+            alt={"House Rules"}
             width={100}
             height={100}
             loading="lazy"

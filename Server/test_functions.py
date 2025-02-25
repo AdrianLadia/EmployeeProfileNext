@@ -66,6 +66,8 @@ memoObject = {
     'Code': None,
     'submitted': False,
     'description': 'description',
+    'remedialAction': 'Verbal Warning',
+    'isWithOffense': True,
     'date': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
     'reason': None,
     '_version': 0
@@ -450,13 +452,13 @@ def test_getRemedialActionForEmployeeMemoAction():
             memo['Employee']['_id'], memo['MemoCode']['_id'],
             memo['MemoCode']['_version'])
 
-        assert remedialAction['remedialAction'] == 'Verbal Warning'
+        assert remedialAction['remedialAction'] == 'Written Warning'
 
-        assert memo['remedialAction'] == None
+        assert memo['remedialAction'] == 'Verbal Warning'
 
         memo2 = user.createMemoAction(userCreated, memoObject)
 
-        assert memo2['remedialAction'] == None
+        assert memo2['remedialAction'] == 'Written Warning'
 
         memoList = user.getMemoListAction(userCreated, employee['_id'])
 

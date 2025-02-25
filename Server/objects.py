@@ -553,7 +553,7 @@ class Memo(BaseModel):
         raise ValueError("date must be a valid datetime, string, or timestamp")
 
     def model_dump_dict(self):
-        return self.model_dump(by_alias=True, mode='json', exclude_none=True)
+        return self.model_dump(by_alias=True, mode='json', exclude_none=True, warnings='error')
 
     def createMemo(self, user):
         if 'canCreateMemo' not in user['roles']['Memo']:
@@ -663,14 +663,14 @@ class Employee(BaseModel):
             raise ValueError('Cannot create Employee with an existing _id')
 
         self.id = generateRandomString()
-        return self.model_dump(by_alias=True)
+        return self.model_dump(by_alias=True, warnings='error')
 
     def updateEmployee(self, user, dataToUpdate):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
             raise ValueError(
                 'User does not have permission to update an employee')
 
-        newData = updateData(self.model_dump(by_alias=True), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True, warnings='error'), dataToUpdate, ['_id'])
         return newData
 
     def deleteEmployee(self, user):
@@ -683,7 +683,7 @@ class Employee(BaseModel):
             raise ValueError('Employee does not exist')
         self.isDeleted = True
 
-        return self.model_dump(by_alias=True)
+        return self.model_dump(by_alias=True, warnings='error')
 
     pass
 
@@ -699,14 +699,14 @@ class Offense(BaseModel):
             raise ValueError(
                 'User does not have permission to create an offense')
         self.id = generateRandomString()
-        return self.model_dump(by_alias=True)
+        return self.model_dump(by_alias=True, warnings='error')
 
     def updateOffense(self, user, dataToUpdate):
         if 'canUpdateOffense' not in user['roles']['Offense']:
             raise ValueError(
                 'User does not have permission to update an offense')
 
-        newData = updateData(self.model_dump(by_alias=True), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True, warnings='error'), dataToUpdate, ['_id'])
 
         return newData
 
@@ -719,7 +719,7 @@ class Offense(BaseModel):
         if len(offense) == 0:
             raise ValueError('Offense does not exist')
 
-        return self.model_dump(by_alias=True)
+        return self.model_dump(by_alias=True, warnings='error')
 
 
 if __name__ == "__main__":

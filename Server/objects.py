@@ -558,15 +558,18 @@ class Memo(BaseModel):
     def createMemo(self, user):
         if 'canCreateMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to create a memo')
-    
+
         employeeHouseRulesSignatureList = self.Employee.employeeHouseRulesSignatureList
         if len(employeeHouseRulesSignatureList) == 0:
             raise ValueError(
                 'Employee must have proof of signature in the house rules')
-        
+
         if not self.Employee.agency and not self.Employee.isRegular:
             raise ValueError(
                 'Employee must have an agency or be a regular employee')
+
+        if not self.Employee.company:
+            raise ValueError('Employee must have a company')
 
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id

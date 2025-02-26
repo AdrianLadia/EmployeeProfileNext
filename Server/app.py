@@ -386,7 +386,7 @@ def delete_memo():
             }), 200
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
-            return jsonify({'error': e.args[0]}), 400
+            return jsonify({'error': e.args}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400

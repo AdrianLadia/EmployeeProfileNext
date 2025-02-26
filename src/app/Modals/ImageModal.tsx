@@ -5,15 +5,20 @@ import { useAppContext } from "../GlobalContext";
 import Image from "next/image";
 
 const ImageModal = () => {
-  const { imageListForModal, setImageListForModal, router, imageModalId, setImageModalId } =
-    useAppContext();
+  const {
+    imageListForModal,
+    setImageListForModal,
+    router,
+    imageModalId,
+    setImageModalId,
+  } = useAppContext();
 
   const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
   const handleClose = () => {
     // router.replace(window.location.pathname, undefined);
-    setImageListForModal([])
-    setImageModalId("")
+    setImageListForModal([]);
+    setImageModalId("");
   };
 
   const handleDelete = (index: number) => {
@@ -62,15 +67,15 @@ const ImageModal = () => {
                 <div
                   key={`item${index}`}
                   className={`${
-                    !imageModalId ? " hidden " : " "
-                  } absolute top-2 left-2 btn btn-sm btn-error btn-circle z-40 duration-0 `}
+                    !imageModalId && " hidden " 
+                  } absolute top-2 left-2 btn btn-sm btn-error btn-circle z-40 duration-0 `} 
                   onClick={() => handleDelete(index)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    strokeWidth={2}
+                    strokeWidth={1.5}
                     stroke="currentColor"
                     className="size-5 "
                   >

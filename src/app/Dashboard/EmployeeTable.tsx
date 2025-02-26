@@ -27,14 +27,40 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
     setSearch,
     setToastOptions,
     router,
+    serverRequests,
+    userData,
   } = useAppContext();
 
   const [filteredEmployeeList, setFilteredEmployeeList] =
     React.useState<Employee[]>(employeeList);
 
+  const [newEmployeeList, setNewEmployeeList] =
+    React.useState<Employee[]>(employeeList);
+
+  const [sortOrder, setSortOrder] = React.useState<null | number>(null);
+
   const searchParams = useSearchParams();
 
   const search = searchParams.get("search") || "";
+
+  const fetchEmployeeList = async () => {
+    setLoading(true);
+    try {
+      const res = await serverRequests.getEmployeeForDashboardAction(
+        userData,
+        1,
+        { keyToSort: "firstName", sortOrder: sortOrder }
+      );
+
+      if (res?.data) {
+        setNewEmployeeList(res.data.data);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (fetchingError) {
@@ -54,7 +80,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
 
     const searchQuery = search?.toLowerCase() || "";
 
-    const filteredListForTable = employeeList.filter(
+    const filteredListForTable = newEmployeeList.filter(
       ({
         address,
         firstName,
@@ -80,7 +106,13 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
 
     setFilteredEmployeeList(filteredListForTable as Employee[]);
     setLoading(false);
-  }, [search, employeeList]);
+  }, [search, newEmployeeList]);
+
+  useEffect(() => {
+    if (sortOrder == -1 || sortOrder == 1) {
+      fetchEmployeeList();
+    }
+  }, [sortOrder]);
 
   return (
     <table
@@ -91,7 +123,33 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       {/* head */}
       <thead>
         <tr>
-          <th>Name</th>
+          <th>
+            <div
+              className="flex items-center gap-1 select-none"
+              onClick={() => {
+                const order = sortOrder == 1 ? -1 : 1;
+                setSortOrder(order);
+              }}
+            >
+              Name
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className={`${
+                  sortOrder == -1 ? "bg-error rotate-180" : "bg-success"
+                } size-6 transition-all duration-300 rounded-full p-0.5` }
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                />
+              </svg>
+            </div>
+          </th>
           <th>Address</th>
           <th>Company</th>
           <th className="min-w-[10px]"></th>

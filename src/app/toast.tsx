@@ -44,13 +44,13 @@ const Toast = () => {
   const getToastType = () => {
     switch (toastOptions?.type) {
       case "success":
-        return ["bg-success", "progress-success", "tooltip-success"];
+        return ["alert-success", "progress-success", "tooltip-success"];
       case "error":
-        return ["bg-error", "progress-error", "tooltip-error"];
+        return ["alert-error", "progress-error", "tooltip-error"];
       case "info":
-        return ["bg-info", "progress-info", "tooltip-info"];
+        return ["alert-info", "progress-info", "tooltip-info"];
       case "warning":
-        return ["bg-warning", "progress-warning", "tooltip-warning"];
+        return ["alert-warning", "progress-warning", "tooltip-warning"];
       default:
         return [" ", " ", " "];
     }
@@ -84,7 +84,7 @@ const Toast = () => {
       ref={toastRef}
     >
       <div
-        className={`min-w-[98vw] md:min-w-max md:max-w-[20vw] alert text-white text-wrap px-5 rounded ${
+        className={`min-w-[98vw] md:min-w-max md:max-w-[20vw] alert text-wrap px-5 rounded ${
           getToastType()[0]
         }`}
         onClick={() => {

@@ -33,6 +33,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     handleMemoPrintModalClick,
     imageListForModal,
     imageModalId,
+    router,
   } = useAppContext();
 
   const [remedialAction, setRemedialAction] = useState<string>("");
@@ -49,6 +50,9 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
   } as Memo);
 
   const [memoForPrint, setMemoForPrint] = useState<Memo | null>(null);
+
+  const [employeeNeedsUpdate, setEmployeeNeedsUpdate] =
+    useState<boolean>(false);
 
   const printMemo = async () => {
     try {
@@ -114,7 +118,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
 
         const form = e.target as HTMLFormElement;
 
-        console.log(finalFormData)
+        console.log(finalFormData);
 
         const res = await serverRequests.createMemo(finalFormData, userData);
 
@@ -227,7 +231,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
   };
 
   React.useEffect(() => {
-    if (formData?.Employee?._id && formData?.MemoCode?._id && formData.isWithOffense) {
+    if (
+      formData?.Employee?._id &&
+      formData?.MemoCode?._id &&
+      formData.isWithOffense
+    ) {
       getRemedialAction(
         formData?.Employee?._id,
         formData?.MemoCode?._id || "",
@@ -237,13 +245,28 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       setRemedialAction("");
     }
 
-    if(formData?.Employee && !formData?.Employee?.employeeHouseRulesSignatureList?.length){
-      setToastOptions({
-        open: true,
-        message: "Employee has not signed house rules",
-        type: "error",
-        timer: 8,
-      })
+    if (formData?.Employee?._id) {
+      if (!formData?.Employee?.company) {
+        setToastOptions({
+          open: true,
+          message: `${formData?.Employee?.firstName} has no company assigned`,
+          type: "warning",
+          timer: 5,
+        });
+        setEmployeeNeedsUpdate(true);
+      } else if (!formData?.Employee?.employeeHouseRulesSignatureList?.length) {
+        setToastOptions({
+          open: true,
+          message: `${formData?.Employee?.firstName} has not signed house rules`,
+          type: "warning",
+          timer: 5,
+        });
+        setEmployeeNeedsUpdate(true);
+      } else {
+        setEmployeeNeedsUpdate(false)
+      }
+    } else {
+      setEmployeeNeedsUpdate(false);
     }
   }, [userData, formData]);
 
@@ -299,6 +322,18 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           }}
           id="select-employee"
         />
+
+        {/* update button */}
+        <span
+          className={`${
+            !employeeNeedsUpdate && " hidden "
+          } btn btn-xs btn-warning italic hover:underline font-semibold cursor-pointer w-max`}
+          onClick={() => {
+            router.push("/Employee/Update#" + formData?.Employee?._id);
+          }}
+        >
+          Update {formData?.Employee?.firstName} {formData?.Employee?.lastName}{" "}
+        </span>
       </div>
 
       {/* date */}
@@ -400,9 +435,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             placeholder="Subject"
             id="subject"
             required
-            value={
-              formData?.subject || ""
-            }
+            value={formData?.subject || ""}
             onChange={handleInputChange}
           />
         </label>
@@ -437,7 +470,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         className="btn bg-blue-500 text-white w-full place-self-start my-6"
         type="submit"
         disabled={
-          loading ||
+          loading || employeeNeedsUpdate ||
           !Boolean(formData?.Employee?.employeeHouseRulesSignatureList?.length)
         }
         id="create-memo-btn"

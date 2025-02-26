@@ -126,14 +126,14 @@ const Page = async () => {
               <div className="flex flex-col md:flex-row p-1 justify-between items-center w-full">
                 <h2 className="text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full flex gap-2 items-center">
                   Employees
-                  <Link href="/Employee/Create" className="btn btn-xs btn-circle" title="Add Employee">
+                  <Link href="/Employee/Create" className="btn btn-xs btn-circle btn-neutral" title="Add Employee">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="size-6 -mt-0.5"
+                      className="size-6 "
                     >
                       <path
                         strokeLinecap="round"

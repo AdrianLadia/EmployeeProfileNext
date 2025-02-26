@@ -108,13 +108,17 @@ const CreateEmployeeForm = () => {
           );
           finalFormData.biodataPhotosList = biodataPhotosList;
         }
-        if (formData?.employeeHouseRulesSignatureList && formData?.employeeHouseRulesSignatureList[0]) {
+        if (
+          formData?.employeeHouseRulesSignatureList &&
+          formData?.employeeHouseRulesSignatureList[0]
+        ) {
           const employeeHouseRulesSignatureList = await upload.Images(
             formData.employeeHouseRulesSignatureList,
             `employees/${formData.firstName}${formData.firstName}`,
             "employeeHouseRulesSignatureList"
           );
-          finalFormData.employeeHouseRulesSignatureList = employeeHouseRulesSignatureList;
+          finalFormData.employeeHouseRulesSignatureList =
+            employeeHouseRulesSignatureList;
         }
 
         const form = e.target as HTMLFormElement;
@@ -441,12 +445,16 @@ const CreateEmployeeForm = () => {
               options={agencyOptions}
               onChange={(e, newValue) => {
                 const valueToPass =
-                  typeof newValue == "object" && newValue !== null
+                  typeof newValue == "object" &&
+                  newValue !== null &&
+                  newValue.value
                     ? (newValue as { value: string }).value?.toString()
+                    : typeof newValue == "object" && newValue.value == null
+                    ? null
                     : newValue
-                    ? newValue?.toString()
-                    : null;
-                setFormData({ ...formData, agency: valueToPass });
+                    ? [newValue?.toString()]
+                    : null; 
+                setFormData({ ...formData, agency: valueToPass as string });
               }}
             />
           </div>
@@ -460,12 +468,16 @@ const CreateEmployeeForm = () => {
               options={companyOptions}
               onChange={(e, newValue) => {
                 const valueToPass =
-                  typeof newValue == "object" && newValue !== null
+                  typeof newValue == "object" &&
+                  newValue !== null &&
+                  newValue.value
                     ? (newValue as { value: string }).value?.toString()
+                    : typeof newValue == "object" && newValue.value == null
+                    ? null
                     : newValue
-                    ? newValue?.toString()
-                    : null;
-                setFormData({ ...formData, company: valueToPass });
+                    ? [newValue?.toString()]
+                    : null; 
+                setFormData({ ...formData, company: valueToPass as string });
               }}
             />
           </div>

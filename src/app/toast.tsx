@@ -58,7 +58,7 @@ const Toast = () => {
 
   React.useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (toastRef.current && !toastRef?.current?.contains(e.target as Node)) { 
+      if (toastRef.current && !toastRef?.current?.contains(e.target as Node)) {
         if (!timer && toastOptions?.open) {
           closeToast();
         }
@@ -106,7 +106,7 @@ const Toast = () => {
       </div>
 
       <progress
-        className={`progress w-full ${getToastType()[1]} rounded-none -mt-2 `}
+        className={`progress w-full ${getToastType()[1]} rounded-none -mt-1.5 `}
         value={(timer / toastOptions?.timer) * 100 || 0}
         max={100}
       />

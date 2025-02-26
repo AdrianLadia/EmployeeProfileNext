@@ -229,6 +229,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       [e.target.name]: e.target.value === "true" ? true : false,
     });
   };
+  // console.log(formData)
 
   React.useEffect(() => {
     if (
@@ -246,6 +247,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     }
 
     if (formData?.Employee?._id) {
+      // console.log(!formData?.Employee?.agency ); 
+      // console.log(formData?.Employee?.isRegular)
       if (!formData?.Employee?.company) {
         setToastOptions({
           open: true,
@@ -262,8 +265,18 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           timer: 5,
         });
         setEmployeeNeedsUpdate(true);
+      } else if (
+        !formData?.Employee?.agency && !formData?.Employee?.isRegular
+      ) { 
+        setToastOptions({
+          open: true,
+          message: `${formData?.Employee?.firstName} must be assigned to an agency or have a regular status`,
+          type: "warning",
+          timer: 5,
+        });
+        setEmployeeNeedsUpdate(true);
       } else {
-        setEmployeeNeedsUpdate(false)
+        setEmployeeNeedsUpdate(false);
       }
     } else {
       setEmployeeNeedsUpdate(false);
@@ -470,7 +483,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         className="btn bg-blue-500 text-white w-full place-self-start my-6"
         type="submit"
         disabled={
-          loading || employeeNeedsUpdate ||
+          loading ||
+          employeeNeedsUpdate ||
           !Boolean(formData?.Employee?.employeeHouseRulesSignatureList?.length)
         }
         id="create-memo-btn"

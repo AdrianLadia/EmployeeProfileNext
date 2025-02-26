@@ -219,7 +219,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         getOptionLabel={(option) =>
           `${option.Employee?.firstName} ${option.Employee?.lastName}, ${
             option?.MemoCode?.title
-          } (${option?.date?.substring(5, 16)})` || ""
+          } (${option?.date?.substring(0, 10)})` || ""
         }
         isClearable
         onChange={(selectedOption) => {

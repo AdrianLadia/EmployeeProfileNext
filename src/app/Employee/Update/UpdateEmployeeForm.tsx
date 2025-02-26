@@ -649,12 +649,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             defaultValue={formData?.agency?.toString() || undefined}
             onChange={(e, newValue) => {
               const valueToPass =
-                typeof newValue == "object" && newValue !== null
+                typeof newValue == "object" &&
+                newValue !== null &&
+                newValue.value
                   ? (newValue as { value: string }).value?.toString()
+                  : typeof newValue == "object" && newValue.value == null
+                  ? null
                   : newValue
-                  ? newValue?.toString()
+                  ? [newValue?.toString(), console.log(newValue)]
                   : null;
-              setFormData({ ...formData, agency: valueToPass });
+              setFormData({ ...formData, agency: valueToPass as string });
               setDataToUpdate({ ...dataToUpdate, agency: valueToPass });
             }}
           />
@@ -671,13 +675,20 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             defaultValue={formData?.company?.toString() || undefined}
             onChange={(e, newValue) => {
               const valueToPass =
-                typeof newValue == "object" && newValue !== null
+                typeof newValue == "object" &&
+                newValue !== null &&
+                newValue.value
                   ? (newValue as { value: string }).value?.toString()
+                  : typeof newValue == "object" && newValue.value == null
+                  ? null
                   : newValue
-                  ? newValue.toString()
+                  ? [newValue?.toString(), console.log(newValue)]
                   : null;
-              setFormData({ ...formData, company: valueToPass });
-              setDataToUpdate({ ...dataToUpdate, company: valueToPass });
+              setFormData({ ...formData, company: valueToPass as string });
+              setDataToUpdate({
+                ...dataToUpdate,
+                company: valueToPass as string,
+              });
             }}
           />
         </div>

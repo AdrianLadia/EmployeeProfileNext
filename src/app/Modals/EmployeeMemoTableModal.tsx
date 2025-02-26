@@ -102,8 +102,8 @@ const EmployeeMemoTableModal = () => {
                     {/* print */}
                     <td className="w-max text-center ">
                       <button
-                        className="hover:text-blue-300 text-info tooltip-right md:tooltip"
-                        data-tip="Download"
+                        className="hover:text-blue-300 text-info"
+                        title="Download"
                         onClick={() => handleMemoPrintModalClick(memo)}
                       >
                         <svg
@@ -124,7 +124,7 @@ const EmployeeMemoTableModal = () => {
                     </td>
 
                     {/* Date */}
-                    <td className="w-max "> {memo?.date?.substring(0, 16)} </td>
+                    <td className="w-max "> {memo?.date?.substring(0, 10)} </td>
 
                     {/* Employee */}
                     {!isForSingleEmployee && (

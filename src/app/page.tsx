@@ -36,7 +36,7 @@ const Page = async () => {
   const res = await serverRequests.getEmployeeForDashboardAction(
     userData,
     1,
-    null
+    {"keyToSort": "dateJoined", "sortOrder": 1}
   );
 
   let employeeResponse;

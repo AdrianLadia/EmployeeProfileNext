@@ -51,10 +51,6 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
 
         const finalFormData = {...formData}
 
-        if(!formData?.reason){ 
-          finalFormData.reason = ""
-        }  
-
         const res = await serverRequests.deleteMemo(finalFormData as Memo, userData);
 
         if (res && res.data) {

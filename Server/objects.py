@@ -243,6 +243,10 @@ class UserActions(User):
         return db.create(res, 'Employee')
 
     def updateEmployeeAction(self, user, data, dataToUpdate):
+        for key in Employee.model_fields.keys():
+            if key not in data:
+                data[key] = None
+
         employee = Employee(**data)
         res = employee.updateEmployee(user, dataToUpdate)
         return db.update({'_id': res['_id']}, res, 'Employee')

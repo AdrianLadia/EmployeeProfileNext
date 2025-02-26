@@ -243,6 +243,10 @@ class UserActions(User):
         return db.create(res, 'Employee')
 
     def updateEmployeeAction(self, user, data, dataToUpdate):
+        for key in Employee.model_fields.keys():
+            if key not in data:
+                data[key] = None
+
         employee = Employee(**data)
         res = employee.updateEmployee(user, dataToUpdate)
         return db.update({'_id': res['_id']}, res, 'Employee')
@@ -354,23 +358,6 @@ class UserActions(User):
         if sort == None:
             sort = {'keyToSort': None, 'sortOrder': None}
 
-        # employees = db.read({'isDeleted': False},
-        #                     'Employee',
-        #                     projection={
-        #                         '_id': 1,
-        #                         'firstName': 1,
-        #                         'lastName': 1,
-        #                         'address': 1,
-        #                         'phoneNumber': 1,
-        #                         'company': 1,
-        #                         'photoOfPerson': 1,
-        #                         'dateJoined': 1,
-        #                         'companyRole': 1,
-        #                         'isOJT': 1,
-        #                         'isRegular': 1,
-        #                         'isDeleted': 1,
-        #                     })
-
         employees = db.readWithPagination({'isDeleted': False},
                                           'Employee',
                                           projection={
@@ -470,7 +457,7 @@ class UserActions(User):
     def fetchEmployeeListAction(self,
                                 user,
                                 page=1,
-                                limit=10,
+                                limit=9999,
                                 sort={
                                     'keyToSort': None,
                                     'sortOrder': None
@@ -482,7 +469,7 @@ class UserActions(User):
         if page == None:
             page = 1
         if limit == None:
-            limit = 10
+            limit = 9999
         if sort == None:
             sort = {'keyToSort': None, 'sortOrder': None}
 
@@ -518,7 +505,6 @@ class UserActions(User):
 
         employee[0]['employeeSignature'] = photo
         return db.update({'_id': employeeId}, employee[0], 'Employee')
-
 
 class Memo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')

@@ -731,7 +731,6 @@ def test_create_employee_create_employee_id_and_update_employee_id():
         db.delete({}, 'EmployeeID')
         pass
 
-
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():
         raise ValueError('Not to be run in cloud production environment')

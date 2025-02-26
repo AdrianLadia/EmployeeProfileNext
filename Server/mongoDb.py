@@ -259,7 +259,7 @@ class mongoDb:
 
         updatedData = self.read(query, collection_name, session=session)
         return updatedData
-
+    
     def delete(self, query, collection_name, session=None):
         """Delete documents from the collection."""
         print('Deleting data in collection: ' + collection_name +

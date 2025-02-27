@@ -37,7 +37,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   const [newEmployeeList, setNewEmployeeList] =
     React.useState<Employee[]>(employeeList);
 
-  const [sortOrder, setSortOrder] = React.useState<null | number>(null);
+  const [sortOrder, setSortOrder] = React.useState<null | number>(1);
 
   const searchParams = useSearchParams();
 

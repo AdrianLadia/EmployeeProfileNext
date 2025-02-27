@@ -18,6 +18,7 @@ const EmployeeDetails = () => {
     setSelectedEmployee,
     handleImageModalClick,
     handleMemoTableModalClick,
+    handleGalleryModalClick,
     serverRequests,
     userData,
     loading,
@@ -156,7 +157,8 @@ const EmployeeDetails = () => {
       "lastName",
       "isDeleted",
       "employeeSignature",
-      "employeeHouseRulesSignatureList"
+      "employeeHouseRulesSignatureList",
+      "employeeImageGallery",
     ];
 
     return (
@@ -274,7 +276,7 @@ const EmployeeDetails = () => {
           }
         >
           <div className=" indicator  ">
-            {/* indicator */}
+            {/* memo indicator */}
             <span
               className={`
               ${loading && "hidden"} 
@@ -296,8 +298,8 @@ const EmployeeDetails = () => {
             >
               {fetchingMemos ? "..." : selectedEmployeeMemos?.length}
             </span>
-            {/* avatar Image */}
 
+            {/* avatar Image */}
             <div
               className={` ${loading && "hidden"}
               w-20 2xl:w-28 h-20 2xl:h-28 relative`}
@@ -334,9 +336,7 @@ const EmployeeDetails = () => {
             !selectedEmployeeDetails?.address && "hidden"
           } text-center capitalize w-full px-3`}
         >
-          <h3 className="  ">
-            {selectedEmployeeDetails?.address || ""}
-          </h3>
+          <h3 className="  ">{selectedEmployeeDetails?.address || ""}</h3>
         </div>
       </div>
 
@@ -371,6 +371,30 @@ const EmployeeDetails = () => {
               " ? "}
           </strong>
           Days with Us
+        </div>
+
+        {/* employee gallery */}
+        <div
+          className={
+            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            ` ${!selectedEmployeeDetails._id && "hidden"}`
+          }
+          onClick={() =>
+            selectedEmployeeDetails?.employeeImageGallery &&
+            handleGalleryModalClick(
+              selectedEmployeeDetails
+            )
+          }
+        >
+          Gallery
+          <Image
+            className={`w-8 h-8`}
+            src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
+            alt={"employeeImageGallery"}
+            width={100}
+            height={100}
+            loading="lazy"
+          ></Image>
         </div>
 
         {/* employee Signature */}
@@ -461,14 +485,16 @@ const EmployeeDetails = () => {
           House Rules
           <Image
             className={`w-8 h-8`}
-            src={selectedEmployeeDetails?.employeeHouseRulesSignatureList?.[0] || ""}
+            src={
+              selectedEmployeeDetails?.employeeHouseRulesSignatureList?.[0] ||
+              ""
+            }
             alt={"House Rules"}
             width={100}
             height={100}
             loading="lazy"
           ></Image>
         </div>
-        
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ const Confirmation = () => {
         role="alert" 
     > 
         <div 
-            className={`${confirmationOptions.open ? ' scale-100 ' : ' scale-0 '}  selection:
+            className={`${confirmationOptions.open ? ' scale-100 ' : ' scale-0 '}
             gap-5 w-max rounded-box shadow-2xl !z-[9999]
             flex flex-col justify-center items-center overflow-clip bg-base-100
         `}

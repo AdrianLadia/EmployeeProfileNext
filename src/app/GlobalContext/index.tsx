@@ -47,7 +47,7 @@ interface AppContextProps {
   setSelectedEmployee: (data: Employee) => void;
   handleImageModalClick: (imageList: string[]) => void;
   imageListForModal: string[];
-  setImageListForModal: (data: string[]) => void;
+  setImageListForModal: (data: string[]) => void; 
   memoForTableModal: Memo[];
   setMemoForTableModal: (data: Memo[]) => void;
   handleMemoTableModalClick: (data: Memo[]) => void;
@@ -67,7 +67,10 @@ interface AppContextProps {
   setOffenseListForModal: (data: Offense[]) => void;
   handleVideoModalClick: (video: string) => void;
   videoForModal: string;
-  setVideoForModal: (data: string) => void;
+  setVideoForModal: (data: string) => void; 
+  handleGalleryModalClick: (images: Employee) => void;
+  setEmployeeForGallery: (data: Employee) => void;
+  employeeForGallery: Employee;
 }
 
 // Create the default context with proper types and default values
@@ -115,7 +118,10 @@ const AppContext = createContext<AppContextProps>({
   setOffenseListForModal: () => {},
   handleVideoModalClick: () => {},
   videoForModal: "",
-  setVideoForModal: () => {},
+  setVideoForModal: () => {}, 
+  handleGalleryModalClick: () => {},
+  setEmployeeForGallery: () => {},
+  employeeForGallery: {} as Employee,
 });
 
 export default function ContextProvider({
@@ -420,7 +426,8 @@ export default function ContextProvider({
 
   const [imageModalId, setImageModalId] = useState<string>("");
 
-  const [videoForModal, setVideoForModal] = useState<string>("");
+  const [videoForModal, setVideoForModal] = useState<string>(""); 
+  const [employeeForGallery, setEmployeeForGallery] = useState<Employee>({} as Employee);
 
   useEffect(() => {
     serverRequests
@@ -581,6 +588,14 @@ export default function ContextProvider({
     setVideoForModal(video);
   }
 
+  const handleGalleryModalClick = (Employee: Employee) => {
+    const modal = document.getElementById("EmployeeGalleryModal");
+    if (modal) {
+      (modal as HTMLDialogElement).showModal();
+    }
+    setEmployeeForGallery(Employee);
+  }
+
   const highlightText = (text: string): JSX.Element[] => {
     if (!search) return [<span key="0">{text}</span>];
     const parts = text.split(new RegExp(`(${search})`, "gi"));
@@ -654,7 +669,10 @@ export default function ContextProvider({
     setOffenseListForModal,
     handleVideoModalClick,
     videoForModal,
-    setVideoForModal
+    setVideoForModal, 
+    employeeForGallery,
+    setEmployeeForGallery,
+    handleGalleryModalClick,
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

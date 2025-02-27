@@ -16,12 +16,13 @@ import ImageModal from "./Modals/ImageModal";
 import VideoModal from "./Modals/VideoModal";
 import EmployeeMemoTableModal from "./Modals/EmployeeMemoTableModal";
 import MemoPrintModal from "./Modals/MemoPrintModal";
+import EmployeeGalleryModal from "./Modals/EmployeeGalleryModal";
 
 import OffenseTableModal from "./Offense/OffenseTableModal";
 
 import LoadingOverlay from "./loadingOverlay.tsx";
 
-import { Poppins } from "next/font/google";
+import { Poppins } from "next/font/google"; 
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -42,12 +43,13 @@ export default function RootLayout({
       <body className={` ${poppins.variable} overflow-x-clip pb-32 md:pb-0`}>
         <SessionProvider session={session}>
           <ContextProvider>
-            <Confirmation />
             <ProfileMenu />
             <LoadingOverlay />
+            <Confirmation />
             {children}
             <ImageModal />
             <VideoModal/>
+            <EmployeeGalleryModal/>
             <EmployeeMemoTableModal />
             <MemoPrintModal />
             <OffenseTableModal />

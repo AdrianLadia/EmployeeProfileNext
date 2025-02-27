@@ -24,6 +24,7 @@ export type Isojt = boolean | null;
 export type Dailywage = number | null;
 export type Isdeleted = boolean | null;
 export type Employeesignature = string | null;
+export type EmployeeImageGallery = string[] | null;
 export type Version = number;
 
 export interface Employee {
@@ -46,5 +47,6 @@ export interface Employee {
   dailyWage: Dailywage;
   isDeleted?: Isdeleted;
   employeeSignature?: Employeesignature;
+  employeeImageGallery: EmployeeImageGallery;
   _version: Version;
 }

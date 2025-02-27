@@ -7,6 +7,7 @@ from AppConfig import AppConfig
 import logging
 from firebaseAuthenticator import firebaseAuthenticator
 from datetime import datetime, timezone
+import requests
 from downloadServer import DownloadServer
 
 app = Flask(__name__)
@@ -121,46 +122,27 @@ def create_employee():
 
             res = UserActions(userData).createEmployeeAction(
                 userData, {
-                    '_id':
-                    None,
-                    'firstName':
-                    data['firstName'],
-                    'lastName':
-                    data['lastName'],
-                    'address':
-                    data['address'],
-                    'phoneNumber':
-                    data['phoneNumber'],
-                    'photoOfPerson':
-                    data['photoOfPerson'],
-                    'resumePhotosList':
-                    data['resumePhotosList'],
-                    'biodataPhotosList':
-                    data['biodataPhotosList'],
-                    'employeeHouseRulesSignatureList':
-                    data['employeeHouseRulesSignatureList'],
-                    'email':
-                    data['email'],
-                    'dateJoined':
-                    data['dateJoined'],
-                    'company':
-                    data['company'],
-                    'agency':
-                    data['agency'],
-                    'isRegular':
-                    data['isRegular'],
-                    'companyRole':
-                    data['companyRole'],
-                    'isOJT':
-                    data['isOJT'],
-                    'dailyWage':
-                    data['dailyWage'],
-                    'isDeleted':
-                    False,
-                    'employeeSignature':
-                    data['employeeSignature'] or None,
-                    '_version':
-                    0
+                    '_id': None,
+                    'firstName': data['firstName'],
+                    'lastName': data['lastName'],
+                    'address': data['address'],
+                    'phoneNumber': data['phoneNumber'],
+                    'photoOfPerson': data['photoOfPerson'],
+                    'resumePhotosList': data['resumePhotosList'],
+                    'biodataPhotosList': data['biodataPhotosList'],
+                    'employeeHouseRulesSignatureList': data['employeeHouseRulesSignatureList'],
+                    'employeeImageGallery': data['employeeImageGallery'],
+                    'email': data['email'],
+                    'dateJoined': data['dateJoined'],
+                    'company': data['company'],
+                    'agency': data['agency'],
+                    'isRegular': data['isRegular'],
+                    'companyRole': data['companyRole'],
+                    'isOJT': data['isOJT'],
+                    'dailyWage': data['dailyWage'],
+                    'isDeleted': False,
+                    'employeeSignature': data['employeeSignature'] or None,
+                    '_version': 0
                 })
 
             return jsonify({
@@ -442,8 +424,7 @@ def get_employee_for_dashboard_action():
         sort = data['sort']
 
         try:
-            res = UserActions(userData).getEmployeeForDashboardAction(
-                userData, page, sort)
+            res = UserActions(userData).getEmployeeForDashboardAction(userData, page, sort)
             return jsonify({
                 'message': 'Employee read successfully!',
                 'data': res
@@ -583,7 +564,6 @@ def removeRolefromUser():
             logging.exception("Error removing Role: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
-
 @app.route('/updateEmployeeProfilePicture', methods=['POST'])
 def update_employee_profile_picture():
     if request.is_json:
@@ -602,7 +582,6 @@ def update_employee_profile_picture():
             logging.exception("Error updating Profile Picture: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
-
 @app.route('/fetchEmployeeList', methods=['POST'])
 def fetch_employee_list():
     if request.is_json:
@@ -614,8 +593,7 @@ def fetch_employee_list():
         sort = data['sort']
 
         try:
-            res = UserActions(userData).fetchEmployeeListAction(
-                userData, page, limit, sort)
+            res = UserActions(userData).fetchEmployeeListAction(userData, page, limit, sort)
             return jsonify({
                 'message': 'Employee read successfully!',
                 'data': res
@@ -623,7 +601,6 @@ def fetch_employee_list():
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
             return jsonify({'error': e.args[0]}), 400
-
 
 @app.route('/getAllRecentMemo', methods=['POST'])
 def get_all_recent_memo():
@@ -639,8 +616,7 @@ def get_all_recent_memo():
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
             return jsonify({'error': e.args[0]}), 400
-
-
+        
 @app.route('/updateUrlPhotoOfSignature', methods=['POST'])
 def update_url_photo_of_signature():
     if request.is_json:
@@ -659,7 +635,6 @@ def update_url_photo_of_signature():
             logging.exception("Error updating Photo of Signature: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
-
 @app.route('/downloadIDServer', methods=['POST'])
 def downloadIDServer():
     if request.is_json:
@@ -675,24 +650,20 @@ def downloadIDServer():
             if 'dateJoined' in employee:
                 employee['dateJoined'] = employee['dateJoined'].isoformat()
 
-            payload = {'employee': employee}
+            payload = {'employee':employee}
             urls = downloadServer.downloadEmployeeID(payload)
 
             print(urls, 'urls')
 
-            resID = {
+            resID ={
                 "_id": employee['_id'],
                 "name": employee['firstName'] + " " + employee['lastName'],
                 "companyRole": employee['companyRole'],
-                "IDCardURL": {
-                    "front": urls[0],
-                    "back": urls[1]
-                },
+                "IDCardURL": {"front":urls[0], "back":urls[1]},
                 '_version': employee['_version']
             }
 
-            idGenerated = UserActions(userData).createEmployeeIDAction(
-                userData, employee, resID)
+            idGenerated = UserActions(userData).createEmployeeIDAction(userData, employee, resID)
 
         except Exception as e:
             return jsonify({"error": str(e)}), 400
@@ -700,7 +671,7 @@ def downloadIDServer():
         return jsonify({
             "employeeID": idGenerated,
             "message": "Employee ID Card generated successfully"
-        }), 200
+            }), 200
 
 
 if __name__ == '__main__':

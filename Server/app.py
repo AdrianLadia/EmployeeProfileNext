@@ -131,7 +131,7 @@ def create_employee():
                     'resumePhotosList': data['resumePhotosList'],
                     'biodataPhotosList': data['biodataPhotosList'],
                     'employeeHouseRulesSignatureList': data['employeeHouseRulesSignatureList'],
-                    'employeeImageGallery': None,
+                    'employeeImageGallery': data['employeeImageGallery'],
                     'email': data['email'],
                     'dateJoined': data['dateJoined'],
                     'company': data['company'],

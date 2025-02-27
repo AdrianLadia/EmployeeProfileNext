@@ -81,6 +81,34 @@
             ],
             "title": "Biodataphotoslist"
         },
+        "employeeHouseRulesSignatureList": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Employeehouserulessignaturelist"
+        },
+        "employeeImageGallery": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Employeeimagegallery"
+        },
         "email": {
             "anyOf": [
                 {
@@ -114,6 +142,17 @@
                 }
             ],
             "title": "Company"
+        },
+        "agency": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Agency"
         },
         "isRegular": {
             "anyOf": [
@@ -199,9 +238,12 @@
         "photoOfPerson",
         "resumePhotosList",
         "biodataPhotosList",
+        "employeeHouseRulesSignatureList",
+        "employeeImageGallery",
         "email",
         "dateJoined",
         "company",
+        "agency",
         "isRegular",
         "companyRole",
         "isOJT",

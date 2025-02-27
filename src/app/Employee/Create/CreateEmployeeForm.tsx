@@ -50,6 +50,7 @@ const CreateEmployeeForm = () => {
     employeeSignature: null,
     employeeHouseRulesSignatureList: null,
     agency: null,
+    employeeImageGallery: null,
   } as Employee;
 
   const [formData, setFormData] = useState<Employee>(

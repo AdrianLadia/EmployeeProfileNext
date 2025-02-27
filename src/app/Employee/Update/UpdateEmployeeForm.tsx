@@ -66,6 +66,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     isOJT: null,
     employeeSignature: null,
     employeeHouseRulesSignatureList: null,
+    employeeImageGallery: null,
   } as Employee;
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(

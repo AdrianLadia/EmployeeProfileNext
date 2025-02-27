@@ -24,7 +24,7 @@ const Confirmation = () => {
   return (
     <form 
         className={` ${confirmationOptions.open ? ' fixed !z-[9999] ' : ' hidden '}
-            w-[99vw] h-[99vh] z-[999] top-[0%] left-1/2 right-1/2 translate-x-[-50%]  
+            w-full h-full z-[999] top-[0%] left-1/2 right-1/2 translate-x-[-50%]  
             flex justify-center items-center backdrop-blur-sm bg-inherit alert
         `}
         role="alert" 

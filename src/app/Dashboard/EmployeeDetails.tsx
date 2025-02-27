@@ -376,31 +376,30 @@ const EmployeeDetails = () => {
         {/* employee gallery */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            `${detailStyle()} !flex-row w-full justify-evenly items-center group cursor-pointer` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
-          onClick={() =>
-            selectedEmployeeDetails?.employeeImageGallery &&
-            handleGalleryModalClick(
-              selectedEmployeeDetails
-            )
-          }
+          onClick={() => handleGalleryModalClick(selectedEmployeeDetails)}
         >
           Gallery
-          <Image
-            className={`w-8 h-8`}
-            src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
-            alt={"employeeImageGallery"}
-            width={100}
-            height={100}
-            loading="lazy"
-          ></Image>
+          {selectedEmployeeDetails?.employeeImageGallery?.[0] ? (
+            <Image
+              className={`w-8 h-8`}
+              src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
+              alt={"employeeImageGallery"}
+              width={100}
+              height={100}
+              loading="lazy"
+            ></Image>
+          ) : (
+            <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center">+</div>
+          )}
         </div>
 
         {/* employee Signature */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -424,7 +423,7 @@ const EmployeeDetails = () => {
         {/* Resume */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -448,7 +447,7 @@ const EmployeeDetails = () => {
         {/* Bio-data */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -472,7 +471,7 @@ const EmployeeDetails = () => {
         {/* employeeHouseRulesSignatureList */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>

@@ -48,6 +48,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
     employeeSignature: "",
     employeeHouseRulesSignatureList: [],
     agency: "",
+    employeeImageGallery: null,
   } as Employee;
 
   const [formData, setFormData] = useState<Employee>(defaultFormData);

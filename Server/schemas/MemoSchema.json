@@ -83,6 +83,34 @@
                     ],
                     "title": "Biodataphotoslist"
                 },
+                "employeeHouseRulesSignatureList": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Employeehouserulessignaturelist"
+                },
+                "employeeImageGallery": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Employeeimagegallery"
+                },
                 "email": {
                     "anyOf": [
                         {
@@ -116,6 +144,17 @@
                         }
                     ],
                     "title": "Company"
+                },
+                "agency": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Agency"
                 },
                 "isRegular": {
                     "anyOf": [
@@ -201,9 +240,12 @@
                 "photoOfPerson",
                 "resumePhotosList",
                 "biodataPhotosList",
+                "employeeHouseRulesSignatureList",
+                "employeeImageGallery",
                 "email",
                 "dateJoined",
                 "company",
+                "agency",
                 "isRegular",
                 "companyRole",
                 "isOJT",
@@ -285,7 +327,14 @@
             "title": "Medialist"
         },
         "Employee": {
-            "$ref": "#/$defs/Employee"
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/Employee"
+                },
+                {
+                    "type": "null"
+                }
+            ]
         },
         "memoPhotosList": {
             "anyOf": [
@@ -326,6 +375,18 @@
         "submitted": {
             "title": "Submitted",
             "type": "boolean"
+        },
+        "isWithOffense": {
+            "anyOf": [
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": false,
+            "title": "Iswithoffense"
         },
         "reason": {
             "anyOf": [

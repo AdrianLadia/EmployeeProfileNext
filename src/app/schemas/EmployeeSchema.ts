@@ -14,6 +14,7 @@ export type Photoofperson = string | null;
 export type Resumephotoslist = string[] | null;
 export type Biodataphotoslist = string[] | null;
 export type Employeehouserulessignaturelist = string[] | null;
+export type Employeeimagegallery = string[] | null;
 export type Email = string | null;
 export type Datejoined = string | null;
 export type Company = string | null;
@@ -24,7 +25,6 @@ export type Isojt = boolean | null;
 export type Dailywage = number | null;
 export type Isdeleted = boolean | null;
 export type Employeesignature = string | null;
-export type EmployeeImageGallery = string[] | null;
 export type Version = number;
 
 export interface Employee {
@@ -37,6 +37,7 @@ export interface Employee {
   resumePhotosList: Resumephotoslist;
   biodataPhotosList: Biodataphotoslist;
   employeeHouseRulesSignatureList: Employeehouserulessignaturelist;
+  employeeImageGallery: Employeeimagegallery;
   email: Email;
   dateJoined: Datejoined;
   company: Company;
@@ -47,6 +48,5 @@ export interface Employee {
   dailyWage: Dailywage;
   isDeleted?: Isdeleted;
   employeeSignature?: Employeesignature;
-  employeeImageGallery: EmployeeImageGallery;
   _version: Version;
 }

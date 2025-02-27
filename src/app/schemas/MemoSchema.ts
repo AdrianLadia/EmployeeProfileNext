@@ -17,6 +17,7 @@ export type Photoofperson = string | null;
 export type Resumephotoslist = string[] | null;
 export type Biodataphotoslist = string[] | null;
 export type Employeehouserulessignaturelist = string[] | null;
+export type Employeeimagegallery = string[] | null;
 export type Email = string | null;
 export type Datejoined = string | null;
 export type Company = string | null;
@@ -46,7 +47,7 @@ export interface Memo {
   _id?: Id;
   date: Date;
   mediaList: Medialist;
-  Employee: Employee;
+  Employee: Employee | null;
   memoPhotosList: Memophotoslist;
   subject: Subject;
   description: Description;
@@ -68,6 +69,7 @@ export interface Employee {
   resumePhotosList: Resumephotoslist;
   biodataPhotosList: Biodataphotoslist;
   employeeHouseRulesSignatureList: Employeehouserulessignaturelist;
+  employeeImageGallery: Employeeimagegallery;
   email: Email;
   dateJoined: Datejoined;
   company: Company;

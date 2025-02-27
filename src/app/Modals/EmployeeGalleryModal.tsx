@@ -4,19 +4,29 @@ import { useAppContext } from "../GlobalContext";
 
 import Confirmation from "../confirmation";
 
+import Toast from "../toast";
+
+import FirebaseUpload from "../api/FirebaseUpload";
+
+import { Employee } from "../schemas/EmployeeSchema";
+
 const EmployeeGalleryModal = () => {
   const {
-    loading,
-    setLoading,
     employeeForGallery,
     handleImageModalClick,
     handleConfirmation,
     serverRequests,
     userData,
+    setToastOptions,
+    setEmployeeForGallery
   } = useAppContext();
 
   const captureInputRef = React.useRef<HTMLInputElement>(null);
   const uploadInputRef = React.useRef<HTMLInputElement>(null);
+
+  const upload = new FirebaseUpload();
+
+  const [ loading, setLoading] = React.useState<boolean | undefined>(false);
 
   const [employeeImageGallery, setEmployeeImageGallery] = React.useState<
     string[]
@@ -25,6 +35,8 @@ const EmployeeGalleryModal = () => {
   const [showMenu, setShowMenu] = React.useState(false);
 
   const [addedImages, setAddedImages] = React.useState<string[]>([]);
+
+  const [isGalleryChanged, setIsGalleryChanged] = React.useState(false);
 
   const handleTakePhotoClick = () => {
     if (captureInputRef?.current) {
@@ -40,6 +52,9 @@ const EmployeeGalleryModal = () => {
 
   const handleClose = () => {
     setShowMenu(false);
+    setAddedImages([]);
+    setEmployeeImageGallery([]);
+    setEmployeeForGallery({} as Employee);
   };
 
   const handleDeleteImage = async (index: number, key: string) => {
@@ -57,6 +72,8 @@ const EmployeeGalleryModal = () => {
       } else if (key === "old") {
         const newImages = [...(employeeImageGallery || [])];
         newImages.splice(index, 1);
+        setIsGalleryChanged(true);
+        setShowMenu(true);
         setEmployeeImageGallery(newImages);
       } else {
         console.error("Invalid Key");
@@ -88,29 +105,50 @@ const EmployeeGalleryModal = () => {
 
   const handleSave = async () => {
     // employee: Employee, dataToUpdate: DataToUpdate, userObject: User
-    setLoading(true);
     const confirmed = await handleConfirmation(
-      "Are you sure save Changes?",
-      "The Changes you've made will be Saved and will not be able to Revert.",
-      "Success"
+        "Are you sure save Changes?",
+        "The Changes you've made will be Saved and will not be able to Revert.",
+        "Success"
     );
+    setLoading(true);
     try {
       if (confirmed) {
-        const finalData = [...addedImages, ...employeeImageGallery]; 
-        const res = await serverRequests.updateEmployee(employeeForGallery, {
-          employeeImageGallery: finalData
-        }, userData);
+        let uploadedImages: string[] = [];
+        if (addedImages.length) {
+          uploadedImages = await upload.Images(
+            addedImages,
+            `employees/${employeeForGallery.firstName} ${employeeForGallery.lastName}`,
+            "employeeImageGallery"
+          );
+        }
 
-        console.log(res)
+        const finalData = [...uploadedImages, ...employeeImageGallery];
+        // const finalData = [...addedImages, ...employeeImageGallery];
+
+        const res = await serverRequests.updateEmployee(
+          employeeForGallery,
+          {
+            employeeImageGallery: finalData,
+          },
+          userData
+        );
 
         if (res?.data) {
           setEmployeeImageGallery(finalData);
           setAddedImages([]);
           setShowMenu(false);
+          setIsGalleryChanged(false);
+
+          setToastOptions({
+            message: "Changes Saved Successfully",
+            type: "success",
+            open: true,
+            timer: 5,
+          });
         }
 
-        if(res.error){
-            throw new Error(res.error);
+        if (res.error) {
+          throw new Error(res.error);
         }
       }
     } catch (e) {
@@ -122,8 +160,9 @@ const EmployeeGalleryModal = () => {
 
   const AddImage = () => {
     return (
-      <div className="grow h-[30vh] md:h-[40vh] w-full md:w-[25%] flex justify-center items-center border group duration-150 cursor-pointer rounded-box">
+      <div className="grow w-full md:max-w-[50vw] min-h-[40vh] md:w-[25%] flex justify-center items-center border group duration-150 cursor-pointer rounded-box">
         {showMenu ? (
+          // menu
           <div className="flex flex-col items-center justify-evenly gap-2 w-full max-h-[100%] ">
             <button
               className="btn min-w-[50%] max-w-full"
@@ -175,33 +214,38 @@ const EmployeeGalleryModal = () => {
               <span className="w-[60%] max-w-full">Take Photo</span>
             </button>
 
-            {/*  */}
+            {/* ***** save and clear ****** */}
             <div
               className={`${
-                !addedImages?.length && "hidden"
-              } min-w-[50%] max-w-full flex justify-between items-center gap-2 pt-4 border-t mt-2`}
+                !addedImages?.length && !isGalleryChanged
+                  ? " hidden "
+                  : " flex "
+              }  min-w-[50%] max-w-full justify-between items-center gap-2 pt-4 border-t mt-2 `}
             >
               <button
                 className="btn btn-error btn-outline w-[47%]"
                 onClick={() => {
                   setAddedImages([]);
                 }}
+                disabled={loading}
               >
-                Clear
+                <span className= {`${loading&&" loading loading-spinner"}`} >Clear</span>
               </button>
               <button
                 className="btn btn-info w-[47%]"
                 onClick={() => {
                   handleSave();
                 }}
+                disabled={loading}
               >
-                Save
+                <span className= {`${loading&&" loading loading-spinner"}`} >Save</span>
               </button>
             </div>
           </div>
         ) : (
+          // show menu button
           <div
-            className="w-full h-full flex items-center justify-center"
+            className="w-full h-full flex flex-col items-center justify-center"
             onClick={() => {
               setShowMenu(true);
             }}
@@ -212,7 +256,7 @@ const EmployeeGalleryModal = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-10 text-white"
+              className="size-12 text-white"
             >
               <path
                 strokeLinecap="round"
@@ -220,6 +264,7 @@ const EmployeeGalleryModal = () => {
                 d="M12 4.5v15m7.5-7.5h-15"
               />
             </svg>
+            <span className="text-white">Add Photo</span>
           </div>
         )}
       </div>
@@ -227,18 +272,27 @@ const EmployeeGalleryModal = () => {
   };
 
   React.useEffect(() => {
-    setEmployeeImageGallery(employeeForGallery?.employeeImageGallery || []);
+    if (employeeForGallery?._id) {
+      setEmployeeImageGallery(employeeForGallery?.employeeImageGallery || []);
+
+      if (
+        employeeImageGallery.length &&
+        employeeForGallery?.employeeImageGallery !== employeeImageGallery
+      ) {
+        setShowMenu(true);
+      }
+    }
   }, [employeeForGallery]);
 
   return (
     <dialog
-      className={` !z-50 modal md:px-2 ${loading && " cursor-wait "} `}
+      className={` modal md:px-2 ${loading && " cursor-wait "} `}
       id="EmployeeGalleryModal"
     >
-      <div className="w-full h-full flex flex-wrap justify-between gap-4 relative overflow-y-auto backdrop-blur-md rounded-box shadow-xl pb-12 px-2 md:px-4">
+      <div className="w-full h-full flex flex-col gap-4 relative backdrop-blur-md rounded-box shadow-xl overflow-y-auto">
         {/* close button */}
         <form
-          className=" w-full flex justify-end items-center sticky top-2 z-50"
+          className=" w-full h-max flex justify-end items-center sticky top-2 z-50 pr-2"
           method="dialog"
           id="closeButton"
         >
@@ -246,146 +300,119 @@ const EmployeeGalleryModal = () => {
         </form>
 
         <Confirmation />
+        <Toast />
 
-        {/* add image */}
-        {AddImage()}
+        <div className="w-full flex flex-wrap gap-4 justify-center items-stretch mt-4 h-max min-h-[80vh] px-4   ">
+          {/* add image */}
+          {AddImage()}
 
-        {/* added images */}
-        {addedImages.map((image, index) => (
-          <div className=" grow border-4 border-info relative group rounded-box overflow-clip">
-            <img
-              src={image}
-              key={index}
-              alt="Employee"
-              className=" w-full h-[40vh] select-none "
-            />
-            <div
-              className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0  
-                size-[50%] top-[25%] left-[25%] absolute 
-                flex items-center justify-evenly"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
-                onClick={() => {
-                  handleDeleteImage(index, "new");
-                }}
+          {/* added images */}
+          {addedImages.map((image, index) => (
+            <div className=" grow border-4 border-info relative flex items-center group rounded-box overflow-clip">
+              <img
+                src={image}
+                alt={`addedImages${index}`}
+                key={`addedImages${index}`}
+                className=" w-full h-[40vh] min-h-full select-none "
+              />
+              <div
+                className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0  
+                    size-[55%] top-[23%] left-[23%] absolute 
+                    flex items-center justify-evenly"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
+                  onClick={() => {!loading&&
+                    handleDeleteImage(index, "new");
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                  />
+                </svg>
 
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
-                onClick={() => {
-                  handleImageModalClick([addedImages[index]]);
-                }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
+                  onClick={() => {!loading&&
+                    handleImageModalClick([addedImages[index]]);
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
+                  />
+                </svg>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        {employeeImageGallery.map((image, index) => (
-          <div className="grow relative rounded-box overflow-clip group border-4 border-transparent">
-            <img
-              src={image}
-              alt={`image${index}`}
-              key={`image${index}`}
-              className=" w-full grow h-[40vh] select-none relative"
-            />
-            <div
-              className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0  
-                size-[50%] top-[25%] left-[25%] absolute 
-                flex items-center justify-evenly"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
-                onClick={() => {
-                  handleDeleteImage(index, "old");
-                }}
+          {/* old images */}
+          {employeeImageGallery.map((image, index) => (
+            <div className="grow relative rounded-box overflow-clip group border-4 border-transparent">
+              <img
+                src={image}
+                alt={`employeeImageGallery${index}`}
+                key={`employeeImageGallery${index}`}
+                className=" w-full grow h-[40vh] min-h-full select-none relative"
+              />
+              <div
+                className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0  
+                    size-[55%] top-[23%] left-[23%] absolute 
+                    flex items-center justify-evenly"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
+                  onClick={() => {!loading&&
+                    handleDeleteImage(index, "old");
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                  />
+                </svg>
 
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
-                onClick={() => {
-                  handleImageModalClick(employeeImageGallery);
-                }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
+                  onClick={() => {!loading&&
+                    handleImageModalClick(employeeImageGallery);
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
+                  />
+                </svg>
+              </div>
             </div>
-          </div>
-        ))}
-
-        {/* images */}
-        {/* {imageListForGalleryModal.map((image, index) => (
-          <div className=" grow max-h-[40vh] rounded-box overflow-clip relative">
-            <img
-              src={image}
-              key={index}
-              alt="Employee"
-              className=" w-max  h-full select-none *:"
-            />
-
-            <div className="absolute group">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
-                onClick={() => {
-                  handleImageModalClick([addedImages[index]]);
-                }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
-                />
-              </svg>
-            </div>
-          </div>
-        ))} */}
+          ))}
+          <div className="h-12 w-full "/>
+        </div>
       </div>
 
       <input

@@ -245,7 +245,7 @@ class UserActions(User):
     def updateEmployeeAction(self, user, data, dataToUpdate):
         for key in Employee.model_fields.keys():
             if key not in data:
-                data[key] = None
+                data[key] = dataToUpdate[key] if key in dataToUpdate else None
 
         employee = Employee(**data)
         res = employee.updateEmployee(user, dataToUpdate)
@@ -613,6 +613,7 @@ class Employee(BaseModel):
     resumePhotosList: Optional[List[str]]
     biodataPhotosList: Optional[List[str]]
     employeeHouseRulesSignatureList: Optional[List[str]]
+    employeeImageGallery: Optional[List[str]]
     email: Optional[str]
     dateJoined: Optional[datetime.datetime]
     company: Optional[str]

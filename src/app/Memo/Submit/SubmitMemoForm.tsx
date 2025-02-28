@@ -15,6 +15,7 @@ import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
 
 import Image from "next/image";
+import { Employee } from "@/app/schemas/EmployeeSchema";
 
 interface CreateMemoFormProps {
   memoList: Memo[];
@@ -157,7 +158,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
               e.target.id === "photoOfPerson" ||
               e.target.id === "employeeSignature"
                 ? fileDataUrls[0]
-                : fileDataUrls;
+                : fileDataUrls.concat(formData?.Employee ? formData.Employee[e.target.id as keyof Employee] as string[] : []);
 
             setFormData({
               ...formData,

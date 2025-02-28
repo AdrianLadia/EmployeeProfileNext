@@ -110,11 +110,10 @@ const EmployeeGalleryModal = () => {
   };
 
   const handleSave = async () => {
-    // employee: Employee, dataToUpdate: DataToUpdate, userObject: User
     const confirmed = await handleConfirmation(
-      "Are you sure save Changes?",
-      "The Changes you've made will be Saved and will not be able to Revert.",
-      "Success"
+      "Are you sure?",
+      "The Changes you've made will be Saved.",
+      "success"
     );
     setLoading(true);
     try {

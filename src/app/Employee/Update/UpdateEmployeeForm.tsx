@@ -236,7 +236,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
               e.target.id === "photoOfPerson" ||
               e.target.id === "employeeSignature"
                 ? fileDataUrls[0]
-                : fileDataUrls;
+                : fileDataUrls.concat(formData[e.target.id as keyof Employee] as string[]);
 
             setFormData({
               ...formData,

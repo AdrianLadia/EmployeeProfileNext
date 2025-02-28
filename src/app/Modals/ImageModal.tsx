@@ -129,17 +129,14 @@ const ImageModal = () => {
         </div>
       </div> 
 
-      <div className="w-[90vw] lg:w-[75vw] overflow-x-auto grid grid-flow-col place-items-center h-[10vh]">
+      <div className="w-[90vw] lg:w-[75vw] overflow-x-auto grid grid-flow-col place-items-center place-content-center gap-3 h-[10vh]">
         {imageListForModal.map((item, index) => (
           <a
             key={`item${index}`}
             href={`#item${index}`}
-            className={`${
-              imageModalId == `#item${index}` &&
-              " border-info bg-info text-white"
-            }   rounded-box h-12 w-12 opacity-70 `}
+            className={` rounded-box h-12 w-12 opacity-70 bg-red-100`}
           >
-            <Image className="h-full w-full rounded-box" src={item} quality={0.2} width={64} height={64} alt={"img" + index} />
+            <Image className="h-full w-full rounded-box" src={item} quality={10} width={64} height={64} alt={"img" + index} />
           </a>
         ))}
       </div>

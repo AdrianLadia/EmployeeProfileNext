@@ -10,6 +10,8 @@ import FirebaseUpload from "../api/FirebaseUpload";
 
 import { Employee } from "../schemas/EmployeeSchema";
 
+import Image from "next/image";
+
 const EmployeeGalleryModal = () => {
   const {
     employeeForGallery,
@@ -18,7 +20,7 @@ const EmployeeGalleryModal = () => {
     serverRequests,
     userData,
     setToastOptions,
-    setEmployeeForGallery
+    setEmployeeForGallery,
   } = useAppContext();
 
   const captureInputRef = React.useRef<HTMLInputElement>(null);
@@ -26,7 +28,7 @@ const EmployeeGalleryModal = () => {
 
   const upload = new FirebaseUpload();
 
-  const [ loading, setLoading] = React.useState<boolean | undefined>(false);
+  const [loading, setLoading] = React.useState<boolean | undefined>(false);
 
   const [employeeImageGallery, setEmployeeImageGallery] = React.useState<
     string[]
@@ -37,6 +39,8 @@ const EmployeeGalleryModal = () => {
   const [addedImages, setAddedImages] = React.useState<string[]>([]);
 
   const [isGalleryChanged, setIsGalleryChanged] = React.useState(false);
+
+  const [isDropping, setIsDropping] = React.useState(false);
 
   const handleTakePhotoClick = () => {
     if (captureInputRef?.current) {
@@ -101,14 +105,16 @@ const EmployeeGalleryModal = () => {
         };
       }
     }
+    setLoading(false);
+    setShowMenu(true);
   };
 
   const handleSave = async () => {
     // employee: Employee, dataToUpdate: DataToUpdate, userObject: User
     const confirmed = await handleConfirmation(
-        "Are you sure save Changes?",
-        "The Changes you've made will be Saved and will not be able to Revert.",
-        "Success"
+      "Are you sure save Changes?",
+      "The Changes you've made will be Saved and will not be able to Revert.",
+      "Success"
     );
     setLoading(true);
     try {
@@ -160,12 +166,81 @@ const EmployeeGalleryModal = () => {
 
   const AddImage = () => {
     return (
-      <div className="grow w-full md:max-w-[50vw] min-h-[40vh] md:w-[25%] flex justify-center items-center border group duration-150 cursor-pointer rounded-box">
-        {showMenu ? (
+      <div
+        className={`${
+          loading && "border-neutral"
+        } grow w-full md:max-w-[50vw] min-h-[40vh] md:w-[25%] flex justify-center items-center border group duration-150 cursor-pointer rounded-box relative `}
+        onDragOver={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!isDropping) {
+            setIsDropping(true);
+          }
+        }}
+        onMouseLeave={() => {
+          setIsDropping(false);
+        }}
+      >
+        {/* {isDropping && ( */}
+        <div
+          className={`${
+            isDropping ? "z-50 " : "hidden"
+          } absolute w-full h-full text-white`}
+        >
+          <span
+            onClick={() => {
+              setIsDropping(false);
+            }}
+            className="close-button right-2 absolute top-2 z-50"
+          >
+            X
+          </span>
+          <div
+            className={`${isDropping && "animate-pulse"} ${
+              loading && "text-loading"
+            }  w-full h-full flex flex-col items-center justify-center tracking-widest text-2xl gap-2 absolute`}
+          >
+            <span>Drop Here</span>
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="size-10 animate-bounce"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                />
+              </svg>
+            </span>
+          </div>
+          <input
+            onChange={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setLoading(true);
+              setIsDropping(false);
+              handleFileChange(e);
+            }}
+            multiple
+            type="file"
+            name="test"
+            id="test"
+            className=" min-w-full h-full z-10 pointer-events-none md:pointer-events-auto opacity-0 "
+          />
+        </div>
+
+        {(showMenu && !isDropping) || (!isDropping && addedImages.length) ? (
           // menu
-          <div className="flex flex-col items-center justify-evenly gap-2 w-full max-h-[100%] ">
+          <div className="flex flex-col items-center justify-evenly gap-2 w-full max-h-[100%]">
+            {/*  */}
             <button
-              className="btn min-w-[50%] max-w-full"
+              className="btn min-w-[50%] max-w-full z-20"
+              disabled={loading}
               onClick={() => {
                 handleUploadClick();
               }}
@@ -186,8 +261,10 @@ const EmployeeGalleryModal = () => {
               </svg>
               <span className="w-[60%] max-w-full">Upload</span>
             </button>
+            {/*  */}
             <button
-              className="btn min-w-[50%] md:hidden"
+              className="btn min-w-[50%] md:hidden z-20"
+              disabled={loading}
               onClick={() => {
                 handleTakePhotoClick();
               }}
@@ -215,12 +292,14 @@ const EmployeeGalleryModal = () => {
             </button>
 
             {/* ***** save and clear ****** */}
+            {/* ***** save and clear ****** */}
             <div
-              className={`${
-                !addedImages?.length && !isGalleryChanged
-                  ? " hidden "
-                  : " flex "
-              }  min-w-[50%] max-w-full justify-between items-center gap-2 pt-4 border-t mt-2 `}
+              className={`${loading && "border-neutral"}
+                ${
+                  !addedImages?.length && !isGalleryChanged
+                    ? " hidden "
+                    : " flex "
+                }  min-w-[50%] max-w-full justify-between items-center gap-2 pt-4 border-t mt-2 z-20`}
             >
               <button
                 className="btn btn-error btn-outline w-[47%]"
@@ -229,7 +308,9 @@ const EmployeeGalleryModal = () => {
                 }}
                 disabled={loading}
               >
-                <span className= {`${loading&&" loading loading-spinner"}`} >Clear</span>
+                <span className={`${loading && " loading loading-spinner"}`}>
+                  Clear
+                </span>
               </button>
               <button
                 className="btn btn-info w-[47%]"
@@ -238,38 +319,51 @@ const EmployeeGalleryModal = () => {
                 }}
                 disabled={loading}
               >
-                <span className= {`${loading&&" loading loading-spinner"}`} >Save</span>
+                <span className={`${loading && " loading loading-spinner"}`}>
+                  Save
+                </span>
               </button>
             </div>
           </div>
         ) : (
-          // show menu button
-          <div
-            className="w-full h-full flex flex-col items-center justify-center"
-            onClick={() => {
-              setShowMenu(true);
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-12 text-white"
+          !isDropping &&
+          !addedImages.length && (
+            // show menu button
+            <div
+              className="w-full h-full flex flex-col items-center justify-center shadow-xl z-20"
+              onClick={() => {
+                setShowMenu(true);
+              }}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
-            <span className="text-white">Add Photo</span>
-          </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="size-12 text-white"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              <span className="text-white">Add Photo</span>
+            </div>
+          )
         )}
       </div>
     );
   };
+
+  // const downloadImage = async (imageUrl: string) => {
+  const downloadImage = async () => {
+    try {
+    } catch (e) {
+      console.error(e);
+    }
+  }; 
 
   React.useEffect(() => {
     if (employeeForGallery?._id) {
@@ -289,7 +383,7 @@ const EmployeeGalleryModal = () => {
       className={` modal md:px-2 ${loading && " cursor-wait "} `}
       id="EmployeeGalleryModal"
     >
-      <div className="w-full h-full flex flex-col gap-4 relative backdrop-blur-md rounded-box shadow-xl overflow-y-auto">
+      <div className="w-full h-full flex flex-col gap-8 relative backdrop-blur-md rounded-box shadow-xl overflow-y-auto">
         {/* close button */}
         <form
           className=" w-full h-max flex justify-end items-center sticky top-2 z-50 pr-2"
@@ -308,9 +402,11 @@ const EmployeeGalleryModal = () => {
 
           {/* added images */}
           {addedImages.map((image, index) => (
-            <div className=" grow border-4 border-info relative flex items-center group rounded-box overflow-clip">
-              <img
+            <div className=" grow border-4 border-info relative flex items-center group rounded-box overflow-clip shadow-xl ">
+              <Image
                 src={image}
+                width={200}
+                height={200}
                 alt={`addedImages${index}`}
                 key={`addedImages${index}`}
                 className=" w-full h-[40vh] min-h-full select-none "
@@ -327,8 +423,8 @@ const EmployeeGalleryModal = () => {
                   strokeWidth={1.5}
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
-                  onClick={() => {!loading&&
-                    handleDeleteImage(index, "new");
+                  onClick={() => {
+                    !loading && handleDeleteImage(index, "new");
                   }}
                 >
                   <path
@@ -345,8 +441,8 @@ const EmployeeGalleryModal = () => {
                   strokeWidth={1.5}
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
-                  onClick={() => {!loading&&
-                    handleImageModalClick([addedImages[index]]);
+                  onClick={() => {
+                    !loading && handleImageModalClick([addedImages[index]]);
                   }}
                 >
                   <path
@@ -361,9 +457,11 @@ const EmployeeGalleryModal = () => {
 
           {/* old images */}
           {employeeImageGallery.map((image, index) => (
-            <div className="grow relative rounded-box overflow-clip group border-4 border-transparent">
-              <img
+            <div className="grow relative rounded-box overflow-clip group border-4 border-transparent shadow-xl ">
+              <Image
                 src={image}
+                width={200}
+                height={200}
                 alt={`employeeImageGallery${index}`}
                 key={`employeeImageGallery${index}`}
                 className=" w-full grow h-[40vh] min-h-full select-none relative"
@@ -373,6 +471,7 @@ const EmployeeGalleryModal = () => {
                     size-[55%] top-[23%] left-[23%] absolute 
                     flex items-center justify-evenly"
               >
+                {/* delete */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -380,8 +479,8 @@ const EmployeeGalleryModal = () => {
                   strokeWidth={1.5}
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
-                  onClick={() => {!loading&&
-                    handleDeleteImage(index, "old");
+                  onClick={() => {
+                    !loading && handleDeleteImage(index, "old");
                   }}
                 >
                   <path
@@ -398,8 +497,27 @@ const EmployeeGalleryModal = () => {
                   strokeWidth={1.5}
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
-                  onClick={() => {!loading&&
-                    handleImageModalClick(employeeImageGallery);
+                  onClick={() => {
+                    !loading && downloadImage();
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                  />
+                </svg>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-accent"
+                  onClick={() => {
+                    !loading &&
+                      handleImageModalClick([employeeImageGallery[index]]);
                   }}
                 >
                   <path
@@ -411,7 +529,7 @@ const EmployeeGalleryModal = () => {
               </div>
             </div>
           ))}
-          <div className="h-12 w-full "/>
+          <div className="h-12 w-full " />
         </div>
       </div>
 

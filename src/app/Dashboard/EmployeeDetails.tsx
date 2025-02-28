@@ -341,6 +341,31 @@ const EmployeeDetails = () => {
       </div>
 
       <div className="flex flex-wrap gap-3 h-max w-full text-xs pb-2 ">
+        {/* employee gallery */}
+        <div
+          className={
+            `${detailStyle()} !flex-row w-full justify-evenly items-center group cursor-pointer` +
+            ` ${!selectedEmployeeDetails._id && "hidden"}`
+          }
+          onClick={() => handleGalleryModalClick(selectedEmployeeDetails)}
+        >
+          Gallery
+          {selectedEmployeeDetails?.employeeImageGallery?.[0] ? (
+            <Image
+              className={`w-8 h-8`}
+              src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
+              alt={"employeeImageGallery"}
+              width={100}
+              height={100}
+              loading="lazy"
+            ></Image>
+          ) : (
+            <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center">
+              +
+            </div>
+          )}
+        </div>
+
         {detailSkeleton()}
 
         {detailComponent()}
@@ -371,29 +396,6 @@ const EmployeeDetails = () => {
               " ? "}
           </strong>
           Days with Us
-        </div>
-
-        {/* employee gallery */}
-        <div
-          className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center group cursor-pointer` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
-          }
-          onClick={() => handleGalleryModalClick(selectedEmployeeDetails)}
-        >
-          Gallery
-          {selectedEmployeeDetails?.employeeImageGallery?.[0] ? (
-            <Image
-              className={`w-8 h-8`}
-              src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
-              alt={"employeeImageGallery"}
-              width={100}
-              height={100}
-              loading="lazy"
-            ></Image>
-          ) : (
-            <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center">+</div>
-          )}
         </div>
 
         {/* employee Signature */}

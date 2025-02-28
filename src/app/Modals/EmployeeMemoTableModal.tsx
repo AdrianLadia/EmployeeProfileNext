@@ -23,7 +23,7 @@ const EmployeeMemoTableModal = () => {
 
   useEffect(() => {
     if (memoForTableModal.length > 0) {
-      const res = memoForTableModal.map((memo) => memo.Employee._id);
+      const res = memoForTableModal.map((memo) => memo?.Employee?._id);
 
       const uniqueArray = [...new Set(res)];
 

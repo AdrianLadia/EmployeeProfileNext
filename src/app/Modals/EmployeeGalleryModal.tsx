@@ -169,7 +169,7 @@ const EmployeeGalleryModal = () => {
       <div
         className={`${
           loading && "border-neutral"
-        } h-[30vh] w-full flex justify-center items-center border group duration-150 cursor-pointer rounded-box relative bg-base-100/30`}
+        } h-[40vh] md:h-[45%] w-full flex justify-center items-center border group duration-150 cursor-pointer rounded-box relative bg-base-100/30`}
         onDragOver={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -355,14 +355,7 @@ const EmployeeGalleryModal = () => {
         )}
       </div>
     );
-  };
-
-  // const downloadImage = async () => {
-  //   try {
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
+  }; 
 
   React.useEffect(() => {
     if (employeeForGallery?._id) {

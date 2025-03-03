@@ -168,7 +168,7 @@ const EmployeeGalleryModal = () => {
       <div
         className={`${
           loading && "border-neutral"
-        } h-[30vh] w-full flex justify-center items-center border group duration-150 cursor-pointer rounded-box relative bg-base-100/30`}
+        } grow w-full md:max-w-[50vw] min-h-[40vh] md:w-[25%] flex justify-center items-center border group duration-150 cursor-pointer rounded-box relative `}
         onDragOver={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -362,7 +362,7 @@ const EmployeeGalleryModal = () => {
     } catch (e) {
       console.error(e);
     }
-  };
+  }; 
 
   React.useEffect(() => {
     if (employeeForGallery?._id) {
@@ -379,43 +379,36 @@ const EmployeeGalleryModal = () => {
 
   return (
     <dialog
-      className={` modal ${loading && " cursor-wait "} `}
+      className={` modal md:px-2 ${loading && " cursor-wait "} `}
       id="EmployeeGalleryModal"
     >
       <div className="w-full h-full flex flex-col gap-8 relative backdrop-blur-md rounded-box shadow-xl overflow-y-auto">
         {/* close button */}
         <form
-          className=" w-full h-max flex justify-between items-center sticky z-50 p-4 shadow-lg "
+          className=" w-full h-max flex justify-end items-center sticky top-2 z-50 pr-2"
           method="dialog"
           id="closeButton"
         >
-          <span className="flex items-center max-w-[90vw] text-white font-[550] tracking-[0.2em] text-xl">
-            {employeeForGallery?.firstName} {employeeForGallery?.lastName}
-          </span>
           <button className=" close-button " onClick={handleClose}></button>
         </form>
 
         <Confirmation />
         <Toast />
 
-        <div
-          className={`${
-            !employeeImageGallery.length && !addedImages.length && "!columns-1"
-          } w-full columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 [&>div:not(:first-child)]:mt-5 p-5 pt-1`}
-        >
+        <div className="w-full flex flex-wrap gap-4 justify-center items-stretch mt-4 h-max min-h-[80vh] px-4   "> 
           {/* add image */}
           {AddImage()}
 
           {/* added images */}
           {addedImages.map((image, index) => (
-            <div className=" relative flex group border-4 border-info shadow-xl rounded-box overflow-clip">
+            <div className=" grow border-4 border-info relative flex items-center group rounded-box overflow-clip shadow-xl ">
               <Image
                 src={image}
                 width={200}
                 height={200}
                 alt={`addedImages${index}`}
                 key={`addedImages${index}`}
-                className={`${loading&&"loading loading-info"} w-full h-max select-none `}
+                className=" w-full h-[40vh] min-h-full select-none "
               />
               <div
                 className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0  
@@ -446,7 +439,7 @@ const EmployeeGalleryModal = () => {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-accent"
+                  className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
                   onClick={() => {
                     !loading && handleImageModalClick([addedImages[index]]);
                   }}
@@ -463,20 +456,21 @@ const EmployeeGalleryModal = () => {
 
           {/* old images */}
           {employeeImageGallery.map((image, index) => (
-            <div className="relative flex group border-4 border-transparent shadow-xl rounded-box overflow-clip">
+            <div className="grow relative rounded-box overflow-clip group border-4 border-transparent shadow-xl ">
               <Image
                 src={image}
                 width={200}
                 height={200}
                 alt={`employeeImageGallery${index}`}
-                key={`employeeImageGallery${index}`} 
-                className={`${loading&&"loading loading-info"} w-full grow h-max select-none `}
+                key={`employeeImageGallery${index}`}
+                className=" w-full grow h-[40vh] min-h-full select-none relative"
               />
               <div
                 className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0  
                     size-[55%] top-[23%] left-[23%] absolute 
                     flex items-center justify-evenly"
               >
+                {/* delete */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

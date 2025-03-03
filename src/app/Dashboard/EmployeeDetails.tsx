@@ -360,7 +360,7 @@ const EmployeeDetails = () => {
               loading="lazy"
             ></Image>
           ) : (
-            <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center">
+            <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border rounded-box grid place-items-center">
               +
             </div>
           )}

@@ -63,10 +63,10 @@ const ImageModal = () => {
         <button onClick={handleClose} className="close-button"></button>
       </form>
       <div className=" h-[90vh] w-[90vw] relative pt-4">
-        <div className="carousel w-full h-full gap-1">
+        <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
             <div
-              className="carousel-item relative w-full items-center md:items-start justify-center group "
+              className="carousel-item relative w-full items-center md:items-start justify-center group"
               key={`item${index}`}
               id={`item${index}`}
             >

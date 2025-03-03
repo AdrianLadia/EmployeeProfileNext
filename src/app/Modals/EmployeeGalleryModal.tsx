@@ -21,6 +21,7 @@ const EmployeeGalleryModal = () => {
     userData,
     setToastOptions,
     setEmployeeForGallery,
+    router,
   } = useAppContext();
 
   const captureInputRef = React.useRef<HTMLInputElement>(null);
@@ -128,7 +129,6 @@ const EmployeeGalleryModal = () => {
         }
 
         const finalData = [...uploadedImages, ...employeeImageGallery];
-        // const finalData = [...addedImages, ...employeeImageGallery];
 
         const res = await serverRequests.updateEmployee(
           employeeForGallery,
@@ -160,6 +160,7 @@ const EmployeeGalleryModal = () => {
       console.error(e);
     } finally {
       setLoading(false);
+      router.refresh();
     }
   };
 
@@ -356,13 +357,12 @@ const EmployeeGalleryModal = () => {
     );
   };
 
-  // const downloadImage = async (imageUrl: string) => {
-  const downloadImage = async () => {
-    try {
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  // const downloadImage = async () => {
+  //   try {
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 
   React.useEffect(() => {
     if (employeeForGallery?._id) {
@@ -389,7 +389,7 @@ const EmployeeGalleryModal = () => {
           method="dialog"
           id="closeButton"
         >
-          <span className="flex items-center max-w-[90vw] text-white font-[550] tracking-[0.2em] text-xl">
+          <span className="flex items-center max-w-[90vw] text-white font-[550] tracking-[0.2em] text-xl indent-4">
             {employeeForGallery?.firstName} {employeeForGallery?.lastName}
           </span>
           <button className=" close-button " onClick={handleClose}></button>
@@ -408,14 +408,17 @@ const EmployeeGalleryModal = () => {
 
           {/* added images */}
           {addedImages.map((image, index) => (
-            <div className=" relative flex group border-4 border-info shadow-xl rounded-box overflow-clip">
+            <div
+              key={image + index}
+              className=" relative flex group border-4 border-info shadow-xl rounded-box overflow-clip"
+            >
               <Image
                 src={image}
                 width={200}
                 height={200}
                 alt={`addedImages${index}`}
                 key={`addedImages${index}`}
-                className={`${loading&&"loading loading-info"} w-full h-max select-none `}
+                className={` w-full h-max select-none `}
               />
               <div
                 className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0  
@@ -430,7 +433,9 @@ const EmployeeGalleryModal = () => {
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
                   onClick={() => {
-                    !loading && handleDeleteImage(index, "new");
+                    if (!loading) {
+                      handleDeleteImage(index, "new");
+                    }
                   }}
                 >
                   <path
@@ -448,7 +453,9 @@ const EmployeeGalleryModal = () => {
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-accent"
                   onClick={() => {
-                    !loading && handleImageModalClick([addedImages[index]]);
+                    if (!loading) {
+                      handleImageModalClick([addedImages[index]]);
+                    }
                   }}
                 >
                   <path
@@ -463,14 +470,14 @@ const EmployeeGalleryModal = () => {
 
           {/* old images */}
           {employeeImageGallery.map((image, index) => (
-            <div className="relative flex group border-4 border-transparent shadow-xl rounded-box overflow-clip">
+            <div key={image + index} className="relative flex group border-4 border-transparent shadow-xl rounded-box overflow-clip">
               <Image
                 src={image}
                 width={200}
                 height={200}
                 alt={`employeeImageGallery${index}`}
-                key={`employeeImageGallery${index}`} 
-                className={`${loading&&"loading loading-info"} w-full grow h-max select-none `}
+                key={`employeeImageGallery${index}`}
+                className={` w-full grow h-max select-none `}
               />
               <div
                 className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0  
@@ -485,7 +492,9 @@ const EmployeeGalleryModal = () => {
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
                   onClick={() => {
-                    !loading && handleDeleteImage(index, "old");
+                    if (!loading) {
+                      handleDeleteImage(index, "old");
+                    }
                   }}
                 >
                   <path
@@ -495,7 +504,7 @@ const EmployeeGalleryModal = () => {
                   />
                 </svg>
 
-                <svg
+                {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -511,7 +520,7 @@ const EmployeeGalleryModal = () => {
                     strokeLinejoin="round"
                     d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
                   />
-                </svg>
+                </svg> */}
 
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -521,8 +530,9 @@ const EmployeeGalleryModal = () => {
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-accent"
                   onClick={() => {
-                    !loading &&
+                    if (!loading) {
                       handleImageModalClick([employeeImageGallery[index]]);
+                    }
                   }}
                 >
                   <path

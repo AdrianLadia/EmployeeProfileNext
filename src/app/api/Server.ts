@@ -12,8 +12,8 @@ class Server {
       productionDownload: 'http://127.0.0.1:80'
     };
 
-    // this.apiUrl = next_env === 'production' ? urls.productionApi : urls.localApi;
-    this.apiUrl = next_env === 'production' ? urls.productionApi : urls.productionApi;
+    this.apiUrl = next_env === 'production' ? urls.productionApi : urls.localApi;
+    // this.apiUrl = next_env === 'production' ? urls.productionApi : urls.productionApi;
     this.downloadUrl = next_env === 'production' ? urls.productionDownload : urls.localDownload;
   }
 }

@@ -357,12 +357,12 @@ const EmployeeGalleryModal = () => {
   };
 
   // const downloadImage = async (imageUrl: string) => {
-  const downloadImage = async () => {
-    try {
-    } catch (e) {
-      console.error(e);
-    }
-  }; 
+  // const downloadImage = async () => {
+  //   try {
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 
   React.useEffect(() => {
     if (employeeForGallery?._id) {
@@ -395,13 +395,16 @@ const EmployeeGalleryModal = () => {
         <Confirmation />
         <Toast />
 
-        <div className="w-full flex flex-wrap gap-4 justify-center items-stretch mt-4 h-max min-h-[80vh] px-4   "> 
+        <div className="w-full flex flex-wrap gap-4 justify-center items-stretch mt-4 h-max min-h-[80vh] px-4   ">
           {/* add image */}
           {AddImage()}
 
           {/* added images */}
           {addedImages.map((image, index) => (
-            <div className=" grow border-4 border-info relative flex items-center group rounded-box overflow-clip shadow-xl ">
+            <div
+              key={image + index}
+              className=" grow border-4 border-info relative flex items-center group rounded-box overflow-clip shadow-xl "
+            >
               <Image
                 src={image}
                 width={200}
@@ -423,7 +426,9 @@ const EmployeeGalleryModal = () => {
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
                   onClick={() => {
-                    !loading && handleDeleteImage(index, "new");
+                    if (!loading) {
+                      handleDeleteImage(index, "new");
+                    }
                   }}
                 >
                   <path
@@ -441,7 +446,9 @@ const EmployeeGalleryModal = () => {
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
                   onClick={() => {
-                    !loading && handleImageModalClick([addedImages[index]]);
+                    if (!loading) {
+                      handleImageModalClick([addedImages[index]]);
+                    }
                   }}
                 >
                   <path
@@ -456,7 +463,10 @@ const EmployeeGalleryModal = () => {
 
           {/* old images */}
           {employeeImageGallery.map((image, index) => (
-            <div className="grow relative rounded-box overflow-clip group border-4 border-transparent shadow-xl ">
+            <div
+              key={image + index}
+              className="grow relative rounded-box overflow-clip group border-4 border-transparent shadow-xl "
+            >
               <Image
                 src={image}
                 width={200}
@@ -479,7 +489,9 @@ const EmployeeGalleryModal = () => {
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 hover:text-error cursor-pointer"
                   onClick={() => {
-                    !loading && handleDeleteImage(index, "old");
+                    if (!loading) {
+                      handleDeleteImage(index, "old");
+                    }
                   }}
                 >
                   <path
@@ -489,15 +501,17 @@ const EmployeeGalleryModal = () => {
                   />
                 </svg>
 
-                <svg
+                {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-info"
-                  onClick={() => {
-                    !loading && downloadImage();
+                  onClick={() => { 
+                    if(!loading){
+                      downloadImage();
+                    }
                   }}
                 >
                   <path
@@ -505,7 +519,7 @@ const EmployeeGalleryModal = () => {
                     strokeLinejoin="round"
                     d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
                   />
-                </svg>
+                </svg> */}
 
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -515,8 +529,9 @@ const EmployeeGalleryModal = () => {
                   stroke="currentColor"
                   className="size-6 text-neutral-content opacity-0 group-hover:opacity-100 cursor-pointer hover:text-accent"
                   onClick={() => {
-                    !loading &&
+                    if (!loading) {
                       handleImageModalClick([employeeImageGallery[index]]);
+                    }
                   }}
                 >
                   <path

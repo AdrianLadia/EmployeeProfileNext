@@ -16,21 +16,7 @@ const ProfileMenu = () => {
 
   const handleMenuClick = () => {
     setShowMenu(!showMenu);
-  }  
-  
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {  
-        setShowMenu(false); 
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []); 
+  }   
 
   const modalRef = React.useRef<HTMLDivElement>(null);
 

@@ -9,21 +9,7 @@ const VideoModal = () => {
 
   const handleClose = () => {
     setVideoForModal("");
-  };
-
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClose();
-      }
-    };
-
-    videoModalRef.current?.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      videoModalRef.current?.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  }; 
 
   return (
     <dialog

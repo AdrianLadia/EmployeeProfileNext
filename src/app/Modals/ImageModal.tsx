@@ -66,7 +66,7 @@ const ImageModal = () => {
         <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
             <div
-              className="carousel-item relative w-full items-center md:items-start justify-center group"
+              className="carousel-item relative w-full items-center md:items-start justify-center group overflow-y-auto"
               key={`item${index}`}
               id={`item${index}`}
             >

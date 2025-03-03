@@ -43,21 +43,7 @@ const EmployeeMemoTableModal = () => {
 
   const handleClose = () => {
     setMemoForTableModal([] as Memo[]);
-  };
-
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClose();
-      }
-    };
-
-    memoTableModalRef.current?.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      memoTableModalRef.current?.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  }; 
 
   return (
     <dialog id="EmployeeMemoModal" className="modal " ref={memoTableModalRef}>

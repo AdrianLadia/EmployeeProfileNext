@@ -117,12 +117,23 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         if (dataToUpdate?.biodataPhotosList) {
           try {
+            const alreadyUploadedList: string[] = [];
+            const toUploadList: string[] = [];
+
+            formData?.biodataPhotosList?.map((item) => {
+              if (item.includes("data:image")) {
+                toUploadList.push(item);
+              } else {
+                alreadyUploadedList.push(item);
+              }
+            });
+
             const res = await upload.Images(
-              formData.biodataPhotosList || [],
+              toUploadList || [],
               `employees/${formData.firstName} ${formData.lastName}`,
               "biodataPhotosList"
             );
-            dataToUpdate.biodataPhotosList = res || [];
+            dataToUpdate.biodataPhotosList = res.concat(alreadyUploadedList);
           } catch (e) {
             console.error(e);
           }
@@ -130,12 +141,23 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         if (dataToUpdate?.resumePhotosList) {
           try {
+            const alreadyUploadedList: string[] = [];
+            const toUploadList: string[] = [];
+
+            formData?.resumePhotosList?.map((item) => {
+              if (item.includes("data:image")) {
+                toUploadList.push(item);
+              } else {
+                alreadyUploadedList.push(item);
+              }
+            });
+
             const res = await upload.Images(
-              formData.resumePhotosList || [],
+              toUploadList || [],
               `employees/${formData.firstName} ${formData.lastName}`,
               "resumePhotosList"
             );
-            dataToUpdate.resumePhotosList = res || [];
+            dataToUpdate.resumePhotosList = res.concat(alreadyUploadedList); 
           } catch (e) {
             console.error(e);
           }
@@ -143,12 +165,23 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         if (dataToUpdate?.employeeHouseRulesSignatureList) {
           try {
+            const alreadyUploadedList: string[] = [];
+            const toUploadList: string[] = [];
+
+            formData?.employeeHouseRulesSignatureList?.map((item) => {
+              if (item.includes("data:image")) {
+                toUploadList.push(item);
+              } else {
+                alreadyUploadedList.push(item);
+              }
+            });
+
             const res = await upload.Images(
-              formData.employeeHouseRulesSignatureList || [],
+              toUploadList || [],
               `employees/${formData.firstName} ${formData.lastName}`,
               "employeeHouseRulesSignatureList"
             );
-            dataToUpdate.employeeHouseRulesSignatureList = res || [];
+            dataToUpdate.employeeHouseRulesSignatureList = res.concat(alreadyUploadedList);
           } catch (e) {
             console.error(e);
           }
@@ -217,6 +250,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
+    const id = e.target.id as keyof Employee;
+
     if (files && files.length > 0) {
       const fileReaders = [];
       const fileDataUrls: string[] = [];
@@ -236,7 +271,11 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
               e.target.id === "photoOfPerson" ||
               e.target.id === "employeeSignature"
                 ? fileDataUrls[0]
-                : fileDataUrls
+                : formData?.[id] == null
+                ? fileDataUrls
+                : fileDataUrls.concat(
+                    Array.isArray(formData?.[id]) ? formData?.[id] : []
+                  );
 
             setFormData({
               ...formData,

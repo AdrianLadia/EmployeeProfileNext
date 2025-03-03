@@ -15,10 +15,13 @@ const ImageModal = () => {
 
   const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+
   const handleClose = () => {
     // router.replace(window.location.pathname, undefined);
     setImageListForModal([]);
     setImageModalId("");
+    setSelectedIndex(0)
   };
 
   const handleDelete = (index: number) => {
@@ -46,6 +49,10 @@ const ImageModal = () => {
     };
   }, []);
 
+  const handleViewImage = (index: number) => {
+    setSelectedIndex(index);
+  }  
+
   return (
     <dialog
       id="imageModal"
@@ -56,10 +63,10 @@ const ImageModal = () => {
         <button onClick={handleClose} className="close-button"></button>
       </form>
       <div className=" h-[90vh] w-[90vw] relative pt-4">
-        <div className="carousel w-full h-full gap-1">
+        <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
             <div
-              className="carousel-item relative w-full items-center md:items-start justify-center group "
+              className="carousel-item relative w-full items-center md:items-start justify-center group"
               key={`item${index}`}
               id={`item${index}`}
             >
@@ -106,6 +113,7 @@ const ImageModal = () => {
                     } top-[48%] right-2 absolute text-xl z-50 btn btn-sm btn-circle shadow-md shadow-gray-500 `}
                     key={`item${index + 1}`}
                     href={`#item${index + 1}`}
+                    onClick={() => handleViewImage(index + 1)}
                   >
                     {`>`}
                   </a>
@@ -116,12 +124,13 @@ const ImageModal = () => {
                     } top-[48%] left-2 absolute text-xl z-50 btn btn-sm btn-circle shadow-md shadow-gray-500`}
                     key={`item${index - 1}`}
                     href={`#item${index - 1}`}
+                    onClick={() => handleViewImage(index - 1)}
                   >
                     {`<`}
                   </a>
-                  <span className="absolute left-1/2 right-1/2 translate-x-[-50%] bottom-3.5 w-max badge z-20  ">
+                  {/* <span className="absolute left-1/2 right-1/2 translate-x-[-50%] bottom-3.5 w-max badge z-20  ">
                     {index + 1} of {imageListForModal.length}
-                  </span>
+                  </span> */}
                 </>
               )}
             </div>
@@ -129,13 +138,14 @@ const ImageModal = () => {
         </div>
       </div> 
 
-      <div className="w-[90vw] lg:w-[75vw] overflow-x-auto grid grid-flow-col place-items-center place-content-center gap-3 h-[10vh]">
+      <div className="w-[90vw] lg:w-[75vw] overflow-x-auto grid grid-flow-col place-items-center place-content-center gap-3">
         {imageListForModal.map((item, index) => (
           <a
             key={`item${index}`}
             href={`#item${index}`}
-            className={` rounded-box h-12 w-12 opacity-70 bg-red-100`}
-          >
+            className={`${selectedIndex == index ? " border-info " : " border-transparent " } rounded-box h-12 w-12 border-2`}
+            onClick={() => handleViewImage(index)}
+            >
             <Image className="h-full w-full rounded-box" src={item} quality={10} width={64} height={64} alt={"img" + index} />
           </a>
         ))}

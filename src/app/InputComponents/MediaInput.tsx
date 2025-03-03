@@ -102,7 +102,7 @@ const MediaInput: FC<MediaInputProps> = ({
               e.target.id === "photoOfPerson" ||
               e.target.id === "employeeSignature"
                 ? fileDataUrls[0]
-                : fileDataUrls.concat(mediaList || []);
+                : fileDataUrls;
 
             settingFunction(finalResult, e.target.id);
           }

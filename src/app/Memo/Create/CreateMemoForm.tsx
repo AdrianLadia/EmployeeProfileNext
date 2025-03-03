@@ -174,11 +174,15 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
-    if (files && files?.length > 0) {
+    const id = e.target.id as keyof Memo;
+
+    if (files && files.length > 0) {
+      // const isVideo = files[0].type.includes("video") ? true : false;
+
       const fileReaders = [];
       const fileDataUrls: string[] = [];
 
-      for (let i = 0; i < files?.length; i++) {
+      for (let i = 0; i < files.length; i++) {
         const reader = new FileReader();
         fileReaders.push(reader);
 
@@ -188,16 +192,12 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           fileDataUrls.push(reader.result as string);
 
           // Check if all files have been processed
-          if (fileDataUrls?.length === files?.length) {
-            const finalResult =
-              e.target.id === "photoOfPerson" ||
-              e.target.id == "employeeSignature"
-                ? fileDataUrls[0]
-                : fileDataUrls.concat(formData?.Employee ? formData.Employee[e.target.id as keyof Employee] as string[] : []);
+          if (fileDataUrls.length === files.length) {
+            const finalResult = fileDataUrls
 
             setFormData({
               ...formData,
-              [e.target.id]: finalResult,
+              [id]: finalResult,
             });
           }
         };
@@ -247,7 +247,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     }
 
     if (formData?.Employee?._id) {
-      // console.log(!formData?.Employee?.agency ); 
+      // console.log(!formData?.Employee?.agency );
       // console.log(formData?.Employee?.isRegular)
       if (!formData?.Employee?.company) {
         setToastOptions({
@@ -266,8 +266,9 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         });
         setEmployeeNeedsUpdate(true);
       } else if (
-        !formData?.Employee?.agency && !formData?.Employee?.isRegular
-      ) { 
+        !formData?.Employee?.agency &&
+        !formData?.Employee?.isRegular
+      ) {
         setToastOptions({
           open: true,
           message: `${formData?.Employee?.firstName} must be assigned to an agency or have a regular status`,

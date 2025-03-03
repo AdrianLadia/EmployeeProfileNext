@@ -37,19 +37,26 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   const [newEmployeeList, setNewEmployeeList] =
     React.useState<Employee[]>(employeeList);
 
-  const [sortOrder, setSortOrder] = React.useState<null | number>(1);
+  const [sortOrder, setSortOrder] = React.useState<{
+    id: string;
+    order: number;
+  }>({ id: "firstName", order: 1 });
 
   const searchParams = useSearchParams();
 
   const search = searchParams.get("search") || "";
 
-  const fetchEmployeeList = async () => {
+  const fetchEmployeeList = async (keyToSort: string) => {
     setLoading(true);
     try {
+      const number = keyToSort !== sortOrder.id ? 1 : sortOrder.order == 1 ? -1 : 1;
+
+      setSortOrder({ id: keyToSort, order: number });
+
       const res = await serverRequests.getEmployeeForDashboardAction(
         userData,
         1,
-        { keyToSort: "firstName", sortOrder: sortOrder }
+        { keyToSort: keyToSort, sortOrder: number }
       );
 
       if (res?.data) {
@@ -106,13 +113,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
 
     setFilteredEmployeeList(filteredListForTable as Employee[]);
     setLoading(false);
-  }, [search, newEmployeeList]);
-
-  useEffect(() => {
-    if (sortOrder == -1 || sortOrder == 1) {
-      fetchEmployeeList();
-    }
-  }, [sortOrder]);
+  }, [search, newEmployeeList]); 
 
   return (
     <table
@@ -127,8 +128,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             <div
               className="flex items-center gap-1 select-none"
               onClick={() => {
-                const order = sortOrder == 1 ? -1 : 1;
-                setSortOrder(order);
+                fetchEmployeeList("firstName");
               }}
             >
               Name
@@ -139,8 +139,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 strokeWidth={1.5}
                 stroke="currentColor"
                 className={`${
-                  sortOrder == -1 ? "bg-error rotate-180" : "bg-success"
-                } size-6 transition-all duration-300 rounded-full p-0.5` }
+                  sortOrder.id=="firstName" && sortOrder.order == -1 ? "bg-error rotate-180" : sortOrder.id=="firstName" && sortOrder.order == 1? "bg-success" : "bg-gray-400"
+                } size-6 transition-all duration-300 rounded-full p-0.5 cursor-pointer`}
               >
                 <path
                   strokeLinecap="round"
@@ -151,7 +151,32 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             </div>
           </th>
           <th>Address</th>
-          <th>Company</th>
+          <th>
+            <div
+              className="flex items-center gap-1 select-none"
+              onClick={() => {
+                fetchEmployeeList("company");
+              }}
+            >
+              Company
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className={`${
+                  sortOrder.id=="company" && sortOrder.order == -1 ? "bg-error rotate-180" : sortOrder.id=="company" && sortOrder.order == 1? "bg-success" : "bg-gray-400"
+                } size-6 transition-all duration-300 rounded-full p-0.5 cursor-pointer`}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                />
+              </svg>
+            </div>
+          </th>
           <th className="min-w-[10px]"></th>
         </tr>
       </thead>

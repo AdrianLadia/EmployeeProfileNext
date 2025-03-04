@@ -90,7 +90,7 @@ const ImageModal = () => {
       </form>
 
       {/*  */}
-      <div className={`${!imageListForModal.length && " hidden "} my-2 h-[87svh] w-[90vw] relative `}>
+      <div className={`${!imageListForModal.length && " hidden "} my-2 h-[83svh] w-[90vw] relative `}>
         <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
             <div
@@ -168,7 +168,7 @@ const ImageModal = () => {
         </div>
       </div>
 
-      <div className="w-[90vw] lg:w-[75vw] overflow-x-auto grid grid-flow-col place-items-center place-content-center gap-3">
+      <div className="w-[90vw] lg:w-[75vw] overflow-x-auto grid grid-flow-col place-items-center place-content-center gap-3 pt-2 ">
         {imageListForModal.map((item, index) => (
           <a
             key={`item${index}`}

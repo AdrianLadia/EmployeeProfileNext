@@ -70,7 +70,7 @@ const ImageModal = () => {
         method="dialog"
       >
         <div
-          className={` btn btn-sm h-8 w-max px-4 btn-circle text-xs`}
+          className={`${!imageListForModal.length &&"hidden"} btn btn-sm h-8 w-max px-4 btn-circle text-xs`}
           onClick={() => setFullHeight(!fullHeight)} 
           title="Toggle"
         >

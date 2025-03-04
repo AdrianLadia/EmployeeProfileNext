@@ -53,6 +53,8 @@ const ImageModal = () => {
     setSelectedIndex(index);
   };
 
+  const [fullHeight, setFullHeight] = React.useState(false);
+
   return (
     <dialog
       id="imageModal"
@@ -62,16 +64,57 @@ const ImageModal = () => {
       <form
         className={`${
           !imageListForModal.length
-            ? " !w-full !h-full flex items-center justify-center " 
+            ? " !w-full !h-full items-center justify-center "
             : " right-4 top-2 "
-        } absolute z-50 `}
+        } absolute z-50 flex gap-4`}
         method="dialog"
       >
+        <div
+          className={` btn btn-sm h-8 w-max px-4 btn-circle text-xs`}
+          onClick={() => setFullHeight(!fullHeight)} 
+          title="Toggle"
+        >
+          {fullHeight?"Container Height":"Max Height"}
+          {/* <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24" 
+            fill="currentColor"
+            className="size-5"
+          >
+            <line
+              x1="12"
+              y1="5"
+              x2="12"
+              y2="19"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <polygon points="6,8 12,2 18,8" fill="currentColor" />
+            <polygon points="6,16 12,22 18,16" fill="currentColor" />
+            <line
+              x1="4"
+              y1="0"
+              x2="20"
+              y2="0"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <line
+              x1="4"
+              y1="24"
+              x2="20"
+              y2="24"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>  */}
+        </div>
+
         <button
           onClick={handleClose}
           className={`${
             !imageListForModal.length &&
-            " !size-32 !text-3xl !font-[300] !text-white " 
+            " !size-32 !text-3xl !font-[300] !text-white "
           } close-button`}
         >
           {!imageListForModal.length && "X"}
@@ -111,7 +154,9 @@ const ImageModal = () => {
 
               {/*  */}
               <Image
-                className=" select-none "
+                className={`${
+                  fullHeight ? "  h-[80vh] " : "  "
+                } w-full md:w-max md:max-w-[80vw] select-none `}
                 width={800}
                 height={800}
                 src={image}

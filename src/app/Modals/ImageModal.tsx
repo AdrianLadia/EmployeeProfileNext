@@ -74,7 +74,7 @@ const ImageModal = () => {
           onClick={() => setFullHeight(!fullHeight)} 
           title="Toggle"
         >
-          {fullHeight?"Container Height":"Max Height"}
+          {fullHeight?"Contain Height":"Max Height"}
           {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24" 

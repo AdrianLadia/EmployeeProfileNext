@@ -48,7 +48,7 @@ const EmployeeMemoTableModal = () => {
   return (
     <dialog id="EmployeeMemoModal" className="modal " ref={memoTableModalRef}>
       <div className=" bg-transparent shadow-none gap-2 p-0 w-max">
-        <div className=" max-h-[80vh] w-[98vw] md:w-[80vw] rounded-box py-8 bg-base-200 px-6 flex justify-center items-center flex-col gap-2 relative ">
+        <div className=" max-h-[80svh] w-[98vw] md:w-[80vw] rounded-box py-8 bg-base-200 px-6 flex justify-center items-center flex-col gap-2 relative ">
           {/*  */}
           <form className="absolute top-2 right-2" method="dialog">
             <button

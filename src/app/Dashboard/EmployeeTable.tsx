@@ -192,7 +192,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             onClick={() => !loading && setSelectedEmployee(employee)}
             title="Select Employee"
           >
-            <th className="bg-opacity-0 backdrop-blur-md ">
+            <th className="bg-opacity-0 backdrop-blur-sm ">
               <div className="flex items-center gap-3 ">
                 <div className="avatar ">
                   <div className="mask mask-squircle h-12 w-12 ">

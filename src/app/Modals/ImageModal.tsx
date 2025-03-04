@@ -55,17 +55,21 @@ const ImageModal = () => {
 
   const [fullHeight, setFullHeight] = React.useState(false);
 
+  const [showDelete, setShowDelete] = React.useState(false);
+
   return (
     <dialog
       id="imageModal"
-      className="modal backdrop-blur-md !p-0 !m-0 overflow-hidden"
+      className="modal backdrop-blur-sm !p-0 !px-3"
       ref={imageModalRef}
     >
       {/*  */}
       <form
         className={`${
-          !imageListForModal.length ? " !h-[100svh] items-center justify-center " : " justify-end "
-        } z-50 flex gap-4 w-[100vw] pt-2 px-2 md:px-4`}
+          !imageListForModal.length
+            ? " !h-[100svh] items-center justify-center "
+            : " justify-end "
+        } z-[60] flex gap-4 w-full md:px-2 pt-2`}
         method="dialog"
       >
         <div
@@ -90,18 +94,25 @@ const ImageModal = () => {
       </form>
 
       {/*  */}
-      <div className={`${!imageListForModal.length && " hidden "} my-2 h-[83svh] w-[90vw] relative `}>
+      <div
+        className={`${
+          !imageListForModal.length && " hidden "
+        } my-2 h-[83svh] w-[90vw] relative `}
+      >
         <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
             <div
-              className="carousel-item relative w-full grid place-items-center group overflow-y-auto"
+              className="carousel-item relative w-full grid place-items-center group overflow-y-auto z-40"
               key={`item${index}`}
               id={`item${index}`}
             >
               {/*  */}
               <div
-                className={`${!imageModalId && " hidden "}
-                absolute top-1/2 bottom-1/2 translate-y-[-50%] bg-neutral p-24 rounded-full flex items-center text-neutral-content bg-opacity-0 group-hover:bg-opacity-50`}
+                className={`${!imageModalId && " hidden "} ${
+                  showDelete && "hidden"
+                }
+                absolute top-1/2 bottom-1/2 translate-y-[-50%] bg-neutral/60 p-24 rounded-full 
+                flex items-center text-neutral-content `}
               >
                 <span className="hover:text-error">
                   <svg
@@ -110,7 +121,7 @@ const ImageModal = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-6 cursor-pointer opacity-0 group-hover:opacity-100"
+                    className="size-6 cursor-pointer "
                     onClick={() => handleDelete(index)}
                   >
                     <path
@@ -125,12 +136,15 @@ const ImageModal = () => {
               {/*  */}
               <Image
                 className={`${
-                  fullHeight ? "  h-[80vh] " : "  "
+                  fullHeight ? "  h-[83svh] " : "  "
                 } w-full md:w-max md:max-w-[80vw] select-none `}
                 width={800}
                 height={800}
                 src={image}
                 alt=""
+                onClick={() => {
+                  setShowDelete(!showDelete);
+                }}
               />
 
               {/*  */}
@@ -143,7 +157,11 @@ const ImageModal = () => {
                     } top-[48%] right-2 absolute text-xl z-50 btn btn-sm btn-circle shadow-md shadow-gray-500 `}
                     key={`item${index + 1}`}
                     href={`#item${index + 1}`}
-                    onClick={() => handleViewImage(index + 1)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewImage(index + 1);
+                    }}
+                    // onClick={() => handleViewImage(index + 1)}
                   >
                     {`>`}
                   </a>
@@ -154,7 +172,11 @@ const ImageModal = () => {
                     } top-[48%] left-2 absolute text-xl z-50 btn btn-sm btn-circle shadow-md shadow-gray-500`}
                     key={`item${index - 1}`}
                     href={`#item${index - 1}`}
-                    onClick={() => handleViewImage(index - 1)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewImage(index - 1);
+                    }}
+                    // onClick={() => handleViewImage(index - 1)}
                   >
                     {`<`}
                   </a>

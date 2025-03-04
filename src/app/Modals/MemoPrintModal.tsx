@@ -150,7 +150,7 @@ const PrintMemorandumModal = () => {
     >
       <div
         style={style}
-        className={` relative h-[90vh] w-[95vw] sm:w-[500px] md:min-w-[50vw] border bg-white text-black`}
+        className={` relative h-[90svh] w-[95vw] sm:w-[500px] md:min-w-[50vw] border bg-white text-black`}
       >
         <div className="w-full h-full overflow-auto pt-8 ">
           <div

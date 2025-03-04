@@ -375,7 +375,7 @@ const EmployeeGalleryModal = () => {
       className={` modal ${loading && " cursor-wait "} `}
       id="EmployeeGalleryModal"
     >
-      <div className="w-full h-full flex flex-col gap-8 relative backdrop-blur-md rounded-box shadow-xl overflow-y-auto">
+      <div className="w-full h-full flex flex-col gap-8 relative backdrop-blur-sm rounded-box shadow-xl overflow-y-auto">
         {/* close button */}
         <form
           className=" w-full h-max flex justify-between items-center sticky z-50 p-4 shadow-lg "

@@ -65,7 +65,7 @@ const ImageModal = () => {
         className={`${
           !imageListForModal.length
             ? " !w-full !h-full items-center justify-center "
-            : " right-4 top-2 "
+            : " right-2 md:right-4 top-2 "
         } absolute z-50 flex gap-4`}
         method="dialog"
       >

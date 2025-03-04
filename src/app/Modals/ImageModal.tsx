@@ -2,7 +2,7 @@ import React from "react";
 
 import { useAppContext } from "../GlobalContext";
 
-import Image from "next/image"; 
+import Image from "next/image";
 
 const ImageModal = () => {
   const {
@@ -21,7 +21,7 @@ const ImageModal = () => {
     // router.replace(window.location.pathname, undefined);
     setImageListForModal([]);
     setImageModalId("");
-    setSelectedIndex(0)
+    setSelectedIndex(0);
   };
 
   const handleDelete = (index: number) => {
@@ -51,7 +51,7 @@ const ImageModal = () => {
 
   const handleViewImage = (index: number) => {
     setSelectedIndex(index);
-  }  
+  };
 
   return (
     <dialog
@@ -59,14 +59,29 @@ const ImageModal = () => {
       className="modal backdrop-blur-md !p-0 "
       ref={imageModalRef}
     >
-      <form className="absolute right-4 top-2 z-50 " method="dialog">
-        <button onClick={handleClose} className="close-button"></button>
+      <form
+        className={`${
+          !imageListForModal.length
+            ? " !w-full !h-full flex items-center justify-center " 
+            : " right-4 top-2 "
+        } absolute z-50 `}
+        method="dialog"
+      >
+        <button
+          onClick={handleClose}
+          className={`${
+            !imageListForModal.length &&
+            " !size-32 !text-3xl !font-[300] !text-white " 
+          } close-button`}
+        >
+          {!imageListForModal.length && "X"}
+        </button>
       </form>
       <div className=" h-[90vh] w-[90vw] relative pt-4">
         <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
             <div
-              className="carousel-item relative w-full items-center md:items-start justify-center group overflow-y-auto"
+              className="carousel-item relative w-full grid place-items-center group overflow-y-auto"
               key={`item${index}`}
               id={`item${index}`}
             >
@@ -96,7 +111,7 @@ const ImageModal = () => {
 
               {/*  */}
               <Image
-                className=" lg:h-full grow md:grow-0 select-none "
+                className=" select-none "
                 width={800}
                 height={800}
                 src={image}
@@ -136,17 +151,26 @@ const ImageModal = () => {
             </div>
           ))}
         </div>
-      </div> 
+      </div>
 
       <div className="w-[90vw] lg:w-[75vw] overflow-x-auto grid grid-flow-col place-items-center place-content-center gap-3">
         {imageListForModal.map((item, index) => (
           <a
             key={`item${index}`}
             href={`#item${index}`}
-            className={`${selectedIndex == index ? " border-info " : " border-transparent " } rounded-box h-12 w-12 border-2`}
+            className={`${
+              selectedIndex == index ? " border-info " : " border-transparent "
+            } rounded-box h-12 w-12 border-2`}
             onClick={() => handleViewImage(index)}
-            >
-            <Image className="h-full w-full rounded-box" src={item} quality={10} width={64} height={64} alt={"img" + index} />
+          >
+            <Image
+              className="h-full w-full rounded-box"
+              src={item}
+              quality={10}
+              width={64}
+              height={64}
+              alt={"img" + index}
+            />
           </a>
         ))}
       </div>

@@ -58,56 +58,24 @@ const ImageModal = () => {
   return (
     <dialog
       id="imageModal"
-      className="modal backdrop-blur-md !p-0 "
+      className="modal backdrop-blur-md !p-0 !m-0 overflow-hidden"
       ref={imageModalRef}
     >
+      {/*  */}
       <form
         className={`${
-          !imageListForModal.length
-            ? " !w-full !h-full items-center justify-center "
-            : " right-2 md:right-4 top-2 "
-        } absolute z-50 flex gap-4`}
+          !imageListForModal.length ? " !h-[100svh] items-center justify-center " : " justify-end "
+        } z-50 flex gap-4 w-[100vw] pt-2 px-2 md:px-4`}
         method="dialog"
       >
         <div
-          className={`${!imageListForModal.length &&"hidden"} btn btn-sm h-8 w-max px-4 btn-circle text-xs`}
-          onClick={() => setFullHeight(!fullHeight)} 
+          className={`${
+            !imageListForModal.length && "hidden"
+          } btn btn-sm h-8 w-max px-4 btn-circle text-xs`}
+          onClick={() => setFullHeight(!fullHeight)}
           title="Toggle"
         >
-          {fullHeight?"Contain Height":"Max Height"}
-          {/* <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24" 
-            fill="currentColor"
-            className="size-5"
-          >
-            <line
-              x1="12"
-              y1="5"
-              x2="12"
-              y2="19"
-              stroke="currentColor"
-              stroke-width="2"
-            />
-            <polygon points="6,8 12,2 18,8" fill="currentColor" />
-            <polygon points="6,16 12,22 18,16" fill="currentColor" />
-            <line
-              x1="4"
-              y1="0"
-              x2="20"
-              y2="0"
-              stroke="currentColor"
-              stroke-width="2"
-            />
-            <line
-              x1="4"
-              y1="24"
-              x2="20"
-              y2="24"
-              stroke="currentColor"
-              stroke-width="2"
-            />
-          </svg>  */}
+          {fullHeight ? "Contain Height" : "Max Height"}
         </div>
 
         <button
@@ -120,7 +88,9 @@ const ImageModal = () => {
           {!imageListForModal.length && "X"}
         </button>
       </form>
-      <div className=" h-[90vh] w-[90vw] relative pt-4">
+
+      {/*  */}
+      <div className={`${!imageListForModal.length && " hidden "} my-2 h-[87svh] w-[90vw] relative `}>
         <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
             <div

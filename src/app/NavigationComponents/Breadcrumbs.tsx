@@ -45,7 +45,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         className={`
         ${fixed && `${position.x} ${position.y} fixed z-30`} 
         breadcrumbs text-sm w-[70%]
-        flex md:flex-col 2xl:flex-row items-center md:items-start 2xl:items-center md:overflow-hidden
+        hidden md:flex md:flex-col 2xl:flex-row items-center md:items-start 2xl:items-center md:overflow-hidden
       `}
       >
         <ul className="flex !justify-start !items-start text-start md:!flex-col 2xl:!flex-row relative ">

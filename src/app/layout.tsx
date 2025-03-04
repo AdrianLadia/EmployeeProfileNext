@@ -40,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` ${poppins.variable} overflow-x-clip pb-32 md:pb-0`}>
+      <body className={` ${poppins.variable} overflow-x-clip `}>
         <SessionProvider session={session}>
           <ContextProvider>
             <ProfileMenu />

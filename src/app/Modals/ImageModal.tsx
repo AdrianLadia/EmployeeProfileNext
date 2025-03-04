@@ -53,7 +53,7 @@ const ImageModal = () => {
     setSelectedIndex(index);
   };
 
-  const [fullHeight, setFullHeight] = React.useState(false);
+  const [fullHeight, setFullHeight] = React.useState(true);
 
   const [showDelete, setShowDelete] = React.useState(false);
 

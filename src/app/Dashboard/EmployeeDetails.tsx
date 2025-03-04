@@ -350,20 +350,34 @@ const EmployeeDetails = () => {
           onClick={() => handleGalleryModalClick(selectedEmployeeDetails)}
         >
           Gallery
-          {selectedEmployeeDetails?.employeeImageGallery?.[0] ? (
-            <Image
-              className={`w-8 h-8 border `}
-              src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
-              alt={"employeeImageGallery"}
-              width={100}
-              height={100}
-              loading="lazy"
-            ></Image>
-          ) : (
-            <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center">
-              +
-            </div>
-          )}
+          <div className="flex gap-1">
+            {selectedEmployeeDetails?.employeeImageGallery?.[0] ? (
+              <>
+                <Image
+                  className={`w-8 h-8 border `}
+                  src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
+                  alt={"employeeImageGallery"}
+                  width={100}
+                  height={100}
+                  loading="lazy"
+                />
+                <div
+                  className={`${
+                    selectedEmployeeDetails?.employeeImageGallery?.length < 3 &&
+                    "hidden"
+                  } w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center`}
+                >
+                  {`+${
+                    selectedEmployeeDetails?.employeeImageGallery?.length - 1
+                  }`}
+                </div>
+              </>
+            ) : (
+              <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center">
+                +
+              </div>
+            )}
+          </div>
         </div>
 
         {detailSkeleton()}

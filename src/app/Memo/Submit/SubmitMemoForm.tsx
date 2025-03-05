@@ -15,7 +15,6 @@ import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
 
 import Image from "next/image";
-import { Employee } from "@/app/schemas/EmployeeSchema";
 
 interface CreateMemoFormProps {
   memoList: Memo[];
@@ -33,7 +32,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     imageListForModal,
     imageModalId,
     handleVideoModalClick,
-    setImageModalId
+    setImageModalId,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -44,7 +43,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
   const [filteredMemos, setFilteredMemos] = useState<Memo[]>([]);
 
-  const [submittedMemos, setSubmittedMemos] = useState<string[]>([]); 
+  const [submittedMemos, setSubmittedMemos] = useState<string[]>([]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -136,49 +135,53 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files; 
-  
-      const id = e.target.id as keyof Memo;
-  
-      if (files && files.length > 0) {
-        const isVideo = files[0].type.includes("video") ? true : false;
-  
-        const fileReaders = [];
-        const fileDataUrls: string[] = [];
-  
-        for (let i = 0; i < files.length; i++) {
-          const reader = new FileReader();
-          fileReaders.push(reader);
-  
-          reader.readAsDataURL(files[i]);
-  
-          reader.onloadend = async () => {
-            fileDataUrls.push(reader.result as string);
-  
-            if (fileDataUrls.length === files.length) {
-              setLoading(true);
-              setImageModalId(id);
-              const res = await upload.Images(fileDataUrls, `${id}${isVideo&&"video"}${i}`, "id");
-  
-              const finalResult =
-                formData?.[id] == null
-                  ? res
-                  : res.concat(
-                      Array.isArray(formData?.[id]) ? formData?.[id] : []
-                    );
-  
-              setFormData({
-                ...formData,
-                [id]: finalResult,
-              }); 
+    const files = e.target.files;
 
-              setImageModalId("");
-              setLoading(false);
-            } 
-          };
-        }
+    const id = e.target.id as keyof Memo;
+
+    if (files && files.length > 0) {
+      const isVideo = files[0].type.includes("video") ? true : false;
+
+      const fileReaders = [];
+      const fileDataUrls: string[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        fileReaders.push(reader);
+
+        reader.readAsDataURL(files[i]);
+
+        reader.onloadend = async () => {
+          fileDataUrls.push(reader.result as string);
+
+          if (fileDataUrls.length === files.length) {
+            setLoading(true);
+            setImageModalId(id);
+            const res = await upload.Images(
+              fileDataUrls,
+              `${id}${isVideo && "video"}${i}`,
+              "id"
+            );
+
+            const finalResult =
+              formData?.[id] == null
+                ? res
+                : res.concat(
+                    Array.isArray(formData?.[id]) ? formData?.[id] : []
+                  );
+
+            setFormData({
+              ...formData,
+              [id]: finalResult,
+            });
+
+            setImageModalId("");
+            setLoading(false);
+          }
+        };
       }
-    }; 
+    }
+  };
 
   const filterMemos = (memoList: Memo[]) => {
     const filteredMemos = memoList.filter(

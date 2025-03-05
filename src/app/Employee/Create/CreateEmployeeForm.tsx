@@ -9,16 +9,12 @@ import MediaInput from "@/app/InputComponents/MediaInput";
 
 import { Employee } from "@/app/schemas/EmployeeSchema";
 
-import FirebaseUpload from "@/app/api/FirebaseUpload";
-
 import SelectPlus from "@/app/InputComponents/SelectPlus";
 
 import SignatureComponent from "../Signature/SignatureComponent";
 
 const CreateEmployeeForm = () => {
   const [show, setShow] = useState(true);
-
-  const upload = new FirebaseUpload();
 
   const {
     setToastOptions,
@@ -318,7 +314,7 @@ const CreateEmployeeForm = () => {
           {/* Phone Number */}
           <div className="flex flex-col text-sm gap-2 w-full md:w-[48%]">
             Phone Number
-            <label className="input input-bordered flex items-center gap-2"> 
+            <label className="input input-bordered flex items-center gap-2">
               <input
                 type="text"
                 className="grow"
@@ -332,7 +328,7 @@ const CreateEmployeeForm = () => {
           {/* E-mail */}
           <div className="flex flex-col text-sm gap-2 w-full md:w-[48%]">
             E-mail
-            <label className="input input-bordered flex items-center gap-2"> 
+            <label className="input input-bordered flex items-center gap-2">
               <input
                 type="email"
                 className="grow"
@@ -433,7 +429,7 @@ const CreateEmployeeForm = () => {
                     ? null
                     : newValue
                     ? [newValue?.toString()]
-                    : null; 
+                    : null;
                 setFormData({ ...formData, agency: valueToPass as string });
               }}
             />
@@ -456,7 +452,7 @@ const CreateEmployeeForm = () => {
                     ? null
                     : newValue
                     ? [newValue?.toString()]
-                    : null; 
+                    : null;
                 setFormData({ ...formData, company: valueToPass as string });
               }}
             />

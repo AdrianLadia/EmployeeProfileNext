@@ -35,6 +35,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     pathname,
     imageListForModal,
     imageModalId,
+    setImageModalId,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -89,103 +90,103 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
     if (confirmed) {
       try {
-        if (dataToUpdate?.photoOfPerson) {
-          try {
-            const res = await upload.Images(
-              [formData.photoOfPerson || ""],
-              `employees/${formData.firstName} ${formData.lastName}`,
-              "photoOfPerson"
-            );
-            dataToUpdate.photoOfPerson = res[0] || "";
-          } catch (e) {
-            console.error(e);
-          }
-        }
+        // if (dataToUpdate?.photoOfPerson) {
+        //   try {
+        //     const res = await upload.Images(
+        //       [formData.photoOfPerson || ""],
+        //       `employees/${formData.firstName} ${formData.lastName}`,
+        //       "photoOfPerson"
+        //     );
+        //     dataToUpdate.photoOfPerson = res[0] || "";
+        //   } catch (e) {
+        //     console.error(e);
+        //   }
+        // }
 
-        if (dataToUpdate?.employeeSignature) {
-          try {
-            const res = await upload.Images(
-              [formData.employeeSignature || ""],
-              `employees/${formData.firstName} ${formData.lastName}`,
-              "employeeSignature"
-            );
-            dataToUpdate.employeeSignature = res[0] || "";
-          } catch (e) {
-            console.error(e);
-          }
-        }
+        // if (dataToUpdate?.employeeSignature) {
+        //   try {
+        //     const res = await upload.Images(
+        //       [formData.employeeSignature || ""],
+        //       `employees/${formData.firstName} ${formData.lastName}`,
+        //       "employeeSignature"
+        //     );
+        //     dataToUpdate.employeeSignature = res[0] || "";
+        //   } catch (e) {
+        //     console.error(e);
+        //   }
+        // }
 
-        if (dataToUpdate?.biodataPhotosList) {
-          try {
-            const alreadyUploadedList: string[] = [];
-            const toUploadList: string[] = [];
+        // if (dataToUpdate?.biodataPhotosList) {
+        //   try {
+        //     const alreadyUploadedList: string[] = [];
+        //     const toUploadList: string[] = [];
 
-            formData?.biodataPhotosList?.map((item) => {
-              if (item.includes("data:image")) {
-                toUploadList.push(item);
-              } else {
-                alreadyUploadedList.push(item);
-              }
-            });
+        //     formData?.biodataPhotosList?.map((item) => {
+        //       if (item.includes("data:image")) {
+        //         toUploadList.push(item);
+        //       } else {
+        //         alreadyUploadedList.push(item);
+        //       }
+        //     });
 
-            const res = await upload.Images(
-              toUploadList || [],
-              `employees/${formData.firstName} ${formData.lastName}`,
-              "biodataPhotosList"
-            );
-            dataToUpdate.biodataPhotosList = res.concat(alreadyUploadedList);
-          } catch (e) {
-            console.error(e);
-          }
-        }
+        //     const res = await upload.Images(
+        //       toUploadList || [],
+        //       `employees/${formData.firstName} ${formData.lastName}`,
+        //       "biodataPhotosList"
+        //     );
+        //     dataToUpdate.biodataPhotosList = res.concat(alreadyUploadedList);
+        //   } catch (e) {
+        //     console.error(e);
+        //   }
+        // }
 
-        if (dataToUpdate?.resumePhotosList) {
-          try {
-            const alreadyUploadedList: string[] = [];
-            const toUploadList: string[] = [];
+        // if (dataToUpdate?.resumePhotosList) {
+        //   try {
+        //     const alreadyUploadedList: string[] = [];
+        //     const toUploadList: string[] = [];
 
-            formData?.resumePhotosList?.map((item) => {
-              if (item.includes("data:image")) {
-                toUploadList.push(item);
-              } else {
-                alreadyUploadedList.push(item);
-              }
-            });
+        //     formData?.resumePhotosList?.map((item) => {
+        //       if (item.includes("data:image")) {
+        //         toUploadList.push(item);
+        //       } else {
+        //         alreadyUploadedList.push(item);
+        //       }
+        //     });
 
-            const res = await upload.Images(
-              toUploadList || [],
-              `employees/${formData.firstName} ${formData.lastName}`,
-              "resumePhotosList"
-            );
-            dataToUpdate.resumePhotosList = res.concat(alreadyUploadedList); 
-          } catch (e) {
-            console.error(e);
-          }
-        }
+        //     const res = await upload.Images(
+        //       toUploadList || [],
+        //       `employees/${formData.firstName} ${formData.lastName}`,
+        //       "resumePhotosList"
+        //     );
+        //     dataToUpdate.resumePhotosList = res.concat(alreadyUploadedList);
+        //   } catch (e) {
+        //     console.error(e);
+        //   }
+        // }
 
-        if (dataToUpdate?.employeeHouseRulesSignatureList) {
-          try {
-            const alreadyUploadedList: string[] = [];
-            const toUploadList: string[] = [];
+        // if (dataToUpdate?.employeeHouseRulesSignatureList) {
+        //   try {
+        //     const alreadyUploadedList: string[] = [];
+        //     const toUploadList: string[] = [];
 
-            formData?.employeeHouseRulesSignatureList?.map((item) => {
-              if (item.includes("data:image")) {
-                toUploadList.push(item);
-              } else {
-                alreadyUploadedList.push(item);
-              }
-            });
+        //     formData?.employeeHouseRulesSignatureList?.map((item) => {
+        //       if (item.includes("data:image")) {
+        //         toUploadList.push(item);
+        //       } else {
+        //         alreadyUploadedList.push(item);
+        //       }
+        //     });
 
-            const res = await upload.Images(
-              toUploadList || [],
-              `employees/${formData.firstName} ${formData.lastName}`,
-              "employeeHouseRulesSignatureList"
-            );
-            dataToUpdate.employeeHouseRulesSignatureList = res.concat(alreadyUploadedList);
-          } catch (e) {
-            console.error(e);
-          }
-        }
+        //     const res = await upload.Images(
+        //       toUploadList || [],
+        //       `employees/${formData.firstName} ${formData.lastName}`,
+        //       "employeeHouseRulesSignatureList"
+        //     );
+        //     dataToUpdate.employeeHouseRulesSignatureList = res.concat(alreadyUploadedList);
+        //   } catch (e) {
+        //     console.error(e);
+        //   }
+        // }
 
         const form = e.target as HTMLFormElement;
 
@@ -262,30 +263,35 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         reader.readAsDataURL(files[i]);
 
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
           fileDataUrls.push(reader.result as string);
 
-          // Check if all files have been processed
           if (fileDataUrls.length === files.length) {
+            setLoading(true);
+            setImageModalId(id);
+            const res = await upload.Images(fileDataUrls, `${id}${i}`, "id");
+
             const finalResult =
-              e.target.id === "photoOfPerson" ||
-              e.target.id === "employeeSignature"
-                ? fileDataUrls[0]
+              id === "photoOfPerson" || id === "employeeSignature"
+                ? res[0]
                 : formData?.[id] == null
-                ? fileDataUrls
-                : fileDataUrls.concat(
+                ? res
+                : res.concat(
                     Array.isArray(formData?.[id]) ? formData?.[id] : []
                   );
 
             setFormData({
               ...formData,
-              [e.target.id]: finalResult,
+              [id]: finalResult,
             });
 
             setDataToUpdate({
               ...dataToUpdate,
-              [e.target.id]: finalResult,
+              [id]: finalResult,
             });
+
+            setLoading(false);
+            setImageModalId("");
           }
         };
       }

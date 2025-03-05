@@ -143,9 +143,9 @@ const EmployeeMemoTableModal = () => {
                               {memo?.MemoCode?.title}
                             </summary> */}
                           {/* <p className='btn btn-xs text-[.70rem] btn-neutral truncate' >{"remedialAction"}</p> */}
-                          <div className={`${!memo?.remedialAction && "hidden"} collapse-content flex flex-wrap gap-1 `}>
+                          <div className={` collapse-content flex flex-wrap gap-1 `}>
                             <p className="btn btn-xs text-[.70rem] btn-neutral truncate">
-                              {memo?.remedialAction || " "}
+                              {memo?.remedialAction || "No Offense"}
                             </p>
                             {/* {memo?.remedialAction?.map((action: string, index: number) => (
                                 <p className='btn btn-xs text-[.70rem] btn-neutral truncate' key={index}>{action}</p>

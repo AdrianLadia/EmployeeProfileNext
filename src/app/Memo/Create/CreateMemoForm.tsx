@@ -34,6 +34,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     imageListForModal,
     imageModalId,
     router,
+    setImageModalId,
   } = useAppContext();
 
   const [remedialAction, setRemedialAction] = useState<string>("");
@@ -95,30 +96,28 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           ...formData,
         };
 
-        if (formData?.mediaList) {
-          const isVideo = formData?.mediaList?.[0]?.includes("video")
-            ? "/video"
-            : "";
-          const res = await upload.Images(
-            formData?.mediaList,
-            `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}${isVideo}`,
-            "mediaList"
-          );
-          finalFormData.mediaList = res || [];
-        }
+        // if (formData?.mediaList) {
+        //   const isVideo = formData?.mediaList?.[0]?.includes("video")
+        //     ? "/video"
+        //     : "";
+        //   const res = await upload.Images(
+        //     formData?.mediaList,
+        //     `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}${isVideo}`,
+        //     "mediaList"
+        //   );
+        //   finalFormData.mediaList = res || [];
+        // }
 
-        if (formData?.memoPhotosList) {
-          const res = await upload.Images(
-            formData?.memoPhotosList,
-            `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
-            "memoPhotosList"
-          );
-          finalFormData.memoPhotosList = res || [];
-        }
+        // if (formData?.memoPhotosList) {
+        //   const res = await upload.Images(
+        //     formData?.memoPhotosList,
+        //     `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
+        //     "memoPhotosList"
+        //   );
+        //   finalFormData.memoPhotosList = res || [];
+        // }
 
-        const form = e.target as HTMLFormElement;
-
-        console.log(finalFormData);
+        const form = e.target as HTMLFormElement; 
 
         const res = await serverRequests.createMemo(finalFormData, userData);
 
@@ -177,7 +176,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     const id = e.target.id as keyof Memo;
 
     if (files && files.length > 0) {
-      // const isVideo = files[0].type.includes("video") ? true : false;
+      const isVideo = files[0].type.includes("video") ? true : false;
 
       const fileReaders = [];
       const fileDataUrls: string[] = [];
@@ -188,18 +187,29 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
 
         reader.readAsDataURL(files[i]);
 
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
           fileDataUrls.push(reader.result as string);
 
-          // Check if all files have been processed
-          if (fileDataUrls.length === files.length) {
-            const finalResult = fileDataUrls
+          if (fileDataUrls.length === files.length) { 
+            setLoading(true);
+            setImageModalId(id);
+            const res = await upload.Images(fileDataUrls, `${id}${i}`, `${isVideo&&"video"}id`);
+
+            const finalResult =
+              formData?.[id] == null
+                ? res
+                : res.concat(
+                    Array.isArray(formData?.[id]) ? formData?.[id] : []
+                  );
 
             setFormData({
               ...formData,
               [id]: finalResult,
             });
-          }
+
+            setImageModalId("");
+            setLoading(false);
+          } 
         };
       }
     }

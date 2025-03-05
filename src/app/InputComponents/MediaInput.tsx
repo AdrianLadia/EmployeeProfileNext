@@ -6,6 +6,8 @@ import { useAppContext } from "../GlobalContext";
 
 import { Employee } from "../schemas/EmployeeSchema";
 
+import FirebaseUpload from "../api/FirebaseUpload";
+
 interface MediaInputProps {
   id: string;
   title?: string;
@@ -42,17 +44,21 @@ const MediaInput: FC<MediaInputProps> = ({
     imageListForModal,
     imageModalId,
     handleVideoModalClick,
+    setLoading,
+    loading,
   } = useAppContext();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const captureInputRef = React.useRef<HTMLInputElement>(null);
   const videoInputRef = React.useRef<HTMLInputElement>(null);
 
+  const upload = new FirebaseUpload();
+
   const [hideTakePhoto, setHideTakePhoto] = React.useState(false);
 
   const [isVideo, setIsVideo] = React.useState(false);
 
-  React.useEffect(() => {
+  React.useEffect(() => { 
     if (mediaList?.[0]?.toLowerCase()?.includes("video")) {
       setIsVideo(true);
     } else {
@@ -74,7 +80,7 @@ const MediaInput: FC<MediaInputProps> = ({
           [id]:
             id === "photoOfPerson" || id === "employeeSignature"
               ? imageListForModal[0]
-              : imageListForModal
+              : imageListForModal,
         }));
       }
     }
@@ -86,6 +92,7 @@ const MediaInput: FC<MediaInputProps> = ({
     if (files && files.length > 0) {
       const fileReaders = [];
       const fileDataUrls: string[] = [];
+      const isVideo = files[0].type.includes("video") ? true : false;
 
       for (let i = 0; i < files.length; i++) {
         const reader = new FileReader();
@@ -93,18 +100,24 @@ const MediaInput: FC<MediaInputProps> = ({
 
         reader.readAsDataURL(files[i]);
 
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
           fileDataUrls.push(reader.result as string);
 
           // Check if all files have been processed
           if (fileDataUrls.length === files.length) {
+            setLoading(true);
+            setImageModalId(id);
+            const res = await upload.Images(fileDataUrls, `${id}${isVideo&&"video"}${i}`, "id");
+
             const finalResult =
               e.target.id === "photoOfPerson" ||
               e.target.id === "employeeSignature"
-                ? fileDataUrls[0]
-                : fileDataUrls;
+                ? res[0]
+                : res.concat(mediaList as string[]);
 
             settingFunction(finalResult, e.target.id);
+            setImageModalId("");
+            setLoading(false);
           }
         };
       }
@@ -113,7 +126,6 @@ const MediaInput: FC<MediaInputProps> = ({
 
   const settingFunction = (value: string | string[], id: string) => {
     if (setFunction) {
-      // const toPass = id === "photoOfPerson" || id === "employeeSignature" ? value : (Array.isArray(value) ? value.concat(mediaList || []) : value);
       setFunction((prev: Employee) => ({
         ...prev,
         [id]: value,
@@ -189,9 +201,9 @@ const MediaInput: FC<MediaInputProps> = ({
           className={` h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px] relative group`}
           title={`${mediaList?.length || 0} File(s)`}
         >
-          {!isVideo && (
+          {!isVideo && !!mediaList?.length && (
             <Image
-              className={`
+              className={` 
               ${mediaList?.length && "cursor-pointer border "} 
               h-[${imgDimensions?.height}px] w-[${
                 imgDimensions?.width
@@ -207,9 +219,15 @@ const MediaInput: FC<MediaInputProps> = ({
                   setImageModalId(id);
                 }
               }}
-              
             />
           )}
+
+          {/* {!mediaList?.length || (loading && imageModalId == id) && (
+            <div
+              className={`${loading && imageModalId == id && "skeleton"} h-[60px] w-[60px]
+                rounded-box flex items-center justify-center border`}
+            >?</div>
+          )} */}
 
           {isVideo && mediaList?.length && (
             <div
@@ -235,7 +253,11 @@ const MediaInput: FC<MediaInputProps> = ({
               }
             }}
           >
-            {mediaList?.length}
+            {loading && imageModalId == id && " animate-spin " ? (
+              <span className="animate-spin">C</span>
+            ) : (
+              mediaList?.length
+            )}
           </span>
         </div>
       </div>
@@ -244,19 +266,25 @@ const MediaInput: FC<MediaInputProps> = ({
       <div className="dropdown dropdown-top ">
         <div className={`${inputStyle}`} role="button" tabIndex={0}>
           <div
-            className={`${
-              !disable
+            className={` ${
+              loading && imageModalId == id
+                ? "bg-neutral-200 cursor-not-allowed"
+                : !disable && !loading
                 ? "bg-neutral text-neutral-content hover:bg-neutral-500"
                 : "bg-neutral-200 cursor-not-allowed"
             } h-full min-w-28 max-w-max font-semibold flex items-center justify-center px-3 select-none `}
           >
-            {mediaList?.length
-              ? ` ${mediaList?.length || 0} File(s)`
-              : "Choose File"}
+            {loading && imageModalId == id ? (
+              <span className="loading"></span>
+            ) : mediaList?.length ? (
+              ` ${mediaList?.length || 0} File(s)`
+            ) : (
+              "Choose File"
+            )}
           </div>
           <ul
             tabIndex={0}
-            className={`${
+            className={`${loading && " hidden "} ${
               disable && "hidden"
             } dropdown-content menu bg-base-100 rounded-box z-[1] border-2 border-neutral p-0.5 font-semibold `}
           >
@@ -332,23 +360,6 @@ const MediaInput: FC<MediaInputProps> = ({
           </ul>
         </div>
       </div>
-
-      {/* <div className={inputStyle + " flex justify-between m-0 p-0"}>
-        <input
-          type="file"
-          className={inputStyle + " border-0 outline-none text-transparent "}
-          id={id}
-          accept="image/*"
-          capture
-          required={required}
-          disabled={disable}
-          multiple={multiple}
-          onChange={(setFunction && handleFileChange) || onChangeHandler}
-        />
-        <h3 className="h-full flex items-center px-8">
-          {mediaList?.length || 0} File(s)
-        </h3>
-      </div> */}
     </div>
   );
 };

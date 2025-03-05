@@ -39,7 +39,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
       className={` 
         ${showMenu ? " top-[55px] md:top-[75px] " : " hidden "} right-0 md:right-2
         absolute shadow-lg border backdrop-blur-lg bg-base-300 duration-300 transition-all
-        w-[96vw] md:w-[330px] h-[83svh] md:max-h-[75svh] rounded-2xl z-50 
+        w-[96vw] md:w-[330px] h-[70svh] md:max-h-[75svh] rounded-2xl z-50 
         flex flex-col justify-between border-info overflow-auto overscroll-contain
       `}
     >

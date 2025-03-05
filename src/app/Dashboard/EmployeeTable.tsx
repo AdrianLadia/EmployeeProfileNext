@@ -49,7 +49,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   const fetchEmployeeList = async (keyToSort: string) => {
     setLoading(true);
     try {
-      const number = keyToSort !== sortOrder.id ? 1 : sortOrder.order == 1 ? -1 : 1;
+      const number =
+        keyToSort !== sortOrder.id ? 1 : sortOrder.order == 1 ? -1 : 1;
 
       setSortOrder({ id: keyToSort, order: number });
 
@@ -113,11 +114,11 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
 
     setFilteredEmployeeList(filteredListForTable as Employee[]);
     setLoading(false);
-  }, [search, newEmployeeList]); 
+  }, [search, newEmployeeList]);
 
   return (
     <table
-      className={`table w-full table-pin-rows ${
+      className={` table table-auto w-full table-pin-rows ${
         !employeeList.length ? " h-[88%] " : " h-max "
       } `}
     >
@@ -139,7 +140,11 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 strokeWidth={1.5}
                 stroke="currentColor"
                 className={`${
-                  sortOrder.id=="firstName" && sortOrder.order == -1 ? "bg-error rotate-180" : sortOrder.id=="firstName" && sortOrder.order == 1? "bg-success" : "bg-gray-400"
+                  sortOrder.id == "firstName" && sortOrder.order == -1
+                    ? "bg-error rotate-180"
+                    : sortOrder.id == "firstName" && sortOrder.order == 1
+                    ? "bg-success"
+                    : "bg-gray-400"
                 } size-6 transition-all duration-300 rounded-full p-0.5 cursor-pointer`}
               >
                 <path
@@ -150,7 +155,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
               </svg>
             </div>
           </th>
-          <th>Address</th>
+          {/* <th>Address</th> */}
           <th>
             <div
               className="flex items-center gap-1 select-none"
@@ -166,7 +171,11 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 strokeWidth={1.5}
                 stroke="currentColor"
                 className={`${
-                  sortOrder.id=="company" && sortOrder.order == -1 ? "bg-error rotate-180" : sortOrder.id=="company" && sortOrder.order == 1? "bg-success" : "bg-gray-400"
+                  sortOrder.id == "company" && sortOrder.order == -1
+                    ? "bg-error rotate-180"
+                    : sortOrder.id == "company" && sortOrder.order == 1
+                    ? "bg-success"
+                    : "bg-gray-400"
                 } size-6 transition-all duration-300 rounded-full p-0.5 cursor-pointer`}
               >
                 <path
@@ -218,23 +227,26 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       employee?.firstName + " " + employee?.lastName
                     )}
                   </div>
-                  <div className="text-sm opacity-80">
+                  <div className="text-xs opacity-80">
                     {highlightText(
+                      employee.address ? employee.address.toString() : ""
+                    )}
+                    {/* {highlightText(
                       employee.phoneNumber
                         ? employee.phoneNumber.toString()
                         : ""
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
             </th>
-            <td className="capitalize ">
+            {/* <td className="capitalize ">
               <div className="min-w-[45vw] md:min-w-[20vw]">
                 {highlightText(
                   employee.address ? employee.address.toString() : ""
                 )}
               </div>
-            </td>
+            </td> */}
             <td>
               {highlightText(
                 employee.company ? employee.company.toString() : ""
@@ -373,7 +385,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       <tfoot>
         <tr>
           <th>Name</th>
-          <th>Address</th>
+          {/* <th>Address</th> */}
           <th>Company</th>
           <th></th>
         </tr>

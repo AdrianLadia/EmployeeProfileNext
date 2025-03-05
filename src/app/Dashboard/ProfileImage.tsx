@@ -68,29 +68,6 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
     }
   };
 
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = e.target.files || [];
-
-  //   setLoading(true);
-
-  //   const reader = new FileReader();
-
-  //   reader.readAsDataURL(files[0]);
-
-  //   reader.onloadend = () => {
-  //     setUploadedPhoto(reader.result as string);
-  //   };
-
-  //   setLoading(false);
-
-  //   const timeout = setTimeout(() => {
-  //     open(e);
-  //     // handleSave(reader.result as string);
-  //   }, 500);
-
-  //   return () => clearTimeout(timeout);
-  // };
-
   const handleSave = async (image: string) => {
     const confirmed = await handleConfirmation(
       "Confirm Action?",
@@ -108,9 +85,6 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
             `employees/${employee.firstName}${employee.lastName}`,
             "photoOfPerson"
           );
-
-          console.log(uploadRes);
-
           photoURL = uploadRes[0];
         }
 
@@ -121,7 +95,6 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
         );
 
         if (res?.data) {
-          console.log(res.data);
           console.log("Image Successfully Saved");
 
           setToastOptions({
@@ -156,8 +129,62 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
         setLoading(false);
       }
     } else {
-      console.log("Cancelled");
-      setUploadedPhoto("")
+      setUploadedPhoto("");
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    const confirmed = await handleConfirmation(
+      "Confirm Action?",
+      `Remove Photo for ${employee?.firstName} ${employee?.lastName} `,
+      "error"
+    );
+
+    if (confirmed) {
+      setLoading(true);
+      try {
+        const res = await serverRequests.updateEmployeeProfilePicture(
+          employee?._id || "",
+          "",
+          userData
+        );
+
+        if (res?.data) { 
+          console.log("Image Successfully Removed");
+
+          setToastOptions({
+            open: true,
+            message: "Photo Removed",
+            type: "success",
+            timer: 3,
+          });
+
+          router.refresh();
+        }
+
+        if (res?.error) {
+          console.error(res.error);
+
+          setToastOptions({
+            open: true,
+            message: res.error || "Error",
+            type: "error",
+            timer: 15,
+          });
+        }
+      } catch (e) {
+        console.error(e);
+        setToastOptions({
+          open: true,
+          message: (e as Error).message || "Error",
+          type: "error",
+          timer: 15,
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
       setLoading(false);
     }
   };
@@ -299,6 +326,25 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ employee }) => {
               />
             </svg>
             Upload
+          </a>
+        </li>
+        <li className={`${employee?.photoOfPerson ? "" : "hidden"}`}>
+          <a onClick={handleRemoveImage}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="size-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776"
+              />
+            </svg>
+            Remove
           </a>
         </li>
       </ul>

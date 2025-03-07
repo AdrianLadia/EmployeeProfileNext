@@ -124,6 +124,16 @@ const MediaInput: React.FC<FileInputProps> = ({
     setMediaType(mediaType);
   }, [value]);
 
+  const mediaInputStyle = () => {
+    let style = "";
+
+    if (!(Array.isArray(value) ? value[0] : value) && props.required) {
+      style = ` tooltip-open tooltip-top tooltip `;
+    }
+
+    return ` ${style} `;
+  };
+
   return (
     <div className={`"flex flex-col items-center gap-1 ${props.width} `}>
       {/* preview image */}
@@ -138,7 +148,10 @@ const MediaInput: React.FC<FileInputProps> = ({
       </div>
 
       {/* upload button */}
-      <div className="dropdown dropdown-top w-full">
+      <div
+        className={` dropdown dropdown-top w-full ${mediaInputStyle()}`}
+        data-tip={"Required"}
+      >
         <div
           className={`${
             isLoading && "cursor-not-allowed pointer-events-none"
@@ -239,6 +252,7 @@ const MediaInput: React.FC<FileInputProps> = ({
         name="uploadInputRef"
         id="uploadInputRef"
         ref={uploadInputRef}
+        required={false}
         {...props}
       />
       <input
@@ -248,6 +262,7 @@ const MediaInput: React.FC<FileInputProps> = ({
         name="cameraInputRef"
         id="cameraInputRef"
         ref={cameraInputRef}
+        required={false}
         capture
         {...props}
       />
@@ -258,6 +273,7 @@ const MediaInput: React.FC<FileInputProps> = ({
         name="videoInputRef"
         id="videoInputRef"
         ref={videoInputRef}
+        required={false}
         {...props}
       />
     </div>

@@ -28,7 +28,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [formData, setFormData] = useState<Memo>({ } as Memo);
+  const [formData, setFormData] = useState<Memo>({} as Memo);
 
   const [filteredMemos, setFilteredMemos] = useState<Memo[]>([]);
 
@@ -49,9 +49,12 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
       try {
         const form = e.target as HTMLFormElement;
 
-        const finalFormData = {...formData}
+        const finalFormData = { ...formData };
 
-        const res = await serverRequests.deleteMemo(finalFormData as Memo, userData);
+        const res = await serverRequests.deleteMemo(
+          finalFormData as Memo,
+          userData
+        );
 
         if (res && res.data) {
           setToastOptions({
@@ -113,6 +116,13 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
       color: "inherit",
     }),
   };
+
+  useEffect(() => {
+    const res = memoList?.find(
+      (employee) => employee._id == window.location.hash.split("#")[1]
+    );
+    setFormData(res || ({} as Memo));
+  }, []);
 
   return (
     <form className={` form-style `} ref={formRef} onSubmit={handleSubmit}>

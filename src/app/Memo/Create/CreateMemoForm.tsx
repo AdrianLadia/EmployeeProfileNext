@@ -300,58 +300,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     }
     setKeysToUpdate('')
     setEmployeeNeedsUpdate(false);
-  }, [formData, userData]);
-
-  // React.useEffect(() => {
-  //   if (
-  //     formData?.Employee?._id &&
-  //     formData?.MemoCode?._id &&
-  //     formData.isWithOffense
-  //   ) {
-  //     getRemedialAction(
-  //       formData?.Employee?._id,
-  //       formData?.MemoCode?._id || "",
-  //       formData?.MemoCode?._version || 0
-  //     );
-  //   } else {
-  //     setRemedialAction("");
-  //   }
-
-  //   if (formData?.Employee?._id) {
-  //     if (!formData?.Employee?.company) {
-  //       setToastOptions({
-  //         open: true,
-  //         message: `${formData?.Employee?.firstName} has no company assigned`,
-  //         type: "warning",
-  //         timer: 5,
-  //       });
-  //       setEmployeeNeedsUpdate(true);
-  //     } else if (!formData?.Employee?.employeeHouseRulesSignatureList?.length) {
-  //       setToastOptions({
-  //         open: true,
-  //         message: `${formData?.Employee?.firstName} has not signed house rules`,
-  //         type: "warning",
-  //         timer: 5,
-  //       });
-  //       setEmployeeNeedsUpdate(true);
-  //     } else if (
-  //       !formData?.Employee?.agency &&
-  //       !formData?.Employee?.isRegular
-  //     ) {
-  //       setToastOptions({
-  //         open: true,
-  //         message: `${formData?.Employee?.firstName} must be assigned to an agency or have a regular status`,
-  //         type: "warning",
-  //         timer: 5,
-  //       });
-  //       setEmployeeNeedsUpdate(true);
-  //     } else {
-  //       setEmployeeNeedsUpdate(false);
-  //     }
-  //   } else {
-  //     setEmployeeNeedsUpdate(false);
-  //   }
-  // }, [userData, formData]);
+  }, [formData, userData]); 
 
   const selectStyle = {
     control: (base: unknown) => ({
@@ -412,7 +361,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             !employeeNeedsUpdate && " hidden "
           } btn btn-xs btn-warning italic hover:underline font-semibold cursor-pointer w-max`}
           onClick={() => {
-            router.push("/Employee/Update" + `${keysToUpdate&&`?${keysToUpdate}`} #${formData?.Employee?._id}`);
+            router.push("/Employee/Update" + `${keysToUpdate&&`?${keysToUpdate}`}#${formData?.Employee?._id}`);
           }}
         >
           Update {formData?.Employee?.firstName} {formData?.Employee?.lastName}{" "}

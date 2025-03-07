@@ -79,6 +79,15 @@ const CreateEmployeeForm = () => {
           _version: 0,
         };
 
+        if (formData.employeeSignature) {
+          const employeeSignature = await upload.Images(
+            [formData.employeeSignature],
+            `employees/${formData.firstName}${formData.lastName}`,
+            "employeeSignature"
+          );
+          finalFormData.employeeSignature = employeeSignature[0];
+        }
+
         const form = e.target as HTMLFormElement;
 
         const res = await serverRequests.createEmployee(

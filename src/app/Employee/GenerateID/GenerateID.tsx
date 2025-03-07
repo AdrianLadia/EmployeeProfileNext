@@ -84,7 +84,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
   const [keysToUpdate, setKeysToUpdate] = React.useState<string>("");
 
   React.useEffect(() => {
-    const keysToUpdate = [
+    const keyToUpdate = [
       !formData?.firstName && `firstName`,
       !formData?.lastName && `lastName`,
       !formData?.address && `address`,
@@ -97,7 +97,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
     const params = new URLSearchParams();
 
-    keysToUpdate.forEach((key) => params.append("key", key as string));
+    keyToUpdate.forEach((key) => params.append("key", key as string)); 
 
     setKeysToUpdate(params.toString());
   }, [formData]);

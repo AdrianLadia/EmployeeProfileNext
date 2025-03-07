@@ -4,11 +4,13 @@ import SignatureCanvas from "react-signature-canvas";
 
 interface SignatureComponentProps {
   title?: string;
+  titleStyle?: string;
   setSignatureImageUrl: (url: string) => void;
 }
 
 const SignatureComponent: React.FC<SignatureComponentProps> = ({
   title = "Sign Here",
+  titleStyle = "",
   setSignatureImageUrl,
 }) => {
   const sigCanvas = useRef<SignatureCanvas | null>(null);
@@ -39,19 +41,7 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
       sigCanvas.current.clear();
     }
     setLoading(false);
-  };
-
-  // const back = () => {
-  //   setLoading(true);
-  //   setSignatureImageUrl("");
-  //   setLoading(false);
-  // }
-
-  // const handleEnd = ( ) => {
-    // const canvas = sigCanvas.current?.isEmpty();
-    // console.log("Canvas:", canvas);
-    // setIsClear(Boolean(canvas));
-  // }
+  }; 
 
   const [canvasWidth, setCanvasWidth] = useState<number>(0);
 
@@ -68,7 +58,7 @@ const SignatureComponent: React.FC<SignatureComponentProps> = ({
       ref={canvasContainer}
       className="flex flex-col items-center w-full h-full"
     >
-      <span className="w-[100%]">{title}</span>
+      <span className={` !w-full ${titleStyle}`}>{title}</span>
       <div className="bg-white mt-2 border-2 border-black rounded-box w-max relative overflow-clip ">
         <SignatureCanvas
           ref={sigCanvas}

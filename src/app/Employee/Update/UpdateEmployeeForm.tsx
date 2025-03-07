@@ -92,105 +92,20 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
     if (confirmed) {
       try {
-        // if (dataToUpdate?.photoOfPerson) {
-        //   try {
-        //     const res = await upload.Images(
-        //       [formData.photoOfPerson || ""],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "photoOfPerson"
-        //     );
-        //     dataToUpdate.photoOfPerson = res[0] || "";
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
-        // if (dataToUpdate?.employeeSignature) {
-        //   try {
-        //     const res = await upload.Images(
-        //       [formData.employeeSignature || ""],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "employeeSignature"
-        //     );
-        //     dataToUpdate.employeeSignature = res[0] || "";
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
-        // if (dataToUpdate?.biodataPhotosList) {
-        //   try {
-        //     const alreadyUploadedList: string[] = [];
-        //     const toUploadList: string[] = [];
-
-        //     formData?.biodataPhotosList?.map((item) => {
-        //       if (item.includes("data:image")) {
-        //         toUploadList.push(item);
-        //       } else {
-        //         alreadyUploadedList.push(item);
-        //       }
-        //     });
-
-        //     const res = await upload.Images(
-        //       toUploadList || [],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "biodataPhotosList"
-        //     );
-        //     dataToUpdate.biodataPhotosList = res.concat(alreadyUploadedList);
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
-        // if (dataToUpdate?.resumePhotosList) {
-        //   try {
-        //     const alreadyUploadedList: string[] = [];
-        //     const toUploadList: string[] = [];
-
-        //     formData?.resumePhotosList?.map((item) => {
-        //       if (item.includes("data:image")) {
-        //         toUploadList.push(item);
-        //       } else {
-        //         alreadyUploadedList.push(item);
-        //       }
-        //     });
-
-        //     const res = await upload.Images(
-        //       toUploadList || [],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "resumePhotosList"
-        //     );
-        //     dataToUpdate.resumePhotosList = res.concat(alreadyUploadedList);
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
-        // if (dataToUpdate?.employeeHouseRulesSignatureList) {
-        //   try {
-        //     const alreadyUploadedList: string[] = [];
-        //     const toUploadList: string[] = [];
-
-        //     formData?.employeeHouseRulesSignatureList?.map((item) => {
-        //       if (item.includes("data:image")) {
-        //         toUploadList.push(item);
-        //       } else {
-        //         alreadyUploadedList.push(item);
-        //       }
-        //     });
-
-        //     const res = await upload.Images(
-        //       toUploadList || [],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "employeeHouseRulesSignatureList"
-        //     );
-        //     dataToUpdate.employeeHouseRulesSignatureList = res.concat(alreadyUploadedList);
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
         const form = e.target as HTMLFormElement;
+
+        if (dataToUpdate?.employeeSignature) {
+          try {
+            const res = await upload.Images(
+              [formData.employeeSignature || ""],
+              `employees/${formData.firstName} ${formData.lastName}`,
+              "employeeSignature"
+            );
+            dataToUpdate.employeeSignature = res[0] || "";
+          } catch (e) {
+            console.error(e);
+          }
+        }
 
         const res = await serverRequests.updateEmployee(
           selectedEmployee,
@@ -320,12 +235,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     }
   }, [selectedEmployee, formData]);
 
-  const labelStyle = (key?: string) => {
+  const labelStyle = (key?: string) => { 
     const style = `${
       !selectedEmployee?._id
         ? "text-gray-300"
-        : key && keysToUpdate.includes(key as string) 
-        ? " text-warning w-max cursor-default "
+        : key && keysToUpdate.includes(key as string)
+        ? " !text-warning cursor-default w-max "
         : " text- "
     }`;
     return style;
@@ -461,6 +376,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         ) : (
           <SignatureComponent
             title="Employee Signature"
+            titleStyle={` text-start ${labelStyle("employeeSignature")}`}
             setSignatureImageUrl={(url) => {
               if (url) {
                 setFormData({ ...formData, employeeSignature: url });
@@ -551,8 +467,9 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       </div>
 
       {/* address */}
-      <div className={`flex flex-col text-sm gap-2 ${labelStyle("address")}`}>
-        Address
+      <div className={`flex flex-col text-sm gap-2 `}>
+        <span className={`${labelStyle("address")}`}>Address</span>
+
         <textarea
           className="textarea textarea-bordered"
           placeholder="Address"
@@ -762,11 +679,9 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         <label
           className={`${
             formData?.agency && " hidden "
-          } label cursor-pointer flex justify-start gap-2 w-max`}
+          } label cursor-pointer flex justify-start gap-2 w-max `}
         >
-          <p className={`label-text text-base ${labelStyle("isRegular")}`}>
-            Is Regular?
-          </p>
+          <span className={` ${labelStyle("isRegular")} `}>Is Regular?</span>
           <input
             type="checkbox"
             className="checkbox"
@@ -782,9 +697,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         {/* isOJT */}
         <label className="label cursor-pointer flex justify-start gap-2 w-max">
-          <p className={`label-text text-base ${labelStyle("isRegular")}`}>
-            Is OJT?
-          </p>
+          <span className={` ${labelStyle("isOJT")} `}>Is OJT?</span>
           <input
             type="checkbox"
             className="checkbox"

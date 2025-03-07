@@ -289,7 +289,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
       <div className="flex gap-2 justify-center absolute bottom-5 left-0 w-full ">
         <button
           onClick={() => {
-            router.push("/Employee/Update" + `?${keysToUpdate} #${formData?._id}`);
+            router.push("/Employee/Update" + `${keysToUpdate&&`?${keysToUpdate}`}#${formData?._id}`);
           }}
           hidden={hasEmptyFields ? false : true}
           tabIndex={-1}

@@ -33,12 +33,18 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
       setLoading(true);
 
       let res;
-      
-      if(idURL.front && idURL.back){
-        // res = await serverRequests.updateEmployeeID(userData, formData?._id || ""); 
-        res = await serverRequests.generateEmployeeID(userData, formData?._id || "");
-      }else{
-        res = await serverRequests.generateEmployeeID(userData, formData?._id || "");
+
+      if (idURL.front && idURL.back) {
+        // res = await serverRequests.updateEmployeeID(userData, formData?._id || "");
+        res = await serverRequests.generateEmployeeID(
+          userData,
+          formData?._id || ""
+        );
+      } else {
+        res = await serverRequests.generateEmployeeID(
+          userData,
+          formData?._id || ""
+        );
       }
 
       if (res?.error) {
@@ -75,6 +81,27 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
     setIdURL({} as { front: string; back: string });
   }, [formData, hasEmptyFields]);
 
+  const [keysToUpdate, setKeysToUpdate] = React.useState<string>("");
+
+  React.useEffect(() => {
+    const keysToUpdate = [
+      !formData?.firstName && `firstName`,
+      !formData?.lastName && `lastName`,
+      !formData?.address && `address`,
+      !formData?.phoneNumber && `phoneNumber`,
+      !formData?.dateJoined && `dateJoined`,
+      !formData?.photoOfPerson && `photoOfPerson`,
+      !formData?.companyRole && `companyRole`,
+      !formData?.employeeSignature && `employeeSignature`,
+    ].filter(Boolean);
+
+    const params = new URLSearchParams();
+
+    keysToUpdate.forEach((key) => params.append("key", key as string));
+
+    setKeysToUpdate(params.toString());
+  }, [formData]);
+
   const fetchEmployeeID = async () => {
     try {
       setLoading(true);
@@ -92,11 +119,9 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
       if (chosenID) {
         setIdURL(chosenID.IDCardURL);
-      }else{
+      } else {
         setIdURL({ front: "", back: "" });
       }
-
-      
 
       if (res?.error) {
         console.error(res.error);
@@ -111,12 +136,15 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
   return (
     <>
       <div
-        className={` ${phase==1?" shadow-xl border":""} overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel `}
+        className={` ${
+          phase == 1 ? " shadow-xl border" : ""
+        } overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel `}
       >
         {/* select employee*/}
         <EmployeeSelection
           setPhase={setPhase}
           setHasEmptyFields={setHasEmptyFields}
+          keysToUpdate={keysToUpdate}
           hasEmptyFields={hasEmptyFields}
           setFormData={setFormData}
           formData={formData}

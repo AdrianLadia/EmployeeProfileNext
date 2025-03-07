@@ -14,6 +14,7 @@ interface EmployeeSelectionProps {
   setHasEmptyFields: (hasEmptyFields: boolean) => void;
   hasEmptyFields: boolean;
   setPhase: (phase: 1 | 2) => void;
+  keysToUpdate: string;
 }
 
 const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
@@ -23,6 +24,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
   setHasEmptyFields,
   hasEmptyFields = false,
   setPhase,
+  keysToUpdate
 }) => {
   const { router, pathname } = useAppContext();
 
@@ -287,7 +289,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
       <div className="flex gap-2 justify-center absolute bottom-5 left-0 w-full ">
         <button
           onClick={() => {
-            router.push("/Employee/Update#" + formData?._id);
+            router.push("/Employee/Update" + `?${keysToUpdate} #${formData?._id}`);
           }}
           hidden={hasEmptyFields ? false : true}
           tabIndex={-1}

@@ -21,7 +21,7 @@ const MediaInput: React.FC<FileInputProps> = ({
     handleVideoModalClick,
     loading,
     imageModalId,
-    setImageModalId
+    setImageModalId,
   } = useAppContext();
 
   const uploadInputRef = React.useRef<HTMLInputElement>(null);
@@ -59,9 +59,9 @@ const MediaInput: React.FC<FileInputProps> = ({
         (typeof value === "string" && value) ? (
           <div
             className="relative w-full h-full cursor-pointer group"
-            onClick={() =>{
-              setImageModalId(props.id as string)
-              handleImageModalClick(Array.isArray(value) ? value : [value])
+            onClick={() => {
+              setImageModalId(props.id as string);
+              handleImageModalClick(Array.isArray(value) ? value : [value]);
             }}
           >
             <Image
@@ -88,7 +88,7 @@ const MediaInput: React.FC<FileInputProps> = ({
           <div
             className={`${
               isLoading && "loading !loading-md loading-dots cursor-wait "
-            } grid place-content-center w-full h-full z-20 select-none text-neutral`}
+            } grid place-content-center w-full h-full z-20 select-none `}
           >
             ?
           </div>
@@ -125,10 +125,15 @@ const MediaInput: React.FC<FileInputProps> = ({
   }, [value]);
 
   return (
-    <div className={`"flex flex-col items-center gap-1 ${props.width}`}>
+    <div className={`"flex flex-col items-center gap-1 ${props.width} `}>
       {/* preview image */}
       <div className="flex justify-between w-full">
-        <h2 className="text-sm place-self-end">{props?.title}</h2>
+        <h2
+          onClick={handleUploadClick}
+          className={`text-sm place-self-end mb-2 ${className}`}
+        >
+          {props?.title}
+        </h2>
         {handlePreview()}
       </div>
 

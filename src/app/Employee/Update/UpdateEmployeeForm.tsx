@@ -11,7 +11,7 @@ import { useAppContext } from "@/app/GlobalContext";
 
 // import Image from 'next/image'
 
-import MediaInput from "@/app/InputComponents/MediaInput";
+import MediaInput from "../../InputComponents/MediaInput";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
@@ -250,7 +250,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-
     const id = e.target.id as keyof Employee;
 
     if (files && files.length > 0) {
@@ -267,31 +266,30 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           fileDataUrls.push(reader.result as string);
 
           if (fileDataUrls.length === files.length) {
-            setLoading(true);
             setImageModalId(id);
-            const res = await upload.Images(fileDataUrls, `${id}${i}`, "id");
-
-            const finalResult =
+            setLoading(true);
+            const res = await upload.Images(fileDataUrls, `${id}`, id);
+            const oldData =
+              id !== "photoOfPerson" &&
+              id !== "employeeSignature" &&
+              Array.isArray(formData[id]) &&
+              formData[id].length
+                ? formData[id]
+                : [];
+            const finalData =
               id === "photoOfPerson" || id === "employeeSignature"
                 ? res[0]
-                : formData?.[id] == null
-                ? res
-                : res.concat(
-                    Array.isArray(formData?.[id]) ? formData?.[id] : []
-                  );
+                : res.concat(oldData);
 
             setFormData({
               ...formData,
-              [id]: finalResult,
+              [id]: finalData,
             });
-
             setDataToUpdate({
               ...dataToUpdate,
-              [id]: finalResult,
+              [id]: finalData,
             });
-
             setLoading(false);
-            setImageModalId("");
           }
         };
       }
@@ -613,51 +611,47 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         <MediaInput
           id="photoOfPerson"
           title="Photo Of Person"
-          width="w-full"
-          inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-          imgDimensions={{ height: 60, width: 60 }}
-          mediaList={formData?.photoOfPerson ? [formData?.photoOfPerson] : []}
-          onChangeHandler={handleFileChange}
-          disable={disable}
+          width={"w-full"}
+          value={formData?.photoOfPerson as string}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleFileChange(e);
+          }}
         />
 
         {/* resumePhotosList */}
         <MediaInput
           id="resumePhotosList"
           title="Resume"
-          width="w-full md:w-[48%]"
-          inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
-          imgDimensions={{ height: 60, width: 60 }}
-          mediaList={formData?.resumePhotosList || []}
-          onChangeHandler={handleFileChange}
-          disable={disable}
+          value={formData?.resumePhotosList || []}
+          width={"w-full md:w-[48%]"}
           multiple={true}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleFileChange(e);
+          }}
         />
 
         {/* biodataPhotosList */}
         <MediaInput
           id="biodataPhotosList"
           title="Bio Data"
-          width="w-full md:w-[48%]"
-          inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
-          imgDimensions={{ height: 60, width: 60 }}
-          mediaList={formData?.biodataPhotosList || []}
-          onChangeHandler={handleFileChange}
-          disable={disable}
+          value={formData?.biodataPhotosList || []}
+          width={"w-full md:w-[48%]"}
           multiple={true}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleFileChange(e);
+          }}
         />
 
         {/* employeeHouseRulesSignatureList */}
         <MediaInput
           id="employeeHouseRulesSignatureList"
           title="House Rules Agreement"
-          width="w-full "
-          inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
-          imgDimensions={{ height: 60, width: 60 }}
-          mediaList={formData?.employeeHouseRulesSignatureList || []}
-          onChangeHandler={handleFileChange}
-          disable={disable}
+          width={"w-full"}
+          value={formData?.employeeHouseRulesSignatureList || []}
           multiple={true}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleFileChange(e);
+          }}
         />
       </div>
 

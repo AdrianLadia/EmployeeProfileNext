@@ -8,7 +8,7 @@ import { Memo } from "@/app/schemas/MemoSchema.ts";
 
 // import Image from 'next/image';
 
-import MediaInput from "@/app/InputComponents/MediaInput";
+import MediaInput from "../../InputComponents/MediaInput";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 
@@ -136,12 +136,9 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-
     const id = e.target.id as keyof Memo;
 
     if (files && files.length > 0) {
-      const isVideo = files[0].type.includes("video") ? true : false;
-
       const fileReaders = [];
       const fileDataUrls: string[] = [];
 
@@ -155,27 +152,19 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
           fileDataUrls.push(reader.result as string);
 
           if (fileDataUrls.length === files.length) {
-            setLoading(true);
             setImageModalId(id);
-            const res = await upload.Images(
-              fileDataUrls,
-              `${id}${isVideo && "video"}${i}`,
-              "id"
-            );
-
-            const finalResult =
-              formData?.[id] == null
-                ? res
-                : res.concat(
-                    Array.isArray(formData?.[id]) ? formData?.[id] : []
-                  );
+            setLoading(true);
+            const res = await upload.Images(fileDataUrls, `${id}`, id);
+            const oldData =
+              Array.isArray(formData[id]) && formData[id].length
+                ? formData[id]
+                : [];
+            const finalData = res.concat(oldData);
 
             setFormData({
               ...formData,
-              [id]: finalResult,
+              [id]: finalData,
             });
-
-            setImageModalId("");
             setLoading(false);
           }
         };
@@ -437,11 +426,8 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         id="memoPhotosList"
         title="Memo Photo"
         width="w-full"
-        inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-        imgDimensions={{ height: 60, width: 60 }}
-        mediaList={formData?.memoPhotosList || []}
-        // setFunction={setFormData}
-        onChangeHandler={handleFileChange}
+        value={formData?.memoPhotosList || []}
+        onChange={handleFileChange}
         required={!formData?.memoPhotosList?.length}
         multiple={true}
       />

@@ -21,7 +21,6 @@ const ImageModal = () => {
     // router.replace(window.location.pathname, undefined);
     setImageListForModal([]);
     setImageModalId("");
-    setSelectedIndex(0);
   };
 
   const handleDelete = (index: number) => {
@@ -195,15 +194,15 @@ const ImageModal = () => {
           <a
             key={`item${index}`}
             href={`#item${index}`}
-            className={`${
-              selectedIndex == index ? " border-info " : " border-transparent "
-            } rounded-box h-12 w-12 border-2`}
+            className={` rounded-box h-12 w-12 relative`}
             onClick={() => handleViewImage(index)}
           >
             <Image
-              className="h-full w-full rounded-box"
+              className="h-full w-full rounded-box border"
               src={item}
-              quality={10}
+              quality={1}
+              // layout="fill"
+              // objectFit="cover"
               width={64}
               height={64}
               alt={"img" + index}

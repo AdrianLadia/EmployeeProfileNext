@@ -13,7 +13,6 @@ const EmployeeMemoTableModal = () => {
     handleImageModalClick,
     handleMemoPrintModalClick,
     handleVideoModalClick,
-    router,
   } = useAppContext();
 
   const memoTableModalRef = React.useRef<HTMLDialogElement>(null);

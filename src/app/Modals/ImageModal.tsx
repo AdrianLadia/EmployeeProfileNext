@@ -13,12 +13,9 @@ const ImageModal = () => {
     setImageModalId,
   } = useAppContext();
 
-  const imageModalRef = React.useRef<HTMLDialogElement>(null);
+  const imageModalRef = React.useRef<HTMLDialogElement>(null); 
 
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-
-  const handleClose = () => {
-    // router.replace(window.location.pathname, undefined);
+  const handleClose = () => { 
     setImageListForModal([]);
     setImageModalId("");
   };
@@ -47,10 +44,6 @@ const ImageModal = () => {
       imageModalRef.current?.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-
-  const handleViewImage = (index: number) => {
-    setSelectedIndex(index);
-  };
 
   const [fullHeight, setFullHeight] = React.useState(true);
 
@@ -158,7 +151,7 @@ const ImageModal = () => {
                     href={`#item${index + 1}`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleViewImage(index + 1);
+                      // handleViewImage(index + 1);
                     }}
                     // onClick={() => handleViewImage(index + 1)}
                   >
@@ -173,7 +166,7 @@ const ImageModal = () => {
                     href={`#item${index - 1}`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleViewImage(index - 1);
+                      // handleViewImage(index - 1);
                     }}
                     // onClick={() => handleViewImage(index - 1)}
                   >
@@ -195,7 +188,7 @@ const ImageModal = () => {
             key={`item${index}`}
             href={`#item${index}`}
             className={` rounded-box h-12 w-12 relative`}
-            onClick={() => handleViewImage(index)}
+            // onClick={() => handleViewImage(index)}
           >
             <Image
               className="h-full w-full rounded-box border"

@@ -227,7 +227,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       employee?.firstName + " " + employee?.lastName
                     )}
                   </div>
-                  <div className="text-xs opacity-80">
+                  <div className="text-xs opacity-70">
                     {highlightText(
                       employee.address ? employee.address.toString() : ""
                     )}

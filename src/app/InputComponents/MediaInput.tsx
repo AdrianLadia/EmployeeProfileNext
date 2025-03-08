@@ -24,6 +24,8 @@ const MediaInput: React.FC<FileInputProps> = ({
     setImageModalId,
   } = useAppContext();
 
+  const { required, ...rest } = props;
+
   const uploadInputRef = React.useRef<HTMLInputElement>(null);
   const cameraInputRef = React.useRef<HTMLInputElement>(null);
   const videoInputRef = React.useRef<HTMLInputElement>(null);
@@ -125,13 +127,11 @@ const MediaInput: React.FC<FileInputProps> = ({
   }, [value]);
 
   const mediaInputStyle = () => {
-    let style = "";
-
-    if (!(Array.isArray(value) ? value[0] : value) && props.required) {
-      style = ` tooltip-open tooltip-top tooltip `;
+    if (!(Array.isArray(value) ? value[0] : value) && required) {
+      return "after:content-['*'] after:text-red-500 after:ml-1";
     }
-
-    return ` ${style} `;
+  
+    return "";
   };
 
   return (
@@ -140,7 +140,7 @@ const MediaInput: React.FC<FileInputProps> = ({
       <div className="flex justify-between w-full">
         <h2
           onClick={handleUploadClick}
-          className={`text-sm place-self-end mb-2 ${className}`}
+          className={`text-sm place-self-end mb-2 ${className} ${mediaInputStyle()}`}
         >
           {props?.title}
         </h2>
@@ -149,7 +149,7 @@ const MediaInput: React.FC<FileInputProps> = ({
 
       {/* upload button */}
       <div
-        className={` dropdown dropdown-top w-full ${mediaInputStyle()}`}
+        className={` dropdown dropdown-top w-full `}
         data-tip={"Required"}
       >
         <div
@@ -253,7 +253,7 @@ const MediaInput: React.FC<FileInputProps> = ({
         id="uploadInputRef"
         ref={uploadInputRef}
         required={false}
-        {...props}
+        {...rest}
       />
       <input
         className="hidden"
@@ -264,7 +264,7 @@ const MediaInput: React.FC<FileInputProps> = ({
         ref={cameraInputRef}
         required={false}
         capture
-        {...props}
+        {...rest}
       />
       <input
         className="hidden"
@@ -274,7 +274,7 @@ const MediaInput: React.FC<FileInputProps> = ({
         id="videoInputRef"
         ref={videoInputRef}
         required={false}
-        {...props}
+        {...rest}
       />
     </div>
   );

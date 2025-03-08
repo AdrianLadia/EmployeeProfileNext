@@ -71,7 +71,8 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
         formData?.dateJoined &&
         formData?.photoOfPerson &&
         formData?.companyRole &&
-        formData?.employeeSignature
+        formData?.employeeSignature &&
+        formData?.company
       )
     ) {
       setHasEmptyFields(true);
@@ -93,11 +94,14 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
       !formData?.photoOfPerson && `photoOfPerson`,
       !formData?.companyRole && `companyRole`,
       !formData?.employeeSignature && `employeeSignature`,
+      !formData?.company && `company`,
     ].filter(Boolean);
 
     const params = new URLSearchParams();
 
     keyToUpdate.forEach((key) => params.append("key", key as string)); 
+
+    console.log(params.toString());
 
     setKeysToUpdate(params.toString());
   }, [formData]);

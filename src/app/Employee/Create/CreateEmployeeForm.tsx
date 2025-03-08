@@ -16,7 +16,7 @@ import SignatureComponent from "../Signature/SignatureComponent";
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 
 const CreateEmployeeForm = () => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   const upload = new FirebaseUpload();
 
@@ -268,7 +268,7 @@ const CreateEmployeeForm = () => {
       ref={formRef}
       onSubmit={(e) => handleSubmit(e)}
     >
-      <h2 className="font-semibold w-max text-blue-500">Employee Registry</h2> 
+      <h2 className="font-semibold w-max text-blue-500">Employee Registry</h2>
 
       {/* name */}
       <div className="flex flex-wrap text-sm gap-2 justify-between">
@@ -297,21 +297,21 @@ const CreateEmployeeForm = () => {
       </div>
 
       {/* more details button */}
-      <div className="w-full flex justify-center">
-        <label
-          className="w-max flex justify-center items-center gap-2"
-          htmlFor="show"
-        >
-          <input
-            className="checkbox"
-            type="checkbox"
-            name="show"
-            id="show"
-            checked={show}
-            onChange={(e) => setShow(e.target.checked)}
-          />
-          More Details
-        </label>
+      <div
+        className="w-full flex justify-center select-none cursor-pointer"
+        onClick={() => setShow(!show)}
+      >
+        {show ? (
+          <p className="w-full relative flex items-center text-center">
+            <span className="flex-1 border-t border-dashed border-gray-300"></span>
+            <span className="px-4 text-gray-400">
+              Fields below are optional
+            </span>
+            <span className="flex-1 border-t border-dashed border-gray-300"></span>
+          </p>
+        ) : (
+          <p className="flex items-center gap-2">Add More Details? <input className="btn btn-xs btn-neutral btn-outline" type="button" value="Yes" /></p>
+        )}
       </div>
 
       <div

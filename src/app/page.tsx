@@ -16,8 +16,6 @@ import SearchBar from "./Dashboard/SearchBar";
 import { getUserData, getTestUserData } from "./api/UserData";
 import Link from "next/link";
 
-// import UploadOffenseButton from "./UploadOffenseButton";
-
 export const metadata = {
   title: "| Dashboard",
   description: "Employee Dashboard",
@@ -127,7 +125,7 @@ const Page = async () => {
           </div>
 
           {/* Table */}
-          <div className="w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-lg rounded-box flex flex-col items-start justify-between border order-1 lg:order-2">
+          <div className="w-[100%] max-h-[85svh] lg:h-[75%] p-4 shadow-lg rounded-box flex flex-col items-start justify-between border order-1 lg:order-2">
             <div className=" w-full overflow-auto h-full">
               <div className="flex flex-col md:flex-row p-1 justify-between items-center w-full">
                 <h2 className="text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full flex gap-2 items-center">

@@ -235,15 +235,15 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     }
   }, [selectedEmployee, formData]);
 
-  const labelStyle = (key?: string, value?: Boolean) => { 
-    const style = `${
-      !selectedEmployee?._id
-        ? "text-gray-300"
-        : key && keysToUpdate.includes(key as string) && !value
-        ? " !text-warning cursor-default w-max "
-        : " text- "
-    }`;
-    return style;
+  const labelStyle = (key?: string, value?: boolean) => {
+    if (!selectedEmployee?._id) return "text-gray-300";
+
+    if ((key && keysToUpdate.includes(key) && !value) || value == undefined) {
+      return `relative text-warning cursor-default w-max
+        before:content-['!'] before:badge before:badge-warning before:badge-sm before:rounded-box before:mr-1 `;
+    }
+
+    return "";
   };
 
   const selectStyle = {
@@ -354,7 +354,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       <>
         {formData?.employeeSignature && !updateSignature ? (
           <div className="flex flex-col w-full items-center">
-            <span className={`w-full ${labelStyle("employeeSignature"), Boolean(formData?.employeeSignature)}`}>
+            <span
+              className={`w-full ${
+                (labelStyle("employeeSignature"),
+                Boolean(formData?.employeeSignature))
+              }`}
+            >
               Employee Signature
             </span>
             <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip">
@@ -376,7 +381,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         ) : (
           <SignatureComponent
             title="Employee Signature"
-            titleStyle={` text-start ${labelStyle("employeeSignature", Boolean(formData?.employeeSignature))}`}
+            titleStyle={` text-start ${labelStyle(
+              "employeeSignature",
+              Boolean(formData?.employeeSignature)
+            )}`}
             setSignatureImageUrl={(url) => {
               if (url) {
                 setFormData({ ...formData, employeeSignature: url });
@@ -391,6 +399,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       </>
     );
   };
+
+  // console.log("")
 
   return (
     <form
@@ -431,13 +441,17 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       {/* name */}
       <div className={`flex flex-wrap justify-between text-sm gap-2 `}>
         <span
-          className={`w-full md:w-[48%] order-1 ${labelStyle("firstName", Boolean(formData?.firstName))}`}
+          className={`w-full md:w-[48%] order-1 ${labelStyle(
+            "firstName",
+            Boolean(formData?.firstName)
+          )}`}
         >
           First Name
         </span>
         <span
           className={`w-full md:w-[48%] order-3 md:order-2 ${labelStyle(
-            "lastName", Boolean(formData?.lastName)
+            "lastName",
+            Boolean(formData?.lastName)
           )}`}
         >
           Last Name
@@ -468,7 +482,11 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
       {/* address */}
       <div className={`flex flex-col text-sm gap-2 `}>
-        <span className={`${labelStyle("address", Boolean(formData?.address))}`}>Address</span>
+        <span
+          className={`${labelStyle("address", Boolean(formData?.address))}`}
+        >
+          Address
+        </span>
 
         <textarea
           className="textarea textarea-bordered"
@@ -487,7 +505,14 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       <div className="flex flex-col gap-2 justify-between md:flex-row">
         {/* Phone Number */}
         <div className={`flex flex-col text-sm gap-2 w-full md:w-[48%]`}>
-          <span className={`${labelStyle("phoneNumber", Boolean(formData?.phoneNumber))}`}>Phone Number</span>
+          <span
+            className={`${labelStyle(
+              "phoneNumber",
+              Boolean(formData?.phoneNumber)
+            )}`}
+          >
+            Phone Number
+          </span>
           <label className="input input-bordered flex items-center gap-2">
             <input
               type="text"
@@ -503,7 +528,9 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         {/* E-mail */}
         <div className={`flex flex-col text-sm gap-2 w-full md:w-[48%]`}>
-          <span className={`${labelStyle("email", Boolean(formData?.email))}`}>E-mail</span>
+          <span className={`${labelStyle("email", Boolean(formData?.email))}`}>
+            E-mail
+          </span>
 
           <label className="input input-bordered flex items-center gap-2">
             <input
@@ -532,7 +559,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             handleFileChange(e);
           }}
-          className={`${labelStyle("photoOfPerson", Boolean(formData?.photoOfPerson))}`}
+          className={`${labelStyle(
+            "photoOfPerson",
+            Boolean(formData?.photoOfPerson)
+          )}`}
         />
 
         {/* resumePhotosList */}
@@ -545,7 +575,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             handleFileChange(e);
           }}
-          className={`${labelStyle("resumePhotosList", Boolean(formData?.resumePhotosList?.[0]))}`}
+          className={`${labelStyle(
+            "resumePhotosList",
+            Boolean(formData?.resumePhotosList?.[0])
+          )}`}
         />
 
         {/* biodataPhotosList */}
@@ -558,7 +591,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             handleFileChange(e);
           }}
-          className={`${labelStyle("biodataPhotosList", Boolean(formData?.biodataPhotosList?.[0]))}`}
+          className={`${labelStyle(
+            "biodataPhotosList",
+            Boolean(formData?.biodataPhotosList?.[0])
+          )}`}
         />
 
         {/* employeeHouseRulesSignatureList */}
@@ -571,7 +607,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             handleFileChange(e);
           }}
-          className={`${labelStyle("employeeHouseRulesSignatureList", Boolean(formData?.employeeHouseRulesSignatureList?.[0]))}`}
+          className={`${labelStyle(
+            "employeeHouseRulesSignatureList",
+            Boolean(formData?.employeeHouseRulesSignatureList?.[0])
+          )}`}
         />
       </div>
 
@@ -579,7 +618,13 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
       {/* date Joined*/}
       <label className={`flex flex-col text-sm gap-2 `}>
-        <span className={`${labelStyle("dateJoined"), Boolean(formData?.dateJoined)}`}>Date Joined</span>
+        <span
+          className={`${
+            (labelStyle("dateJoined", Boolean(formData?.dateJoined)))
+          }`}
+        >
+          Date Joined
+        </span>
 
         <input
           type="date"
@@ -603,7 +648,11 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         } flex flex-wrap justify-between text-sm gap-2 `}
       >
         <div className="flex flex-col text-sm gap-2 w-full">
-          <span className={`${labelStyle("agency", Boolean(formData?.agency))}`}>Agency</span>
+          <span
+            className={`${labelStyle("agency", Boolean(formData?.agency))}`}
+          >
+            Agency
+          </span>
 
           <SelectPlus
             options={agencyOptions}
@@ -630,7 +679,11 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       {/* company */}
       <div className="flex flex-wrap justify-between text-sm gap-2 ">
         <div className="flex flex-col text-sm gap-2 w-full">
-          <span className={`${labelStyle("company", Boolean(formData?.company))}`}>Company</span>
+          <span
+            className={`${labelStyle("company", Boolean(formData?.company))}`}
+          >
+            Company
+          </span>
 
           <SelectPlus
             options={companyOptions}
@@ -659,7 +712,14 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
       {/* company role */}
       <div className={`flex flex-col text-sm gap-2 `}>
-        <span className={`${labelStyle("companyRole", Boolean(formData?.companyRole))}`}>Company Role</span>
+        <span
+          className={`${labelStyle(
+            "companyRole",
+            Boolean(formData?.companyRole)
+          )}`}
+        >
+          Company Role
+        </span>
 
         <label className="input input-bordered flex items-center gap-2">
           <input
@@ -681,7 +741,14 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
             formData?.agency && " hidden "
           } label cursor-pointer flex justify-start gap-2 w-max `}
         >
-          <span className={` ${labelStyle("isRegular", Boolean(formData?.isRegular))} `}>Is Regular?</span>
+          <span
+            className={` ${labelStyle(
+              "isRegular",
+              Boolean(formData?.isRegular)
+            )} `}
+          >
+            Is Regular?
+          </span>
           <input
             type="checkbox"
             className="checkbox"
@@ -697,7 +764,11 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         {/* isOJT */}
         <label className="label cursor-pointer flex justify-start gap-2 w-max">
-          <span className={` ${labelStyle("isOJT", Boolean(formData?.isOJT))} `}>Is OJT?</span>
+          <span
+            className={` ${labelStyle("isOJT", Boolean(formData?.isOJT))} `}
+          >
+            Is OJT?
+          </span>
           <input
             type="checkbox"
             className="checkbox"
@@ -714,7 +785,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
       {/* Daily wage */}
       <div className={`flex flex-col text-sm gap-2 `}>
-        <span className={`label-text text-base ${labelStyle("dailyWage", Boolean(formData?.dailyWage))}`}>
+        <span
+          className={`label-text text-base ${labelStyle(
+            "dailyWage",
+            Boolean(formData?.dailyWage)
+          )}`}
+        >
           Daily Wage
         </span>
 

@@ -48,6 +48,8 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    console.log("ran")
+
     if (!formData?.reason && !formData?.memoPhotosList?.length) {
       setToastOptions({
         open: true,

@@ -167,7 +167,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
             <div
               className={`${
                 formData?._id && !formData?.photoOfPerson
-                  ? " border-error text-error "
+                  ? " border-warning text-warning "
                   : " border-gray-400 "
               } w-[110px] h-[83.59px] grid place-content-center border relative rounded-box pb-1.5`}
             >
@@ -203,7 +203,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
             <div
               className={`${
                 formData?._id && !formData?.employeeSignature
-                  ? " border-error text-error "
+                  ? " border-warning text-warning "
                   : " border-gray-400 "
               } w-[110px] h-[83.59px] grid place-content-center border relative rounded-box pb-1.5`}
             >
@@ -229,7 +229,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
             <div
               key={key}
               className={`${
-                value[0] ? " text-info " : formData?._id ? " text-error " : ""
+                value[0] ? " text-info " : formData?._id ? " text-warning " : ""
               } flex flex-col gap-1 grow justify-end md:min-w-[20vw] lg:min-w-[10vw]`}
             >
               <span className={`font-semibold w-full capitalize`}>{key}</span>
@@ -239,7 +239,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
                   value?.[0]
                     ? " input-info "
                     : formData?._id
-                    ? " input-error "
+                    ? " input-warning "
                     : " "
                 } input input-bordered !min-h-[3rem] !h-max py-3 flex items-center grow `}
               >
@@ -295,7 +295,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
           tabIndex={-1}
           className={`${
             hasEmptyFields && formData?._id ? " w-[43%] " : " hidden "
-          } btn-outline btn h-12 `}
+          } btn-outline btn btn-warning h-12 `}
         >
           Update
           <i className="font-bold text-[1rem]">

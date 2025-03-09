@@ -418,7 +418,7 @@ const EmployeeGalleryModal = () => {
                 className={` w-full h-max select-none `}
               />
               <div
-                className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0  
+                className="group-hover:bg-opacity-80 duration-200 bg-neutral rounded-full bg-opacity-0
                     size-[55%] top-[23%] left-[23%] absolute 
                     flex items-center justify-evenly"
               >

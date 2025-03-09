@@ -286,7 +286,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
       </div>
 
       {/* actions */}
-      <div className="flex gap-2 justify-center absolute bottom-5 left-0 w-full ">
+      <div className="flex gap-2 justify-center absolute bottom-2 left-0 w-full ">
         <button
           onClick={() => {
             router.push("/Employee/Update" + `${keysToUpdate&&`?${keysToUpdate}`}#${formData?._id}`);
@@ -295,11 +295,11 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
           tabIndex={-1}
           className={`${
             hasEmptyFields && formData?._id ? " w-[43%] " : " hidden "
-          } btn-outline btn btn-warning h-12 `}
+          } btn-outline btn btn-warning  `}
         >
           Update
-          <i className="font-bold text-[1rem]">
-            {formData?.firstName} {formData?.lastName}
+          <i className=" ">
+            {formData?.lastName}
           </i>
         </button>
 
@@ -312,7 +312,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
           tabIndex={-1}
           className={` ${
             hasEmptyFields && formData?._id ? " w-[43%] " : " w-[90%] "
-          } btn-primary btn h-12 `}
+          } btn-primary btn  `}
         >
           Next
         </button>

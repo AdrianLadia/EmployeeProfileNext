@@ -69,7 +69,7 @@ const EmployeeMemoTableModal = () => {
             ></button>
           </form>
 
-          <div className="w-full h-[90%] overflow-auto rounded-box bg-base-100/90 ">
+          <div className="w-full max-h-[90%] overflow-auto rounded-box  ">
             <table className="table w-full table-pin-rows ">
               {/* head */}
               <thead>
@@ -91,7 +91,7 @@ const EmployeeMemoTableModal = () => {
                 {sortedMemos?.map((memo) => (
                   <tr
                     key={memo._id}
-                    className={`${!memo?.submitted && "bg-error/10"} `}
+                    className={`${!memo?.submitted ? "bg-red-50/80" : "bg-base-100/80"} `}
                   >
                     {/* print */}
                     <td className="w-max text-center ">
@@ -142,24 +142,17 @@ const EmployeeMemoTableModal = () => {
                       <div>
                         <div
                           tabIndex={0}
-                          className="collapse collapse-open bg-base-300 w-[70vw] min-[700px]:w-full "
+                          className="collapse collapse-open bg-base-300/90 w-[70vw] min-[700px]:w-full "
                         >
                           <div className="collapse-title text-base font-bold">
                             {memo?.MemoCode?.title}
-                          </div>
-                          {/* <summary className="collapse-title text-base font-bold">
-                              {memo?.MemoCode?.title}
-                            </summary> */}
-                          {/* <p className='btn btn-xs text-[.70rem] btn-neutral truncate' >{"remedialAction"}</p> */}
+                          </div> 
                           <div
                             className={` collapse-content flex flex-wrap gap-1 `}
                           >
                             <p className="btn btn-xs text-[.70rem] btn-neutral truncate">
                               {memo?.remedialAction || "No Offense"}
-                            </p>
-                            {/* {memo?.remedialAction?.map((action: string, index: number) => (
-                                <p className='btn btn-xs text-[.70rem] btn-neutral truncate' key={index}>{action}</p>
-                              ))}  */}
+                            </p> 
                           </div>
                         </div>
                       </div>
@@ -231,7 +224,6 @@ const EmployeeMemoTableModal = () => {
                       {memo?.submitted ? (
                         <span className="text-success">✔</span>
                       ) : (
-                        // <span className="text-error">X</span>
                         <div className="flex gap-2 ">
                           <a
                             href={"/Memo/Delete" + `#${memo?._id}`}

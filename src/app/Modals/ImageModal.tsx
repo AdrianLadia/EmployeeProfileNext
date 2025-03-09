@@ -13,9 +13,9 @@ const ImageModal = () => {
     setImageModalId,
   } = useAppContext();
 
-  const imageModalRef = React.useRef<HTMLDialogElement>(null); 
+  const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
-  const handleClose = () => { 
+  const handleClose = () => {
     setImageListForModal([]);
     setImageModalId("");
   };
@@ -89,7 +89,7 @@ const ImageModal = () => {
       <div
         className={`${
           !imageListForModal.length && " hidden "
-        } my-2 h-[83svh] w-[90vw] relative `}
+        } my-2 h-[80svh] w-[90vw] relative `}
       >
         <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
@@ -128,8 +128,10 @@ const ImageModal = () => {
               {/*  */}
               <Image
                 className={`${
-                  fullHeight ? "  h-[83svh] " : "  "
-                } w-full md:w-max md:max-w-[80vw] select-none `}
+                  fullHeight
+                    ? "  h-[80svh] w-full md:max-w-[80vw] "
+                    : " h-max w-full md:w-min "
+                } select-none `}
                 width={800}
                 height={800}
                 src={image}

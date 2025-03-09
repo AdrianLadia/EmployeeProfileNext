@@ -24,6 +24,8 @@ const EmployeeDetails = () => {
     loading,
     setLoading,
     setToastOptions,
+    router,
+    pathname,
   } = useAppContext();
 
   const [selectedEmployeeMemos, setSelectedEmployeeMemos] = React.useState(
@@ -111,14 +113,6 @@ const EmployeeDetails = () => {
       if (selectedEmployee._id) {
         getSelectedEmployeeDetails();
       }
-
-      // if (userData?._id && selectedEmployee?._id && window.innerWidth < 768) {
-      //   // dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-      //   window.scrollTo({
-      //     top: 10000,
-      //     behavior: "smooth", // Enables smooth scrolling
-      //   });
-      // }
 
       if (!selectedEmployee._id) {
         setSelectedEmployeeDetails({} as Employee);
@@ -232,11 +226,22 @@ const EmployeeDetails = () => {
     ) : null;
   };
 
+  React.useEffect(() => {
+    if (selectedEmployee._id) {
+      const timeout = setTimeout(() => {
+        router.push(pathname + "#employee-details");
+      }, 800);
+      return () => clearTimeout(timeout);
+    } else {
+      router.replace(pathname);
+    }
+  }, [selectedEmployee]);
+
   return (
     <div
       className={` ${
         loading && "cursor-wait"
-      } relative h-full w-full flex flex-col overflow-auto rounded-box shadow-lg border p-4 pt-5`}
+      } relative h-full w-full flex flex-col overflow-auto rounded-box shadow-lg border p-4 pt-5 `}
     >
       {/* avatar, name, address */}
 

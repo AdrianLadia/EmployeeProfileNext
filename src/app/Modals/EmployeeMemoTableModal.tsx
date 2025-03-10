@@ -19,7 +19,8 @@ const EmployeeMemoTableModal = () => {
 
   const [isForSingleEmployee, setIsForSingleEmployee] = React.useState(false);
 
-  const [sortedMemos, setSortedMemos] = React.useState<Memo[]>(memoForTableModal);
+  const [sortedMemos, setSortedMemos] =
+    React.useState<Memo[]>(memoForTableModal);
 
   useEffect(() => {
     if (memoForTableModal.length > 0) {
@@ -37,34 +38,38 @@ const EmployeeMemoTableModal = () => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
 
-      setSortedMemos(sorted)
+      setSortedMemos(sorted);
     }
   }, [memoForTableModal]);
 
   const handleClose = () => {
     setMemoForTableModal([] as Memo[]);
-  }; 
+  };
 
   return (
-    <dialog id="EmployeeMemoModal" className="modal " ref={memoTableModalRef}>
+    <dialog id="EmployeeMemoModal" className="modal outline-none" ref={memoTableModalRef}>
       <div className=" bg-transparent shadow-none gap-2 p-0 w-max">
-        <div className=" max-h-[80svh] w-[98vw] md:w-[80vw] rounded-box py-8 bg-base-200 px-6 flex justify-center items-center flex-col gap-2 relative ">
+        <div className="h-[100svh] w-[98vw] rounded-box py-8 backdrop-blur-sm md:px-6 flex justify-center items-center flex-col gap-2 relative ">
           {/*  */}
-          <form className="absolute top-2 right-2" method="dialog">
+          <form
+            className="absolute top-2 flex justify-between w-full pl-2 pr-1 md:pl-6 "
+            method="dialog"
+          >
+            <h3 className=" font-semibold w-max text-start backdrop-blur-2xl p-2 ">
+              <span className=" text-white text-base ">
+                {isForSingleEmployee
+                  ? `Memos ( ${memoForTableModal?.[0]?.Employee?.firstName} ${memoForTableModal?.[0]?.Employee?.lastName} )`
+                  : `Recent Memos `}
+              </span>{" "}
+            </h3>
+
             <button
               onClick={() => handleClose()}
-              className=" close-button "
+              className=" close-button p-0"
             ></button>
           </form>
 
-          <h3 className="text-xl font-semibold w-full text-start ">
-            <span className="text-base">
-              {isForSingleEmployee
-                ? `Memos ( ${memoForTableModal?.[0]?.Employee?.firstName} ${memoForTableModal?.[0]?.Employee?.lastName} )`
-                : `Recent Memos `}
-            </span>{" "}
-          </h3>
-          <div className="w-full h-full overflow-auto rounded-box ">
+          <div className="w-full max-h-[90%] overflow-auto rounded-box  ">
             <table className="table w-full table-pin-rows ">
               {/* head */}
               <thead>
@@ -78,13 +83,16 @@ const EmployeeMemoTableModal = () => {
                   <th className="min-w-[20vw]">Offense</th>
                   <th className="min-w-[150px]">Media</th>
                   <th className="min-w-[150px]">Memo Photo</th>
-                  <th className="min-w-[200px]">Reason</th>
+                  <th>Reason</th>
                   <th>isSubmitted</th>
                 </tr>
               </thead>
               <tbody>
                 {sortedMemos?.map((memo) => (
-                  <tr key={memo._id} className="hover:bg-base-100">
+                  <tr
+                    key={memo._id}
+                    className={`${!memo?.submitted ? "bg-red-50/80" : "bg-base-100/80"} `}
+                  >
                     {/* print */}
                     <td className="w-max text-center ">
                       <button
@@ -134,22 +142,17 @@ const EmployeeMemoTableModal = () => {
                       <div>
                         <div
                           tabIndex={0}
-                          className="collapse collapse-open bg-base-300 w-[70vw] min-[700px]:w-full "
+                          className="collapse collapse-open bg-base-300/90 w-[70vw] min-[700px]:w-full "
                         >
                           <div className="collapse-title text-base font-bold">
                             {memo?.MemoCode?.title}
-                          </div>
-                          {/* <summary className="collapse-title text-base font-bold">
-                              {memo?.MemoCode?.title}
-                            </summary> */}
-                          {/* <p className='btn btn-xs text-[.70rem] btn-neutral truncate' >{"remedialAction"}</p> */}
-                          <div className={` collapse-content flex flex-wrap gap-1 `}>
+                          </div> 
+                          <div
+                            className={` collapse-content flex flex-wrap gap-1 `}
+                          >
                             <p className="btn btn-xs text-[.70rem] btn-neutral truncate">
                               {memo?.remedialAction || "No Offense"}
-                            </p>
-                            {/* {memo?.remedialAction?.map((action: string, index: number) => (
-                                <p className='btn btn-xs text-[.70rem] btn-neutral truncate' key={index}>{action}</p>
-                              ))}  */}
+                            </p> 
                           </div>
                         </div>
                       </div>
@@ -188,18 +191,22 @@ const EmployeeMemoTableModal = () => {
                     </td>
                     {/* Memo Photos */}
                     <td>
-                      <div className="w-[150px] h-[150px] border border-neutral group rounded-box overflow-clip">
-                        <Image
-                          className={` group-hover:p-1 cursor-pointer w-full h-full `}
-                          src={memo?.memoPhotosList?.[0] || ""}
-                          width={100}
-                          height={100}
-                          alt="memoPhotosList"
-                          onClick={() =>
-                            memo?.memoPhotosList?.[0] &&
-                            handleImageModalClick(memo?.memoPhotosList)
-                          }
-                        />
+                      <div className="w-[150px] h-[150px] border border-neutral group rounded-box overflow-clip flex items-center justify-center">
+                        {memo?.memoPhotosList?.[0] ? (
+                          <Image
+                            className={` w-full h-full hover:p-1 `}
+                            src={memo?.memoPhotosList?.[0] || ""}
+                            width={100}
+                            height={100}
+                            alt="memoPhotosList"
+                            onClick={() =>
+                              memo?.memoPhotosList?.[0] &&
+                              handleImageModalClick(memo?.memoPhotosList)
+                            }
+                          />
+                        ) : (
+                          <span className="text-neutral">X</span>
+                        )}
                       </div>
                     </td>
                     {/* Reason */}
@@ -217,8 +224,21 @@ const EmployeeMemoTableModal = () => {
                       {memo?.submitted ? (
                         <span className="text-success">✔</span>
                       ) : (
-                        <span className="text-error">X</span>
-                      )}{" "}
+                        <div className="flex gap-2 ">
+                          <a
+                            href={"/Memo/Delete" + `#${memo?._id}`}
+                            className="btn btn-sm btn-error btn-outline"
+                          >
+                            Delete
+                          </a>
+                          <a
+                            href={"/Memo/Submit" + `#${memo?._id}`}
+                            className="btn btn-sm btn-info"
+                          >
+                            Submit
+                          </a>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}

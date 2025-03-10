@@ -15,13 +15,9 @@ const ImageModal = () => {
 
   const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-
   const handleClose = () => {
-    // router.replace(window.location.pathname, undefined);
     setImageListForModal([]);
     setImageModalId("");
-    setSelectedIndex(0);
   };
 
   const handleDelete = (index: number) => {
@@ -48,10 +44,6 @@ const ImageModal = () => {
       imageModalRef.current?.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-
-  const handleViewImage = (index: number) => {
-    setSelectedIndex(index);
-  };
 
   const [fullHeight, setFullHeight] = React.useState(true);
 
@@ -97,7 +89,7 @@ const ImageModal = () => {
       <div
         className={`${
           !imageListForModal.length && " hidden "
-        } my-2 h-[83svh] w-[90vw] relative `}
+        } my-2 h-[80svh] w-[90vw] relative `}
       >
         <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
@@ -136,8 +128,10 @@ const ImageModal = () => {
               {/*  */}
               <Image
                 className={`${
-                  fullHeight ? "  h-[83svh] " : "  "
-                } w-full md:w-max md:max-w-[80vw] select-none `}
+                  fullHeight
+                    ? "  h-[80svh] w-full md:max-w-[80vw] "
+                    : " h-max w-full md:w-min "
+                } select-none `}
                 width={800}
                 height={800}
                 src={image}
@@ -159,7 +153,7 @@ const ImageModal = () => {
                     href={`#item${index + 1}`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleViewImage(index + 1);
+                      // handleViewImage(index + 1);
                     }}
                     // onClick={() => handleViewImage(index + 1)}
                   >
@@ -174,7 +168,7 @@ const ImageModal = () => {
                     href={`#item${index - 1}`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleViewImage(index - 1);
+                      // handleViewImage(index - 1);
                     }}
                     // onClick={() => handleViewImage(index - 1)}
                   >
@@ -195,15 +189,15 @@ const ImageModal = () => {
           <a
             key={`item${index}`}
             href={`#item${index}`}
-            className={`${
-              selectedIndex == index ? " border-info " : " border-transparent "
-            } rounded-box h-12 w-12 border-2`}
-            onClick={() => handleViewImage(index)}
+            className={` rounded-box h-12 w-12 relative`}
+            // onClick={() => handleViewImage(index)}
           >
             <Image
-              className="h-full w-full rounded-box"
+              className="h-full w-full rounded-box border"
               src={item}
-              quality={10}
+              quality={1}
+              // layout="fill"
+              // objectFit="cover"
               width={64}
               height={64}
               alt={"img" + index}

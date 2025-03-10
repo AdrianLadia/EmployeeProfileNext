@@ -14,6 +14,7 @@ interface EmployeeSelectionProps {
   setHasEmptyFields: (hasEmptyFields: boolean) => void;
   hasEmptyFields: boolean;
   setPhase: (phase: 1 | 2) => void;
+  keysToUpdate: string;
 }
 
 const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
@@ -23,6 +24,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
   setHasEmptyFields,
   hasEmptyFields = false,
   setPhase,
+  keysToUpdate
 }) => {
   const { router, pathname } = useAppContext();
 
@@ -165,7 +167,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
             <div
               className={`${
                 formData?._id && !formData?.photoOfPerson
-                  ? " border-error text-error "
+                  ? " border-warning text-warning "
                   : " border-gray-400 "
               } w-[110px] h-[83.59px] grid place-content-center border relative rounded-box pb-1.5`}
             >
@@ -201,7 +203,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
             <div
               className={`${
                 formData?._id && !formData?.employeeSignature
-                  ? " border-error text-error "
+                  ? " border-warning text-warning "
                   : " border-gray-400 "
               } w-[110px] h-[83.59px] grid place-content-center border relative rounded-box pb-1.5`}
             >
@@ -227,7 +229,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
             <div
               key={key}
               className={`${
-                value[0] ? " text-info " : formData?._id ? " text-error " : ""
+                value[0] ? " text-info " : formData?._id ? " text-warning " : ""
               } flex flex-col gap-1 grow justify-end md:min-w-[20vw] lg:min-w-[10vw]`}
             >
               <span className={`font-semibold w-full capitalize`}>{key}</span>
@@ -237,7 +239,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
                   value?.[0]
                     ? " input-info "
                     : formData?._id
-                    ? " input-error "
+                    ? " input-warning "
                     : " "
                 } input input-bordered !min-h-[3rem] !h-max py-3 flex items-center grow `}
               >
@@ -284,20 +286,20 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
       </div>
 
       {/* actions */}
-      <div className="flex gap-2 justify-center absolute bottom-5 left-0 w-full ">
+      <div className="flex gap-2 justify-center absolute bottom-2 left-0 w-full ">
         <button
           onClick={() => {
-            router.push("/Employee/Update#" + formData?._id);
+            router.push("/Employee/Update" + `${keysToUpdate&&`?${keysToUpdate}`}#${formData?._id}`);
           }}
           hidden={hasEmptyFields ? false : true}
           tabIndex={-1}
           className={`${
             hasEmptyFields && formData?._id ? " w-[43%] " : " hidden "
-          } btn-outline btn h-12 `}
+          } btn-outline btn btn-warning  `}
         >
           Update
-          <i className="font-bold text-[1rem]">
-            {formData?.firstName} {formData?.lastName}
+          <i className=" ">
+            {formData?.lastName}
           </i>
         </button>
 
@@ -310,7 +312,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({
           tabIndex={-1}
           className={` ${
             hasEmptyFields && formData?._id ? " w-[43%] " : " w-[90%] "
-          } btn-primary btn h-12 `}
+          } btn-primary btn  `}
         >
           Next
         </button>

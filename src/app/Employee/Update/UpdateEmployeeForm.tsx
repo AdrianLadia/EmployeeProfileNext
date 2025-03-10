@@ -11,7 +11,7 @@ import { useAppContext } from "@/app/GlobalContext";
 
 // import Image from 'next/image'
 
-import MediaInput from "@/app/InputComponents/MediaInput";
+import MediaInput from "../../InputComponents/MediaInput";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
@@ -77,6 +77,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     defaultFormData as Employee
   );
 
+  const [keysToUpdate, setKeysToUpdate] = useState<string[]>([]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -90,105 +92,20 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
     if (confirmed) {
       try {
-        // if (dataToUpdate?.photoOfPerson) {
-        //   try {
-        //     const res = await upload.Images(
-        //       [formData.photoOfPerson || ""],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "photoOfPerson"
-        //     );
-        //     dataToUpdate.photoOfPerson = res[0] || "";
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
-        // if (dataToUpdate?.employeeSignature) {
-        //   try {
-        //     const res = await upload.Images(
-        //       [formData.employeeSignature || ""],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "employeeSignature"
-        //     );
-        //     dataToUpdate.employeeSignature = res[0] || "";
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
-        // if (dataToUpdate?.biodataPhotosList) {
-        //   try {
-        //     const alreadyUploadedList: string[] = [];
-        //     const toUploadList: string[] = [];
-
-        //     formData?.biodataPhotosList?.map((item) => {
-        //       if (item.includes("data:image")) {
-        //         toUploadList.push(item);
-        //       } else {
-        //         alreadyUploadedList.push(item);
-        //       }
-        //     });
-
-        //     const res = await upload.Images(
-        //       toUploadList || [],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "biodataPhotosList"
-        //     );
-        //     dataToUpdate.biodataPhotosList = res.concat(alreadyUploadedList);
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
-        // if (dataToUpdate?.resumePhotosList) {
-        //   try {
-        //     const alreadyUploadedList: string[] = [];
-        //     const toUploadList: string[] = [];
-
-        //     formData?.resumePhotosList?.map((item) => {
-        //       if (item.includes("data:image")) {
-        //         toUploadList.push(item);
-        //       } else {
-        //         alreadyUploadedList.push(item);
-        //       }
-        //     });
-
-        //     const res = await upload.Images(
-        //       toUploadList || [],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "resumePhotosList"
-        //     );
-        //     dataToUpdate.resumePhotosList = res.concat(alreadyUploadedList);
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
-        // if (dataToUpdate?.employeeHouseRulesSignatureList) {
-        //   try {
-        //     const alreadyUploadedList: string[] = [];
-        //     const toUploadList: string[] = [];
-
-        //     formData?.employeeHouseRulesSignatureList?.map((item) => {
-        //       if (item.includes("data:image")) {
-        //         toUploadList.push(item);
-        //       } else {
-        //         alreadyUploadedList.push(item);
-        //       }
-        //     });
-
-        //     const res = await upload.Images(
-        //       toUploadList || [],
-        //       `employees/${formData.firstName} ${formData.lastName}`,
-        //       "employeeHouseRulesSignatureList"
-        //     );
-        //     dataToUpdate.employeeHouseRulesSignatureList = res.concat(alreadyUploadedList);
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
         const form = e.target as HTMLFormElement;
+
+        if (dataToUpdate?.employeeSignature) {
+          try {
+            const res = await upload.Images(
+              [formData.employeeSignature || ""],
+              `employees/${formData.firstName} ${formData.lastName}`,
+              "employeeSignature"
+            );
+            dataToUpdate.employeeSignature = res[0] || "";
+          } catch (e) {
+            console.error(e);
+          }
+        }
 
         const res = await serverRequests.updateEmployee(
           selectedEmployee,
@@ -250,7 +167,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-
     const id = e.target.id as keyof Employee;
 
     if (files && files.length > 0) {
@@ -267,31 +183,30 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           fileDataUrls.push(reader.result as string);
 
           if (fileDataUrls.length === files.length) {
-            setLoading(true);
             setImageModalId(id);
-            const res = await upload.Images(fileDataUrls, `${id}${i}`, "id");
-
-            const finalResult =
+            setLoading(true);
+            const res = await upload.Images(fileDataUrls, `${id}`, id);
+            const oldData =
+              id !== "photoOfPerson" &&
+              id !== "employeeSignature" &&
+              Array.isArray(formData[id]) &&
+              formData[id].length
+                ? formData[id]
+                : [];
+            const finalData =
               id === "photoOfPerson" || id === "employeeSignature"
                 ? res[0]
-                : formData?.[id] == null
-                ? res
-                : res.concat(
-                    Array.isArray(formData?.[id]) ? formData?.[id] : []
-                  );
+                : res.concat(oldData);
 
             setFormData({
               ...formData,
-              [id]: finalResult,
+              [id]: finalData,
             });
-
             setDataToUpdate({
               ...dataToUpdate,
-              [id]: finalResult,
+              [id]: finalData,
             });
-
             setLoading(false);
-            setImageModalId("");
           }
         };
       }
@@ -320,7 +235,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     }
   }, [selectedEmployee, formData]);
 
-  const labelStyle = `${selectedEmployee?._id ? "" : "text-gray-300"}`;
+  const labelStyle = (key?: string, value?: boolean) => {
+    if (!selectedEmployee?._id) return "text-gray-300";
+
+    if ((key && keysToUpdate.includes(key) && !value) || value == undefined) {
+      return `relative text-warning cursor-default w-max
+        before:content-['!'] before:badge before:badge-warning before:badge-sm before:rounded-box before:mr-1 `;
+    }
+
+    return "";
+  };
 
   const selectStyle = {
     control: (base: unknown) => ({
@@ -413,6 +337,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     const res = employeeList?.find(
       (employee) => employee._id == window.location.hash.split("#")[1]
     );
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const keys = searchParams.getAll("key");
+
+    setKeysToUpdate(keys);
+
     setSelectedEmployee(res as Employee);
     setFormData(res as Employee);
     setDisable(false);
@@ -424,7 +354,14 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       <>
         {formData?.employeeSignature && !updateSignature ? (
           <div className="flex flex-col w-full items-center">
-            <span className="w-full">Employee Signature</span>
+            <span
+              className={`w-full ${
+                (labelStyle("employeeSignature"),
+                Boolean(formData?.employeeSignature))
+              }`}
+            >
+              Employee Signature
+            </span>
             <div className="flex flex-col items-center gap-2 border-2 border-black mt-2 rounded-box w-[84%] overflow-clip">
               <div className="h-[300px] flex items-center justify-center relative w-full">
                 <img
@@ -444,6 +381,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         ) : (
           <SignatureComponent
             title="Employee Signature"
+            titleStyle={` text-start ${labelStyle(
+              "employeeSignature",
+              Boolean(formData?.employeeSignature)
+            )}`}
             setSignatureImageUrl={(url) => {
               if (url) {
                 setFormData({ ...formData, employeeSignature: url });
@@ -458,6 +399,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       </>
     );
   };
+
+  // console.log("")
 
   return (
     <form
@@ -496,11 +439,23 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       />
 
       {/* name */}
-      <div
-        className={`flex flex-wrap justify-between text-sm gap-2 ${labelStyle}`}
-      >
-        <span className="w-full md:w-[48%] order-1">First Name</span>
-        <span className="w-full md:w-[48%] order-3 md:order-2">Last Name</span>
+      <div className={`flex flex-wrap justify-between text-sm gap-2 `}>
+        <span
+          className={`w-full md:w-[48%] order-1 ${labelStyle(
+            "firstName",
+            Boolean(formData?.firstName)
+          )}`}
+        >
+          First Name
+        </span>
+        <span
+          className={`w-full md:w-[48%] order-3 md:order-2 ${labelStyle(
+            "lastName",
+            Boolean(formData?.lastName)
+          )}`}
+        >
+          Last Name
+        </span>
         <label className="input input-bordered flex items-center gap-2 w-full md:w-[48%] order-2 md:order-3">
           <input
             type="text"
@@ -526,8 +481,13 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       </div>
 
       {/* address */}
-      <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
-        Address
+      <div className={`flex flex-col text-sm gap-2 `}>
+        <span
+          className={`${labelStyle("address", Boolean(formData?.address))}`}
+        >
+          Address
+        </span>
+
         <textarea
           className="textarea textarea-bordered"
           placeholder="Address"
@@ -544,23 +504,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       {/* phone and email */}
       <div className="flex flex-col gap-2 justify-between md:flex-row">
         {/* Phone Number */}
-        <div
-          className={`flex flex-col text-sm gap-2 ${labelStyle} w-full md:w-[48%]`}
-        >
-          Phone Number
+        <div className={`flex flex-col text-sm gap-2 w-full md:w-[48%]`}>
+          <span
+            className={`${labelStyle(
+              "phoneNumber",
+              Boolean(formData?.phoneNumber)
+            )}`}
+          >
+            Phone Number
+          </span>
           <label className="input input-bordered flex items-center gap-2">
-            {/* <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-4 text-gray-500"
-            >
-              <path
-                fillRule="evenodd"
-                d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z"
-                clipRule="evenodd"
-              />
-            </svg> */}
             <input
               type="text"
               className="grow"
@@ -574,20 +527,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         </div>
 
         {/* E-mail */}
-        <div
-          className={`flex flex-col text-sm gap-2 ${labelStyle} w-full md:w-[48%]`}
-        >
-          E-mail
+        <div className={`flex flex-col text-sm gap-2 w-full md:w-[48%]`}>
+          <span className={`${labelStyle("email", Boolean(formData?.email))}`}>
+            E-mail
+          </span>
+
           <label className="input input-bordered flex items-center gap-2">
-            {/* <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-4 text-gray-500"
-            >
-              <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
-              <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
-            </svg> */}
             <input
               type="email"
               className="grow"
@@ -604,68 +549,83 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       <div className="w-full border-b my-5" />
 
       {/* photoOfPerson, resume, bioData */}
-      <div
-        className={
-          "flex flex-wrap gap-3 md:gap-4 justify-between w-full " + labelStyle
-        }
-      >
+      <div className={"flex flex-wrap gap-3 md:gap-4 justify-between w-full "}>
         {/* photoOfPerson */}
         <MediaInput
           id="photoOfPerson"
           title="Photo Of Person"
-          width="w-full"
-          inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-          imgDimensions={{ height: 60, width: 60 }}
-          mediaList={formData?.photoOfPerson ? [formData?.photoOfPerson] : []}
-          onChangeHandler={handleFileChange}
-          disable={disable}
+          width={"w-full"}
+          value={formData?.photoOfPerson as string}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleFileChange(e);
+          }}
+          className={`${labelStyle(
+            "photoOfPerson",
+            Boolean(formData?.photoOfPerson)
+          )}`}
         />
 
         {/* resumePhotosList */}
         <MediaInput
           id="resumePhotosList"
           title="Resume"
-          width="w-full md:w-[48%]"
-          inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
-          imgDimensions={{ height: 60, width: 60 }}
-          mediaList={formData?.resumePhotosList || []}
-          onChangeHandler={handleFileChange}
-          disable={disable}
+          value={formData?.resumePhotosList || []}
+          width={"w-full md:w-[48%]"}
           multiple={true}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleFileChange(e);
+          }}
+          className={`${labelStyle(
+            "resumePhotosList",
+            Boolean(formData?.resumePhotosList?.[0])
+          )}`}
         />
 
         {/* biodataPhotosList */}
         <MediaInput
           id="biodataPhotosList"
           title="Bio Data"
-          width="w-full md:w-[48%]"
-          inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
-          imgDimensions={{ height: 60, width: 60 }}
-          mediaList={formData?.biodataPhotosList || []}
-          onChangeHandler={handleFileChange}
-          disable={disable}
+          value={formData?.biodataPhotosList || []}
+          width={"w-full md:w-[48%]"}
           multiple={true}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleFileChange(e);
+          }}
+          className={`${labelStyle(
+            "biodataPhotosList",
+            Boolean(formData?.biodataPhotosList?.[0])
+          )}`}
         />
 
         {/* employeeHouseRulesSignatureList */}
         <MediaInput
           id="employeeHouseRulesSignatureList"
           title="House Rules Agreement"
-          width="w-full "
-          inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
-          imgDimensions={{ height: 60, width: 60 }}
-          mediaList={formData?.employeeHouseRulesSignatureList || []}
-          onChangeHandler={handleFileChange}
-          disable={disable}
+          width={"w-full"}
+          value={formData?.employeeHouseRulesSignatureList || []}
           multiple={true}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleFileChange(e);
+          }}
+          className={`${labelStyle(
+            "employeeHouseRulesSignatureList",
+            Boolean(formData?.employeeHouseRulesSignatureList?.[0])
+          )}`}
         />
       </div>
 
       <div className="w-full border-b my-5" />
 
       {/* date Joined*/}
-      <label className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
-        Date Joined
+      <label className={`flex flex-col text-sm gap-2 `}>
+        <span
+          className={`${
+            (labelStyle("dateJoined", Boolean(formData?.dateJoined)))
+          }`}
+        >
+          Date Joined
+        </span>
+
         <input
           type="date"
           className="grow input input-bordered w-full"
@@ -688,7 +648,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         } flex flex-wrap justify-between text-sm gap-2 `}
       >
         <div className="flex flex-col text-sm gap-2 w-full">
-          Agency
+          <span
+            className={`${labelStyle("agency", Boolean(formData?.agency))}`}
+          >
+            Agency
+          </span>
+
           <SelectPlus
             options={agencyOptions}
             disabled={disable}
@@ -714,7 +679,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       {/* company */}
       <div className="flex flex-wrap justify-between text-sm gap-2 ">
         <div className="flex flex-col text-sm gap-2 w-full">
-          Company
+          <span
+            className={`${labelStyle("company", Boolean(formData?.company))}`}
+          >
+            Company
+          </span>
+
           <SelectPlus
             options={companyOptions}
             disabled={disable}
@@ -741,8 +711,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       </div>
 
       {/* company role */}
-      <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
-        Company Role
+      <div className={`flex flex-col text-sm gap-2 `}>
+        <span
+          className={`${labelStyle(
+            "companyRole",
+            Boolean(formData?.companyRole)
+          )}`}
+        >
+          Company Role
+        </span>
+
         <label className="input input-bordered flex items-center gap-2">
           <input
             type="companyRole"
@@ -761,9 +739,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         <label
           className={`${
             formData?.agency && " hidden "
-          } label cursor-pointer flex justify-start gap-2 w-max`}
+          } label cursor-pointer flex justify-start gap-2 w-max `}
         >
-          <p className="label-text text-base">Is Regular?</p>
+          <span
+            className={` ${labelStyle(
+              "isRegular",
+              Boolean(formData?.isRegular)
+            )} `}
+          >
+            Is Regular?
+          </span>
           <input
             type="checkbox"
             className="checkbox"
@@ -779,7 +764,11 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
         {/* isOJT */}
         <label className="label cursor-pointer flex justify-start gap-2 w-max">
-          <p className="label-text text-base">Is OJT?</p>
+          <span
+            className={` ${labelStyle("isOJT", Boolean(formData?.isOJT))} `}
+          >
+            Is OJT?
+          </span>
           <input
             type="checkbox"
             className="checkbox"
@@ -795,8 +784,16 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       </div>
 
       {/* Daily wage */}
-      <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
-        Daily Wage
+      <div className={`flex flex-col text-sm gap-2 `}>
+        <span
+          className={`label-text text-base ${labelStyle(
+            "dailyWage",
+            Boolean(formData?.dailyWage)
+          )}`}
+        >
+          Daily Wage
+        </span>
+
         <label className="input input-bordered flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"

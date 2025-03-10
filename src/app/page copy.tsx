@@ -16,6 +16,8 @@ import SearchBar from "./Dashboard/SearchBar";
 import { getUserData, getTestUserData } from "./api/UserData";
 import Link from "next/link";
 
+// import UploadOffenseButton from "./UploadOffenseButton";
+
 export const metadata = {
   title: "| Dashboard",
   description: "Employee Dashboard",
@@ -31,10 +33,11 @@ const Page = async () => {
     ? await getUserData()
     : await getTestUserData();
 
-  const res = await serverRequests.getEmployeeForDashboardAction(userData, 1, {
-    keyToSort: "firstName",
-    sortOrder: 1,
-  });
+  const res = await serverRequests.getEmployeeForDashboardAction(
+    userData,
+    1,
+    {"keyToSort": "firstName", "sortOrder": 1}
+  );
 
   let employeeResponse;
 
@@ -70,10 +73,10 @@ const Page = async () => {
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
     hover:bg-base-300 hover:border-transparent overflow-y-auto md:overflow-y-clip
-    pl-4 p-2 shadow-lg rounded-box flex flex-col items-start justify-evenly gap-2 border tracking-tighter order-3 lg:order-1`;
+    pl-4 p-2 shadow-lg rounded-box flex flex-col items-start justify-evenly gap-2 border tracking-tighter`;
 
   return (
-    <div className=" flex flex-col items-center justify-center h-max md:h-[100vh] scroll-smooth">
+    <div className=" flex flex-col items-center justify-center h-max md:h-[100vh] ">
       {/* <ProfileMenu />   */}
 
       <div className="h-[1.5vh] md:h-0" />
@@ -89,7 +92,7 @@ const Page = async () => {
         </div>
 
         {/* cards and table */}
-        <div className="w-full 2xl:w-[60%] lg:w-[65%] h-max lg:h-[92%] flex flex-wrap items-center justify-between p-4 gap-4 lg:gap-0 order-2 lg:order-1">
+        <div className="w-full 2xl:w-[60%] lg:w-[65%] h-max lg:h-[92%] flex flex-wrap items-center justify-between p-4 gap-4 lg:gap-0 ">
           {/* Employee Length */}
           <div className={cardStyle}>
             <h3 className="text-lg font-semibold ">Employees</h3>
@@ -117,24 +120,13 @@ const Page = async () => {
             </span>
           </div>
 
-          {/* employee preview */}
-          <div className="block lg:hidden order-2 " id="employee-details">
-            <div className="w-full h-full flex flex-wrap justify-between py-6 ">
-              <EmployeeDetails />
-            </div>
-          </div>
-
           {/* Table */}
-          <div className="w-[100%] max-h-[75svh] lg:h-[75%] p-4 shadow-lg rounded-box flex flex-col items-start justify-between border order-1 lg:order-2">
+          <div className="w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-lg rounded-box flex flex-col items-start justify-between border ">
             <div className=" w-full overflow-auto h-full">
               <div className="flex flex-col md:flex-row p-1 justify-between items-center w-full">
                 <h2 className="text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full flex gap-2 items-center">
                   Employees
-                  <Link
-                    href="/Employee/Create"
-                    className="btn btn-xs btn-circle btn-neutral"
-                    title="Add Employee"
-                  >
+                  <Link href="/Employee/Create" className="btn btn-xs btn-circle btn-neutral" title="Add Employee">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -163,10 +155,8 @@ const Page = async () => {
         </div>
 
         {/* employee preview */}
-        <div className="hidden lg:block 2xl:w-[40%] lg:w-[35%] max-h-[95vh] lg:h-[92%] order-1 lg:order-2">
-          <div className="w-full h-full flex flex-wrap justify-between py-6 px-4 ">
-            <EmployeeDetails />
-          </div>
+        <div className="w-full 2xl:w-[40%] lg:w-[35%] max-h-[95vh] lg:h-[92%] flex flex-wrap justify-between py-6 px-4">
+          <EmployeeDetails />
         </div>
       </div>
     </div>

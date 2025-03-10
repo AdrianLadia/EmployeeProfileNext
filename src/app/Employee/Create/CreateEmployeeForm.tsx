@@ -5,7 +5,7 @@ import React, { useState, useRef } from "react";
 
 import { useAppContext } from "@/app/GlobalContext";
 
-import MediaInput from "@/app/InputComponents/MediaInput";
+import MediaInput from "../../InputComponents/MediaInput";
 
 import { Employee } from "@/app/schemas/EmployeeSchema";
 
@@ -13,8 +13,12 @@ import SelectPlus from "@/app/InputComponents/SelectPlus";
 
 import SignatureComponent from "../Signature/SignatureComponent";
 
+import FirebaseUpload from "@/app/api/FirebaseUpload";
+
 const CreateEmployeeForm = () => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
+
+  const upload = new FirebaseUpload();
 
   const {
     setToastOptions,
@@ -24,6 +28,9 @@ const CreateEmployeeForm = () => {
     router,
     loading,
     setLoading,
+    imageModalId,
+    setImageModalId,
+    imageListForModal,
   } = useAppContext();
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -63,7 +70,6 @@ const CreateEmployeeForm = () => {
     );
 
     setLoading(true);
-    // setConfirmSave(true);
 
     if (confirmed) {
       try {
@@ -73,50 +79,14 @@ const CreateEmployeeForm = () => {
           _version: 0,
         };
 
-        // if (formData.photoOfPerson) {
-        //   const photoOfPerson = await upload.Images(
-        //     [formData.photoOfPerson],
-        //     `employees/${formData.firstName}${formData.lastName}`,
-        //     "photoOfPerson"
-        //   );
-        //   finalFormData.photoOfPerson = photoOfPerson[0];
-        // }
-        // if (formData.employeeSignature) {
-        //   const employeeSignature = await upload.Images(
-        //     [formData.employeeSignature],
-        //     `employees/${formData.firstName}${formData.lastName}`,
-        //     "employeeSignature"
-        //   );
-        //   finalFormData.employeeSignature = employeeSignature[0];
-        // }
-        // if (formData.resumePhotosList && formData.resumePhotosList[0]) {
-        //   const resumePhotosList = await upload.Images(
-        //     formData.resumePhotosList,
-        //     `employees/${formData.firstName}${formData.firstName}`,
-        //     "resumePhotosList"
-        //   );
-        //   finalFormData.resumePhotosList = resumePhotosList;
-        // }
-        // if (formData?.biodataPhotosList && formData?.biodataPhotosList[0]) {
-        //   const biodataPhotosList = await upload.Images(
-        //     formData.biodataPhotosList,
-        //     `employees/${formData.firstName}${formData.firstName}`,
-        //     "biodataPhotosList"
-        //   );
-        //   finalFormData.biodataPhotosList = biodataPhotosList;
-        // }
-        // if (
-        //   formData?.employeeHouseRulesSignatureList &&
-        //   formData?.employeeHouseRulesSignatureList[0]
-        // ) {
-        //   const employeeHouseRulesSignatureList = await upload.Images(
-        //     formData.employeeHouseRulesSignatureList,
-        //     `employees/${formData.firstName}${formData.firstName}`,
-        //     "employeeHouseRulesSignatureList"
-        //   );
-        //   finalFormData.employeeHouseRulesSignatureList =
-        //     employeeHouseRulesSignatureList;
-        // }
+        if (formData.employeeSignature) {
+          const employeeSignature = await upload.Images(
+            [formData.employeeSignature],
+            `employees/${formData.firstName}${formData.lastName}`,
+            "employeeSignature"
+          );
+          finalFormData.employeeSignature = employeeSignature[0];
+        }
 
         const form = e.target as HTMLFormElement;
 
@@ -237,6 +207,59 @@ const CreateEmployeeForm = () => {
     );
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    const id = e.target.id as keyof Employee;
+
+    if (files && files.length > 0) {
+      const fileReaders = [];
+      const fileDataUrls: string[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        fileReaders.push(reader);
+
+        reader.readAsDataURL(files[i]);
+
+        reader.onloadend = async () => {
+          fileDataUrls.push(reader.result as string);
+
+          if (fileDataUrls.length === files.length) {
+            setImageModalId(id);
+            setLoading(true);
+            const res = await upload.Images(fileDataUrls, `${id}`, id);
+            const oldData =
+              id !== "photoOfPerson" &&
+              id !== "employeeSignature" &&
+              Array.isArray(formData[id]) &&
+              formData[id].length
+                ? formData[id]
+                : [];
+            const finalData =
+              id === "photoOfPerson" || id === "employeeSignature"
+                ? res[0]
+                : res.concat(oldData);
+
+            setFormData({
+              ...formData,
+              [id]: finalData,
+            });
+            setLoading(false);
+          }
+        };
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    if (imageListForModal) {
+      setFormData({
+        ...formData,
+        [imageModalId]: imageListForModal,
+      });
+    }
+  }, [imageListForModal]);
+
   return (
     <form
       className={` ${loading && "cursor-wait"} ${
@@ -274,21 +297,21 @@ const CreateEmployeeForm = () => {
       </div>
 
       {/* more details button */}
-      <div className="w-full flex justify-center">
-        <label
-          className="w-max flex justify-center items-center gap-2"
-          htmlFor="show"
-        >
-          <input
-            className="checkbox"
-            type="checkbox"
-            name="show"
-            id="show"
-            checked={show}
-            onChange={(e) => setShow(e.target.checked)}
-          />
-          More Details
-        </label>
+      <div
+        className="w-full flex justify-center select-none cursor-pointer"
+        onClick={() => setShow(!show)}
+      >
+        {show ? (
+          <p className="w-full relative flex items-center text-center">
+            <span className="flex-1 border-t border-dashed border-gray-300"></span>
+            <span className="px-4 text-gray-400">
+              Fields below are optional
+            </span>
+            <span className="flex-1 border-t border-dashed border-gray-300"></span>
+          </p>
+        ) : (
+          <p className="flex items-center gap-2">Add More Details? <input className="btn btn-xs btn-neutral btn-outline" type="button" value="Yes" /></p>
+        )}
       </div>
 
       <div
@@ -348,48 +371,47 @@ const CreateEmployeeForm = () => {
           <MediaInput
             id="photoOfPerson"
             title="Photo Of Person"
-            width="w-full"
-            inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-            imgDimensions={{ height: 60, width: 60 }}
-            mediaList={formData?.photoOfPerson ? [formData?.photoOfPerson] : []}
-            setFunction={setFormData}
+            width={"w-full"}
+            value={formData?.photoOfPerson as string}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              handleFileChange(e);
+            }}
           />
 
           {/* resumePhotosList */}
           <MediaInput
             id="resumePhotosList"
             title="Resume"
-            width="w-full md:w-[48%]"
-            inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
-            imgDimensions={{ height: 60, width: 60 }}
-            mediaList={formData?.resumePhotosList || []}
-            // onChangeHandler={handleFileChange}
-            setFunction={setFormData}
+            value={formData?.resumePhotosList || []}
+            width={"w-full md:w-[48%]"}
             multiple={true}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              handleFileChange(e);
+            }}
           />
 
           {/* biodataPhotosList */}
           <MediaInput
             id="biodataPhotosList"
             title="Bio Data"
-            width="w-full md:w-[48%]"
-            inputStyle="file-input file-input-bordered w-full max-w-full file-input-xs h-10"
-            imgDimensions={{ height: 60, width: 60 }}
-            mediaList={formData?.biodataPhotosList || []}
-            setFunction={setFormData}
+            value={formData?.biodataPhotosList || []}
+            width={"w-full md:w-[48%]"}
             multiple={true}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              handleFileChange(e);
+            }}
           />
 
           {/* employeeHouseRulesSignatureList */}
           <MediaInput
             id="employeeHouseRulesSignatureList"
             title="House Rules Agreement"
-            width="w-full"
-            inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-            imgDimensions={{ height: 60, width: 60 }}
-            mediaList={formData?.employeeHouseRulesSignatureList || []}
-            setFunction={setFormData}
+            width={"w-full"}
+            value={formData?.employeeHouseRulesSignatureList || []}
             multiple={true}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              handleFileChange(e);
+            }}
           />
         </div>
 

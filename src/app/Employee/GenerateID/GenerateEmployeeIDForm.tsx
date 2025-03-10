@@ -72,14 +72,14 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
         tabIndex={-1}
       >
         {/*  */}
-        <div className="w-[80%] md:w-[480px] h-[83%] shadow-md carousel border my-4 relative">
+        <div className="w-[80%] md:w-[480px] h-[80%] carousel my-4 relative">
           {loading || !idURL?.front ? (
             renderPlaceholder()
           ) : (
             <>
-              <div className="min-w-full h-full relative" id="frontID">
+              <div className="min-w-full h-full relative flex justify-center items-center" id="frontID">
                 <Image
-                  className="w-full h-full"
+                  className=" h-max max-h-full shadow-lg"
                   src={idURL?.front || ""}
                   height={300}
                   width={300}
@@ -92,9 +92,9 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
                   {`>`}
                 </a>
               </div>
-              <div className="min-w-full h-full relative" id="backID">
+              <div className="min-w-full h-full relative flex justify-center items-center" id="backID">
                 <Image
-                  className="w-full h-full"
+                  className=" h-max max-h-full shadow-lg"
                   src={idURL?.back || ""}
                   height={300}
                   width={300}
@@ -112,11 +112,11 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
         </div>
 
         {/* actions */}
-        <div className="flex justify-center absolute bottom-5 left-0 w-[100%] gap-2">
+        <div className="flex justify-center absolute bottom-2 left-0 w-[100%] gap-2 h-max">
           <a
             href="#phase1"
             onClick={() => setPhase(1)}
-            className="btn-outline btn-primary btn w-[43%] h-12"
+            className="btn-outline btn-primary btn w-[43%] "
             tabIndex={-1}
           >
             Back
@@ -125,7 +125,7 @@ const EmployeeIDView: React.FC<EmployeeIDViewProps> = ({
             type="submit"
             disabled={hasEmptyFields}
             tabIndex={-1}
-            className={` btn-primary btn w-[43%] h-12 `}
+            className={` btn-primary btn w-[43%] `}
           >
             {loading ? (
               <p className={`${loading && "animate-spin"} `}>C</p>

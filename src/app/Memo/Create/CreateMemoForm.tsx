@@ -6,9 +6,7 @@ import { useAppContext } from "@/app/GlobalContext";
 
 import { Memo, Employee, Offense } from "@/app/schemas/MemoSchema.ts";
 
-// import Image from 'next/image';
-
-import MediaInput from "@/app/InputComponents/MediaInput.tsx";
+import MediaInput from "../../InputComponents/MediaInput.tsx";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload.ts";
 
@@ -117,7 +115,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         //   finalFormData.memoPhotosList = res || [];
         // }
 
-        const form = e.target as HTMLFormElement; 
+        const form = e.target as HTMLFormElement;
 
         const res = await serverRequests.createMemo(finalFormData, userData);
 
@@ -172,12 +170,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-
     const id = e.target.id as keyof Memo;
 
-    if (files && files.length > 0) {
-      const isVideo = files[0].type.includes("video") ? true : false;
+    const isVideo = files && files[0].type.includes("video") ? true : false;
 
+    if (files && files.length > 0) {
       const fileReaders = [];
       const fileDataUrls: string[] = [];
 
@@ -190,26 +187,31 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         reader.onloadend = async () => {
           fileDataUrls.push(reader.result as string);
 
-          if (fileDataUrls.length === files.length) { 
-            setLoading(true);
+          if (fileDataUrls.length === files.length) {
             setImageModalId(id);
-            const res = await upload.Images(fileDataUrls, `${id}${i}`, `${isVideo&&"video"}id`);
+            setLoading(true);
 
-            const finalResult =
-              formData?.[id] == null
-                ? res
-                : res.concat(
-                    Array.isArray(formData?.[id]) ? formData?.[id] : []
-                  );
+            const res = await upload.Images(
+              fileDataUrls,
+              `${isVideo && "video"} ${id}`,
+              id
+            );
+
+            const oldData =
+              Array.isArray(formData[id]) && formData[id].length
+                ? formData[id]
+                : [];
+
+            const isVideo2 = oldData[0]?.includes("video") ? true : false;
+
+            const finalData = isVideo || isVideo2 ? res : res.concat(oldData);
 
             setFormData({
               ...formData,
-              [id]: finalResult,
+              [id]: finalData,
             });
-
-            setImageModalId("");
             setLoading(false);
-          } 
+          }
         };
       }
     }
@@ -239,7 +241,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       [e.target.name]: e.target.value === "true" ? true : false,
     });
   };
-  // console.log(formData)
+
+  const [keysToUpdate, setKeysToUpdate] = React.useState<string>('');
 
   React.useEffect(() => {
     if (
@@ -248,51 +251,56 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       formData.isWithOffense
     ) {
       getRemedialAction(
-        formData?.Employee?._id,
-        formData?.MemoCode?._id || "",
-        formData?.MemoCode?._version || 0
+        formData.Employee._id,
+        formData.MemoCode._id || "",
+        formData.MemoCode._version || 0
       );
     } else {
       setRemedialAction("");
     }
 
-    if (formData?.Employee?._id) {
-      // console.log(!formData?.Employee?.agency );
-      // console.log(formData?.Employee?.isRegular)
-      if (!formData?.Employee?.company) {
-        setToastOptions({
-          open: true,
-          message: `${formData?.Employee?.firstName} has no company assigned`,
-          type: "warning",
-          timer: 5,
-        });
-        setEmployeeNeedsUpdate(true);
-      } else if (!formData?.Employee?.employeeHouseRulesSignatureList?.length) {
-        setToastOptions({
-          open: true,
-          message: `${formData?.Employee?.firstName} has not signed house rules`,
-          type: "warning",
-          timer: 5,
-        });
-        setEmployeeNeedsUpdate(true);
-      } else if (
-        !formData?.Employee?.agency &&
-        !formData?.Employee?.isRegular
-      ) {
-        setToastOptions({
-          open: true,
-          message: `${formData?.Employee?.firstName} must be assigned to an agency or have a regular status`,
-          type: "warning",
-          timer: 5,
-        });
-        setEmployeeNeedsUpdate(true);
-      } else {
-        setEmployeeNeedsUpdate(false);
-      }
-    } else {
-      setEmployeeNeedsUpdate(false);
+    if (!formData?.Employee?._id) return setEmployeeNeedsUpdate(false), setKeysToUpdate(''); 
+
+    const { company, employeeHouseRulesSignatureList, agency, isRegular } =
+      formData.Employee;
+
+    if (
+      !company ||
+      !employeeHouseRulesSignatureList?.length ||
+      (!agency && !isRegular)
+    ) {
+      const messages = [
+        !company && `No company`,
+        !employeeHouseRulesSignatureList?.length && `No house rules`,
+        !agency && !isRegular && `No agency or regular status.`,
+      ].filter(Boolean);
+
+      const keysToUpdate = [
+        !company && `company`,
+        !employeeHouseRulesSignatureList?.length &&
+          `employeeHouseRulesSignatureList`,
+        !agency?.length && `agency`,
+        !isRegular && `isRegular`,
+      ].filter(Boolean);
+      
+      const params = new URLSearchParams(); 
+      
+      keysToUpdate.forEach((key) => params.append("key", key as string));
+
+      setKeysToUpdate(params.toString());
+
+      setToastOptions({
+        open: true,
+        message: messages.join(", "),
+        type: "warning",
+        timer: 10,
+      });
+
+      return setEmployeeNeedsUpdate(true);
     }
-  }, [userData, formData]);
+    setKeysToUpdate('')
+    setEmployeeNeedsUpdate(false);
+  }, [formData, userData]); 
 
   const selectStyle = {
     control: (base: unknown) => ({
@@ -353,7 +361,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             !employeeNeedsUpdate && " hidden "
           } btn btn-xs btn-warning italic hover:underline font-semibold cursor-pointer w-max`}
           onClick={() => {
-            router.push("/Employee/Update#" + formData?.Employee?._id);
+            router.push("/Employee/Update" + `${keysToUpdate&&`?${keysToUpdate}`}#${formData?.Employee?._id}`);
           }}
         >
           Update {formData?.Employee?.firstName} {formData?.Employee?.lastName}{" "}
@@ -480,13 +488,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         id="mediaList"
         title="Media Proof"
         width="w-full"
-        inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-        imgDimensions={{ height: 60, width: 60 }}
-        mediaList={formData?.mediaList || []}
-        onChangeHandler={handleFileChange}
+        onChange={handleFileChange}
+        value={formData?.mediaList || []}
         multiple={true}
         required={false}
-        allowVideo={true}
+        allowVideos={true}
       />
 
       {/* submit */}

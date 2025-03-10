@@ -126,8 +126,9 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       <thead>
         <tr>
           <th>
+            <div className="w-max">
             <div
-              className="flex items-center gap-1 select-none"
+              className="flex items-center gap-1 select-none w-max"
               onClick={() => {
                 fetchEmployeeList("firstName");
               }}
@@ -153,6 +154,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                   d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
                 />
               </svg>
+            </div>
             </div>
           </th>
           {/* <th>Address</th> */}
@@ -190,18 +192,18 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
         </tr>
       </thead>
       <tbody>
-        {filteredEmployeeList.map((employee) => (
+        {filteredEmployeeList.map((employee, index) => (
           <tr
-            key={employee.firstName}
+            key={employee.firstName + employee._id + index}
             className={` ${
-              selectedEmployee?.firstName == employee?.firstName
+              selectedEmployee?.firstName == employee?.firstName && selectedEmployee?._id == employee?._id
                 ? "bg-base-300 "
                 : "hover:bg-base-200 "
             }  ${loading ? "disabled cursor-wait" : ""}  `}
             onClick={() => !loading && setSelectedEmployee(employee)}
             title="Select Employee"
           >
-            <th className="bg-opacity-0 backdrop-blur-sm ">
+            <td className=" ">
               <div className="flex items-center gap-3 ">
                 <div className="avatar ">
                   <div className="mask mask-squircle h-12 w-12 ">
@@ -227,7 +229,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       employee?.firstName + " " + employee?.lastName
                     )}
                   </div>
-                  <div className="text-xs opacity-80">
+                  <div className="text-xs opacity-70">
                     {highlightText(
                       employee.address ? employee.address.toString() : ""
                     )}
@@ -239,7 +241,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                   </div>
                 </div>
               </div>
-            </th>
+            </td>
             {/* <td className="capitalize ">
               <div className="min-w-[45vw] md:min-w-[20vw]">
                 {highlightText(

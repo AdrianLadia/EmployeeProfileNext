@@ -302,7 +302,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
               width={100}
               alt="biodataPhotosList"
               onClick={() => {
-                if (formData?.resumePhotosList?.[0]) {
+                if (formData?.biodataPhotosList?.[0]) {
                   handleImageModalClick(formData?.biodataPhotosList || []);
                 }
               }}

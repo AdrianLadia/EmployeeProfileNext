@@ -24,7 +24,6 @@ const EmployeeDetails = () => {
     loading,
     setLoading,
     setToastOptions,
-    router,
   } = useAppContext();
 
   const detailsRef = React.useRef<HTMLDivElement>(null);

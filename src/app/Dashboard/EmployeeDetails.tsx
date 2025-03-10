@@ -25,8 +25,9 @@ const EmployeeDetails = () => {
     setLoading,
     setToastOptions,
     router,
-    pathname,
   } = useAppContext();
+
+  const detailsRef = React.useRef<HTMLDivElement>(null);
 
   const [selectedEmployeeMemos, setSelectedEmployeeMemos] = React.useState(
     [] as Memo[]
@@ -227,21 +228,40 @@ const EmployeeDetails = () => {
   };
 
   React.useEffect(() => {
-    if (selectedEmployee._id) {
+    if (selectedEmployeeDetails._id) {
       const timeout = setTimeout(() => {
-        router.push(pathname + "#employee-details");
-      }, 800);
+        if (detailsRef.current) {
+          detailsRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center", 
+          });
+        }
+      }, 600);
       return () => clearTimeout(timeout);
-    } else {
-      router.replace(pathname);
     }
   }, [selectedEmployee]);
+
+  // React.useEffect(() => {
+  //   if (selectedEmployee._id) {
+  //     const timeout = setTimeout(() => {
+  //       if(window.location.href.includes("#employee-details")){
+  //         router.refresh();
+  //       }else{
+  //         router.replace(window.location.href + "#employee-details");
+  //       }
+  //     }, 800);
+  //     return () => clearTimeout(timeout);
+  //   } else {
+  //     router.replace(window.location.href );
+  //   }
+  // }, [selectedEmployee]);
 
   return (
     <div
       className={` ${
         loading && "cursor-wait"
       } relative h-full w-full flex flex-col overflow-auto rounded-box shadow-lg border p-4 pt-5 `}
+      ref={detailsRef}
     >
       {/* avatar, name, address */}
 
@@ -272,7 +292,7 @@ const EmployeeDetails = () => {
       <div
         className={` flex flex-wrap w-full gap-3 items-center md:items-start justify-center h-max border-b pb-3 pt-3 mb-2 lg:pb-4 lg:mb-6 ${
           Boolean(!selectedEmployeeDetails?._id) && "hidden"
-        } `}
+        } ${loading && "hidden"}`}
       >
         {/* avatar */}
         <div
@@ -348,7 +368,9 @@ const EmployeeDetails = () => {
         <div
           className={
             `btn rounded-xl shadow-md !flex-row w-full justify-evenly items-center group cursor-pointer` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() => handleGalleryModalClick(selectedEmployeeDetails)}
         >
@@ -419,7 +441,9 @@ const EmployeeDetails = () => {
         <div
           className={
             `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() =>
             selectedEmployeeDetails?.employeeSignature &&
@@ -443,7 +467,9 @@ const EmployeeDetails = () => {
         <div
           className={
             `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() =>
             selectedEmployeeDetails?.resumePhotosList &&
@@ -467,7 +493,9 @@ const EmployeeDetails = () => {
         <div
           className={
             `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() =>
             selectedEmployeeDetails?.biodataPhotosList &&
@@ -491,7 +519,9 @@ const EmployeeDetails = () => {
         <div
           className={
             `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() =>
             selectedEmployeeDetails?.employeeHouseRulesSignatureList &&

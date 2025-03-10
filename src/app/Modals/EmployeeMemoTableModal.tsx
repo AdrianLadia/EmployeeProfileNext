@@ -47,7 +47,11 @@ const EmployeeMemoTableModal = () => {
   };
 
   return (
-    <dialog id="EmployeeMemoModal" className="modal outline-none" ref={memoTableModalRef}>
+    <dialog
+      id="EmployeeMemoModal"
+      className="modal outline-none"
+      ref={memoTableModalRef}
+    >
       <div className=" bg-transparent shadow-none gap-2 p-0 w-max">
         <div className="h-[100svh] w-[98vw] rounded-box py-8 backdrop-blur-sm md:px-6 flex justify-center items-center flex-col gap-2 relative ">
           {/*  */}
@@ -79,10 +83,10 @@ const EmployeeMemoTableModal = () => {
                   {!isForSingleEmployee && (
                     <th className="min-w-[150px]">Employee</th>
                   )}
-                  <th className="min-w-[200px]">Memo</th>
-                  <th className="min-w-[20vw]">Offense</th>
-                  <th className="min-w-[150px]">Media</th>
-                  <th className="min-w-[150px]">Memo Photo</th>
+                  <th className="min-w-[300px]">Memo</th>
+                  {/* <th className="min-w-[20vw]">Offense</th> */}
+                  <th className="min-w-[125px]">Media</th>
+                  <th className="min-w-[125px]">Memo Photo</th>
                   <th>Reason</th>
                   <th>isSubmitted</th>
                 </tr>
@@ -91,7 +95,9 @@ const EmployeeMemoTableModal = () => {
                 {sortedMemos?.map((memo) => (
                   <tr
                     key={memo._id}
-                    className={`${!memo?.submitted ? "bg-red-50/80" : "bg-base-100/80"} `}
+                    className={`${
+                      !memo?.submitted ? "bg-red-50/70" : "bg-base-100/80"
+                    } `}
                   >
                     {/* print */}
                     <td className="w-max text-center ">
@@ -132,13 +138,25 @@ const EmployeeMemoTableModal = () => {
                       className=" "
                       onClick={() => handleMemoPrintModalClick(memo)}
                     >
-                      <h3 className="font-bold underline">{memo?.subject}</h3>
-                      <p className="whitespace-pre-line hover:underline decoration-wavy line-clamp-4">
-                        {memo?.description}
-                      </p>
+                      <div className="p-4 bg-base-200 hover:bg-base-100 cursor-pointer rounded-box">
+                        <h2 className="font-bold text-base text-pretty" title="Title">
+                          {memo?.MemoCode?.title}
+                        </h2>
+                        <div className="w-full my-0.5" />
+                        {/* <h3 className="indent-1 text-sm font-bold -mb-0.5" title="Subject">
+                          {memo?.subject}
+                        </h3> */}
+                        <p className="text-xs px-1 whitespace-pre-line line-clamp-3" title="Message">
+                          {memo?.description}
+                        </p>
+                        <div className="w-full my-1" />
+                        <p className="btn btn-xs text-[.70rem] btn-neutral truncate mt-1">
+                          {memo?.remedialAction || "No Offense"}
+                        </p>
+                      </div>
                     </td>
                     {/* Offense */}
-                    <td>
+                    {/* <td>
                       <div>
                         <div
                           tabIndex={0}
@@ -156,10 +174,10 @@ const EmployeeMemoTableModal = () => {
                           </div>
                         </div>
                       </div>
-                    </td>
+                    </td> */}
                     {/* Photos */}
                     <td>
-                      <div className="overflow-clip w-[150px] h-[150px] border cursor-pointer border-neutral text-neutral-content group flex justify-center items-center rounded-box">
+                      <div className="overflow-clip w-[125px] h-[125px] border cursor-pointer border-neutral text-neutral-content group flex justify-center items-center rounded-box">
                         {memo?.mediaList?.[0]
                           ?.toLocaleLowerCase()
                           .includes("video") ? (
@@ -191,7 +209,7 @@ const EmployeeMemoTableModal = () => {
                     </td>
                     {/* Memo Photos */}
                     <td>
-                      <div className="w-[150px] h-[150px] border border-neutral group rounded-box overflow-clip flex items-center justify-center">
+                      <div className="w-[125px] h-[125px] border border-neutral group rounded-box overflow-clip flex items-center justify-center">
                         {memo?.memoPhotosList?.[0] ? (
                           <Image
                             className={` w-full h-full hover:p-1 `}
@@ -252,7 +270,7 @@ const EmployeeMemoTableModal = () => {
                     <th className="min-w-[150px]">Employee</th>
                   )}
                   <th>Memo</th>
-                  <th>Offense</th>
+                  {/* <th>Offense</th> */}
                   <th>Photos</th>
                   <th>Memo Photos</th>
                   <th>Reason</th>

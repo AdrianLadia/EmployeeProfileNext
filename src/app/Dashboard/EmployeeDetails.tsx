@@ -40,12 +40,6 @@ const EmployeeDetails = () => {
 
   const [fetchingMemos, setFetchingMemos] = React.useState<boolean>(false);
 
-  // const detailStyle = () =>
-  //   ` ${loading && "hidden"} 
-  //   tracking-widest flex grow flex-col text-center border border-base-300 rounded-xl bg-base-100 
-  //   hover:bg-base-300 p-2 2xl:p-3
-  // `;
-
   const detailStyle = () =>
     ` ${loading && "hidden"} 
     tracking-widest flex grow flex-col text-center shadow-md rounded-xl border-t border-x border-base-200
@@ -345,7 +339,7 @@ const EmployeeDetails = () => {
             !selectedEmployeeDetails?.address && "hidden"
           } text-center capitalize w-full px-3`}
         >
-          <h3 >{selectedEmployeeDetails?.address || ""}</h3>
+          <h3>{selectedEmployeeDetails?.address || ""}</h3>
         </div>
       </div>
 

@@ -87,8 +87,6 @@ const OffenseTableModal = () => {
 
   const [year] = React.useState(new Date().getFullYear());
 
-  // if (!offenseListForModal.length) return null;
-
   return (
     <dialog className=" modal " id="OffenseDownloadModal">
       <div

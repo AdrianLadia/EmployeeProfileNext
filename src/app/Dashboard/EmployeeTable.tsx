@@ -254,7 +254,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 <div
                   tabIndex={0}
                   role="button"
-                  className="btn btn-sm btn-circle btn-neutral btn-outline border border-gray-400 bg-base-100"
+                  className="btn btn-sm btn-circle btn-neutral btn-outline "
                   title="Menu"
                 >
                   <svg

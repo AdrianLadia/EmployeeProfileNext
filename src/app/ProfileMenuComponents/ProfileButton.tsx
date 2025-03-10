@@ -17,15 +17,13 @@ const ProfileButton: FC<ProfileButtonProps> = ({
   return (
     <div
       className={` 
-          z-[60] cursor-pointer w-full h-full ${
-            !showMenu && " md:tooltip-left  md:tooltip relative"
-          } 
+        z-[60] cursor-pointer w-full h-full  
       `}
       onClick={(e) => {
         handleMenuClick();
         e.stopPropagation();
       }}
-      data-tip="Profile"
+      title="Profile"
       id="profile-button"
     >
       <div

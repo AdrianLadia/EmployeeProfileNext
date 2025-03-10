@@ -203,7 +203,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             onClick={() => !loading && setSelectedEmployee(employee)}
             title="Select Employee"
           >
-            <th className="bg-opacity-0 backdrop-blur-sm ">
+            <td className=" ">
               <div className="flex items-center gap-3 ">
                 <div className="avatar ">
                   <div className="mask mask-squircle h-12 w-12 ">
@@ -241,7 +241,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                   </div>
                 </div>
               </div>
-            </th>
+            </td>
             {/* <td className="capitalize ">
               <div className="min-w-[45vw] md:min-w-[20vw]">
                 {highlightText(

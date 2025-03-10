@@ -92,7 +92,7 @@ const OffenseTableModal = () => {
   return (
     <dialog className=" modal " id="OffenseDownloadModal">
       <div
-        className={` relative h-[100svh] w-[100vw] md:w-[80vw] 2xl:w-[70vw] border bg-white text-black rounded-box`}
+        className={` relative h-[99svh] w-[100vw] md:w-[80vw] 2xl:w-[70vw] border bg-white text-black rounded-box`}
       >
         <div className="w-full h-full overflow-auto py-[8vh]">
           {/* CLOSE BUTTON */}

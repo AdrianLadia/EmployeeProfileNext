@@ -40,10 +40,16 @@ const EmployeeDetails = () => {
 
   const [fetchingMemos, setFetchingMemos] = React.useState<boolean>(false);
 
+  // const detailStyle = () =>
+  //   ` ${loading && "hidden"} 
+  //   tracking-widest flex grow flex-col text-center border border-base-300 rounded-xl bg-base-100 
+  //   hover:bg-base-300 p-2 2xl:p-3
+  // `;
+
   const detailStyle = () =>
     ` ${loading && "hidden"} 
-    tracking-widest flex grow flex-col text-center  border border-base-300 rounded-xl bg-base-100 
-    hover:bg-base-300 p-2 2xl:p-3
+    tracking-widest flex grow flex-col text-center shadow-md rounded-xl border-t border-x border-base-200
+    p-2 2xl:p-3 hover:bg-base-300
   `;
 
   const skeletonStyle = `
@@ -329,8 +335,6 @@ const EmployeeDetails = () => {
             )
           }
         >
-          {/* <h2 className=" ">{selectedEmployeeDetails?.firstName}</h2>
-          <h2 className=" ">{selectedEmployeeDetails?.lastName}</h2> */}
           {selectedEmployeeDetails?.firstName}{" "}
           {selectedEmployeeDetails?.lastName}
         </div>
@@ -341,7 +345,7 @@ const EmployeeDetails = () => {
             !selectedEmployeeDetails?.address && "hidden"
           } text-center capitalize w-full px-3`}
         >
-          <h3 className="  ">{selectedEmployeeDetails?.address || ""}</h3>
+          <h3 >{selectedEmployeeDetails?.address || ""}</h3>
         </div>
       </div>
 
@@ -349,7 +353,7 @@ const EmployeeDetails = () => {
         {/* employee gallery */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center group cursor-pointer` +
+            `btn rounded-xl shadow-md !flex-row w-full justify-evenly items-center group cursor-pointer` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() => handleGalleryModalClick(selectedEmployeeDetails)}
@@ -359,7 +363,7 @@ const EmployeeDetails = () => {
             {selectedEmployeeDetails?.employeeImageGallery?.[0] ? (
               <>
                 <Image
-                  className={`w-8 h-8 border `}
+                  className={`w-8 h-8 border border-base-200`}
                   src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
                   alt={"employeeImageGallery"}
                   width={100}
@@ -370,7 +374,7 @@ const EmployeeDetails = () => {
                   className={`${
                     selectedEmployeeDetails?.employeeImageGallery?.length < 3 &&
                     "hidden"
-                  } w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center`}
+                  } w-8 h-8 bg-base-300 group-hover:bg-base-100 border-base-200 border grid place-items-center`}
                 >
                   {`+${
                     selectedEmployeeDetails?.employeeImageGallery?.length - 1
@@ -378,7 +382,7 @@ const EmployeeDetails = () => {
                 </div>
               </>
             ) : (
-              <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center">
+              <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border-base-200 border grid place-items-center">
                 +
               </div>
             )}
@@ -420,7 +424,7 @@ const EmployeeDetails = () => {
         {/* employee Signature */}
         <div
           className={
-            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
+            `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -432,9 +436,9 @@ const EmployeeDetails = () => {
         >
           Signature
           <Image
-            className={`w-8 h-8`}
+            className={`w-8 h-8 border border-base-100`}
             src={selectedEmployeeDetails?.employeeSignature || ""}
-            alt={"employeeSignature"}
+            alt={" "}
             width={100}
             height={100}
             loading="lazy"
@@ -444,7 +448,7 @@ const EmployeeDetails = () => {
         {/* Resume */}
         <div
           className={
-            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
+            `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -456,9 +460,9 @@ const EmployeeDetails = () => {
         >
           Resume
           <Image
-            className={`w-8 h-8`}
+            className={`w-8 h-8 border border-base-100`}
             src={selectedEmployeeDetails?.resumePhotosList?.[0] || ""}
-            alt={"Resume"}
+            alt={" "}
             width={100}
             height={100}
             loading="lazy"
@@ -468,7 +472,7 @@ const EmployeeDetails = () => {
         {/* Bio-data */}
         <div
           className={
-            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
+            `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -480,9 +484,9 @@ const EmployeeDetails = () => {
         >
           Bio-data
           <Image
-            className={`w-8 h-8`}
+            className={`w-8 h-8 border border-base-100`}
             src={selectedEmployeeDetails?.biodataPhotosList?.[0] || ""}
-            alt={"Bio-data"}
+            alt={" "}
             width={100}
             height={100}
             loading="lazy"
@@ -492,7 +496,7 @@ const EmployeeDetails = () => {
         {/* employeeHouseRulesSignatureList */}
         <div
           className={
-            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
+            `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -504,12 +508,12 @@ const EmployeeDetails = () => {
         >
           House Rules
           <Image
-            className={`w-8 h-8`}
+            className={`w-8 h-8 border border-base-100`}
             src={
               selectedEmployeeDetails?.employeeHouseRulesSignatureList?.[0] ||
               ""
             }
-            alt={"House Rules"}
+            alt={" "}
             width={100}
             height={100}
             loading="lazy"

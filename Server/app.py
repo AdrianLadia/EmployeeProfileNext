@@ -7,7 +7,6 @@ from AppConfig import AppConfig
 import logging
 from firebaseAuthenticator import firebaseAuthenticator
 from datetime import datetime, timezone
-import requests
 from downloadServer import DownloadServer
 
 app = Flask(__name__)

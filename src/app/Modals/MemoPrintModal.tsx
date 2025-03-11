@@ -180,10 +180,7 @@ const PrintMemorandumModal = () => {
             </div>
           </div>
 
-          <div
-            className="opacity-50 hover:opacity-100 flex justify-center items-center absolute top-3 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 tooltip tooltip-bottom"
-            data-tip="Include"
-          >
+          <div className="opacity-50 hover:opacity-100 flex justify-center items-center absolute md:top-3 top-14 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 ">
             {memoForPrintModal?.mediaList?.[0] &&
               !memoForPrintModal?.mediaList?.[0]?.includes("video") && (
                 <>
@@ -227,8 +224,15 @@ const PrintMemorandumModal = () => {
           {/* printable div */}
           <div className="h-max w-full pt-3 px-4 pb-3 bg-white" ref={memoRef}>
             {/* <h1 className="text-3xl"> Memorandum </h1> */}
-            <h1 className="text-3xl text-center uppercase font-serif tracking-tighter"> {memoForPrintModal?.Employee?.agency || "Memorandum"} </h1>
-            <h2 className="text-lg text-center uppercase font-serif tracking-tighter"> Memorandum and Explanation Notice </h2>
+            <h1 className="text-3xl text-center uppercase font-serif tracking-tighter">
+              {" "}
+              {memoForPrintModal?.Employee?.agency ||
+                "Pustanan Printers - Cebu"}{" "}
+            </h1>
+            <h2 className="text-lg text-center uppercase font-serif tracking-tighter">
+              {" "}
+              Memorandum and Explanation Notice{" "}
+            </h2>
 
             <br />
 

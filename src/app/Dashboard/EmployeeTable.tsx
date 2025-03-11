@@ -126,33 +126,35 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       <thead>
         <tr>
           <th>
-            <div
-              className="flex items-center gap-1 select-none"
-              onClick={() => {
-                fetchEmployeeList("firstName");
-              }}
-            >
-              Name
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className={`${
-                  sortOrder.id == "firstName" && sortOrder.order == -1
-                    ? "bg-error rotate-180"
-                    : sortOrder.id == "firstName" && sortOrder.order == 1
-                    ? "bg-success"
-                    : "bg-gray-400"
-                } size-6 transition-all duration-300 rounded-full p-0.5 cursor-pointer`}
+            <div className="w-max">
+              <div
+                className="flex items-center gap-1 select-none w-max"
+                onClick={() => {
+                  fetchEmployeeList("firstName");
+                }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
-                />
-              </svg>
+                Name
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className={`${
+                    sortOrder.id == "firstName" && sortOrder.order == -1
+                      ? "bg-error rotate-180"
+                      : sortOrder.id == "firstName" && sortOrder.order == 1
+                      ? "bg-success"
+                      : "bg-gray-400"
+                  } size-6 transition-all duration-300 rounded-full p-0.5 cursor-pointer`}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                  />
+                </svg>
+              </div>
             </div>
           </th>
           {/* <th>Address</th> */}
@@ -186,22 +188,23 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
               </svg>
             </div>
           </th>
-          <th className="min-w-[10px]"></th>
+          <th className="w-max"></th>
         </tr>
       </thead>
       <tbody>
-        {filteredEmployeeList.map((employee) => (
+        {filteredEmployeeList.map((employee, index) => (
           <tr
-            key={employee.firstName}
+            key={employee.firstName + employee._id + index}
             className={` ${
-              selectedEmployee?.firstName == employee?.firstName
+              selectedEmployee?.firstName == employee?.firstName &&
+              selectedEmployee?._id == employee?._id
                 ? "bg-base-300 "
                 : "hover:bg-base-200 "
             }  ${loading ? "disabled cursor-wait" : ""}  `}
             onClick={() => !loading && setSelectedEmployee(employee)}
             title="Select Employee"
           >
-            <th className="bg-opacity-0 backdrop-blur-sm ">
+            <td className=" ">
               <div className="flex items-center gap-3 ">
                 <div className="avatar ">
                   <div className="mask mask-squircle h-12 w-12 ">
@@ -231,22 +234,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                     {highlightText(
                       employee.address ? employee.address.toString() : ""
                     )}
-                    {/* {highlightText(
-                      employee.phoneNumber
-                        ? employee.phoneNumber.toString()
-                        : ""
-                    )} */}
                   </div>
                 </div>
               </div>
-            </th>
-            {/* <td className="capitalize ">
-              <div className="min-w-[45vw] md:min-w-[20vw]">
-                {highlightText(
-                  employee.address ? employee.address.toString() : ""
-                )}
-              </div>
-            </td> */}
+            </td>
             <td>
               {highlightText(
                 employee.company ? employee.company.toString() : ""
@@ -255,7 +246,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             </td>
             <td>
               <div
-                className="dropdown dropdown-top dropdown-end"
+                className="dropdown dropdown-top dropdown-end w-max"
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
@@ -263,7 +254,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 <div
                   tabIndex={0}
                   role="button"
-                  className="btn btn-sm btn-circle btn-neutral btn-outline border border-gray-400 bg-base-100"
+                  className="btn btn-sm btn-circle btn-neutral btn-outline "
                   title="Menu"
                 >
                   <svg
@@ -385,7 +376,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       <tfoot>
         <tr>
           <th>Name</th>
-          {/* <th>Address</th> */}
           <th>Company</th>
           <th></th>
         </tr>

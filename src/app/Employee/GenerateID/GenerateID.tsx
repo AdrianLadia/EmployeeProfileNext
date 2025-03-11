@@ -101,8 +101,6 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
 
     keyToUpdate.forEach((key) => params.append("key", key as string)); 
 
-    console.log(params.toString());
-
     setKeysToUpdate(params.toString());
   }, [formData]);
 
@@ -142,7 +140,7 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
       <div
         className={` ${
           phase == 1 ? " shadow-xl border" : ""
-        } overflow-x-hidden h-[75vh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel `}
+        } overflow-x-hidden h-[75svh] w-[96vw] md:w-[70vw] lg:w-[50vw] 2xl:w-[45vw] flex carousel `}
       >
         {/* select employee*/}
         <EmployeeSelection

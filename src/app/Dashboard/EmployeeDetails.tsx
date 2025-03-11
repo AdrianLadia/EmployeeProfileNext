@@ -26,6 +26,8 @@ const EmployeeDetails = () => {
     setToastOptions,
   } = useAppContext();
 
+  const detailsRef = React.useRef<HTMLDivElement>(null);
+
   const [selectedEmployeeMemos, setSelectedEmployeeMemos] = React.useState(
     [] as Memo[]
   );
@@ -40,8 +42,8 @@ const EmployeeDetails = () => {
 
   const detailStyle = () =>
     ` ${loading && "hidden"} 
-    tracking-widest flex grow flex-col text-center  border border-base-300 rounded-xl bg-base-100 
-    hover:bg-base-300 p-2 2xl:p-3
+    tracking-widest flex grow flex-col text-center shadow-md rounded-xl border-t border-x border-base-200
+    p-2 2xl:p-3 hover:bg-base-300
   `;
 
   const skeletonStyle = `
@@ -111,14 +113,6 @@ const EmployeeDetails = () => {
       if (selectedEmployee._id) {
         getSelectedEmployeeDetails();
       }
-
-      // if (userData?._id && selectedEmployee?._id && window.innerWidth < 768) {
-      //   // dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-      //   window.scrollTo({
-      //     top: 10000,
-      //     behavior: "smooth", // Enables smooth scrolling
-      //   });
-      // }
 
       if (!selectedEmployee._id) {
         setSelectedEmployeeDetails({} as Employee);
@@ -232,11 +226,41 @@ const EmployeeDetails = () => {
     ) : null;
   };
 
+  React.useEffect(() => {
+    if (selectedEmployeeDetails._id) {
+      const timeout = setTimeout(() => {
+        if (detailsRef.current) {
+          detailsRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center", 
+          });
+        }
+      }, 600);
+      return () => clearTimeout(timeout);
+    }
+  }, [selectedEmployee]);
+
+  // React.useEffect(() => {
+  //   if (selectedEmployee._id) {
+  //     const timeout = setTimeout(() => {
+  //       if(window.location.href.includes("#employee-details")){
+  //         router.refresh();
+  //       }else{
+  //         router.replace(window.location.href + "#employee-details");
+  //       }
+  //     }, 800);
+  //     return () => clearTimeout(timeout);
+  //   } else {
+  //     router.replace(window.location.href );
+  //   }
+  // }, [selectedEmployee]);
+
   return (
     <div
       className={` ${
         loading && "cursor-wait"
-      } relative h-full w-full flex flex-col overflow-auto rounded-box shadow-lg border p-4 pt-5`}
+      } relative h-full w-full flex flex-col overflow-auto rounded-box shadow-lg border p-4 pt-5 `}
+      ref={detailsRef}
     >
       {/* avatar, name, address */}
 
@@ -267,7 +291,7 @@ const EmployeeDetails = () => {
       <div
         className={` flex flex-wrap w-full gap-3 items-center md:items-start justify-center h-max border-b pb-3 pt-3 mb-2 lg:pb-4 lg:mb-6 ${
           Boolean(!selectedEmployeeDetails?._id) && "hidden"
-        } `}
+        } ${loading && "hidden"}`}
       >
         {/* avatar */}
         <div
@@ -324,8 +348,6 @@ const EmployeeDetails = () => {
             )
           }
         >
-          {/* <h2 className=" ">{selectedEmployeeDetails?.firstName}</h2>
-          <h2 className=" ">{selectedEmployeeDetails?.lastName}</h2> */}
           {selectedEmployeeDetails?.firstName}{" "}
           {selectedEmployeeDetails?.lastName}
         </div>
@@ -336,7 +358,7 @@ const EmployeeDetails = () => {
             !selectedEmployeeDetails?.address && "hidden"
           } text-center capitalize w-full px-3`}
         >
-          <h3 className="  ">{selectedEmployeeDetails?.address || ""}</h3>
+          <h3>{selectedEmployeeDetails?.address || ""}</h3>
         </div>
       </div>
 
@@ -344,8 +366,10 @@ const EmployeeDetails = () => {
         {/* employee gallery */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center group cursor-pointer` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            `btn rounded-xl shadow-md !flex-row w-full justify-evenly items-center group cursor-pointer` +
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() => handleGalleryModalClick(selectedEmployeeDetails)}
         >
@@ -354,7 +378,7 @@ const EmployeeDetails = () => {
             {selectedEmployeeDetails?.employeeImageGallery?.[0] ? (
               <>
                 <Image
-                  className={`w-8 h-8 border `}
+                  className={`w-8 h-8 border border-base-200`}
                   src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
                   alt={"employeeImageGallery"}
                   width={100}
@@ -365,7 +389,7 @@ const EmployeeDetails = () => {
                   className={`${
                     selectedEmployeeDetails?.employeeImageGallery?.length < 3 &&
                     "hidden"
-                  } w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center`}
+                  } w-8 h-8 bg-base-300 group-hover:bg-base-100 border-base-200 border grid place-items-center`}
                 >
                   {`+${
                     selectedEmployeeDetails?.employeeImageGallery?.length - 1
@@ -373,7 +397,7 @@ const EmployeeDetails = () => {
                 </div>
               </>
             ) : (
-              <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center">
+              <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border-base-200 border grid place-items-center">
                 +
               </div>
             )}
@@ -415,8 +439,10 @@ const EmployeeDetails = () => {
         {/* employee Signature */}
         <div
           className={
-            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() =>
             selectedEmployeeDetails?.employeeSignature &&
@@ -427,9 +453,9 @@ const EmployeeDetails = () => {
         >
           Signature
           <Image
-            className={`w-8 h-8`}
+            className={`w-8 h-8 border border-base-100`}
             src={selectedEmployeeDetails?.employeeSignature || ""}
-            alt={"employeeSignature"}
+            alt={" "}
             width={100}
             height={100}
             loading="lazy"
@@ -439,8 +465,10 @@ const EmployeeDetails = () => {
         {/* Resume */}
         <div
           className={
-            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() =>
             selectedEmployeeDetails?.resumePhotosList &&
@@ -451,9 +479,9 @@ const EmployeeDetails = () => {
         >
           Resume
           <Image
-            className={`w-8 h-8`}
+            className={`w-8 h-8 border border-base-100`}
             src={selectedEmployeeDetails?.resumePhotosList?.[0] || ""}
-            alt={"Resume"}
+            alt={" "}
             width={100}
             height={100}
             loading="lazy"
@@ -463,8 +491,10 @@ const EmployeeDetails = () => {
         {/* Bio-data */}
         <div
           className={
-            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() =>
             selectedEmployeeDetails?.biodataPhotosList &&
@@ -475,9 +505,9 @@ const EmployeeDetails = () => {
         >
           Bio-data
           <Image
-            className={`w-8 h-8`}
+            className={`w-8 h-8 border border-base-100`}
             src={selectedEmployeeDetails?.biodataPhotosList?.[0] || ""}
-            alt={"Bio-data"}
+            alt={" "}
             width={100}
             height={100}
             loading="lazy"
@@ -487,8 +517,10 @@ const EmployeeDetails = () => {
         {/* employeeHouseRulesSignatureList */}
         <div
           className={
-            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
-            ` ${!selectedEmployeeDetails._id && "hidden"}`
+            `btn rounded-xl shadow-md grow !flex-row justify-evenly items-center place-self-center max-w-full` +
+            ` ${!selectedEmployeeDetails._id && "hidden"} ${
+              loading && "hidden"
+            } `
           }
           onClick={() =>
             selectedEmployeeDetails?.employeeHouseRulesSignatureList &&
@@ -499,12 +531,12 @@ const EmployeeDetails = () => {
         >
           House Rules
           <Image
-            className={`w-8 h-8`}
+            className={`w-8 h-8 border border-base-100`}
             src={
               selectedEmployeeDetails?.employeeHouseRulesSignatureList?.[0] ||
               ""
             }
-            alt={"House Rules"}
+            alt={" "}
             width={100}
             height={100}
             loading="lazy"

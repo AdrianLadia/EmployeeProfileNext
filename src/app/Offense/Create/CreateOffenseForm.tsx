@@ -32,7 +32,6 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({
 
   const [remedialActions, setRemedialActions] = useState<string[]>([
     "Written-Reprimand",
-    "Verbal Reprimand",
     "Verbal And Written Reprimand",
     "1 Day Suspension",
     "3 Days Suspension",

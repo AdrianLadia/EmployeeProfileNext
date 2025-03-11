@@ -73,7 +73,7 @@ const Page = async () => {
     pl-4 p-2 shadow-lg rounded-box flex flex-col items-start justify-evenly gap-2 border tracking-tighter order-3 lg:order-1`;
 
   return (
-    <div className=" flex flex-col items-center justify-center h-max md:h-[100vh] ">
+    <div className=" flex flex-col items-center justify-center h-max md:h-[100vh] scroll-smooth">
       {/* <ProfileMenu />   */}
 
       <div className="h-[1.5vh] md:h-0" />
@@ -118,14 +118,14 @@ const Page = async () => {
           </div>
 
           {/* employee preview */}
-          <div className="block lg:hidden max-h-[95vh] order-2 ">
+          <div className="block lg:hidden order-2 " id="employee-details">
             <div className="w-full h-full flex flex-wrap justify-between py-6 ">
               <EmployeeDetails />
             </div>
           </div>
 
           {/* Table */}
-          <div className="w-[100%] max-h-[85svh] lg:h-[75%] p-4 shadow-lg rounded-box flex flex-col items-start justify-between border order-1 lg:order-2">
+          <div className="w-[100%] max-h-[75svh] lg:h-[75%] p-4 shadow-lg rounded-box flex flex-col items-start justify-between border order-1 lg:order-2">
             <div className=" w-full overflow-auto h-full">
               <div className="flex flex-col md:flex-row p-1 justify-between items-center w-full">
                 <h2 className="text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full flex gap-2 items-center">

@@ -15,9 +15,9 @@ const OffenseDownloadButton: React.FC<{ offenseList: Offense[] }> = ({ offenseLi
 
   return (
     <button
-      className="btn btn-accent btn-sm tooltip tooltip-left text-white md:tooltip-top tooltip-accent"
+      className="btn btn-accent btn-sm text-white"
       onClick={handleClick}
-      data-tip="Download"
+      title="Download"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

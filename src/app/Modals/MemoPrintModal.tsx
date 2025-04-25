@@ -40,75 +40,234 @@ const PrintMemorandumModal = () => {
 
   const convertToPdf = async () => {
     setLoading(true);
-
-    const desktopWidth = 1200;
+  
+    const desktopWidth = 1280;
     const desktopHeight = 800;
-
+  
     const originalWidth = window.innerWidth;
     const originalHeight = window.innerHeight;
-
+  
     window.innerWidth = desktopWidth;
     window.innerHeight = desktopHeight;
     window.dispatchEvent(new Event("resize"));
-
+  
     const element = memoRef.current;
     if (!element) {
       console.error("Element not found");
       setLoading(false);
       return;
     }
-
+  
     try {
-      const A4_WIDTH = 595.28; // A4 width in points
-      const A4_HEIGHT = 841.89; // A4 height in points
-
-      // FORCE element width to A4 width
-      element.style.width = `${A4_WIDTH}px`;
-      element.style.maxWidth = `${A4_WIDTH}px`;
+      const A4_WIDTH = 595.28; // Width of A4 in points
+      const A4_HEIGHT = 841.89; // Height of A4 in points
+      const MARGIN = 10; // Margin around content
+      const PAGE_BREAK_SEARCH_RANGE = 100; // Range to search for whitespace
+  
+      // Apply styles for rendering
+      element.style.width = `${A4_WIDTH - (MARGIN * 2)}px`;
+      element.style.maxWidth = `${A4_WIDTH - (MARGIN * 2)}px`;
+      element.style.fontSize = `14px`; // Use a readable font size
       element.style.height = "auto";
       element.style.overflow = "visible";
-
-      // Capture the memo content
+  
+      // Create canvas of the element
       const canvas = await html2canvas(element, {
-        scale: 2, // High resolution
+        scale: 2,
         useCORS: true,
-        width: A4_WIDTH, // Force A4 width
+        width: A4_WIDTH - (MARGIN * 2),
+        backgroundColor: "#ffffff"
       });
+  
+      // Create a temporary canvas to detect whitespace
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
 
-      const imgData = canvas.toDataURL("image/png");
+      if(!tempCtx){
+        console.error("tempCtx is null");
+        return;
+      }
 
-      // Stretch the image to fit full width & height of A4 page
+      tempCtx?.drawImage(canvas, 0, 0);
+  
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "pt",
         format: "a4",
         compress: true,
       });
-
-      pdf.addImage(imgData, "PNG", 0, 0, A4_WIDTH, A4_HEIGHT);
-
-      // Add media list image if available and not a video
+  
+      const effectivePageHeight = A4_HEIGHT - (MARGIN * 2);
+      
+      const pageRatio = canvas.width / (A4_WIDTH - (MARGIN * 2));
+      const pixelsPerPage = Math.floor(effectivePageHeight * pageRatio);
+      
+      const totalPages = Math.ceil(canvas.height / pixelsPerPage);
+      
+      const findBreakpoint = (y: number) => {
+        if (y >= canvas.height) return canvas.height;
+        
+        const searchStart = Math.max(0, y - PAGE_BREAK_SEARCH_RANGE);
+        const searchEnd = Math.min(canvas.height, y + PAGE_BREAK_SEARCH_RANGE);
+        
+        const imageData = tempCtx.getImageData(0, searchStart, canvas.width, searchEnd - searchStart);
+        const data = imageData.data;
+        
+        const whiteRows = [];
+        
+        for (let row = 0; row < searchEnd - searchStart; row++) {
+          let whitePixelCount = 0;
+          let totalPixels = 0;
+          
+          for (let col = 0; col < canvas.width; col++) {
+            const pixelIndex = (row * canvas.width + col) * 4;
+            if (data[pixelIndex] > 240 && data[pixelIndex + 1] > 240 && data[pixelIndex + 2] > 240) {
+              whitePixelCount++;
+            }
+            totalPixels++;
+          }
+          
+          if (whitePixelCount / totalPixels > 0.95) {
+            whiteRows.push(row + searchStart);
+          }
+        }
+        
+        if (whiteRows.length > 0) {
+          whiteRows.sort((a, b) => Math.abs(a - y) - Math.abs(b - y));
+          return whiteRows[0];
+        }
+        
+        return y;
+      };
+  
+      for (let page = 0; page < totalPages; page++) {
+        const idealY = (page + 1) * pixelsPerPage;
+        
+        const breakY = findBreakpoint(idealY);
+        
+        const pageHeight = (page === totalPages - 1) 
+          ? canvas.height - (page * pixelsPerPage)
+          : breakY - (page * pixelsPerPage);
+        
+        const pageCanvas = document.createElement('canvas');
+        const pageCtx = pageCanvas.getContext('2d');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = pageHeight;
+        
+        if (pageCtx) {
+          pageCtx.drawImage(
+            canvas, 
+            0, page * pixelsPerPage,
+            canvas.width, pageHeight,
+            0, 0,
+            canvas.width, pageHeight
+          );
+        } else {
+          console.error("pageCtx is null");
+        }
+        
+        const imgData = pageCanvas.toDataURL("image/png");
+        
+        if (page > 0) {
+          pdf.addPage();
+        }
+        
+        pdf.addImage(
+          imgData, 
+          "PNG", 
+          MARGIN,
+          MARGIN,
+          A4_WIDTH - (MARGIN * 2),
+          (pageHeight / pageCanvas.width) * (A4_WIDTH - (MARGIN * 2))
+        );
+      }
+  
       if (
         memoForPrintModal?.mediaList?.[0] &&
         includeMediaList &&
-        !memoForPrintModal?.mediaList?.[0]?.includes("video")
+        !memoForPrintModal?.mediaList?.[0]?.includes("video") &&
+        mediaListRef.current
       ) {
-        await addImageToPdf(pdf, mediaListRef.current, A4_WIDTH, A4_HEIGHT);
+        pdf.addPage();
+        
+        const originalMediaStyles = {
+          width: mediaListRef.current.style.width,
+          fontSize: mediaListRef.current.style.fontSize
+        };
+        
+        mediaListRef.current.style.width = `${A4_WIDTH - (MARGIN * 2)}px`;
+        mediaListRef.current.style.fontSize = `14px`;
+        
+        const mediaCanvas = await html2canvas(mediaListRef.current, {
+          scale: 2,
+          useCORS: true,
+          width: A4_WIDTH - (MARGIN * 2),
+          backgroundColor: "#ffffff"
+        });
+        
+        const mediaImgData = mediaCanvas.toDataURL("image/png");
+        
+        pdf.addImage(
+          mediaImgData, 
+          "PNG", 
+          MARGIN, 
+          MARGIN, 
+          A4_WIDTH - (MARGIN * 2), 
+          (mediaCanvas.height / mediaCanvas.width) * (A4_WIDTH - (MARGIN * 2))
+        );
+        
+        mediaListRef.current.style.width = originalMediaStyles.width;
+        mediaListRef.current.style.fontSize = originalMediaStyles.fontSize;
       }
-
-      // Add memo photos if available
-      if (memoForPrintModal?.memoPhotosList?.[0] && includeMemoPhotos) {
-        await addImageToPdf(pdf, memoImgRef.current, A4_WIDTH, A4_HEIGHT);
+  
+      if (
+        memoForPrintModal?.memoPhotosList?.[0] && 
+        includeMemoPhotos && 
+        memoImgRef.current
+      ) {
+        pdf.addPage();
+        
+        const originalImgStyles = {
+          width: memoImgRef.current.style.width
+        };
+        
+        memoImgRef.current.style.width = `${A4_WIDTH - (MARGIN * 2)}px`;
+        
+        const imgCanvas = await html2canvas(memoImgRef.current, {
+          scale: 2,
+          useCORS: true,
+          width: A4_WIDTH - (MARGIN * 2),
+          backgroundColor: "#ffffff"
+        });
+        
+        const memoImgData = imgCanvas.toDataURL("image/png");
+        
+        pdf.addImage(
+          memoImgData, 
+          "PNG", 
+          MARGIN, 
+          MARGIN, 
+          A4_WIDTH - (MARGIN * 2), 
+          (imgCanvas.height / imgCanvas.width) * (A4_WIDTH - (MARGIN * 2))
+        );
+        
+        memoImgRef.current.style.width = originalImgStyles.width;
       }
-
-      // Save the PDF
+  
       pdf.save(`${memoForPrintModal?.Employee?.firstName}-Memorandum.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     } finally {
-      // Reset styles and restore window size
-      element.style.width = "";
-      element.style.maxWidth = "";
+      if (element) {
+        element.style.width = "";
+        element.style.maxWidth = "";
+        element.style.fontSize = "";
+        element.style.height = "";
+        element.style.overflow = "";
+      }
+      
       window.innerWidth = originalWidth;
       window.innerHeight = originalHeight;
       window.dispatchEvent(new Event("resize"));
@@ -116,30 +275,6 @@ const PrintMemorandumModal = () => {
     }
   };
 
-  // Helper function to add images while maintaining aspect ratio
-  const addImageToPdf = async (
-    pdf: jsPDF,
-    imgRef: HTMLElement | null,
-    A4_WIDTH: number,
-    A4_HEIGHT: number
-  ) => {
-    if (!imgRef) {
-      console.error("Image element not found");
-      return;
-    }
-
-    pdf.addPage();
-    const imgCanvas = await html2canvas(imgRef, {
-      scale: 3, // High quality
-      useCORS: true,
-      width: A4_WIDTH,
-    });
-
-    const imgData = imgCanvas.toDataURL("image/png");
-
-    // STRETCH image to cover full A4 page
-    pdf.addImage(imgData, "PNG", 0, 0, A4_WIDTH, A4_HEIGHT);
-  };
 
   const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
 
@@ -237,7 +372,7 @@ const PrintMemorandumModal = () => {
             <br />
 
             {/* Header */}
-            <div className="my-5 border-l pl-4 grid grid-cols-1 lg:grid-cols-5 items-center lg:gap-4">
+            <div className="my-3 border-l pl-4 grid grid-cols-1 lg:grid-cols-5 items-center lg:gap-1">
               <div className="col-span-1 font-semibold">To:</div>
               <div className={headerTextStyle}>
                 {memoForPrintModal?.Employee?.firstName} 
@@ -261,7 +396,7 @@ const PrintMemorandumModal = () => {
               <div className={headerTextStyle}>{memoForPrintModal?.Code}</div>
             </div>
 
-            <div className=" my-8 w-full border-b-2" />
+            <div className=" my-4 w-full border-b-2" />
 
             {/* memo message */}
             <div className="px-2 ">
@@ -275,11 +410,11 @@ const PrintMemorandumModal = () => {
               </h3>
               <br />
               {/* <p className="indent-4 whitespace-pre-line underline underline-offset-8 hyphens-auto text-justify leading-9"> */}
-              <p className="indent-4 whitespace-pre-line ">
+              <p className="indent-4 whitespace-pre-line text-sm">
                 {memoForPrintModal?.description}
               </p>
               <br />
-              <div className="float-end w-[75%] md:w-[50%] xl:w-[35%] border-b text-center pb-2 border-black">
+              <div className="float-end w-[75%] md:w-[50%] xl:w-[35%] border-b text-center pb-1 border-black">
                   THE MANAGEMENT  
               </div>
               <br />
@@ -289,10 +424,9 @@ const PrintMemorandumModal = () => {
             {/* employee explanation */}
             {!memoForPrintModal?.submitted && !memoForPrintModal.reason ? (
               <>
-                <div className="my-8 w-full border-b-2" />
+                <div className="my-3 w-full border-b-2" />
 
                 <span>Please write your explanation:</span>
-                <br />
                 <br />
                 <br />
                 {[0, 1, 2, 3, 4].map((i) => (
@@ -301,7 +435,6 @@ const PrintMemorandumModal = () => {
                     <br />
                   </div>
                 ))}
-                <br />
                 <br />
                 <div className="float-end w-[75%] md:w-[50%] xl:w-[35%]  ">
                   <div className=" border-b text-center mb-2 border-black"></div>

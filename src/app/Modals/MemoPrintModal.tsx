@@ -25,6 +25,9 @@ const PrintMemorandumModal = () => {
   const memoImgRef = useRef<HTMLDivElement>(null);
   const mediaListRef = useRef<HTMLDivElement>(null);
 
+  const mediaListRefs = React.useRef<React.RefObject<HTMLDivElement>[]>([]);
+  const memoImageListRefs = React.useRef<React.RefObject<HTMLDivElement>[]>([]);
+
   const {
     memoForPrintModal,
     setMemoForPrintModal,
@@ -40,222 +43,257 @@ const PrintMemorandumModal = () => {
 
   const convertToPdf = async () => {
     setLoading(true);
-  
+
     const desktopWidth = 1280;
     const desktopHeight = 800;
-  
+
     const originalWidth = window.innerWidth;
     const originalHeight = window.innerHeight;
-  
+
     window.innerWidth = desktopWidth;
     window.innerHeight = desktopHeight;
     window.dispatchEvent(new Event("resize"));
-  
+
     const element = memoRef.current;
     if (!element) {
       console.error("Element not found");
       setLoading(false);
       return;
     }
-  
+
     try {
       const A4_WIDTH = 595.28; // Width of A4 in points
       const A4_HEIGHT = 841.89; // Height of A4 in points
       const MARGIN = 10; // Margin around content
       const PAGE_BREAK_SEARCH_RANGE = 100; // Range to search for whitespace
-  
+
       // Apply styles for rendering
-      element.style.width = `${A4_WIDTH - (MARGIN * 2)}px`;
-      element.style.maxWidth = `${A4_WIDTH - (MARGIN * 2)}px`;
+      element.style.width = `${A4_WIDTH - MARGIN * 2}px`;
+      element.style.maxWidth = `${A4_WIDTH - MARGIN * 2}px`;
       element.style.fontSize = `14px`; // Use a readable font size
       element.style.height = "auto";
       element.style.overflow = "visible";
-  
+
       // Create canvas of the element
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
-        width: A4_WIDTH - (MARGIN * 2),
-        backgroundColor: "#ffffff"
+        width: A4_WIDTH - MARGIN * 2,
+        backgroundColor: "#ffffff",
       });
-  
+
       // Create a temporary canvas to detect whitespace
-      const tempCanvas = document.createElement('canvas');
-      const tempCtx = tempCanvas.getContext('2d');
+      const tempCanvas = document.createElement("canvas");
+      const tempCtx = tempCanvas.getContext("2d");
       tempCanvas.width = canvas.width;
       tempCanvas.height = canvas.height;
 
-      if(!tempCtx){
+      if (!tempCtx) {
         console.error("tempCtx is null");
         return;
       }
 
       tempCtx?.drawImage(canvas, 0, 0);
-  
+
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "pt",
         format: "a4",
         compress: true,
       });
-  
-      const effectivePageHeight = A4_HEIGHT - (MARGIN * 2);
-      
-      const pageRatio = canvas.width / (A4_WIDTH - (MARGIN * 2));
+
+      const effectivePageHeight = A4_HEIGHT - MARGIN * 2;
+
+      const pageRatio = canvas.width / (A4_WIDTH - MARGIN * 2);
       const pixelsPerPage = Math.floor(effectivePageHeight * pageRatio);
-      
+
       const totalPages = Math.ceil(canvas.height / pixelsPerPage);
-      
+
       const findBreakpoint = (y: number) => {
         if (y >= canvas.height) return canvas.height;
-        
+
         const searchStart = Math.max(0, y - PAGE_BREAK_SEARCH_RANGE);
         const searchEnd = Math.min(canvas.height, y + PAGE_BREAK_SEARCH_RANGE);
-        
-        const imageData = tempCtx.getImageData(0, searchStart, canvas.width, searchEnd - searchStart);
+
+        const imageData = tempCtx.getImageData(
+          0,
+          searchStart,
+          canvas.width,
+          searchEnd - searchStart
+        );
         const data = imageData.data;
-        
+
         const whiteRows = [];
-        
+
         for (let row = 0; row < searchEnd - searchStart; row++) {
           let whitePixelCount = 0;
           let totalPixels = 0;
-          
+
           for (let col = 0; col < canvas.width; col++) {
             const pixelIndex = (row * canvas.width + col) * 4;
-            if (data[pixelIndex] > 240 && data[pixelIndex + 1] > 240 && data[pixelIndex + 2] > 240) {
+            if (
+              data[pixelIndex] > 240 &&
+              data[pixelIndex + 1] > 240 &&
+              data[pixelIndex + 2] > 240
+            ) {
               whitePixelCount++;
             }
             totalPixels++;
           }
-          
+
           if (whitePixelCount / totalPixels > 0.95) {
             whiteRows.push(row + searchStart);
           }
         }
-        
+
         if (whiteRows.length > 0) {
           whiteRows.sort((a, b) => Math.abs(a - y) - Math.abs(b - y));
           return whiteRows[0];
         }
-        
+
         return y;
       };
-  
+
       for (let page = 0; page < totalPages; page++) {
         const idealY = (page + 1) * pixelsPerPage;
-        
+
         const breakY = findBreakpoint(idealY);
-        
-        const pageHeight = (page === totalPages - 1) 
-          ? canvas.height - (page * pixelsPerPage)
-          : breakY - (page * pixelsPerPage);
-        
-        const pageCanvas = document.createElement('canvas');
-        const pageCtx = pageCanvas.getContext('2d');
+
+        const pageHeight =
+          page === totalPages - 1
+            ? canvas.height - page * pixelsPerPage
+            : breakY - page * pixelsPerPage;
+
+        const pageCanvas = document.createElement("canvas");
+        const pageCtx = pageCanvas.getContext("2d");
         pageCanvas.width = canvas.width;
         pageCanvas.height = pageHeight;
-        
+
         if (pageCtx) {
           pageCtx.drawImage(
-            canvas, 
-            0, page * pixelsPerPage,
-            canvas.width, pageHeight,
-            0, 0,
-            canvas.width, pageHeight
+            canvas,
+            0,
+            page * pixelsPerPage,
+            canvas.width,
+            pageHeight,
+            0,
+            0,
+            canvas.width,
+            pageHeight
           );
         } else {
           console.error("pageCtx is null");
         }
-        
+
         const imgData = pageCanvas.toDataURL("image/png");
-        
+
         if (page > 0) {
           pdf.addPage();
         }
-        
+
         pdf.addImage(
-          imgData, 
-          "PNG", 
+          imgData,
+          "PNG",
           MARGIN,
           MARGIN,
-          A4_WIDTH - (MARGIN * 2),
-          (pageHeight / pageCanvas.width) * (A4_WIDTH - (MARGIN * 2))
+          A4_WIDTH - MARGIN * 2,
+          (pageHeight / pageCanvas.width) * (A4_WIDTH - MARGIN * 2)
         );
       }
-  
-      if (
-        memoForPrintModal?.mediaList?.[0] &&
-        includeMediaList &&
-        !memoForPrintModal?.mediaList?.[0]?.includes("video") &&
-        mediaListRef.current
-      ) {
-        pdf.addPage();
-        
-        const originalMediaStyles = {
-          width: mediaListRef.current.style.width,
-          fontSize: mediaListRef.current.style.fontSize
-        };
-        
-        mediaListRef.current.style.width = `${A4_WIDTH - (MARGIN * 2)}px`;
-        mediaListRef.current.style.fontSize = `14px`;
-        
-        const mediaCanvas = await html2canvas(mediaListRef.current, {
-          scale: 2,
-          useCORS: true,
-          width: A4_WIDTH - (MARGIN * 2),
-          backgroundColor: "#ffffff"
-        });
-        
-        const mediaImgData = mediaCanvas.toDataURL("image/png");
-        
-        pdf.addImage(
-          mediaImgData, 
-          "PNG", 
-          MARGIN, 
-          MARGIN, 
-          A4_WIDTH - (MARGIN * 2), 
-          (mediaCanvas.height / mediaCanvas.width) * (A4_WIDTH - (MARGIN * 2))
-        );
-        
-        mediaListRef.current.style.width = originalMediaStyles.width;
-        mediaListRef.current.style.fontSize = originalMediaStyles.fontSize;
+
+      if (memoForPrintModal?.mediaList?.length && includeMediaList) {
+        for (
+          let index = 0;
+          index < memoForPrintModal.mediaList.length;
+          index++
+        ) {
+          const media = memoForPrintModal.mediaList[index];
+
+          if (!media?.includes("video") && includeMediaList) {
+            const mediaElement = mediaListRefs.current[index]?.current;
+
+            if (!mediaElement) {
+              console.error("Media element not found at index", index);
+              continue;
+            }
+
+            pdf.addPage();
+
+            const originalMediaStyles = {
+              width: mediaElement.style.width,
+              fontSize: mediaElement.style.fontSize || "",
+            };
+
+            mediaElement.style.width = `${A4_WIDTH - MARGIN * 2}px`;
+            mediaElement.style.fontSize = `14px`;
+
+            const mediaCanvas = await html2canvas(mediaElement, {
+              scale: 2,
+              useCORS: true,
+              width: A4_WIDTH - MARGIN * 2,
+              backgroundColor: "#ffffff",
+            });
+
+            const mediaImgData = mediaCanvas.toDataURL("image/png");
+
+            pdf.addImage(mediaImgData, "PNG", 0, 0, A4_WIDTH, A4_HEIGHT);
+
+            mediaElement.style.width = originalMediaStyles.width;
+            mediaElement.style.fontSize = originalMediaStyles.fontSize;
+          }
+        }
       }
-  
-      if (
-        memoForPrintModal?.memoPhotosList?.[0] && 
-        includeMemoPhotos && 
-        memoImgRef.current
-      ) {
-        pdf.addPage();
-        
-        const originalImgStyles = {
-          width: memoImgRef.current.style.width
-        };
-        
-        memoImgRef.current.style.width = `${A4_WIDTH - (MARGIN * 2)}px`;
-        
-        const imgCanvas = await html2canvas(memoImgRef.current, {
-          scale: 2,
-          useCORS: true,
-          width: A4_WIDTH - (MARGIN * 2),
-          backgroundColor: "#ffffff"
-        });
-        
-        const memoImgData = imgCanvas.toDataURL("image/png");
-        
-        pdf.addImage(
-          memoImgData, 
-          "PNG", 
-          MARGIN, 
-          MARGIN, 
-          A4_WIDTH - (MARGIN * 2), 
-          (imgCanvas.height / imgCanvas.width) * (A4_WIDTH - (MARGIN * 2))
-        );
-        
-        memoImgRef.current.style.width = originalImgStyles.width;
+
+      if (memoForPrintModal?.memoPhotosList?.length && includeMemoPhotos) {
+        for (
+          let index = 0;
+          index < memoForPrintModal.memoPhotosList.length;
+          index++
+        ) {
+          const media = memoForPrintModal.memoPhotosList[index];
+
+          if (!media?.includes("video") && includeMediaList) {
+            const mediaElement = memoImageListRefs.current[index]?.current;
+
+            if (!mediaElement) {
+              console.error("Media element not found at index", index);
+              continue;
+            }
+
+            pdf.addPage();
+
+            const originalMediaStyles = {
+              width: mediaElement.style.width,
+              fontSize: mediaElement.style.fontSize || "",
+            };
+
+            mediaElement.style.width = `${A4_WIDTH - MARGIN * 2}px`;
+            mediaElement.style.fontSize = `14px`;
+
+            const mediaCanvas = await html2canvas(mediaElement, {
+              scale: 2,
+              useCORS: true,
+              width: A4_WIDTH - MARGIN * 2,
+              backgroundColor: "#ffffff",
+            });
+
+            const mediaImgData = mediaCanvas.toDataURL("image/png");
+
+            pdf.addImage(
+              mediaImgData,
+              "PNG",
+              MARGIN,
+              MARGIN,
+              A4_WIDTH - MARGIN * 2,
+              (mediaCanvas.height / mediaCanvas.width) * (A4_WIDTH - MARGIN * 2)
+            );
+
+            mediaElement.style.width = originalMediaStyles.width;
+            mediaElement.style.fontSize = originalMediaStyles.fontSize;
+          }
+        }
       }
-  
+
       pdf.save(`${memoForPrintModal?.Employee?.firstName}-Memorandum.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
@@ -267,14 +305,13 @@ const PrintMemorandumModal = () => {
         element.style.height = "";
         element.style.overflow = "";
       }
-      
+
       window.innerWidth = originalWidth;
       window.innerHeight = originalHeight;
       window.dispatchEvent(new Event("resize"));
       setLoading(false);
     }
   };
-
 
   const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
 
@@ -308,9 +345,6 @@ const PrintMemorandumModal = () => {
                 <p className="h-[80%] border-l border-neutral-content mt-0.5 ml-1"></p>
                 <p className="h-[80%] border-l border-neutral-content mt-0.5"></p>
                 <p className="h-[80%] border-l border-neutral-content mt-0.5 mr-1"></p>
-                {/* <p className="text-xs">|</p>
-              <p className="text-xs">|</p>
-              <p className="text-xs">|</p> */}
               </div>
             </div>
           </div>
@@ -487,11 +521,6 @@ const PrintMemorandumModal = () => {
                       </>
                     )
                   )}
-                  {/* {memoForPrintModal?.MemoCode?.remedialActions[0] && (
-                    <p className="indent-4 whitespace-pre-line underline underline-offset-8 text-red-500">
-                       {memoForPrintModal?.MemoCode?.remedialActions[0]} 
-                    </p>
-                  )} */}
                 </div>
               </div>
             </div>
@@ -505,43 +534,63 @@ const PrintMemorandumModal = () => {
           </div>
 
           {/* medialist */}
-          <div
-            hidden={
-              memoForPrintModal?.mediaList?.[0] &&
-              !memoForPrintModal?.mediaList?.[0]?.includes("video") &&
-              includeMediaList
-                ? false
-                : true
-            }
-            className="h-full w-full py-8 px-4 bg-white"
-            ref={mediaListRef}
-          >
-            <Image
-              className="w-full h-full"
-              src={memoForPrintModal?.mediaList?.[0] || ""}
-              width={400}
-              height={400}
-              alt="mediaList"
-            />
+          <div ref={mediaListRef}>
+            {memoForPrintModal?.mediaList?.length &&
+              memoForPrintModal?.mediaList?.map((media, index) => {
+                mediaListRefs.current[index] =
+                  mediaListRefs.current[index] ||
+                  React.createRef<HTMLDivElement>();
+                return (
+                  <div
+                    hidden={
+                      !media?.includes("video") && includeMediaList
+                        ? false
+                        : true
+                    }
+                    key={index + media}
+                    className="h-full w-full py-8 px-4 bg-white"
+                    ref={mediaListRefs.current[index]}
+                  >
+                    <Image
+                      className="w-full h-full"
+                      src={media || ""}
+                      width={400}
+                      height={400}
+                      alt="mediaList"
+                    />
+                  </div>
+                );
+              })}
           </div>
 
           {/* memoPhotosList */}
-          <div
-            hidden={
-              memoForPrintModal?.memoPhotosList?.[0] && includeMemoPhotos
-                ? false
-                : true
-            }
-            className="h-full w-full py-8 px-4 bg-white"
-            ref={memoImgRef}
-          >
-            <Image
-              className="w-full h-full"
-              src={memoForPrintModal?.memoPhotosList?.[0] || ""}
-              width={400}
-              height={400}
-              alt="memoPhotosList"
-            />
+          <div ref={memoImgRef}>
+            {memoForPrintModal?.memoPhotosList?.length &&
+              memoForPrintModal?.memoPhotosList?.map((media, index) => {
+                memoImageListRefs.current[index] =
+                  memoImageListRefs.current[index] ||
+                  React.createRef<HTMLDivElement>();
+                return (
+                  <div
+                    hidden={
+                      !media?.includes("video") && includeMediaList
+                        ? false
+                        : true
+                    }
+                    key={index + media}
+                    className="h-full w-full py-8 px-4 bg-white"
+                    ref={memoImageListRefs.current[index]}
+                  >
+                    <Image
+                      className="w-full h-full"
+                      src={media || ""}
+                      width={400}
+                      height={400}
+                      alt="memoPhotosList"
+                    />
+                  </div>
+                );
+              })}
           </div>
         </div>
 

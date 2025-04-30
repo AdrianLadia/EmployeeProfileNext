@@ -46,6 +46,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     mediaList: null,
     memoPhotosList: null,
     isWithOffense: null,
+    date: "",
+    description: "",
   } as Memo);
 
   const [memoForPrint, setMemoForPrint] = useState<Memo | null>(null);
@@ -94,27 +96,6 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           ...formData,
         };
 
-        // if (formData?.mediaList) {
-        //   const isVideo = formData?.mediaList?.[0]?.includes("video")
-        //     ? "/video"
-        //     : "";
-        //   const res = await upload.Images(
-        //     formData?.mediaList,
-        //     `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}${isVideo}`,
-        //     "mediaList"
-        //   );
-        //   finalFormData.mediaList = res || [];
-        // }
-
-        // if (formData?.memoPhotosList) {
-        //   const res = await upload.Images(
-        //     formData?.memoPhotosList,
-        //     `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
-        //     "memoPhotosList"
-        //   );
-        //   finalFormData.memoPhotosList = res || [];
-        // }
-
         const form = e.target as HTMLFormElement;
 
         const res = await serverRequests.createMemo(finalFormData, userData);
@@ -130,10 +111,14 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           });
 
           form.reset();
+
           setFormData({
             reason: null,
             mediaList: null,
             memoPhotosList: null,
+            isWithOffense: null,
+            date: "",
+            description: "",
           } as Memo);
 
           formRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -242,7 +227,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     });
   };
 
-  const [keysToUpdate, setKeysToUpdate] = React.useState<string>('');
+  const [keysToUpdate, setKeysToUpdate] = React.useState<string>("");
 
   React.useEffect(() => {
     if (
@@ -259,7 +244,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       setRemedialAction("");
     }
 
-    if (!formData?.Employee?._id) return setEmployeeNeedsUpdate(false), setKeysToUpdate(''); 
+    if (!formData?.Employee?._id)
+      return setEmployeeNeedsUpdate(false), setKeysToUpdate("");
 
     const { company, employeeHouseRulesSignatureList, agency, isRegular } =
       formData.Employee;
@@ -282,9 +268,9 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         !agency?.length && `agency`,
         !isRegular && `isRegular`,
       ].filter(Boolean);
-      
-      const params = new URLSearchParams(); 
-      
+
+      const params = new URLSearchParams();
+
       keysToUpdate.forEach((key) => params.append("key", key as string));
 
       setKeysToUpdate(params.toString());
@@ -298,9 +284,9 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
 
       return setEmployeeNeedsUpdate(true);
     }
-    setKeysToUpdate('')
+    setKeysToUpdate("");
     setEmployeeNeedsUpdate(false);
-  }, [formData, userData]); 
+  }, [formData, userData]);
 
   const selectStyle = {
     control: (base: unknown) => ({
@@ -361,7 +347,12 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             !employeeNeedsUpdate && " hidden "
           } btn btn-xs btn-warning italic hover:underline font-semibold cursor-pointer w-max`}
           onClick={() => {
-            router.push("/Employee/Update" + `${keysToUpdate&&`?${keysToUpdate}`}#${formData?.Employee?._id}`);
+            router.push(
+              "/Employee/Update" +
+                `${keysToUpdate && `?${keysToUpdate}`}#${
+                  formData?.Employee?._id
+                }`
+            );
           }}
         >
           Update {formData?.Employee?.firstName} {formData?.Employee?.lastName}{" "}
@@ -377,6 +368,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           placeholder="Date"
           id="date"
           required
+          value={formData?.date || ""}
           onChange={handleInputChange}
         />
       </label>
@@ -477,6 +469,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           placeholder="Description"
           id="description"
           required
+          value={formData?.description || ""}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setFormData({ ...formData, description: e.target.value });
           }}

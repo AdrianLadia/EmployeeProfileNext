@@ -70,7 +70,6 @@ const PrintMemorandumModal = () => {
       // Apply styles for rendering
       element.style.width = `${A4_WIDTH - MARGIN * 2}px`;
       element.style.maxWidth = `${A4_WIDTH - MARGIN * 2}px`;
-      element.style.fontSize = `14px`; // Use a readable font size
       element.style.height = "auto";
       element.style.overflow = "visible";
 
@@ -221,11 +220,9 @@ const PrintMemorandumModal = () => {
 
             const originalMediaStyles = {
               width: mediaElement.style.width,
-              fontSize: mediaElement.style.fontSize || "",
             };
 
             mediaElement.style.width = `${A4_WIDTH - MARGIN * 2}px`;
-            mediaElement.style.fontSize = `14px`;
 
             const mediaCanvas = await html2canvas(mediaElement, {
               scale: 2,
@@ -239,7 +236,6 @@ const PrintMemorandumModal = () => {
             pdf.addImage(mediaImgData, "PNG", 0, 0, A4_WIDTH, A4_HEIGHT);
 
             mediaElement.style.width = originalMediaStyles.width;
-            mediaElement.style.fontSize = originalMediaStyles.fontSize;
           }
         }
       }
@@ -264,11 +260,9 @@ const PrintMemorandumModal = () => {
 
             const originalMediaStyles = {
               width: mediaElement.style.width,
-              fontSize: mediaElement.style.fontSize || "",
             };
 
             mediaElement.style.width = `${A4_WIDTH - MARGIN * 2}px`;
-            mediaElement.style.fontSize = `14px`;
 
             const mediaCanvas = await html2canvas(mediaElement, {
               scale: 2,
@@ -289,11 +283,9 @@ const PrintMemorandumModal = () => {
             );
 
             mediaElement.style.width = originalMediaStyles.width;
-            mediaElement.style.fontSize = originalMediaStyles.fontSize;
           }
         }
       }
-
       pdf.save(`${memoForPrintModal?.Employee?.firstName}-Memorandum.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
@@ -301,7 +293,6 @@ const PrintMemorandumModal = () => {
       if (element) {
         element.style.width = "";
         element.style.maxWidth = "";
-        element.style.fontSize = "";
         element.style.height = "";
         element.style.overflow = "";
       }
@@ -313,7 +304,7 @@ const PrintMemorandumModal = () => {
     }
   };
 
-  const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
+  const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 `;
 
   return (
     <dialog
@@ -322,7 +313,7 @@ const PrintMemorandumModal = () => {
     >
       <div
         style={style}
-        className={` relative h-[100svh] w-[100vw] sm:w-[500px] md:min-w-[50vw] border bg-white text-black`}
+        className={` relative h-[100svh] w-[100vw] sm:w-[500px] md:min-w-[50vw] border bg-white text-black text-xs`}
       >
         <div className="w-full h-full overflow-auto pt-8 ">
           <div
@@ -341,7 +332,7 @@ const PrintMemorandumModal = () => {
                 onChange={(e) => setResolution(parseInt(e.target.value))}
               />
               {/* resolution */}
-              <div className=" -z-10 absolute -top-0.5 h-full text-xs flex justify-between w-full px-2 font-bold">
+              <div className=" -z-10 absolute -top-0.5 h-full flex justify-between w-full px-2 font-bold">
                 <p className="h-[80%] border-l border-neutral-content mt-0.5 ml-1"></p>
                 <p className="h-[80%] border-l border-neutral-content mt-0.5"></p>
                 <p className="h-[80%] border-l border-neutral-content mt-0.5 mr-1"></p>
@@ -349,7 +340,7 @@ const PrintMemorandumModal = () => {
             </div>
           </div>
 
-          <div className="opacity-50 hover:opacity-100 flex justify-center items-center absolute md:top-3 top-14 left-1/2 right-1/2 translate-x-[-50%] gap-2 text-xs w-max mt-0.5 ">
+          <div className="opacity-50 hover:opacity-100 flex justify-center items-center absolute md:top-3 top-14 left-1/2 right-1/2 translate-x-[-50%] gap-2 w-max mt-0.5 ">
             {memoForPrintModal?.mediaList?.[0] &&
               !memoForPrintModal?.mediaList?.[0]?.includes("video") && (
                 <>
@@ -391,14 +382,14 @@ const PrintMemorandumModal = () => {
           </form>
 
           {/* printable div */}
-          <div className="h-max w-full pt-3 px-4 pb-3 bg-white" ref={memoRef}>
+          <div className="h-max w-full pt-3 px-4 pb-3 bg-white " ref={memoRef}>
             {/* <h1 className="text-3xl"> Memorandum </h1> */}
-            <h1 className="text-3xl text-center uppercase font-serif tracking-tighter">
+            <h1 className="text-2xl text-center uppercase font-serif tracking-tighter">
               {" "}
               {memoForPrintModal?.Employee?.agency ||
                 "Pustanan Printers - Cebu"}{" "}
             </h1>
-            <h2 className="text-lg text-center uppercase font-serif tracking-tighter">
+            <h2 className="text-base text-center uppercase font-serif tracking-tighter">
               {" "}
               Memorandum and Explanation Notice{" "}
             </h2>
@@ -406,7 +397,7 @@ const PrintMemorandumModal = () => {
             <br />
 
             {/* Header */}
-            <div className="my-3 border-l pl-4 grid grid-cols-1 lg:grid-cols-5 items-center lg:gap-1">
+            <div className="my-3 border-l pl-4 grid grid-cols-1 lg:grid-cols-5 items-center lg:gap-0.5">
               <div className="col-span-1 font-semibold">To:</div>
               <div className={headerTextStyle}>
                 {memoForPrintModal?.Employee?.firstName} 
@@ -430,11 +421,11 @@ const PrintMemorandumModal = () => {
               <div className={headerTextStyle}>{memoForPrintModal?.Code}</div>
             </div>
 
-            <div className=" my-4 w-full border-b-2" />
+            <div className=" mt-4 mb-3 w-full border-b-2" />
 
             {/* memo message */}
             <div className="px-2 ">
-              <h3>
+              <h3 className="mb-1">
                 Dear Mr./Ms.{" "}
                 <strong>
                   {memoForPrintModal?.Employee?.firstName} 
@@ -442,12 +433,10 @@ const PrintMemorandumModal = () => {
                 </strong>{" "}
                 ,
               </h3>
-              <br />
-              {/* <p className="indent-4 whitespace-pre-line underline underline-offset-8 hyphens-auto text-justify leading-9"> */}
-              <p className="indent-4 whitespace-pre-line text-sm">
+              <p className="indent-4 whitespace-pre-line mb-2">
                 {memoForPrintModal?.description}
               </p>
-              <br />
+              {/* <br /> */}
               <div className="float-end w-[75%] md:w-[50%] xl:w-[35%] border-b text-center pb-1 border-black">
                   THE MANAGEMENT  
               </div>
@@ -472,9 +461,7 @@ const PrintMemorandumModal = () => {
                 <br />
                 <div className="float-end w-[75%] md:w-[50%] xl:w-[35%]  ">
                   <div className=" border-b text-center mb-2 border-black"></div>
-                  <div className=" text-center text-xs">
-                    (Name, Signature, Date)
-                  </div>
+                  <div className=" text-center">(Name, Signature, Date)</div>
                 </div>
                 <br />
                 <br />
@@ -505,7 +492,7 @@ const PrintMemorandumModal = () => {
                             action !== memoForPrintModal?.remedialAction
                               ? " border border-neutral "
                               : " bg-neutral text-neutral-content "
-                          } py-1 px-3 text-sm rounded-box relative`}
+                          } py-0.5 px-3 rounded-box relative text-xs`}
                         >
                           {action}
                           <span
@@ -513,7 +500,7 @@ const PrintMemorandumModal = () => {
                               action !== memoForPrintModal?.remedialAction
                                 ? " border border-neutral "
                                 : " bg-neutral text-neutral-content "
-                            } absolute top-[-10px] text-xs badge z-30 px-1`}
+                            } absolute top-[-10px] badge z-30 px-0.5 !text-xs !py-0 `}
                           >
                             {getOrdinal(index + 1)}
                           </span>
@@ -594,7 +581,6 @@ const PrintMemorandumModal = () => {
           </div>
         </div>
 
-        {/* Print Memo Button */}
         <div className="w-full absolute bottom-5 flex justify-center">
           <button
             className={`${

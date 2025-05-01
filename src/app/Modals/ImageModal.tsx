@@ -45,7 +45,7 @@ const ImageModal = () => {
     };
   }, []);
 
-  const [fullHeight, setFullHeight] = React.useState(true);
+  const [fullHeight, setFullHeight] = React.useState(false);
 
   const [showDelete, setShowDelete] = React.useState(false);
 

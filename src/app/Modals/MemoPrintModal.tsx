@@ -482,7 +482,7 @@ const PrintMemorandumModal = () => {
               <br />
               <div className="flex flex-col">
                 Remedial Actions:
-                <div className="flex flex-wrap gap-6 pt-2 ">
+                <div className="flex flex-wrap gap-3 pt-1 ">
                   {memoForPrintModal?.MemoCode?.remedialActions?.map(
                     (action, index) => (
                       <>

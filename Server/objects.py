@@ -407,7 +407,10 @@ class UserActions(User):
 
         one_year_ago = datetime.datetime.now() - datetime.timedelta(days=365)
         employeeMemos = [
-            memo for memo in employeeMemos if memo['date'] >= one_year_ago
+            memo for memo in employeeMemos
+            if (isinstance(memo['date'], datetime.datetime) and memo['date'] >=
+                one_year_ago) or (isinstance(memo['date'], str) and
+                                  parser.parse(memo['date']) >= one_year_ago)
         ]
 
         offenseCount = len(employeeMemos)

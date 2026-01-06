@@ -405,6 +405,11 @@ class UserActions(User):
                 'MemoCode._version': offenseVersion
             }, 'Memo')
 
+        one_year_ago = datetime.datetime.now() - datetime.timedelta(days=365)
+        employeeMemos = [
+            memo for memo in employeeMemos if memo['date'] >= one_year_ago
+        ]
+
         offenseCount = len(employeeMemos)
 
         offense = db.read({'_id': offenseId}, 'Offense')
@@ -421,14 +426,16 @@ class UserActions(User):
             'remedialAction': remedialActions[offenseCount],
             'offenseCount': offenseCount + 1
         }
-    
+
     def createEmployeeIDAction(self, user, employee, idGenerated):
         if 'canGenerateEmployeeID' not in user['roles']['Employee']:
-            raise ValueError('User does not have permission to generate Employee ID')
+            raise ValueError(
+                'User does not have permission to generate Employee ID')
 
         employeeID = db.read({'_id': employee['_id']}, 'EmployeeID')
         if len(employeeID) > 0:
-            generatedID = db.update({'_id': employee['_id']}, idGenerated, 'EmployeeID')
+            generatedID = db.update({'_id': employee['_id']}, idGenerated,
+                                    'EmployeeID')
             print(generatedID, 'generatedID')
             return generatedID[0]['IDCardURL']
 
@@ -436,7 +443,7 @@ class UserActions(User):
         generatedID = db.create(idGenerated, 'EmployeeID')
         print(generatedID, 'generatedID')
         return generatedID['IDCardURL']
-    
+
     def getEmployeeBy_ID(self, employeeId):
         employee = db.read({'_id': employeeId}, 'Employee')
         if len(employee) == 0:
@@ -506,6 +513,7 @@ class UserActions(User):
         employee[0]['employeeSignature'] = photo
         return db.update({'_id': employeeId}, employee[0], 'Employee')
 
+
 class Memo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
     date: datetime.datetime
@@ -572,7 +580,7 @@ class Memo(BaseModel):
             self.remedialAction = remedialActionToString
             self.Code = f'{self.Employee.company}-{formattedDate}-{getRemedialAction["offenseCount"]}'
 
-        else :
+        else:
             self.Code = f'{self.Employee.company}-{formattedDate}'
             self.remedialAction = None
 
@@ -660,7 +668,8 @@ class Employee(BaseModel):
             raise ValueError(
                 'User does not have permission to update an employee')
 
-        newData = updateData(self.model_dump(by_alias=True), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True), dataToUpdate,
+                             ['_id'])
         return newData
 
     def deleteEmployee(self, user):
@@ -696,7 +705,8 @@ class Offense(BaseModel):
             raise ValueError(
                 'User does not have permission to update an offense')
 
-        newData = updateData(self.model_dump(by_alias=True), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True), dataToUpdate,
+                             ['_id'])
 
         return newData
 

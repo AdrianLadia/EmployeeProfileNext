@@ -101,24 +101,74 @@ const PrintMemorandumModal = () => {
         compress: true,
       });
 
-      const addContainedImage = (imgData: string, w: number, h: number) => {
-        const maxW = A4_WIDTH - MARGIN * 2;
-        const maxH = A4_HEIGHT - MARGIN * 2;
-        const ratio = w / h;
-        let drawW = maxW;
-        let drawH = drawW / ratio;
-        if (drawH > maxH) {
-          drawH = maxH;
-          drawW = drawH * ratio;
+      const availW = A4_WIDTH - MARGIN * 2;
+      const availH = A4_HEIGHT - MARGIN * 2;
+      const GAP = 10;
+      const ROWS_PER_PAGE = 3;
+      const rowH = (availH - GAP * (ROWS_PER_PAGE - 1)) / ROWS_PER_PAGE;
+
+      const renderPhotoGrid = async (
+        count: number,
+        mediaTypes: (string | undefined)[],
+        getElement: (i: number) => HTMLElement | null | undefined
+      ) => {
+        let pageStarted = false;
+        let x = MARGIN;
+        let y = MARGIN;
+
+        for (let index = 0; index < count; index++) {
+          if (mediaTypes[index]?.includes("video")) continue;
+
+          const mediaElement = getElement(index);
+          if (!mediaElement) {
+            console.error("Media element not found at index", index);
+            continue;
+          }
+
+          const originalWidth = mediaElement.style.width;
+          mediaElement.style.width = `${availW}px`;
+          const mediaCanvas = await html2canvas(mediaElement, {
+            scale: 2,
+            useCORS: true,
+            width: availW,
+            backgroundColor: "#ffffff",
+          });
+          mediaElement.style.width = originalWidth;
+
+          if (!mediaCanvas.width || !mediaCanvas.height) {
+            console.error("Empty media canvas at index", index);
+            continue;
+          }
+
+          const imgData = mediaCanvas.toDataURL("image/png");
+          const ratio = mediaCanvas.width / mediaCanvas.height;
+
+          let drawH = rowH;
+          let drawW = drawH * ratio;
+          if (drawW > availW) {
+            drawW = availW;
+            drawH = drawW / ratio;
+          }
+
+          if (!pageStarted) {
+            pdf.addPage();
+            pageStarted = true;
+            x = MARGIN;
+            y = MARGIN;
+          } else if (x > MARGIN && x + drawW > MARGIN + availW) {
+            x = MARGIN;
+            y += rowH + GAP;
+          }
+
+          if (y + rowH > MARGIN + availH) {
+            pdf.addPage();
+            x = MARGIN;
+            y = MARGIN;
+          }
+
+          pdf.addImage(imgData, "PNG", x, y, drawW, drawH);
+          x += drawW + GAP;
         }
-        pdf.addImage(
-          imgData,
-          "PNG",
-          (A4_WIDTH - drawW) / 2,
-          (A4_HEIGHT - drawH) / 2,
-          drawW,
-          drawH
-        );
       };
 
       const effectivePageHeight = A4_HEIGHT - MARGIN * 2;
@@ -221,91 +271,23 @@ const PrintMemorandumModal = () => {
       }
 
       if (memoForPrintModal?.mediaList?.length && includeMediaList) {
-        for (
-          let index = 0;
-          index < memoForPrintModal.mediaList.length;
-          index++
-        ) {
-          const media = memoForPrintModal.mediaList[index];
-
-          if (!media?.includes("video") && includeMediaList) {
-            const mediaElement = mediaListRefs.current[index]?.current;
-
-            if (!mediaElement) {
-              console.error("Media element not found at index", index);
-              continue;
-            }
-
-            pdf.addPage();
-
-            const originalMediaStyles = {
-              width: mediaElement.style.width,
-            };
-
-            mediaElement.style.width = `${A4_WIDTH - MARGIN * 2}px`;
-
-            const mediaCanvas = await html2canvas(mediaElement, {
-              scale: 2,
-              useCORS: true,
-              width: A4_WIDTH - MARGIN * 2,
-              backgroundColor: "#ffffff",
-            });
-
-            const mediaImgData = mediaCanvas.toDataURL("image/png");
-
-            addContainedImage(
-              mediaImgData,
-              mediaCanvas.width,
-              mediaCanvas.height
-            );
-
-            mediaElement.style.width = originalMediaStyles.width;
-          }
-        }
+        await renderPhotoGrid(
+          memoForPrintModal.mediaList.length,
+          memoForPrintModal.mediaList,
+          (i) => mediaListRefs.current[i]?.current
+        );
       }
 
-      if (memoForPrintModal?.memoPhotosList?.length && includeMemoPhotos) {
-        for (
-          let index = 0;
-          index < memoForPrintModal.memoPhotosList.length;
-          index++
-        ) {
-          const media = memoForPrintModal.memoPhotosList[index];
-
-          if (!media?.includes("video") && includeMediaList) {
-            const mediaElement = memoImageListRefs.current[index]?.current;
-
-            if (!mediaElement) {
-              console.error("Media element not found at index", index);
-              continue;
-            }
-
-            pdf.addPage();
-
-            const originalMediaStyles = {
-              width: mediaElement.style.width,
-            };
-
-            mediaElement.style.width = `${A4_WIDTH - MARGIN * 2}px`;
-
-            const mediaCanvas = await html2canvas(mediaElement, {
-              scale: 2,
-              useCORS: true,
-              width: A4_WIDTH - MARGIN * 2,
-              backgroundColor: "#ffffff",
-            });
-
-            const mediaImgData = mediaCanvas.toDataURL("image/png");
-
-            addContainedImage(
-              mediaImgData,
-              mediaCanvas.width,
-              mediaCanvas.height
-            );
-
-            mediaElement.style.width = originalMediaStyles.width;
-          }
-        }
+      if (
+        memoForPrintModal?.memoPhotosList?.length &&
+        includeMemoPhotos &&
+        includeMediaList
+      ) {
+        await renderPhotoGrid(
+          memoForPrintModal.memoPhotosList.length,
+          memoForPrintModal.memoPhotosList,
+          (i) => memoImageListRefs.current[i]?.current
+        );
       }
       pdf.save(`${memoForPrintModal?.Employee?.firstName}-Memorandum.pdf`);
     } catch (error) {

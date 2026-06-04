@@ -101,6 +101,26 @@ const PrintMemorandumModal = () => {
         compress: true,
       });
 
+      const addContainedImage = (imgData: string, w: number, h: number) => {
+        const maxW = A4_WIDTH - MARGIN * 2;
+        const maxH = A4_HEIGHT - MARGIN * 2;
+        const ratio = w / h;
+        let drawW = maxW;
+        let drawH = drawW / ratio;
+        if (drawH > maxH) {
+          drawH = maxH;
+          drawW = drawH * ratio;
+        }
+        pdf.addImage(
+          imgData,
+          "PNG",
+          (A4_WIDTH - drawW) / 2,
+          (A4_HEIGHT - drawH) / 2,
+          drawW,
+          drawH
+        );
+      };
+
       const effectivePageHeight = A4_HEIGHT - MARGIN * 2;
 
       const pageRatio = canvas.width / (A4_WIDTH - MARGIN * 2);
@@ -233,7 +253,11 @@ const PrintMemorandumModal = () => {
 
             const mediaImgData = mediaCanvas.toDataURL("image/png");
 
-            pdf.addImage(mediaImgData, "PNG", 0, 0, A4_WIDTH, A4_HEIGHT);
+            addContainedImage(
+              mediaImgData,
+              mediaCanvas.width,
+              mediaCanvas.height
+            );
 
             mediaElement.style.width = originalMediaStyles.width;
           }
@@ -273,13 +297,10 @@ const PrintMemorandumModal = () => {
 
             const mediaImgData = mediaCanvas.toDataURL("image/png");
 
-            pdf.addImage(
+            addContainedImage(
               mediaImgData,
-              "PNG",
-              MARGIN,
-              MARGIN,
-              A4_WIDTH - MARGIN * 2,
-              (mediaCanvas.height / mediaCanvas.width) * (A4_WIDTH - MARGIN * 2)
+              mediaCanvas.width,
+              mediaCanvas.height
             );
 
             mediaElement.style.width = originalMediaStyles.width;
